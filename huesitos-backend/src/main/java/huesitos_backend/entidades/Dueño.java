@@ -26,4 +26,8 @@ public class Dueño {
 
     @Column(nullable = false, length = 150)
     private String direccion;
+
+    @OneToOne
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable = false)
+    private Usuario usuario;
 }
