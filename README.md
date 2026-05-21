@@ -13,7 +13,7 @@ Este es el repositorio principal (monorepo) del proyecto Huesitos.
 
 * **Backend**: Java 26 con Spring Boot 4.
 * **Frontend**: React 18 con Tailwind CSS 3.4.
-* **Base de Datos**: MySQL (No detectado en PATH; se sugiere versión 8.0 o superior).
+* **Base de Datos**: MySQL 8.4.
 * **Arquitectura**: API REST en capas, intercambio JSON y seguridad JWT.
 
 ---

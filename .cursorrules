@@ -3,7 +3,7 @@
 ## Tecnologías
 - **Backend**: Java 26 / Spring Boot 4.
 - **Frontend**: React 18 / Tailwind CSS 3.4.
-- **Base de Datos**: MySQL.
+- **Base de Datos**: MySQL 8.4.
 - **Estructura**: Monorepo.
 
 ## Estándares del Proyecto
