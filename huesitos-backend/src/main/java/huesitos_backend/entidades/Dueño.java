@@ -18,8 +18,8 @@ public class Dueño {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
-    private String nombre;
+    @Column(name = "nombre_completo", nullable = false, length = 100)
+    private String nombreCompleto;
 
     @Column(nullable = false, length = 20)
     private String telefono;
