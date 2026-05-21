@@ -1,8 +1,9 @@
 # Reglas del Proyecto Huesitos
 
 ## Tecnologías
-- **Backend**: Java / Spring Boot.
-- **Frontend**: React / JavaScript / CSS vainilla.
+- **Backend**: Java 26 / Spring Boot 4.
+- **Frontend**: React 18 / Tailwind CSS 3.4.
+- **Base de Datos**: MySQL.
 - **Estructura**: Monorepo.
 
 ## Estándares del Proyecto
@@ -12,3 +13,18 @@
   - `huesitos-frontend/` para React.
 - Escribir código limpio, modular y autodocumentado.
 - Seguir las mejores prácticas de seguridad e inyección de dependencias.
+
+## Flujo de Git y Ramas
+- **`main`**: Solo código en producción 100% funcional.
+- **`develop`**: Rama de integración de características.
+- **`feature/nombre-funcion`**: Ramas temporales para avanzar tareas específicas.
+- **Merge**: Trabajar en `feature/` y fusionar hacia `develop` una vez finalizado y probado por completo.
+
+## Reglas de Commits (Mensajes en español)
+- `feat: ...` -> Nueva funcionalidad.
+- `fix: ...` -> Corrección de errores.
+- `docs: ...` -> Cambios en documentación.
+- `style: ...` -> Cambios visuales con Tailwind.
+
+## Idioma y Nomenclatura
+- Todo el código (clases, variables, métodos, tablas en minúscula/plural) y la documentación se escriben estrictamente en **español**.
