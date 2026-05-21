@@ -1,0 +1,32 @@
+# IDEs and Editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Frontend (Node/React)
+huesitos-frontend/node_modules/
+huesitos-frontend/dist/
+huesitos-frontend/build/
+huesitos-frontend/.env*.local
+
+# Backend (Java/Spring Boot)
+huesitos-backend/target/
+huesitos-backend/.mvn/wrapper/maven-wrapper.jar
+huesitos-backend/bin/
+huesitos-backend/*.class
+huesitos-backend/*.log
+huesitos-backend/.classpath
+huesitos-backend/.project
+huesitos-backend/.settings/
+huesitos-backend/dependency-reduced-pom.xml
+huesitos-backend/.gradletasknamecache
+huesitos-backend/.gradle/
+huesitos-backend/build/
