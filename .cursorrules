@@ -13,6 +13,7 @@
   - `huesitos-frontend/` para React.
 - Escribir código limpio, modular y autodocumentado.
 - Seguir las mejores prácticas de seguridad e inyección de dependencias.
+- **Seguridad**: Nunca exponer ni registrar rutas locales absolutas del sistema de archivos del usuario (ej. `C:/Users/...`) en archivos públicos del repositorio (como `README.md`).
 
 ## Flujo de Git y Ramas
 - **`main`**: Solo código en producción 100% funcional.
