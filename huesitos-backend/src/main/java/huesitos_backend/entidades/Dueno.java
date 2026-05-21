@@ -1,0 +1,29 @@
+package huesitos_backend.entidades;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
+@Entity
+@Table(name = "duenos")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Dueno {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, length = 100)
+    private String nombre;
+
+    @Column(nullable = false, length = 20)
+    private String telefono;
+
+    @Column(nullable = false, length = 150)
+    private String direccion;
+}
