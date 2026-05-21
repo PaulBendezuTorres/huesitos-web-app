@@ -6,6 +6,7 @@ import huesitos_backend.entidades.Usuario;
 import huesitos_backend.repositorios.DueñoRepositorio;
 import huesitos_backend.repositorios.UsuarioRepositorio;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ public class AutenticacionServicio {
 
     private final UsuarioRepositorio usuarioRepositorio;
     private final DueñoRepositorio dueñoRepositorio;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Registra un nuevo cliente en el sistema.
@@ -38,9 +40,10 @@ public class AutenticacionServicio {
             throw new RuntimeException("El teléfono ya está registrado");
         }
 
-        // 3. Forzar rol CLIENTE y estado activo = true
+        // 3. Forzar rol CLIENTE, estado activo = true y encriptar contraseña
         usuario.setRol(Rol.CLIENTE);
         usuario.setActivo(true);
+        usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
 
         // 4. Guardar primero el Usuario en su repositorio
         Usuario usuarioGuardado = usuarioRepositorio.save(usuario);
