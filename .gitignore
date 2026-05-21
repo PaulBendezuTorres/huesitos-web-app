@@ -30,3 +30,6 @@ huesitos-backend/dependency-reduced-pom.xml
 huesitos-backend/.gradletasknamecache
 huesitos-backend/.gradle/
 huesitos-backend/build/
+
+# Local Agent Skills
+.skills/
