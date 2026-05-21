@@ -82,5 +82,21 @@ public class AutenticacionServicio {
         // 4. Generar y retornar el token JWT
         return tokenJwtUtil.generarToken(usuario);
     }
+
+    /**
+     * Cambia el rol de un usuario identificado por su ID.
+     *
+     * @param usuarioId El ID del usuario.
+     * @param nuevoRol El nuevo rol a asignar.
+     * @return El usuario actualizado.
+     */
+    @Transactional
+    public Usuario cambiarRolUsuario(Long usuarioId, Rol nuevoRol) {
+        Usuario usuario = usuarioRepositorio.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        
+        usuario.setRol(nuevoRol);
+        return usuarioRepositorio.save(usuario);
+    }
 }
 
