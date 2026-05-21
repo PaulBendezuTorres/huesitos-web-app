@@ -9,15 +9,16 @@
 - [x] Configurada la conexión MySQL local y dialecto Hibernate en el backend.
 - [x] Implementada la arquitectura de seguridad basada en Spring Security, CORS y tokens JWT.
 - [x] Compilación y construcción del backend verificada con éxito (`BUILD SUCCESS`).
+- [x] Creados el enumerador `Rol` y la entidad JPA `Usuario` en `huesitos_backend.entidades`.
 
 ## 📌 Estado Actual de los Componentes
-- **Backend (Spring Boot)**: Configurado con soporte para JPA, Security y JWT en el puerto 8080.
+- **Backend (Spring Boot)**: Configurado con soporte para JPA, Security y JWT en el puerto 8080. Creados `Rol` y `Usuario`.
 - **Frontend (React)**: Inicializado con React 18, Vite y Tailwind CSS 3.4 con página de bienvenida premium en español.
-- **Base de Datos (MySQL)**: Base de datos `huesitos` inicializada y vacía.
+- **Base de Datos (MySQL)**: Base de datos `huesitos` inicializada. Hibernate creará la tabla `usuarios` al levantar la aplicación.
 
 ## 🛠️ Próximos Pasos (Pendientes)
-- [ ] Creación de entidades JPA (`Usuario`, `Mascota`, `Dueno`, `Cita`).
-- [ ] Creación de repositorios e interfaces de acceso a datos.
+- [ ] Creación de entidades JPA restantes (`Mascota`, `Dueno`, `Cita`).
+- [ ] Creación de repositorios e interfaces de acceso a datos (ej. `RepositorioUsuario`).
 - [ ] Lógica de negocio de autenticación y registro.
 - [ ] Controladores REST y pruebas de endpoints.
 
