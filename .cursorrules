@@ -1,0 +1,14 @@
+# Reglas del Proyecto Huesitos
+
+## Tecnologías
+- **Backend**: Java / Spring Boot.
+- **Frontend**: React / JavaScript / CSS vainilla.
+- **Estructura**: Monorepo.
+
+## Estándares del Proyecto
+- Mantener respuestas y explicaciones concisas y directas al grano.
+- Todo el código nuevo debe respetar la estructura de carpetas:
+  - `huesitos-backend/` para Spring Boot.
+  - `huesitos-frontend/` para React.
+- Escribir código limpio, modular y autodocumentado.
+- Seguir las mejores prácticas de seguridad e inyección de dependencias.
