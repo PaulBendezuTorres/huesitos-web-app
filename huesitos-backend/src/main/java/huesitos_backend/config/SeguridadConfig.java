@@ -1,6 +1,5 @@
 package huesitos_backend.config;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,10 +19,13 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SeguridadConfig {
 
     private final FiltroTokenJwt filtroTokenJwt;
+
+    public SeguridadConfig(FiltroTokenJwt filtroTokenJwt) {
+        this.filtroTokenJwt = filtroTokenJwt;
+    }
 
     @Bean
     public SecurityFilterChain filtroCadenaSeguridad(HttpSecurity http) throws Exception {
