@@ -37,6 +37,7 @@
 
 ## Reglas de Commits
 - Todos los mensajes y descripciones de los commits deben redactarse estrictamente en **español**.
+- Los commits deben ser detallados brevemente para saber exactamente qué se modificó (ej. `feat: crear controlador de autenticacion con endpoint de registro` en lugar de un genérico `feat: controlador`).
 - Usar los siguientes prefijos:
   - `feat: ...` -> Nueva funcionalidad.
   - `fix: ...` -> Corrección de errores.
