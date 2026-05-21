@@ -1,16 +1,23 @@
 package huesitos_backend.config;
 
+import huesitos_backend.seguridad.FiltroAutenticacionJwt;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SeguridadConfig {
+
+    private final FiltroAutenticacionJwt filtroAutenticacionJwt;
 
     @Bean
     public PasswordEncoder encriptadorContrasena() {
@@ -20,12 +27,14 @@ public class SeguridadConfig {
     @Bean
     public SecurityFilterChain filtroSeguridad(HttpSecurity http) throws Exception {
         http
-            // Deshabilitar CSRF para permitir pruebas locales
             .csrf(csrf -> csrf.disable())
-            // Permitir el acceso total de forma temporal para pruebas del registro
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(autorizaciones -> autorizaciones
-                .anyRequest().permitAll()
-            );
+                .requestMatchers("/api/autenticacion/login", "/api/autenticacion/registro").permitAll()
+                .requestMatchers("/api/usuarios/**").hasRole("ADMINISTRADOR")
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(filtroAutenticacionJwt, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
