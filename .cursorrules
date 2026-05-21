@@ -21,11 +21,13 @@
 - **`feature/nombre-funcion`**: Ramas temporales para avanzar tareas específicas.
 - **Merge**: Trabajar en `feature/` y fusionar hacia `develop` una vez finalizado y probado por completo.
 
-## Reglas de Commits (Mensajes en español)
-- `feat: ...` -> Nueva funcionalidad.
-- `fix: ...` -> Corrección de errores.
-- `docs: ...` -> Cambios en documentación.
-- `style: ...` -> Cambios visuales con Tailwind.
+## Reglas de Commits
+- Todos los mensajes y descripciones de los commits deben redactarse estrictamente en **español**.
+- Usar los siguientes prefijos:
+  - `feat: ...` -> Nueva funcionalidad.
+  - `fix: ...` -> Corrección de errores.
+  - `docs: ...` -> Cambios en documentación.
+  - `style: ...` -> Cambios visuales con Tailwind.
 
 ## Idioma y Nomenclatura
 - Todo el código (clases, variables, métodos, tablas en minúscula/plural) y la documentación se escriben estrictamente en **español**.
