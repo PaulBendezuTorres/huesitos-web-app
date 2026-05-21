@@ -15,6 +15,20 @@
 - Seguir las mejores prácticas de seguridad e inyección de dependencias.
 - **Seguridad**: Nunca exponer ni registrar rutas locales absolutas del sistema de archivos del usuario (ej. `C:/Users/...`) en archivos públicos del repositorio (como `README.md`).
 
+## Arquitectura y Patrones (Backend)
+- **Patrón de Capas Estricto**: Todo flujo debe seguir estrictamente: `Controlador` -> `Servicio` -> `Repositorio` -> `Entidad`.
+- **Controladores**: Deben ser `@RestController` limpios, delegar toda la lógica al Servicio y retornar `ResponseEntity`.
+- **Inyección de Dependencias**: Usar inyección basada en constructor (`final` + `@RequiredArgsConstructor` de Lombok), nunca usar `@Autowired` en atributos.
+- **Formato de Intercambio**: Toda comunicación debe usar exclusivamente formato JSON.
+
+## Estilos y Componentes (Frontend)
+- **Componentes React**: Crear componentes funcionales modulares utilizando sintaxis de funciones flecha (`const MiComponente = () => {}`).
+- **Estilos responsivos**: Usar exclusivamente clases utilitarias de Tailwind CSS asegurando un diseño adaptativo (móvil primero).
+
+## Base de Datos (MySQL)
+- **Nomenclatura**: Nombres de tablas y columnas en minúsculas, usando plural para las tablas (ej: `duenos`, `mascotas`, `citas`).
+- **Estrategia JPA**: Mapear relaciones con `@ManyToOne`, `@OneToMany` usando carga perezosa (`FetchType.LAZY`) donde sea posible para optimizar el rendimiento.
+
 ## Flujo de Git y Ramas
 - **`main`**: Solo código en producción 100% funcional.
 - **`develop`**: Rama de integración de características.
