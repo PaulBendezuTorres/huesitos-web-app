@@ -25,3 +25,5 @@
 
 ## 🧠 Decisiones Clave y Notas
 - Se decidió reemplazar la inyección implícita de Lombok con constructores estándar Java en los componentes de seguridad para asegurar la máxima compatibilidad de compilación directa con Maven Compiler.
+- Se simplificó temporalmente `SeguridadConfig` para desactivar la autenticación estricta JWT en los endpoints, permitiendo pruebas del servicio de registro sin requerir cabeceras de autorización de forma temporal.
+
