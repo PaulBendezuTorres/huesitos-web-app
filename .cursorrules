@@ -7,7 +7,7 @@
 - **Estructura**: Monorepo.
 
 ## Estándares del Proyecto
-- Mantener respuestas y explicaciones concisas y directas al grano.
+- **Respuestas**: Responder siempre de manera sumamente breve, concisa y directa al grano.
 - Todo el código nuevo debe respetar la estructura de carpetas:
   - `huesitos-backend/` para Spring Boot.
   - `huesitos-frontend/` para React.
