@@ -63,4 +63,34 @@ public class TransaccionServicio {
 
         return transaccionGuardada;
     }
+
+    /**
+     * Registra el pago virtual de una cita de forma atómica.
+     *
+     * @param citaId                El ID de la cita.
+     * @param medioPago             El medio de pago (CULQI, MERCADO_PAGO).
+     * @param idTransaccionPasarela El ID único devuelto por la pasarela de pagos.
+     * @return La transacción de pago actualizada.
+     */
+    @Transactional
+    public Transaccion registrarPagoVirtual(Long citaId, MedioPago medioPago, String idTransaccionPasarela) {
+        Transaccion transaccion = transaccionRepositorio.findByCitaId(citaId)
+                .orElseThrow(() -> new RuntimeException("Orden de pago no encontrada para esta cita"));
+
+        if (transaccion.getEstadoPago() != EstadoPago.PENDIENTE) {
+            throw new RuntimeException("Esta cita ya se encuentra pagada");
+        }
+
+        transaccion.setEstadoPago(EstadoPago.APROBADO);
+        transaccion.setMedioPago(medioPago);
+        transaccion.setFechaPago(LocalDateTime.now());
+        transaccion.setIdTransaccionPasarela(idTransaccionPasarela);
+        Transaccion transaccionGuardada = transaccionRepositorio.save(transaccion);
+
+        Cita cita = transaccionGuardada.getCita();
+        cita.setEstado(EstadoCita.CONFIRMADA);
+        citaRepositorio.save(cita);
+
+        return transaccionGuardada;
+    }
 }

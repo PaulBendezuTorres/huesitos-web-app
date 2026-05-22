@@ -24,6 +24,7 @@ public class CitaServicio {
     private final MascotaRepositorio mascotaRepositorio;
     private final UsuarioRepositorio usuarioRepositorio;
     private final ServicioRepositorio servicioRepositorio;
+    private final TransaccionServicio transaccionServicio;
 
     /**
      * Agenda una nueva cita validando la existencia de la mascota,
@@ -70,8 +71,10 @@ public class CitaServicio {
             cita.setEstado(EstadoCita.PENDIENTE);
         }
 
-        // 5. Guardar y retornar
-        return citaRepositorio.save(cita);
+        // 5. Guardar y retornar con orden de pago
+        Cita citaNueva = citaRepositorio.save(cita);
+        transaccionServicio.crearOrdenPago(citaNueva);
+        return citaNueva;
     }
 
     /**

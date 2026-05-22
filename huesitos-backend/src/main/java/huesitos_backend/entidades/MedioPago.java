@@ -5,5 +5,7 @@ public enum MedioPago {
     TARJETA,
     TRANSFERENCIA,
     YAPE,
-    PLIN
+    PLIN,
+    CULQI,
+    MERCADO_PAGO
 }
