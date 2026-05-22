@@ -35,14 +35,42 @@
 - **`feature/nombre-funcion`**: Ramas temporales para avanzar tareas específicas.
 - **Merge**: Trabajar en `feature/` y fusionar hacia `develop` una vez finalizado y probado por completo.
 
-## Reglas de Commits
+## Reglas de Commits y Control de Versiones
 - Todos los mensajes y descripciones de los commits deben redactarse estrictamente en **español**.
-- Los commits deben ser detallados brevemente para saber exactamente qué se modificó (ej. `feat: crear controlador de autenticacion con endpoint de registro` en lugar de un genérico `feat: controlador`).
+- **Frecuencia de Commits**: Realizar obligatoriamente un commit en la rama actual inmediatamente después de completar cada paso o tarea individual de un plan de trabajo.
+- **Mensajes de Commit**: Deben ser breves pero detallados, indicando con precisión qué se modificó (ej. `feat: crear controlador de autenticacion con endpoint de registro` en lugar de un genérico `feat: controlador`).
 - Usar los siguientes prefijos:
   - `feat: ...` -> Nueva funcionalidad.
   - `fix: ...` -> Corrección de errores.
   - `docs: ...` -> Cambios en documentación.
   - `style: ...` -> Cambios visuales con Tailwind.
+- **Permiso de Integración (Merge)**: Antes de realizar cualquier fusión (merge) de ramas (como de `feature/*` a `develop` o `develop` a `main`), se debe **solicitar siempre permiso explícito del usuario**.
+
+## Gestión de Planes y Tareas
+- Para cualquier desarrollo complejo o no trivial, se debe elaborar/actualizar un plan de implementación (`implementation_plan.md`) y una lista de tareas (`task.md`).
+- Se debe ir actualizando el progreso de las tareas marcándolas como en progreso `[/]` y completadas `[x]` a medida que se avanza en cada paso.
+
+## Prioridad y Uso de Skills (.skills/)
+Al diseñar e implementar soluciones en el proyecto, se deben revisar y priorizar los skills locales en la carpeta `.skills/` en el siguiente orden de importancia:
+1. **Core & Backend (Prioridad Alta)**:
+   - [java-springboot](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/java-springboot/SKILL.md): Reglas específicas para Spring Boot 4 y Java 26.
+   - [springboot-security](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/springboot-security/SKILL.md): Configuración de seguridad, filtros y cifrado.
+   - [backend-patterns](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/backend-patterns/SKILL.md): Estructuras, inyección de dependencias y organización en el backend.
+   - [mysql](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/mysql/SKILL.md): Diseño de tablas en plural/minúsculas y mapeo JPA.
+   - [architecture-patterns](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/architecture-patterns/SKILL.md): Patrones de diseño generales aplicados al sistema.
+   - [api-design-principles](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/api-design-principles/SKILL.md): Convenciones RESTful y formato JSON.
+   - [error-handling-patterns](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/error-handling-patterns/SKILL.md): Control y gestión de excepciones y respuestas de error uniformes.
+2. **Frontend & Diseño (Prioridad Media)**:
+   - [frontend-design](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/frontend-design/SKILL.md): Arquitectura limpia y reusable en React.
+   - [interface-design](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/interface-design/SKILL.md): Patrones UI para interfaces intuitivas y de primer nivel.
+   - [web-design-guidelines](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/web-design-guidelines/SKILL.md): Reglas estéticas, paletas armónicas y animaciones.
+   - [vercel-react-best-practices](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/vercel-react-best-practices/SKILL.md): Optimización en frontend y preparación para el despliegue.
+3. **Flujo de Trabajo y Soporte (Prioridad Soporte)**:
+   - [resumen-memoria](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/resumen-memoria/SKILL.md): Buenas prácticas para llevar la bitácora de desarrollo.
+   - [systematic-debugging](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/systematic-debugging/SKILL.md): Métodos lógicos para resolver errores sistemáticamente.
+   - [skill-creator](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/skill-creator/SKILL.md): Herramienta para estructurar y crear nuevos skills.
+   - [prompt-engineering-patterns](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/prompt-engineering-patterns/SKILL.md): Optimización del contexto y solicitudes al asistente.
+   - [brainstorming](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/brainstorming/SKILL.md): Lluvia de ideas y diseño inicial antes de programar.
 
 ## Idioma y Nomenclatura
 - Todo el código (clases, variables, métodos, tablas en minúscula/plural) y la documentación se escriben estrictamente en **español**.
