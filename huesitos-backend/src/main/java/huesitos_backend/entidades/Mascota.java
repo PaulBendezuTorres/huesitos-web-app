@@ -37,6 +37,9 @@ public class Mascota {
     @Column(name = "alertas_medicas", length = 500)
     private String alertasMedicas;
 
+    @Column(name = "foto_url", nullable = false, length = 255)
+    private String fotoUrl = "/uploads/defecto-mascota.png";
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dueño_id", nullable = false)
     @com.fasterxml.jackson.annotation.JsonAlias({"dueño", "dueno"})

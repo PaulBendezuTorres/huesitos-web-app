@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "usuarios")
@@ -30,4 +31,13 @@ public class Usuario {
 
     @Column(nullable = false)
     private Boolean activo = true;
+
+    @Column(name = "foto_perfil_url", nullable = false, length = 255)
+    private String fotoPerfilUrl = "/uploads/defecto-usuario.png";
+
+    @Column(name = "token_recuperacion", length = 255)
+    private String tokenRecuperacion;
+
+    @Column(name = "expiracion_token")
+    private LocalDateTime expiracionToken;
 }
