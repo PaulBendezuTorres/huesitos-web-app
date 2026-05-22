@@ -49,6 +49,7 @@
 ## Gestión de Planes y Tareas
 - Para cualquier desarrollo complejo o no trivial, se debe elaborar/actualizar un plan de implementación (`implementation_plan.md`) y una lista de tareas (`task.md`).
 - Se debe ir actualizando el progreso de las tareas marcándolas como en progreso `[/]` y completadas `[x]` a medida que se avanza en cada paso.
+- **Memoria del Proyecto**: Es obligatorio actualizar el archivo `memoria.md` inmediatamente después de completar el desarrollo y/o las pruebas de un plan de trabajo, registrando con precisión los logros, cambios en el estado actual de los componentes y los próximos pasos pendientes.
 
 ## Prioridad y Uso de Skills (.skills/)
 Al diseñar e implementar soluciones en el proyecto, se deben revisar y priorizar los skills locales en la carpeta `.skills/` en el siguiente orden de importancia:
