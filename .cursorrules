@@ -52,25 +52,16 @@
 
 ## Prioridad y Uso de Skills (.skills/)
 Al diseñar e implementar soluciones en el proyecto, se deben revisar y priorizar los skills locales en la carpeta `.skills/` en el siguiente orden de importancia:
-1. **Core & Backend (Prioridad Alta)**:
+1. **Desarrollo Backend y Base de Datos (Prioridad Alta)**:
    - [java-springboot](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/java-springboot/SKILL.md): Reglas específicas para Spring Boot 4 y Java 26.
-   - [springboot-security](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/springboot-security/SKILL.md): Configuración de seguridad, filtros y cifrado.
-   - [backend-patterns](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/backend-patterns/SKILL.md): Estructuras, inyección de dependencias y organización en el backend.
+   - [springboot-security](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/springboot-security/SKILL.md): Configuración de seguridad, filtros y cifrado JWT.
+   - [backend-patterns](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/backend-patterns/SKILL.md): Estructuras, inyección de dependencias y organización en capas.
    - [mysql](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/mysql/SKILL.md): Diseño de tablas en plural/minúsculas y mapeo JPA.
-   - [architecture-patterns](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/architecture-patterns/SKILL.md): Patrones de diseño generales aplicados al sistema.
-   - [api-design-principles](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/api-design-principles/SKILL.md): Convenciones RESTful y formato JSON.
    - [error-handling-patterns](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/error-handling-patterns/SKILL.md): Control y gestión de excepciones y respuestas de error uniformes.
-2. **Frontend & Diseño (Prioridad Media)**:
-   - [frontend-design](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/frontend-design/SKILL.md): Arquitectura limpia y reusable en React.
-   - [interface-design](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/interface-design/SKILL.md): Patrones UI para interfaces intuitivas y de primer nivel.
-   - [web-design-guidelines](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/web-design-guidelines/SKILL.md): Reglas estéticas, paletas armónicas y animaciones.
-   - [vercel-react-best-practices](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/vercel-react-best-practices/SKILL.md): Optimización en frontend y preparación para el despliegue.
-3. **Flujo de Trabajo y Soporte (Prioridad Soporte)**:
-   - [resumen-memoria](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/resumen-memoria/SKILL.md): Buenas prácticas para llevar la bitácora de desarrollo.
-   - [systematic-debugging](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/systematic-debugging/SKILL.md): Métodos lógicos para resolver errores sistemáticamente.
-   - [skill-creator](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/skill-creator/SKILL.md): Herramienta para estructurar y crear nuevos skills.
-   - [prompt-engineering-patterns](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/prompt-engineering-patterns/SKILL.md): Optimización del contexto y solicitudes al asistente.
-   - [brainstorming](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/brainstorming/SKILL.md): Lluvia de ideas y diseño inicial antes de programar.
+2. **Desarrollo Frontend (Prioridad Media)**:
+   - [frontend-design](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/frontend-design/SKILL.md): Arquitectura limpia y reusable en React con Tailwind CSS.
+3. **Flujo de Trabajo (Prioridad Soporte)**:
+   - [resumen-memoria](file:///c:/Users/Paul%20Bendezu/.gemini/antigravity-ide/scratch/huesitos-web-app/.skills/resumen-memoria/SKILL.md): Buenas prácticas para llevar la bitácora de desarrollo en `memoria.md`.
 
 ## Idioma y Nomenclatura
 - Todo el código (clases, variables, métodos, tablas en minúscula/plural) y la documentación se escriben estrictamente en **español**.
