@@ -22,9 +22,6 @@ public class Cita {
     @Column(name = "fecha_hora", nullable = false)
     private LocalDateTime fechaHora;
 
-    @Column(nullable = false, length = 150)
-    private String motivo;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     private EstadoCita estado = EstadoCita.PENDIENTE;
@@ -36,4 +33,8 @@ public class Cita {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "veterinario_id", nullable = true)
     private Usuario veterinario;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "servicio_id", nullable = false)
+    private Servicio servicio;
 }

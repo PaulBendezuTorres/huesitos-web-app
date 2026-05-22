@@ -2,9 +2,11 @@ package huesitos_backend.servicios;
 
 import huesitos_backend.entidades.Cita;
 import huesitos_backend.entidades.EstadoCita;
+import huesitos_backend.entidades.Servicio;
 import huesitos_backend.repositorios.CitaRepositorio;
 import huesitos_backend.repositorios.MascotaRepositorio;
 import huesitos_backend.repositorios.UsuarioRepositorio;
+import huesitos_backend.repositorios.ServicioRepositorio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,7 @@ public class CitaServicio {
     private final CitaRepositorio citaRepositorio;
     private final MascotaRepositorio mascotaRepositorio;
     private final UsuarioRepositorio usuarioRepositorio;
+    private final ServicioRepositorio servicioRepositorio;
 
     /**
      * Agenda una nueva cita validando la existencia de la mascota,
@@ -31,6 +34,14 @@ public class CitaServicio {
      */
     @Transactional
     public Cita agendarCita(Cita cita) {
+        // 0. Validar que el servicio exista
+        if (cita.getServicio() == null || cita.getServicio().getId() == null) {
+            throw new RuntimeException("El servicio especificado no existe o no está disponible");
+        }
+        Servicio servicioReal = servicioRepositorio.findById(cita.getServicio().getId())
+            .orElseThrow(() -> new RuntimeException("El servicio especificado no existe o no está disponible"));
+        cita.setServicio(servicioReal);
+
         // 1. Validar que la mascota exista
         if (cita.getMascota() == null || cita.getMascota().getId() == null ||
             !mascotaRepositorio.existsById(cita.getMascota().getId())) {
