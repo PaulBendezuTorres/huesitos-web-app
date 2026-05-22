@@ -31,7 +31,12 @@ public class SeguridadConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(autorizaciones -> autorizaciones
-                .requestMatchers("/api/autenticacion/login", "/api/autenticacion/registro").permitAll()
+                .requestMatchers(
+                    "/api/autenticacion/login", 
+                    "/api/autenticacion/registro",
+                    "/api/autenticacion/olvide-contrasena",
+                    "/api/autenticacion/restablecer-contrasena"
+                ).permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/servicios").permitAll()
                 .requestMatchers("/api/usuarios/**").hasRole("ADMINISTRADOR")
                 .anyRequest().authenticated()
