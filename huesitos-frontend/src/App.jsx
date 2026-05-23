@@ -1,13 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Landing from './pages/Landing';
-import Login from './pages/Login';
+import VetLogin from './pages/Login';
+import AdminDashboard from './pages/AdminDashboard'; // 1. Importa el componente
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<VetLogin />} />
+        <Route path="/admin" element={<AdminDashboard />} /> 
       </Routes>
     </Router>
   );

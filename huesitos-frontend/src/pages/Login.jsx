@@ -29,22 +29,24 @@ const VetLogin = () => {
         }),
       });
 
-      if (response.ok) {
-        // Se extrae la respuesta basada en tu DTO RespuestaLogin
-        const data = await response.json(); 
-        
-        // Guardamos los datos de sesión en el navegador
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('usuarioCorreo', data.correo);
-        localStorage.setItem('usuarioRol', data.rol);
+if (response.ok) {
+  const data = await response.json(); 
+  
+  localStorage.setItem('token', data.token);
+  localStorage.setItem('usuarioCorreo', data.correo);
+  localStorage.setItem('usuarioRol', data.rol);
 
-        alert(`¡Login exitoso! Entraste como ${data.rol}`);
-        
-        // Redirigir según el rol (ejemplo)
-        // si(data.rol === 'ADMINISTRADOR') navigate('/admin-dashboard');
-        // si(data.rol === 'CLIENTE') navigate('/perfil-mascotas');
-
-      } else {
+  // Redirección dinámica según el rol
+  if (data.rol === 'ADMINISTRADOR') {
+    navigate('/admin');
+  } else if (data.rol === 'CLIENTE') {
+    navigate('/cliente');
+  } else if (data.rol === 'VETERINARIO') {
+    navigate('/veterinario');
+  } else {
+    navigate('/');
+  }
+} else {
         const errorText = await response.text();
         setErrorMsg(errorText || 'Credenciales incorrectas');
       }
