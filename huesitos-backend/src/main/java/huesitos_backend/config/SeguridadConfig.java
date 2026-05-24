@@ -45,6 +45,8 @@ public class SeguridadConfig {
                 ).permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/servicios").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/usuarios/*/horarios").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/vacunas/**", "/api/recetas/**", "/api/archivos-clinicos/**").authenticated()
+                .requestMatchers("/api/vacunas/**", "/api/recetas/**", "/api/archivos-clinicos/**").hasAnyRole("VETERINARIO", "ADMINISTRADOR")
                 .requestMatchers("/api/usuarios/**").hasRole("ADMINISTRADOR")
                 .anyRequest().authenticated()
             )
