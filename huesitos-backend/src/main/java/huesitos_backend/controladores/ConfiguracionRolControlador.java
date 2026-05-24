@@ -4,7 +4,6 @@ import huesitos_backend.entidades.ConfiguracionRol;
 import huesitos_backend.entidades.Rol;
 import huesitos_backend.repositorios.ConfiguracionRolRepositorio;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
