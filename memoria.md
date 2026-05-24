@@ -1,6 +1,6 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-05-24 (Fase 8B de backend - Validación de Citas contra Horarios de Personal implementada con éxito)
+Última actualización: 2026-05-24 (Fase 8C de backend - Agenda Completa y Calendarios Clínicos implementada con éxito)
 
 ## 🚀 Logros Recientes
 - [x] Rama `develop` creada y publicada en GitHub.
@@ -59,9 +59,12 @@
 - [x] Expuestos endpoints PUT en `CitaControlador` para cancelación (`/{id}/cancelar`), check-in (`/{id}/check-in`) y reprogramación (`/{id}/reprogramar`) de citas (Fase 8A).
 - [x] Inyectado `HorarioPersonalRepositorio` en `CitaServicio` e implementada la validación dinámica de horarios de atención (Fase 8B).
 - [x] Agregados métodos de control `validarHorarioAtencion` y el auxiliar `traducirDiaSemana` para el formato amigable de excepciones en español (Fase 8B).
+- [x] Agregada la consulta dinámica `buscarCitasConFiltros` en `CitaRepositorio` para filtrar por rango de fechas, veterinario y estado (Fase 8C).
+- [x] Implementado el método `listarCitasConFiltros` en `CitaServicio` manejando la conversión opcional de fechas (Fase 8C).
+- [x] Expuesto el endpoint de consulta estructurada `GET /api/citas/agenda` en `CitaControlador` (Fase 8C).
 
 ## 📌 Estado Actual de los Componentes
-- **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas (cancelación, check-in, reprogramación y validación dinámica de horarios laborales), Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF y Subida de Archivos Clínicos completamente implementados y validados (Fase 8B finalizada).
+- **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas (cancelación, check-in, reprogramación, validación de horarios y agenda global con filtros avanzados), Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF y Subida de Archivos Clínicos completamente implementados y validados (Fase 8C finalizada).
 - **Frontend (React)**: Inicializado con React 18, Vite y Tailwind CSS 3.4 con página de bienvenida premium en español.
 - **Base de Datos (MySQL)**: Base de datos `huesitos` inicializada. Hibernate crea/actualiza las tablas `usuarios`, `duenos`, `mascotas`, `citas`, `consultas_medicas`, `servicios`, `transacciones`, `horarios_personal`, `vacunas`, `historial_vacunas`, `recetas` y `archivos_clinicos` al levantar la aplicación.
 
@@ -98,8 +101,8 @@
   - [x] Implementar endpoint de check-in para registrar la llegada física de la mascota en clínica.
 - [x] **Fase 8B: Backend - Validación de Citas contra Horarios de Personal**
   - [x] Integrar validación en `CitaServicio` para que las citas agendadas coincidan con la jornada laboral activa en `HorarioPersonal` del veterinario asignado (si tiene horarios configurados).
-- [ ] **Fase 8C: Backend - Agenda Completa y Calendarios Clínicos**
-  - [ ] Implementar endpoints para consultar la agenda global de citas con filtros avanzados (rango de fechas, veterinario asignado, estado de cita).
+- [x] **Fase 8C: Backend - Agenda Completa y Calendarios Clínicos**
+  - [x] Implementar endpoints para consultar la agenda global de citas con filtros avanzados (rango de fechas, veterinario asignado, estado de cita).
 - [ ] **Fase 9A: Backend - Cobros y Pagos Online**
   - [ ] Implementar endpoint/webhook de pago online simulado para transacciones en estado `PENDIENTE`.
   - [ ] Implementar API para registrar cobros presenciales en caja con distintos medios de pago.

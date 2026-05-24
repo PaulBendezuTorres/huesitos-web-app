@@ -202,6 +202,23 @@ public class CitaServicio {
     }
 
     /**
+     * Lista citas aplicando filtros avanzados de rango de fechas, veterinario y estado.
+     *
+     * @param inicio Fecha de inicio de búsqueda (opcional).
+     * @param fin Fecha de fin de búsqueda (opcional).
+     * @param veterinarioId ID del veterinario (opcional).
+     * @param estado Estado de la cita (opcional).
+     * @return Lista de citas filtradas.
+     */
+    @Transactional(readOnly = true)
+    public List<Cita> listarCitasConFiltros(LocalDate inicio, LocalDate fin, Long veterinarioId, EstadoCita estado) {
+        LocalDateTime inicioLDT = (inicio != null) ? inicio.atStartOfDay() : null;
+        LocalDateTime finLDT = (fin != null) ? fin.atTime(LocalTime.of(23, 59, 59)) : null;
+
+        return citaRepositorio.buscarCitasConFiltros(inicioLDT, finLDT, veterinarioId, estado);
+    }
+
+    /**
      * Traduce DayOfWeek a su equivalente en español.
      */
     private String traducirDiaSemana(DayOfWeek day) {

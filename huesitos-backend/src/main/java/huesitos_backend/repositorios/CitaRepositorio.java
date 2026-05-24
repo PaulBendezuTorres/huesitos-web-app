@@ -25,4 +25,20 @@ public interface CitaRepositorio extends JpaRepository<Cita, Long> {
      * Lista todas las citas programadas entre un rango de fechas (para el calendario diario).
      */
     List<Cita> findByFechaHoraBetween(LocalDateTime inicio, LocalDateTime fin);
+
+    /**
+     * Consulta la agenda global de citas aplicando filtros dinámicos y opcionales.
+     */
+    @org.springframework.data.jpa.repository.Query(
+        "SELECT c FROM Cita c WHERE (:inicio IS NULL OR c.fechaHora >= :inicio) " +
+        "AND (:fin IS NULL OR c.fechaHora <= :fin) " +
+        "AND (:veterinarioId IS NULL OR c.veterinario.id = :veterinarioId) " +
+        "AND (:estado IS NULL OR c.estado = :estado)"
+    )
+    List<Cita> buscarCitasConFiltros(
+        @org.springframework.data.repository.query.Param("inicio") LocalDateTime inicio,
+        @org.springframework.data.repository.query.Param("fin") LocalDateTime fin,
+        @org.springframework.data.repository.query.Param("veterinarioId") Long veterinarioId,
+        @org.springframework.data.repository.query.Param("estado") EstadoCita estado
+    );
 }

@@ -121,4 +121,23 @@ public class CitaControlador {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    /**
+     * Endpoint para consultar la agenda global de citas con filtros avanzados.
+     *
+     * @param inicio Fecha de inicio de búsqueda (opcional).
+     * @param fin Fecha de fin de búsqueda (opcional).
+     * @param veterinarioId ID del veterinario (opcional).
+     * @param estado Estado de la cita (opcional).
+     * @return Lista de citas que coinciden con los filtros aplicados.
+     */
+    @GetMapping("/agenda")
+    public ResponseEntity<List<Cita>> consultarAgenda(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fin,
+            @RequestParam(required = false) Long veterinarioId,
+            @RequestParam(required = false) EstadoCita estado) {
+        List<Cita> resultado = citaServicio.listarCitasConFiltros(inicio, fin, veterinarioId, estado);
+        return ResponseEntity.ok(resultado);
+    }
 }
