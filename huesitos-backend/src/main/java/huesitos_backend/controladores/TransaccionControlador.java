@@ -3,6 +3,7 @@ package huesitos_backend.controladores;
 import huesitos_backend.entidades.MedioPago;
 import huesitos_backend.entidades.Transaccion;
 import huesitos_backend.servicios.TransaccionServicio;
+import huesitos_backend.servicios.BoletaPdfServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.util.Map;
 public class TransaccionControlador {
 
     private final TransaccionServicio transaccionServicio;
+    private final BoletaPdfServicio boletaPdfServicio;
 
     /**
      * Endpoint para simular el procesamiento de una compra web a través de pasarela (Culqi/Mercado Pago).
@@ -95,6 +97,36 @@ public class TransaccionControlador {
             return ResponseEntity.ok(transaccionServicio.obtenerTransaccionesPorEstado(estadoPago));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("El estado de pago especificado no es válido");
+        }
+    }
+
+    /**
+     * Endpoint para consultar el reporte financiero consolidado (flujo diario, mensual y acumulado).
+     * Reservado para el Administrador.
+     *
+     * @return El reporte consolidado.
+     */
+    @GetMapping("/reporte")
+    public ResponseEntity<?> obtenerReporte() {
+        return ResponseEntity.ok(transaccionServicio.obtenerReporteFinanciero());
+    }
+
+    /**
+     * Endpoint para descargar la boleta de pago electrónica en PDF inline.
+     *
+     * @param id El ID de la transacción.
+     * @return El archivo PDF inline.
+     */
+    @GetMapping("/{id}/boleta")
+    public ResponseEntity<?> descargarBoleta(@PathVariable Long id) {
+        try {
+            byte[] pdfBytes = boletaPdfServicio.generarPdfBoleta(id);
+            org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+            headers.setContentType(org.springframework.http.MediaType.APPLICATION_PDF);
+            headers.setContentDisposition(org.springframework.http.ContentDisposition.inline().filename("boleta-pago-" + id + ".pdf").build());
+            return new ResponseEntity<>(pdfBytes, headers, org.springframework.http.HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

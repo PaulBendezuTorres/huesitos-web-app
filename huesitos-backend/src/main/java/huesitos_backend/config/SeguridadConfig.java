@@ -47,6 +47,7 @@ public class SeguridadConfig {
                 .requestMatchers(HttpMethod.GET, "/api/usuarios/*/horarios").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/vacunas/**", "/api/recetas/**", "/api/archivos-clinicos/**").authenticated()
                 .requestMatchers("/api/vacunas/**", "/api/recetas/**", "/api/archivos-clinicos/**").hasAnyRole("VETERINARIO", "ADMINISTRADOR")
+                .requestMatchers(HttpMethod.GET, "/api/pagos/reporte").hasRole("ADMINISTRADOR")
                 .requestMatchers(HttpMethod.GET, "/api/pagos/estado/**").hasAnyRole("RECEPCIONISTA", "ADMINISTRADOR")
                 .requestMatchers(HttpMethod.POST, "/api/pagos/procesar-caja/**").hasAnyRole("RECEPCIONISTA", "ADMINISTRADOR")
                 .requestMatchers("/api/pagos/**").authenticated()

@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -114,5 +116,29 @@ public class TransaccionServicio {
     @Transactional(readOnly = true)
     public java.util.List<Transaccion> obtenerTransaccionesPorEstado(EstadoPago estado) {
         return transaccionRepositorio.findByEstadoPago(estado);
+    }
+
+    /**
+     * Obtiene el reporte financiero consolidado (diario, mensual e histórico) de ingresos.
+     *
+     * @return El DTO consolidado con las cifras.
+     */
+    @Transactional(readOnly = true)
+    public huesitos_backend.dto.ReporteFinanciero obtenerReporteFinanciero() {
+        LocalDateTime inicioDia = LocalDate.now().atStartOfDay();
+        LocalDateTime finDia = LocalDate.now().atTime(23, 59, 59);
+
+        LocalDateTime inicioMes = LocalDate.now().withDayOfMonth(1).atStartOfDay();
+        LocalDateTime finMes = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth()).atTime(23, 59, 59);
+
+        BigDecimal diario = transaccionRepositorio.sumarMontoPorFechaPagoBetween(inicioDia, finDia);
+        BigDecimal mensual = transaccionRepositorio.sumarMontoPorFechaPagoBetween(inicioMes, finMes);
+        BigDecimal total = transaccionRepositorio.sumarMontoTotalAprobado();
+
+        return new huesitos_backend.dto.ReporteFinanciero(
+            diario != null ? diario : BigDecimal.ZERO,
+            mensual != null ? mensual : BigDecimal.ZERO,
+            total != null ? total : BigDecimal.ZERO
+        );
     }
 }

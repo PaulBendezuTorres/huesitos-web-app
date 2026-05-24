@@ -1,6 +1,6 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-05-24 (Fase 9A de backend - Cobros y Pagos Online implementada con éxito)
+Última actualización: 2026-05-24 (Fase 9B de backend - Boletas en PDF y Reportes Financieros implementada con éxito)
 
 ## 🚀 Logros Recientes
 - [x] Rama `develop` creada y publicada en GitHub.
@@ -65,9 +65,13 @@
 - [x] Implementada la búsqueda de transacciones por usuario y estado de pago en `TransaccionRepositorio` (Fase 9A).
 - [x] Desarrollados los endpoints `GET` en `TransaccionControlador` para que clientes e inspectores/administradores verifiquen el historial de cobros y pagos (Fase 9A).
 - [x] Asegurados los endpoints de caja presencial y listados de transacciones en `SeguridadConfig` bajo los roles `RECEPCIONISTA` y `ADMINISTRADOR` (Fase 9A).
+- [x] Creado record DTO `ReporteFinanciero` para encapsular las estadísticas diarias, mensuales y globales (Fase 9B).
+- [x] Agregadas las consultas de suma de ingresos `sumarMontoPorFechaPagoBetween` y `sumarMontoTotalAprobado` en `TransaccionRepositorio` (Fase 9B).
+- [x] Creado el servicio `BoletaPdfServicio` implementando la maquetación en PDF de boletas tamaño A5 utilizando OpenPDF (Fase 9B).
+- [x] Expuestos los endpoints GET `/reporte` (restringido al administrador) y `/{id}/boleta` (descarga general) en `TransaccionControlador` (Fase 9B).
 
 ## 📌 Estado Actual de los Componentes
-- **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones (caja presencial y pasarela virtual con consulta de historial), Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF y Subida de Archivos Clínicos completamente implementados y validados (Fase 9A finalizada).
+- **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones (caja presencial, pasarela virtual, boletas en PDF y reportes financieros para el administrador), Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF y Subida de Archivos Clínicos completamente implementados y validados (Fase 9B finalizada).
 - **Frontend (React)**: Inicializado con React 18, Vite y Tailwind CSS 3.4 con página de bienvenida premium en español.
 - **Base de Datos (MySQL)**: Base de datos `huesitos` inicializada. Hibernate crea/actualiza las tablas `usuarios`, `duenos`, `mascotas`, `citas`, `consultas_medicas`, `servicios`, `transacciones`, `horarios_personal`, `vacunas`, `historial_vacunas`, `recetas` y `archivos_clinicos` al levantar la aplicación.
 
@@ -109,9 +113,9 @@
 - [x] **Fase 9A: Backend - Cobros y Pagos Online**
   - [x] Implementar endpoint/webhook de pago online simulado para transacciones en estado `PENDIENTE`.
   - [x] Implementar API para registrar cobros presenciales en caja con distintos medios de pago.
-- [ ] **Fase 9B: Backend - Boletas en PDF y Reportes Financieros**
-  - [ ] Desarrollar servicio para generación y descarga de boletas/facturas de pago en formato PDF.
-  - [ ] Implementar endpoints de reportes financieros: flujo de caja diario, ingresos mensuales y ganancias para el Administrador.
+- [x] **Fase 9B: Backend - Boletas en PDF y Reportes Financieros**
+  - [x] Desarrollar servicio para generación y descarga de boletas/facturas de pago en formato PDF.
+  - [x] Implementar endpoints de reportes financieros: flujo de caja diario, ingresos mensuales y ganancias para el Administrador.
 - [ ] **Fase 10A: Backend - Modelado y CRUD de Inventario**
   - [ ] Diseñar entidades JPA para `Producto`, `Categoria` e `Inventario` (lotes, stock, fecha de vencimiento).
   - [ ] Implementar repositorios, servicios y controladores para la gestión CRUD del inventario.
