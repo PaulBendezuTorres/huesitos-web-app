@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import huesitos_backend.entidades.EstadoPago;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -66,6 +68,33 @@ public class TransaccionControlador {
             return ResponseEntity.ok(transaccion);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    /**
+     * Endpoint para obtener el historial de transacciones de un cliente.
+     *
+     * @param usuarioId El ID del usuario/cliente.
+     * @return Lista de transacciones del cliente.
+     */
+    @GetMapping("/cliente/{usuarioId}")
+    public ResponseEntity<List<Transaccion>> obtenerPorUsuario(@PathVariable Long usuarioId) {
+        return ResponseEntity.ok(transaccionServicio.obtenerTransaccionesPorUsuario(usuarioId));
+    }
+
+    /**
+     * Endpoint para obtener todas las transacciones filtradas por estado.
+     *
+     * @param estado El estado del pago (ej: PENDIENTE, APROBADO).
+     * @return Lista de transacciones que coinciden con el estado.
+     */
+    @GetMapping("/estado/{estado}")
+    public ResponseEntity<?> obtenerPorEstado(@PathVariable String estado) {
+        try {
+            EstadoPago estadoPago = EstadoPago.valueOf(estado.trim().toUpperCase());
+            return ResponseEntity.ok(transaccionServicio.obtenerTransaccionesPorEstado(estadoPago));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("El estado de pago especificado no es válido");
         }
     }
 }

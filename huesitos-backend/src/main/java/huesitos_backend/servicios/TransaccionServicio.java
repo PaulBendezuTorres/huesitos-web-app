@@ -93,4 +93,26 @@ public class TransaccionServicio {
 
         return transaccionGuardada;
     }
+
+    /**
+     * Obtiene el historial de transacciones de un usuario/cliente.
+     *
+     * @param usuarioId El ID del usuario/cliente.
+     * @return Lista de transacciones.
+     */
+    @Transactional(readOnly = true)
+    public java.util.List<Transaccion> obtenerTransaccionesPorUsuario(Long usuarioId) {
+        return transaccionRepositorio.findByCitaMascotaDueñoUsuarioId(usuarioId);
+    }
+
+    /**
+     * Obtiene el historial de transacciones filtrado por estado de pago.
+     *
+     * @param estado El estado del pago.
+     * @return Lista de transacciones que coinciden con el estado.
+     */
+    @Transactional(readOnly = true)
+    public java.util.List<Transaccion> obtenerTransaccionesPorEstado(EstadoPago estado) {
+        return transaccionRepositorio.findByEstadoPago(estado);
+    }
 }

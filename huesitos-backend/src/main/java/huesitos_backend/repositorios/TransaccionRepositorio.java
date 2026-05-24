@@ -8,4 +8,6 @@ import java.util.Optional;
 @Repository
 public interface TransaccionRepositorio extends JpaRepository<Transaccion, Long> {
     Optional<Transaccion> findByCitaId(Long citaId);
+    java.util.List<Transaccion> findByCitaMascotaDueñoUsuarioId(Long usuarioId);
+    java.util.List<Transaccion> findByEstadoPago(huesitos_backend.entidades.EstadoPago estadoPago);
 }
