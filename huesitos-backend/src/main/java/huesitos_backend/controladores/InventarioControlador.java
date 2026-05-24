@@ -2,6 +2,7 @@ package huesitos_backend.controladores;
 
 import huesitos_backend.entidades.Inventario;
 import huesitos_backend.servicios.InventarioServicio;
+import huesitos_backend.servicios.ProductoServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.Map;
 public class InventarioControlador {
 
     private final InventarioServicio inventarioServicio;
+    private final ProductoServicio productoServicio;
 
     @PostMapping
     public ResponseEntity<?> registrarLote(@RequestBody Inventario lote) {
@@ -57,5 +59,27 @@ public class InventarioControlador {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    /**
+     * Endpoint para obtener la lista de productos con bajo stock.
+     *
+     * @return Lista de productos.
+     */
+    @GetMapping("/alertas/bajo-stock")
+    public ResponseEntity<List<huesitos_backend.entidades.Producto>> listarBajoStock() {
+        return ResponseEntity.ok(productoServicio.obtenerProductosBajoStock());
+    }
+
+    /**
+     * Endpoint para obtener los lotes de inventario próximos a vencer.
+     *
+     * @param dias Cantidad de días hacia adelante a evaluar (por defecto 30).
+     * @return Lista de lotes.
+     */
+    @GetMapping("/alertas/vencimientos")
+    public ResponseEntity<List<Inventario>> listarVencimientos(
+            @RequestParam(required = false, defaultValue = "30") Integer dias) {
+        return ResponseEntity.ok(inventarioServicio.obtenerLotesProximosAVencer(dias));
     }
 }

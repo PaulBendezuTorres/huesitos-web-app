@@ -1,6 +1,6 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-05-24 (Fase 10A de backend - Modelado y CRUD de Inventario implementada con éxito)
+Última actualización: 2026-05-24 (Fase 10B de backend - Alertas de Insumos y Control de Vencimientos implementada con éxito)
 
 ## 🚀 Logros Recientes
 - [x] Rama `develop` creada y publicada en GitHub.
@@ -73,6 +73,9 @@
 - [x] Desarrollados repositorios, servicios y controladores para el CRUD y gestión lógica de lotes de inventario (Fase 10A).
 - [x] Configurada la consulta agregada `obtenerStockDisponible` en `InventarioRepositorio` para el cálculo del stock real (Fase 10A).
 - [x] Protegida la mutación de stock en `SeguridadConfig` bajo el rol `ADMINISTRADOR` y habilitado el listado público para el catálogo (Fase 10A).
+- [x] Agregada la propiedad `stockMinimo` en la entidad `Producto` (Fase 10B).
+- [x] Implementadas las consultas JPQL de bajo stock en `ProductoRepositorio` y de vencimientos en `InventarioRepositorio` (Fase 10B).
+- [x] Expuestos los endpoints GET `/bajo-stock` y `/vencimientos` en `InventarioControlador` bajo seguridad restringida a los roles `VETERINARIO` y `ADMINISTRADOR` (Fase 10B).
 
 ## 📌 Estado Actual de los Componentes
 - **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF, Subida de Archivos Clínicos y Modelado y CRUD de Inventario (Categorías, Productos y Lotes de stock) completamente implementados y validados (Fase 10A finalizada).
@@ -123,8 +126,8 @@
 - [x] **Fase 10A: Backend - Modelado y CRUD de Inventario**
   - [x] Diseñar entidades JPA para `Producto`, `Categoria` e `Inventario` (lotes, stock, fecha de vencimiento).
   - [x] Implementar repositorios, servicios y controladores para la gestión CRUD del inventario.
-- [ ] **Fase 10B: Backend - Alertas de Insumos y Control de Vencimientos**
-  - [ ] Implementar lógica de alertas automáticas para bajo stock de insumos y productos próximos a vencer.
+- [x] **Fase 10B: Backend - Alertas de Insumos y Control de Vencimientos**
+  - [x] Implementar lógica de alertas automáticas para bajo stock de insumos y productos próximos a vencer.
 - [ ] **Fase 11A: Backend - Catálogo y Pedidos de Tienda Online**
   - [ ] Implementar API del catálogo de productos públicos para venta (búsqueda, filtros, stock) y persistencia de carritos/pedidos de alimentos/accesorios.
 - [ ] **Fase 11B: Backend - Tareas Programadas y Campañas de Marketing**

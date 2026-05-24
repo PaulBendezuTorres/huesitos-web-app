@@ -66,4 +66,10 @@ public class InventarioServicio {
         lote.setActivo(false);
         inventarioRepositorio.save(lote);
     }
+
+    @Transactional(readOnly = true)
+    public List<Inventario> obtenerLotesProximosAVencer(int dias) {
+        java.time.LocalDate fechaLimite = java.time.LocalDate.now().plusDays(dias);
+        return inventarioRepositorio.buscarLotesProximosAVencer(fechaLimite);
+    }
 }

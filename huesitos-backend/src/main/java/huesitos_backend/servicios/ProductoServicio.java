@@ -70,4 +70,11 @@ public class ProductoServicio {
         producto.setActivo(false);
         productoRepositorio.save(producto);
     }
+
+    @Transactional(readOnly = true)
+    public List<Producto> obtenerProductosBajoStock() {
+        List<Producto> productos = productoRepositorio.buscarProductosBajoStock();
+        productos.forEach(p -> p.setStockDisponible(inventarioRepositorio.obtenerStockDisponible(p.getId())));
+        return productos;
+    }
 }
