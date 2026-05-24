@@ -23,13 +23,15 @@ import javax.imageio.stream.FileImageOutputStream;
 public class StorageService {
 
     private final String UPLOAD_DIR = "uploads/";
+    private final String CLINICOS_DIR = "uploads/clinicos/";
 
     @PostConstruct
     public void init() {
         try {
             Files.createDirectories(Paths.get(UPLOAD_DIR));
+            Files.createDirectories(Paths.get(CLINICOS_DIR));
         } catch (IOException e) {
-            throw new RuntimeException("No se pudo crear la carpeta de uploads", e);
+            throw new RuntimeException("No se pudieron crear las carpetas de uploads", e);
         }
     }
 
@@ -104,6 +106,37 @@ public class StorageService {
             writer.write(null, new IIOImage(imagen, null, null), param);
         } finally {
             writer.dispose();
+        }
+    }
+
+    /**
+     * Guarda un archivo clínico de forma genérica (PDF, imágenes, etc.) en uploads/clinicos/
+     * sin alterar ni comprimir su contenido.
+     */
+    public String guardarArchivoClinico(MultipartFile archivo) {
+        if (archivo == null || archivo.isEmpty()) {
+            throw new RuntimeException("El archivo está vacío");
+        }
+
+        try {
+            // Nombre original y extensión
+            String nombreOriginal = archivo.getOriginalFilename();
+            String extension = "";
+            if (nombreOriginal != null && nombreOriginal.contains(".")) {
+                extension = nombreOriginal.substring(nombreOriginal.lastIndexOf("."));
+            }
+
+            // Nombre único con UUID
+            String nombreArchivo = UUID.randomUUID().toString() + extension;
+
+            // Ruta de guardado
+            File destino = new File(CLINICOS_DIR + nombreArchivo);
+            archivo.transferTo(destino);
+
+            // URL relativa de acceso
+            return "/uploads/clinicos/" + nombreArchivo;
+        } catch (IOException e) {
+            throw new RuntimeException("Error al guardar el archivo clínico", e);
         }
     }
 }
