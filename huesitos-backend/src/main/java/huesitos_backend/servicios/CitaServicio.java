@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import huesitos_backend.entidades.HorarioPersonal;
+import huesitos_backend.repositorios.HorarioPersonalRepositorio;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -25,6 +28,7 @@ public class CitaServicio {
     private final UsuarioRepositorio usuarioRepositorio;
     private final ServicioRepositorio servicioRepositorio;
     private final TransaccionServicio transaccionServicio;
+    private final HorarioPersonalRepositorio horarioPersonalRepositorio;
 
     /**
      * Agenda una nueva cita validando la existencia de la mascota,
@@ -64,6 +68,9 @@ public class CitaServicio {
             if (existeCruce) {
                 throw new RuntimeException("El veterinario ya tiene una cita programada en ese horario");
             }
+
+            // Validar horario de atención del veterinario (dinámico)
+            validarHorarioAtencion(cita.getVeterinario().getId(), cita.getFechaHora());
         }
 
         // 4. Forzar estado PENDIENTE si viene vacío
@@ -156,9 +163,56 @@ public class CitaServicio {
             if (existeCruce) {
                 throw new RuntimeException("El veterinario ya tiene otra cita programada en ese horario");
             }
+
+            // Validar horario de atención del veterinario (dinámico)
+            validarHorarioAtencion(cita.getVeterinario().getId(), nuevaFechaHora);
         }
 
         cita.setFechaHora(nuevaFechaHora);
         return citaRepositorio.save(cita);
+    }
+
+    /**
+     * Valida si la cita se encuentra dentro del horario de atención del veterinario.
+     * Si no hay horarios configurados para el veterinario, se omite la validación.
+     */
+    private void validarHorarioAtencion(Long veterinarioId, LocalDateTime fechaHora) {
+        if (veterinarioId == null) return;
+
+        List<HorarioPersonal> horarios = horarioPersonalRepositorio.findByUsuarioId(veterinarioId);
+        if (horarios.isEmpty()) {
+            return; // Omite validación si no hay horarios configurados
+        }
+
+        DayOfWeek diaCita = fechaHora.getDayOfWeek();
+        LocalTime horaCita = fechaHora.toLocalTime();
+
+        HorarioPersonal horario = horarios.stream()
+                .filter(h -> h.getDiaSemana() == diaCita)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("El veterinario no atiende los días " + traducirDiaSemana(diaCita)));
+
+        if (!horario.getActivo() || horario.getHoraEntrada() == null || horario.getHoraSalida() == null) {
+            throw new RuntimeException("El veterinario no labora el día " + traducirDiaSemana(diaCita));
+        }
+
+        if (horaCita.isBefore(horario.getHoraEntrada()) || horaCita.isAfter(horario.getHoraSalida())) {
+            throw new RuntimeException("La cita está fuera del horario de atención del veterinario (" + horario.getHoraEntrada() + " a " + horario.getHoraSalida() + ")");
+        }
+    }
+
+    /**
+     * Traduce DayOfWeek a su equivalente en español.
+     */
+    private String traducirDiaSemana(DayOfWeek day) {
+        return switch (day) {
+            case MONDAY -> "Lunes";
+            case TUESDAY -> "Martes";
+            case WEDNESDAY -> "Miércoles";
+            case THURSDAY -> "Jueves";
+            case FRIDAY -> "Viernes";
+            case SATURDAY -> "Sábado";
+            case SUNDAY -> "Domingo";
+        };
     }
 }
