@@ -38,8 +38,8 @@
 
 ## Reglas de Commits y Control de Versiones
 - Todos los mensajes y descripciones de los commits deben redactarse estrictamente en **español**.
-- **Granularidad de Commits (Estricto)**: Se debe realizar un único commit al finalizar por completo cada fase de desarrollo. El mensaje de commit debe detallar con precisión todos los puntos y archivos específicos que se modificaron o crearon durante dicha fase.
-- **Mensajes de Commit Descriptivos**: Deben especificar de manera detallada exactamente qué archivo o clase se modificó/creó y su objetivo preciso (ej. `feat(entidades): crear entidad Vacuna.java y mapear tabla vacunas` en lugar de `feat: módulo de vacunas`).
+- **Granularidad de Commits (Estricto)**: Se debe realizar un único commit al finalizar por completo cada fase de desarrollo. No se deben acumular cambios no descritos; el commit debe detallar obligatoriamente y de manera explícita cada uno de los puntos que se movieron o desarrollaron en la fase actual.
+- **Mensajes de Commit Descriptivos**: El mensaje de commit debe ser muy detallado, especificando archivo por archivo o clase por clase las modificaciones y su objetivo preciso (evitando mensajes genéricos que no indiquen claramente qué se ha movido).
 - Usar los siguientes prefijos:
   - `feat: ...` -> Nueva funcionalidad.
   - `fix: ...` -> Corrección de errores.

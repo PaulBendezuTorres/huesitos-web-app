@@ -34,6 +34,11 @@ public class ProductoControlador {
         return ResponseEntity.ok(productoServicio.listarPorCategoria(categoriaId));
     }
 
+    @GetMapping("/buscar")
+    public ResponseEntity<List<Producto>> buscarProductos(@RequestParam(required = false) String nombre) {
+        return ResponseEntity.ok(productoServicio.buscarProductos(nombre));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
         try {

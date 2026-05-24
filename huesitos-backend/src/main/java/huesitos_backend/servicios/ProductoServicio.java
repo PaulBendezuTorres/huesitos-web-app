@@ -77,4 +77,14 @@ public class ProductoServicio {
         productos.forEach(p -> p.setStockDisponible(inventarioRepositorio.obtenerStockDisponible(p.getId())));
         return productos;
     }
+
+    @Transactional(readOnly = true)
+    public List<Producto> buscarProductos(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            return listarActivos();
+        }
+        List<Producto> productos = productoRepositorio.findByNombreContainingIgnoreCaseAndActivoTrue(nombre.trim());
+        productos.forEach(p -> p.setStockDisponible(inventarioRepositorio.obtenerStockDisponible(p.getId())));
+        return productos;
+    }
 }

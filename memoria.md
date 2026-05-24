@@ -71,14 +71,22 @@
 - [x] Expuestos los endpoints GET `/reporte` (restringido al administrador) y `/{id}/boleta` (descarga general) en `TransaccionControlador` (Fase 9B).
 - [x] Creadas las entidades JPA para `Categoria`, `Producto` e `Inventario` (lotes de stock y vencimiento) (Fase 10A).
 - [x] Desarrollados repositorios, servicios y controladores para el CRUD y gestión lógica de lotes de inventario (Fase 10A).
-- [x] Configurada la consulta agregada `obtenerStockDisponible` en `InventarioRepositorio` para el cálculo del stock real (Fase 10A).
 - [x] Protegida la mutación de stock en `SeguridadConfig` bajo el rol `ADMINISTRADOR` y habilitado el listado público para el catálogo (Fase 10A).
 - [x] Agregada la propiedad `stockMinimo` en la entidad `Producto` (Fase 10B).
 - [x] Implementadas las consultas JPQL de bajo stock en `ProductoRepositorio` y de vencimientos en `InventarioRepositorio` (Fase 10B).
 - [x] Expuestos los endpoints GET `/bajo-stock` y `/vencimientos` en `InventarioControlador` bajo seguridad restringida a los roles `VETERINARIO` y `ADMINISTRADOR` (Fase 10B).
+- [x] **Fase 11A: Backend - Catálogo y Pedidos de Tienda Online**:
+  - Creado el enum `EstadoPedido` con estados `PENDIENTE`, `PAGADO`, `ENTREGADO`, `CANCELADO`.
+  - Creadas las entidades `CarritoItem` (asociado a cliente y producto), `Pedido` (cabecera con cliente, fecha, total, estado) y `DetallePedido` (líneas de pedido con precio unitario e inventario).
+  - Creados los repositorios `CarritoItemRepositorio`, `PedidoRepositorio` y `DetallePedidoRepositorio`.
+  - Modificado `InventarioRepositorio` con la consulta FEFO (`buscarLotesDisponiblesParaDescuento`) y `ProductoRepositorio` con búsqueda por coincidencia de nombre.
+  - Modificado `ProductoServicio` y `ProductoControlador` para soportar la búsqueda de catálogo `/api/productos/buscar` de forma pública.
+  - Creado `TiendaOnlineServicio` con el CRUD del carrito y checkout atómico (deducción FEFO lote por lote, guardado de cabecera y detalle de pedido y vaciado del carrito).
+  - Creado `TiendaOnlineControlador` exponiendo `/api/carrito` (CRUD) y `/api/pedidos` (checkout, consultar historial, cambiar estado).
+  - Actualizado `SeguridadConfig` protegiendo las rutas de carrito/checkout para clientes autenticados y cambio de estado de pedidos para Recepcionista y Administrador.
 
 ## 📌 Estado Actual de los Componentes
-- **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF, Subida de Archivos Clínicos y Modelado y CRUD de Inventario (Categorías, Productos y Lotes de stock) completamente implementados y validados (Fase 10A finalizada).
+- **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF, Subida de Archivos Clínicos, Modelado e Inventario, y el módulo de Catálogo y Pedidos de Tienda Online (Fase 11A finalizada) completamente implementados y validados.
 - **Frontend (React)**: Inicializado con React 18, Vite y Tailwind CSS 3.4 con página de bienvenida premium en español.
 - **Base de Datos (MySQL)**: Base de datos `huesitos` inicializada. Hibernate crea/actualiza las tablas `usuarios`, `duenos`, `mascotas`, `citas`, `consultas_medicas`, `servicios`, `transacciones`, `horarios_personal`, `vacunas`, `historial_vacunas`, `recetas`, `archivos_clinicos`, `categorias`, `productos` y `inventarios` al levantar la aplicación.
 
@@ -128,8 +136,8 @@
   - [x] Implementar repositorios, servicios y controladores para la gestión CRUD del inventario.
 - [x] **Fase 10B: Backend - Alertas de Insumos y Control de Vencimientos**
   - [x] Implementar lógica de alertas automáticas para bajo stock de insumos y productos próximos a vencer.
-- [ ] **Fase 11A: Backend - Catálogo y Pedidos de Tienda Online**
-  - [ ] Implementar API del catálogo de productos públicos para venta (búsqueda, filtros, stock) y persistencia de carritos/pedidos de alimentos/accesorios.
+- [x] **Fase 11A: Backend - Catálogo y Pedidos de Tienda Online**
+  - [x] Implementar API del catálogo de productos públicos para venta (búsqueda, filtros, stock) y persistencia de carritos/pedidos de alimentos/accesorios.
 - [ ] **Fase 11B: Backend - Tareas Programadas y Campañas de Marketing**
   - [ ] Implementar tareas programadas (`@Scheduled` de Spring) para procesar y listar recordatorios de vacunas/desparasitaciones.
   - [ ] Implementar API de ofertas y campañas de marketing.
@@ -146,4 +154,5 @@
 - **Diseño e Integración para Tablets**: Toda la API y estructura de datos del backend se optimizará para un consumo ágil, intuitivo y responsivo. Aunque la lógica se implementa en backend, se considera el uso táctil y flujo rápido en Tablets (especialmente para Recepcionistas y Veterinarios en clínica) mediante endpoints de respuesta rápida, paginados y eficientes.
 - **Validación Flexible de Horarios**: En el agendamiento de citas (Fase 8), la validación contra el horario del veterinario será dinámica. Si un veterinario no tiene horarios registrados en la base de datos, el sistema no impondrá restricciones, permitiendo flexibilidad. Si el Administrador configura un horario para el veterinario, este se validará estrictamente.
 - **Cruce de Horario en Reprogramación**: Para la reprogramación de citas se verifica que no existan colisiones de horario para el veterinario en la nueva fecha y hora propuesta, excluyendo la propia cita actual del cálculo para evitar falsos positivos de cruces de agenda cuando no se cambia la hora.
+- **División de Fases y Commits**: A partir de la Fase 11A, se decide realizar una división más granular de las fases y sus correspondientes commits. Esto asegura que cada commit al final de una fase contenga de manera explícita y pormenorizada los puntos y archivos específicos modificados, mejorando enormemente la claridad y control de los cambios realizados.
 

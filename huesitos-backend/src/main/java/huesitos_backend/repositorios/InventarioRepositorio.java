@@ -17,4 +17,7 @@ public interface InventarioRepositorio extends JpaRepository<Inventario, Long> {
 
     @Query("SELECT i FROM Inventario i WHERE i.activo = true AND i.stock > 0 AND i.fechaVencimiento IS NOT NULL AND i.fechaVencimiento <= :fechaLimite")
     List<Inventario> buscarLotesProximosAVencer(@Param("fechaLimite") java.time.LocalDate fechaLimite);
+
+    @Query("SELECT i FROM Inventario i WHERE i.producto.id = :productoId AND i.activo = true AND i.stock > 0 AND (i.fechaVencimiento IS NULL OR i.fechaVencimiento >= CURRENT_DATE) ORDER BY COALESCE(i.fechaVencimiento, '9999-12-31') ASC, i.fechaIngreso ASC")
+    List<Inventario> buscarLotesDisponiblesParaDescuento(@Param("productoId") Long productoId);
 }
