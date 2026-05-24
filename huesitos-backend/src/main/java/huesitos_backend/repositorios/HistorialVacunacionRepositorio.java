@@ -12,4 +12,6 @@ public interface HistorialVacunacionRepositorio extends JpaRepository<HistorialV
      * Busca el historial de vacunas de una mascota ordenado por fecha de aplicación descendente.
      */
     List<HistorialVacunacion> findByMascotaIdOrderByFechaAplicacionDesc(Long mascotaId);
+
+    List<HistorialVacunacion> findByFechaProximaDosisBetween(java.time.LocalDate inicio, java.time.LocalDate fin);
 }

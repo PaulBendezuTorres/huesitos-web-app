@@ -84,9 +84,18 @@
   - Creado `TiendaOnlineServicio` con el CRUD del carrito y checkout atómico (deducción FEFO lote por lote, guardado de cabecera y detalle de pedido y vaciado del carrito).
   - Creado `TiendaOnlineControlador` exponiendo `/api/carrito` (CRUD) y `/api/pedidos` (checkout, consultar historial, cambiar estado).
   - Actualizado `SeguridadConfig` protegiendo las rutas de carrito/checkout para clientes autenticados y cambio de estado de pedidos para Recepcionista y Administrador.
+- [x] **Fase 11B: Backend - Tareas Programadas y Campañas de Marketing**:
+  - Habilitado el planificador de Spring (`@EnableScheduling`) en `HuesitosBackendApplication`.
+  - Creadas las entidades `Desparasitacion`, `Recordatorio`, `Campana` y `Oferta` con sus respectivos repositorios.
+  - Implementados `DesparasitacionServicio` y `CampanaOfertaServicio` con CRUDs completos, auto-cálculos de porcentaje/precio de ofertas e inactivación de expirados.
+  - Implementado `TareaProgramadaServicio` con métodos programados `@Scheduled` para:
+    - Escaneo diario de próximas dosis de vacunas y desparasitaciones a 7 días y generación automática de `Recordatorio` en base de datos.
+    - Inactivación automática de campañas y ofertas expiradas en base a la fecha de fin.
+  - Creados controladores para desparasitaciones, recordatorios (incluyendo endpoints manuales de control `/procesar-manual` y `/inactivar-campanas-manual` para pruebas de QA) y campañas/ofertas.
+  - Configurado `SeguridadConfig` permitiendo visualización pública de campañas y ofertas, y restringiendo mutaciones a Veterinario/Administrador.
 
 ## 📌 Estado Actual de los Componentes
-- **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF, Subida de Archivos Clínicos, Modelado e Inventario, y el módulo de Catálogo y Pedidos de Tienda Online (Fase 11A finalizada) completamente implementados y validados.
+- **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF, Subida de Archivos Clínicos, Modelado e Inventario, Catálogo y Pedidos de Tienda Online, y el módulo de Tareas Programadas y Campañas de Marketing (Fase 11B finalizada) completamente implementados y validados.
 - **Frontend (React)**: Inicializado con React 18, Vite y Tailwind CSS 3.4 con página de bienvenida premium en español.
 - **Base de Datos (MySQL)**: Base de datos `huesitos` inicializada. Hibernate crea/actualiza las tablas `usuarios`, `duenos`, `mascotas`, `citas`, `consultas_medicas`, `servicios`, `transacciones`, `horarios_personal`, `vacunas`, `historial_vacunas`, `recetas`, `archivos_clinicos`, `categorias`, `productos` y `inventarios` al levantar la aplicación.
 
@@ -138,9 +147,9 @@
   - [x] Implementar lógica de alertas automáticas para bajo stock de insumos y productos próximos a vencer.
 - [x] **Fase 11A: Backend - Catálogo y Pedidos de Tienda Online**
   - [x] Implementar API del catálogo de productos públicos para venta (búsqueda, filtros, stock) y persistencia de carritos/pedidos de alimentos/accesorios.
-- [ ] **Fase 11B: Backend - Tareas Programadas y Campañas de Marketing**
-  - [ ] Implementar tareas programadas (`@Scheduled` de Spring) para procesar y listar recordatorios de vacunas/desparasitaciones.
-  - [ ] Implementar API de ofertas y campañas de marketing.
+- [x] **Fase 11B: Backend - Tareas Programadas y Campañas de Marketing**
+  - [x] Implementar tareas programadas (`@Scheduled` de Spring) para procesar y listar recordatorios de vacunas/desparasitaciones.
+  - [x] Implementar API de ofertas y campañas de marketing.
  
  
 ## 🧠 Decisiones Clave y Notas
