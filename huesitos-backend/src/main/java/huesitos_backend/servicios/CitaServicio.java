@@ -105,4 +105,60 @@ public class CitaServicio {
         LocalDateTime fin = fecha.atTime(LocalTime.of(23, 59, 59));
         return citaRepositorio.findByFechaHoraBetween(inicio, fin);
     }
+
+    /**
+     * Cancela una cita cambiando su estado a CANCELADA.
+     *
+     * @param citaId El ID de la cita.
+     * @return La cita actualizada.
+     */
+    @Transactional
+    public Cita cancelarCita(Long citaId) {
+        return cambiarEstadoCita(citaId, EstadoCita.CANCELADA);
+    }
+
+    /**
+     * Registra el check-in de una cita, cambiando su estado a EN_ESPERA.
+     *
+     * @param citaId El ID de la cita.
+     * @return La cita actualizada.
+     */
+    @Transactional
+    public Cita checkInCita(Long citaId) {
+        return cambiarEstadoCita(citaId, EstadoCita.EN_ESPERA);
+    }
+
+    /**
+     * Reprograma una cita validando la disponibilidad del veterinario.
+     *
+     * @param citaId El ID de la cita.
+     * @param nuevaFechaHora La nueva fecha y hora para la cita.
+     * @return La cita actualizada.
+     */
+    @Transactional
+    public Cita reprogramarCita(Long citaId, LocalDateTime nuevaFechaHora) {
+        Cita cita = citaRepositorio.findById(citaId)
+                .orElseThrow(() -> new RuntimeException("Cita no encontrada"));
+
+        // Validar que la nueva fecha no esté en el pasado
+        if (nuevaFechaHora.isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("No se puede reprogramar una cita a una fecha y hora pasada");
+        }
+
+        // Si tiene veterinario asignado, validar cruces
+        if (cita.getVeterinario() != null && cita.getVeterinario().getId() != null) {
+            boolean existeCruce = citaRepositorio.existsByVeterinarioIdAndFechaHoraAndEstadoNotAndIdNot(
+                    cita.getVeterinario().getId(),
+                    nuevaFechaHora,
+                    EstadoCita.CANCELADA,
+                    citaId
+            );
+            if (existeCruce) {
+                throw new RuntimeException("El veterinario ya tiene otra cita programada en ese horario");
+            }
+        }
+
+        cita.setFechaHora(nuevaFechaHora);
+        return citaRepositorio.save(cita);
+    }
 }
