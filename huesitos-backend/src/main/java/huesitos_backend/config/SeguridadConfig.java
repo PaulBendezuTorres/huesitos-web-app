@@ -44,6 +44,7 @@ public class SeguridadConfig {
                     "/api/autenticacion/restablecer-contrasena"
                 ).permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/servicios").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/usuarios/*/horarios").authenticated()
                 .requestMatchers("/api/usuarios/**").hasRole("ADMINISTRADOR")
                 .anyRequest().authenticated()
             )

@@ -19,6 +19,7 @@ public class AutenticacionServicio {
     private final DueñoRepositorio dueñoRepositorio;
     private final PasswordEncoder passwordEncoder;
     private final TokenJwtUtil tokenJwtUtil;
+    private final HorarioPersonalServicio horarioPersonalServicio;
 
     /**
      * Registra un nuevo cliente en el sistema.
@@ -134,7 +135,12 @@ public class AutenticacionServicio {
             usuario.setFotoPerfilUrl("/uploads/defecto-usuario.png");
         }
 
-        return usuarioRepositorio.save(usuario);
+        Usuario usuarioGuardado = usuarioRepositorio.save(usuario);
+
+        // 3. Inicializar el horario por defecto para el nuevo personal
+        horarioPersonalServicio.inicializarHorarioDefecto(usuarioGuardado);
+
+        return usuarioGuardado;
     }
 
     /**
