@@ -51,6 +51,8 @@ public class SeguridadConfig {
                 .requestMatchers(HttpMethod.GET, "/api/pagos/estado/**").hasAnyRole("RECEPCIONISTA", "ADMINISTRADOR")
                 .requestMatchers(HttpMethod.POST, "/api/pagos/procesar-caja/**").hasAnyRole("RECEPCIONISTA", "ADMINISTRADOR")
                 .requestMatchers("/api/pagos/**").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/categorias/**", "/api/productos/**").permitAll()
+                .requestMatchers("/api/categorias/**", "/api/productos/**", "/api/inventarios/**").hasRole("ADMINISTRADOR")
                 .requestMatchers("/api/usuarios/**").hasRole("ADMINISTRADOR")
                 .anyRequest().authenticated()
             )

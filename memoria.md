@@ -1,6 +1,6 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-05-24 (Fase 9B de backend - Boletas en PDF y Reportes Financieros implementada con éxito)
+Última actualización: 2026-05-24 (Fase 10A de backend - Modelado y CRUD de Inventario implementada con éxito)
 
 ## 🚀 Logros Recientes
 - [x] Rama `develop` creada y publicada en GitHub.
@@ -69,11 +69,15 @@
 - [x] Agregadas las consultas de suma de ingresos `sumarMontoPorFechaPagoBetween` y `sumarMontoTotalAprobado` en `TransaccionRepositorio` (Fase 9B).
 - [x] Creado el servicio `BoletaPdfServicio` implementando la maquetación en PDF de boletas tamaño A5 utilizando OpenPDF (Fase 9B).
 - [x] Expuestos los endpoints GET `/reporte` (restringido al administrador) y `/{id}/boleta` (descarga general) en `TransaccionControlador` (Fase 9B).
+- [x] Creadas las entidades JPA para `Categoria`, `Producto` e `Inventario` (lotes de stock y vencimiento) (Fase 10A).
+- [x] Desarrollados repositorios, servicios y controladores para el CRUD y gestión lógica de lotes de inventario (Fase 10A).
+- [x] Configurada la consulta agregada `obtenerStockDisponible` en `InventarioRepositorio` para el cálculo del stock real (Fase 10A).
+- [x] Protegida la mutación de stock en `SeguridadConfig` bajo el rol `ADMINISTRADOR` y habilitado el listado público para el catálogo (Fase 10A).
 
 ## 📌 Estado Actual de los Componentes
-- **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones (caja presencial, pasarela virtual, boletas en PDF y reportes financieros para el administrador), Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF y Subida de Archivos Clínicos completamente implementados y validados (Fase 9B finalizada).
+- **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF, Subida de Archivos Clínicos y Modelado y CRUD de Inventario (Categorías, Productos y Lotes de stock) completamente implementados y validados (Fase 10A finalizada).
 - **Frontend (React)**: Inicializado con React 18, Vite y Tailwind CSS 3.4 con página de bienvenida premium en español.
-- **Base de Datos (MySQL)**: Base de datos `huesitos` inicializada. Hibernate crea/actualiza las tablas `usuarios`, `duenos`, `mascotas`, `citas`, `consultas_medicas`, `servicios`, `transacciones`, `horarios_personal`, `vacunas`, `historial_vacunas`, `recetas` y `archivos_clinicos` al levantar la aplicación.
+- **Base de Datos (MySQL)**: Base de datos `huesitos` inicializada. Hibernate crea/actualiza las tablas `usuarios`, `duenos`, `mascotas`, `citas`, `consultas_medicas`, `servicios`, `transacciones`, `horarios_personal`, `vacunas`, `historial_vacunas`, `recetas`, `archivos_clinicos`, `categorias`, `productos` y `inventarios` al levantar la aplicación.
 
 ## 🛠️ Próximos Pasos (Pendientes)
 - [x] Creación de entidad JPA `Cita`.
@@ -116,9 +120,9 @@
 - [x] **Fase 9B: Backend - Boletas en PDF y Reportes Financieros**
   - [x] Desarrollar servicio para generación y descarga de boletas/facturas de pago en formato PDF.
   - [x] Implementar endpoints de reportes financieros: flujo de caja diario, ingresos mensuales y ganancias para el Administrador.
-- [ ] **Fase 10A: Backend - Modelado y CRUD de Inventario**
-  - [ ] Diseñar entidades JPA para `Producto`, `Categoria` e `Inventario` (lotes, stock, fecha de vencimiento).
-  - [ ] Implementar repositorios, servicios y controladores para la gestión CRUD del inventario.
+- [x] **Fase 10A: Backend - Modelado y CRUD de Inventario**
+  - [x] Diseñar entidades JPA para `Producto`, `Categoria` e `Inventario` (lotes, stock, fecha de vencimiento).
+  - [x] Implementar repositorios, servicios y controladores para la gestión CRUD del inventario.
 - [ ] **Fase 10B: Backend - Alertas de Insumos y Control de Vencimientos**
   - [ ] Implementar lógica de alertas automáticas para bajo stock de insumos y productos próximos a vencer.
 - [ ] **Fase 11A: Backend - Catálogo y Pedidos de Tienda Online**
