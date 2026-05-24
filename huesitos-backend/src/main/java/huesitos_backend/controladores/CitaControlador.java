@@ -1,5 +1,6 @@
 package huesitos_backend.controladores;
 
+import huesitos_backend.dto.SolicitudReprogramacion;
 import huesitos_backend.entidades.Cita;
 import huesitos_backend.entidades.EstadoCita;
 import huesitos_backend.servicios.CitaServicio;
@@ -67,5 +68,57 @@ public class CitaControlador {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
         List<Cita> citas = citaServicio.listarCitasPorDia(fecha);
         return ResponseEntity.ok(citas);
+    }
+
+    /**
+     * Endpoint para cancelar una cita.
+     *
+     * @param id El ID de la cita.
+     * @return La cita cancelada o un mensaje de error.
+     */
+    @PutMapping("/{id}/cancelar")
+    public ResponseEntity<?> cancelarCita(@PathVariable Long id) {
+        try {
+            Cita resultado = citaServicio.cancelarCita(id);
+            return ResponseEntity.ok(resultado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    /**
+     * Endpoint para registrar el check-in (llegada) de una cita.
+     *
+     * @param id El ID de la cita.
+     * @return La cita con estado EN_ESPERA o un mensaje de error.
+     */
+    @PutMapping("/{id}/check-in")
+    public ResponseEntity<?> checkInCita(@PathVariable Long id) {
+        try {
+            Cita resultado = citaServicio.checkInCita(id);
+            return ResponseEntity.ok(resultado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    /**
+     * Endpoint para reprogramar una cita a una nueva fecha y hora.
+     *
+     * @param id El ID de la cita.
+     * @param solicitud El DTO con la nueva fecha y hora.
+     * @return La cita reprogramada o un mensaje de error.
+     */
+    @PutMapping("/{id}/reprogramar")
+    public ResponseEntity<?> reprogramarCita(@PathVariable Long id, @RequestBody SolicitudReprogramacion solicitud) {
+        try {
+            if (solicitud == null || solicitud.nuevaFechaHora() == null) {
+                return ResponseEntity.badRequest().body("La nueva fecha y hora es requerida");
+            }
+            Cita resultado = citaServicio.reprogramarCita(id, solicitud.nuevaFechaHora());
+            return ResponseEntity.ok(resultado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
