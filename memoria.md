@@ -1,0 +1,130 @@
+# Memoria de Desarrollo - Huesitos
+
+Última actualización: 2026-05-24 (Fase 8A de backend - Cancelación, reprogramación y check-in de Citas médicas implementada con éxito)
+
+## 🚀 Logros Recientes
+- [x] Rama `develop` creada y publicada en GitHub.
+- [x] Nueva rama de características `feature/configuracion-base-backend` creada.
+- [x] Base de datos MySQL `huesitos` creada localmente.
+- [x] Configurada la conexión MySQL local y dialecto Hibernate en el backend.
+- [x] Implementada la arquitectura de seguridad basada en Spring Security, CORS y tokens JWT.
+- [x] Compilación y construcción del backend verificada con éxito (`BUILD SUCCESS`).
+- [x] Creados el enumerador `Rol` y la entidad JPA `Usuario` en `huesitos_backend.entidades`.
+- [x] Creados la entidad `Dueño` y los repositorios `UsuarioRepositorio` y `DueñoRepositorio`.
+- [x] Creada la clase `AutenticacionServicio` con la lógica de registro de clientes.
+- [x] Creada la clase `AutenticacionControlador` con el endpoint de registro de clientes.
+- [x] Creado el DTO `RespuestaLogin` e implementado el endpoint de inicio de sesión (`POST /login`) con generación de token JWT y retorno de rol del usuario.
+- [x] Creado el DTO `SolicitudCambioRol`, modificado `AutenticacionServicio` y creado `UsuarioControlador` para el endpoint de cambio de rol (`PUT /api/usuarios/{id}/rol`).
+- [x] Creado `FiltroAutenticacionJwt` y configurada la protección de rutas basada en roles en `SeguridadConfig.java`.
+- [x] Rama de características `feature/configuracion-base-backend` fusionada en `develop` y subida a GitHub (`origin/develop`).
+- [x] Creada la clase entidad JPA `Mascota` bajo el paquete `huesitos_backend.entidades` y su mapeo de relación con `Dueño`.
+- [x] Agregada anotación `@JsonAlias({"dueño", "dueno"})` en `Mascota` para compatibilidad de codificación UTF-8/ASCII.
+- [x] Creados la interfaz `MascotaRepositorio` y el servicio `MascotaServicio` con validaciones y lógica de negocio.
+- [x] Creada la clase `MascotaControlador` exponiendo los endpoints REST de registro, búsqueda y listado.
+- [x] Sesión de pruebas QA Fase 2 completada exitosamente (login JWT, registro de mascota, validación de dueño inexistente, listado por dueño).
+- [x] Creado el enum `EstadoCita` con valores: `PENDIENTE`, `CONFIRMADA`, `COMPLETADA`, `CANCELADA`.
+- [x] Creada la entidad JPA `Cita` mapeada a la tabla `citas` con relaciones `@ManyToOne` a `Mascota` (obligatoria) y `Usuario` como veterinario (opcional).
+- [x] Creada la interfaz `CitaRepositorio` con métodos para verificar cruces de horario y listar citas por rango de fechas.
+- [x] Creado `CitaServicio` con lógica de agendamiento (validación de mascota, veterinario, disponibilidad horaria), cambio de estado y listado diario.
+- [x] Creado `CitaControlador` con endpoints `POST /api/citas`, `PUT /api/citas/{id}/estado` y `GET /api/citas/calendario?fecha=`.
+- [x] Creada la entidad JPA `ConsultaMedica` en `huesitos_backend.entidades` mapeada a la tabla `consultas_medicas`.
+- [x] Creada la entidad JPA `Servicio` en `huesitos_backend.entidades` mapeada a la tabla `servicios` con atributos de catálogo.
+- [x] Creados los enums `MedioPago` y `EstadoPago`, y la entidad JPA `Transaccion` en `huesitos_backend.entidades` mapeada a la tabla `transacciones` con relación OneToOne a Cita.
+- [x] Integrado el catálogo de Servicios en Citas: creado `ServicioRepositorio`, reemplazado el campo `motivo` en la entidad `Cita` por una relación obligatoria `@ManyToOne` hacia `Servicio`, y actualizada la validación en `CitaServicio` al agendar citas.
+- [x] Creados `TransaccionRepositorio` y `TransaccionServicio` con métodos para crear órdenes de pago automáticas y registrar pagos presenciales cambiando estados de citas a `CONFIRMADA`.
+- [x] Creado `TransaccionControlador` con endpoints para procesar compras web (webhook simulado) y pagos presenciales en caja, y configurada la creación automática de órdenes de pago al agendar citas en `CitaServicio`.
+- [x] Creados `ServicioServicio.java` y `ServicioControlador.java` para la gestión (registro, listado de activos y desactivación lógica) del catálogo de servicios veterinarios, y configurada la ruta GET como pública en `SeguridadConfig.java`.
+- [x] Creados `ConsultaMedicaRepositorio.java`, `ConsultaMedicaServicio.java` y `ConsultaMedicaControlador.java` para completar el ciclo del módulo clínico (registro de consultas con actualización automática a COMPLETADA de la cita asociada, y consulta de historial por mascota).
+- [x] Corregida la restricción de base de datos en `Transaccion.java` estableciendo `medio_pago` como `nullable = true` para permitir registrar transacciones en estado `PENDIENTE`.
+- [x] Sesión de pruebas de integración y QA manual completada con éxito vía Postman para todo el flujo clínico-financiero (registro, login JWT, servicios, mascotas, agendamiento de cita, orden de pago en caja, registro de consulta y consulta de historial clínico).
+- [x] Creado `PerfilControlador.java` exponiendo endpoints para subir y comprimir fotos de perfil de usuarios (`POST /api/perfiles/usuario/{id}/foto`) y de mascotas (`POST /api/perfiles/mascota/{id}/foto`).
+- [x] Modificado `AutenticacionControlador.java` para inyectar `AutenticacionAvanzadaServicio` y añadir endpoints públicos de restablecimiento de contraseña (`/olvide-contrasena` y `/restablecer-contrasena`).
+- [x] Creado `ConfiguracionRolControlador.java` exponiendo endpoints para consultar configuraciones por rol (`GET /api/configuraciones/rol/{rol}`) y para registrar/actualizar configuraciones de forma segura (`POST /api/configuraciones`).
+- [x] Configurado `SeguridadConfig.java` permitiendo acceso público a los endpoints de restablecimiento de contraseña en Spring Security.
+- [x] Creados endpoints y métodos para la activación, desactivación y listado de usuarios por Rol (Fase 6).
+- [x] Implementado endpoint de creación segura de Veterinarios y Recepcionistas por parte del Administrador (Fase 6).
+- [x] Creada la entidad JPA `HorarioPersonal`, repositorio y servicios de gestión y configuración de horarios (Fase 6).
+- [x] Agregada inicialización automática de horarios semanales por defecto (jornada estándar y domingos libres) al registrar nuevo personal (Fase 6).
+- [x] Refinadas reglas de acceso en `SeguridadConfig.java` permitiendo que el personal autenticado consulte su propio horario y restringiendo la edición al Administrador (Fase 6).
+- [x] Agregada la dependencia `openpdf` para permitir la generación y descarga de recetas en formato PDF (Fase 7).
+- [x] Creadas las entidades `Vacuna` e `HistorialVacunacion` con repositorios, servicios y controladores para gestionar el catálogo e historial de vacunación de mascotas (Fase 7).
+- [x] Creada la entidad `Receta` con el servicio `RecetaServicio` implementando la generación de PDF (con formato A5 premium, datos del veterinario, mascota y propietario) y endpoints de consulta y descarga (Fase 7).
+- [x] Modificado `StorageService` para admitir subidas genéricas de archivos médicos en la subcarpeta `uploads/clinicos/` (Fase 7).
+- [x] Creada la entidad `ArchivoClinico` y enum `TipoArchivoClinico` con endpoints para la subida y consulta de archivos asociados a mascotas y consultas (Fase 7).
+- [x] Refinadas reglas de seguridad en `SeguridadConfig` permitiendo la consulta clínica a usuarios autenticados y restringiendo la subida y edición de recetas, vacunas y archivos a los roles `VETERINARIO` y `ADMINISTRADOR` (Fase 7).
+- [x] Agregado el estado `EN_ESPERA` al enumerador `EstadoCita` para soportar la sala de espera de la clínica (Fase 8A).
+- [x] Creado record DTO `SolicitudReprogramacion` para transferir nueva fecha/hora al reprogramar citas (Fase 8A).
+- [x] Modificado `CitaRepositorio` agregando verificación de cruces de horario dinámico excluyendo la cita actual (Fase 8A).
+- [x] Implementados servicios de cancelación, check-in y reprogramación de citas en `CitaServicio` (Fase 8A).
+- [x] Expuestos endpoints PUT en `CitaControlador` para cancelación (`/{id}/cancelar`), check-in (`/{id}/check-in`) y reprogramación (`/{id}/reprogramar`) de citas (Fase 8A).
+
+## 📌 Estado Actual de los Componentes
+- **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas (cancelación, check-in y reprogramación), Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF y Subida de Archivos Clínicos completamente implementados y validados (Fase 8A finalizada).
+- **Frontend (React)**: Inicializado con React 18, Vite y Tailwind CSS 3.4 con página de bienvenida premium en español.
+- **Base de Datos (MySQL)**: Base de datos `huesitos` inicializada. Hibernate crea/actualiza las tablas `usuarios`, `duenos`, `mascotas`, `citas`, `consultas_medicas`, `servicios`, `transacciones`, `horarios_personal`, `vacunas`, `historial_vacunas`, `recetas` y `archivos_clinicos` al levantar la aplicación.
+
+## 🛠️ Próximos Pasos (Pendientes)
+- [x] Creación de entidad JPA `Cita`.
+- [x] Implementación de repositorio y servicio para `Cita`.
+- [x] Implementación de controlador REST para `Cita`.
+- [x] Implementar la generación y respuesta de tokens en el inicio de sesión.
+- [x] Creación de la entidad JPA `ConsultaMedica` (Fase 4).
+- [x] Implementación de repositorio y servicio para `ConsultaMedica` (Fase 4).
+- [x] Implementación de controlador REST para `ConsultaMedica` (Fase 4).
+- [x] Creación de la entidad JPA `Servicio` (Fase 4).
+- [x] Implementación de repositorio para `Servicio` (Fase 4).
+- [x] Implementación de servicio para `Servicio` (Fase 4).
+- [x] Implementación de controlador REST para `Servicio` (Fase 4).
+- [x] Creación de la entidad JPA `Transaccion` (Fase 4).
+- [x] Implementación de repositorio y servicio para `Transaccion` (Fase 4).
+- [x] Implementación de controlador REST para `Transaccion` (Fase 4).
+- [x] Sesión de pruebas QA Fase 3 y 4 (agendar cita, cambiar estado, listar calendario, validar cruces de horario, pagos en caja y registro de consultas médicas).
+- [x] Integración de controladores REST, compresión de imágenes, recuperación de contraseña y variables de rol (Fase 5).
+- [x] **Fase 6: Backend - Gestión de Usuarios, Roles, Horarios del Personal y Seguridad Avanzada**
+  - [x] Implementar endpoint para bloqueo/desbloqueo de usuarios (`PUT /api/usuarios/{id}/estado`).
+  - [x] Implementar endpoint de creación segura de usuarios con roles de Veterinario y Recepcionista por el Administrador.
+  - [x] Implementar API para consulta y gestión de permisos/roles.
+  - [x] Diseñar entidad JPA `HorarioPersonal` (asociada a `Usuario`) para definir días laborales, horas de entrada/salida y días libres del personal.
+  - [x] Implementar repositorios, servicios y controladores para que el Administrador configure y gestione los horarios del personal.
+- [x] **Fase 7: Backend - Módulo Clínico Avanzado (Vacunas, Recetas y Archivos Médicos)**
+  - [x] Diseñar entidades JPA y tablas relacionales para `Vacuna` (e `HistorialVacunacion`) y `Receta` vinculadas a la Mascota/ConsultaMedica.
+  - [x] Implementar repositorios, servicios y controladores REST para listar, agendar y registrar vacunas.
+  - [x] Implementar controlador de Recetas Médicas con generación y descarga de PDF.
+  - [x] Implementar endpoints para la subida, almacenamiento y asociación de resultados de laboratorio y exámenes (ecografías, rayos x) a las fichas clínicas.
+- [x] **Fase 8A: Backend - Cancelación, reprogramación y check-in de Citas**
+  - [x] Implementar la API para cancelar y reprogramar citas (`PUT /api/citas/{id}/cancelar` y `PUT /api/citas/{id}/reprogramar`), validando cruces horarias.
+  - [x] Implementar endpoint de check-in para registrar la llegada física de la mascota en clínica.
+- [ ] **Fase 8B: Backend - Validación de Citas contra Horarios de Personal**
+  - [ ] Integrar validación en `CitaServicio` para que las citas agendadas coincidan con la jornada laboral activa en `HorarioPersonal` del veterinario asignado (si tiene horarios configurados).
+- [ ] **Fase 8C: Backend - Agenda Completa y Calendarios Clínicos**
+  - [ ] Implementar endpoints para consultar la agenda global de citas con filtros avanzados (rango de fechas, veterinario asignado, estado de cita).
+- [ ] **Fase 9A: Backend - Cobros y Pagos Online**
+  - [ ] Implementar endpoint/webhook de pago online simulado para transacciones en estado `PENDIENTE`.
+  - [ ] Implementar API para registrar cobros presenciales en caja con distintos medios de pago.
+- [ ] **Fase 9B: Backend - Boletas en PDF y Reportes Financieros**
+  - [ ] Desarrollar servicio para generación y descarga de boletas/facturas de pago en formato PDF.
+  - [ ] Implementar endpoints de reportes financieros: flujo de caja diario, ingresos mensuales y ganancias para el Administrador.
+- [ ] **Fase 10A: Backend - Modelado y CRUD de Inventario**
+  - [ ] Diseñar entidades JPA para `Producto`, `Categoria` e `Inventario` (lotes, stock, fecha de vencimiento).
+  - [ ] Implementar repositorios, servicios y controladores para la gestión CRUD del inventario.
+- [ ] **Fase 10B: Backend - Alertas de Insumos y Control de Vencimientos**
+  - [ ] Implementar lógica de alertas automáticas para bajo stock de insumos y productos próximos a vencer.
+- [ ] **Fase 11A: Backend - Catálogo y Pedidos de Tienda Online**
+  - [ ] Implementar API del catálogo de productos públicos para venta (búsqueda, filtros, stock) y persistencia de carritos/pedidos de alimentos/accesorios.
+- [ ] **Fase 11B: Backend - Tareas Programadas y Campañas de Marketing**
+  - [ ] Implementar tareas programadas (`@Scheduled` de Spring) para procesar y listar recordatorios de vacunas/desparasitaciones.
+  - [ ] Implementar API de ofertas y campañas de marketing.
+ 
+ 
+## 🧠 Decisiones Clave y Notas
+- Se decidió reemplazar la inyección implícita de Lombok con constructores estándar Java en los componentes de seguridad para asegurar la máxima compatibilidad de compilación directa con Maven Compiler.
+- Se simplificó temporalmente `SeguridadConfig` para desactivar la autenticación estricta JWT en los endpoints, permitiendo pruebas del servicio de registro sin requerir cabeceras de autorización de forma temporal.
+- Se agregó `@JsonAlias` al campo `dueño` en `Mascota` para resolver problemas de deserialización JSON con caracteres Unicode (ñ) desde clientes con distintas codificaciones.
+- El campo `veterinario` en `Cita` es `nullable = true` para permitir que clientes agenden citas generales desde la web y la recepcionista asigne veterinario posteriormente.
+- Se configuró el campo `medioPago` en `Transaccion` como `nullable = true` en base de datos debido a que las transacciones se crean originalmente como órdenes de pago en estado `PENDIENTE` sin medio de pago definido (el cual se asigna una vez efectuado el cobro).
+- **Emergencia 24h**: Dado que una emergencia requiere atención médica inmediata, el módulo de emergencias se resolverá a nivel de frontend únicamente como un botón de marcación directa por llamada telefónica y enlace directo a WhatsApp (sin soporte de agendamiento web transaccional por su naturaleza crítica).
+- **Adherencia a Patrones y Principios**: Todo el backend nuevo de las siguientes fases se desarrollará estrictamente bajo el patrón MVC (desacoplado) y los principios SOLID (especialmente SRP para la separación de lógica de negocio y DIP en la inyección de dependencias).
+- **Diseño e Integración para Tablets**: Toda la API y estructura de datos del backend se optimizará para un consumo ágil, intuitivo y responsivo. Aunque la lógica se implementa en backend, se considera el uso táctil y flujo rápido en Tablets (especialmente para Recepcionistas y Veterinarios en clínica) mediante endpoints de respuesta rápida, paginados y eficientes.
+- **Validación Flexible de Horarios**: En el agendamiento de citas (Fase 8), la validación contra el horario del veterinario será dinámica. Si un veterinario no tiene horarios registrados en la base de datos, el sistema no impondrá restricciones, permitiendo flexibilidad. Si el Administrador configura un horario para el veterinario, este se validará estrictamente.
+- **Cruce de Horario en Reprogramación**: Para la reprogramación de citas se verifica que no existan colisiones de horario para el veterinario en la nueva fecha y hora propuesta, excluyendo la propia cita actual del cálculo para evitar falsos positivos de cruces de agenda cuando no se cambia la hora.
+
