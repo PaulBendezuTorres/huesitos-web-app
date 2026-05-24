@@ -98,5 +98,54 @@ public class AutenticacionServicio {
         usuario.setRol(nuevoRol);
         return usuarioRepositorio.save(usuario);
     }
+
+    /**
+     * Activa o desactiva la cuenta de un usuario.
+     */
+    @Transactional
+    public Usuario cambiarEstadoUsuario(Long usuarioId, boolean activo) {
+        Usuario usuario = usuarioRepositorio.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        usuario.setActivo(activo);
+        return usuarioRepositorio.save(usuario);
+    }
+
+    /**
+     * Registra un nuevo miembro del personal (Administrador, Veterinario o Recepcionista).
+     */
+    @Transactional
+    public Usuario registrarPersonal(Usuario usuario) {
+        if (usuario.getRol() == null) {
+            throw new RuntimeException("El rol es obligatorio para registrar personal");
+        }
+        if (usuario.getRol() == Rol.CLIENTE) {
+            throw new RuntimeException("No se puede registrar un cliente como personal desde este endpoint");
+        }
+
+        // 1. Verificar si el correo ya está registrado
+        if (usuarioRepositorio.findByCorreo(usuario.getCorreo()).isPresent()) {
+            throw new RuntimeException("El correo ya está registrado");
+        }
+
+        // 2. Encriptar contraseña, marcar activo y establecer foto por defecto si no tiene
+        usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
+        usuario.setActivo(true);
+        if (usuario.getFotoPerfilUrl() == null) {
+            usuario.setFotoPerfilUrl("/uploads/defecto-usuario.png");
+        }
+
+        return usuarioRepositorio.save(usuario);
+    }
+
+    /**
+     * Lista todos los usuarios. Permite filtrar opcionalmente por rol.
+     */
+    @Transactional(readOnly = true)
+    public List<Usuario> listarUsuarios(Rol rol) {
+        if (rol != null) {
+            return usuarioRepositorio.findByRol(rol);
+        }
+        return usuarioRepositorio.findAll();
+    }
 }
 

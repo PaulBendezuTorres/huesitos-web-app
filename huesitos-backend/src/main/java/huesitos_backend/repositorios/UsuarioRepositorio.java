@@ -18,4 +18,9 @@ public interface UsuarioRepositorio extends JpaRepository<Usuario, Long> {
      * Busca un usuario por su token de recuperación de contraseña.
      */
     Optional<Usuario> findByTokenRecuperacion(String tokenRecuperacion);
+
+    /**
+     * Busca usuarios por su rol.
+     */
+    java.util.List<Usuario> findByRol(huesitos_backend.entidades.Rol rol);
 }
