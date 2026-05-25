@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -20,6 +21,7 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SeguridadConfig {
 
@@ -33,17 +35,29 @@ public class SeguridadConfig {
     @Bean
     public SecurityFilterChain filtroSeguridad(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // <-- Habilita CORS
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(autorizaciones -> autorizaciones
+                // 1. OBLIGATORIO: Permitir TODAS las peticiones OPTIONS (CORS Preflight)
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                
+                // 2. Rutas Públicas de Auth
                 .requestMatchers(
                     "/api/autenticacion/login", 
                     "/api/autenticacion/registro",
                     "/api/autenticacion/olvide-contrasena",
                     "/api/autenticacion/restablecer-contrasena"
                 ).permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/servicios").permitAll()
+                
+                // 3. Modificados los matchers de Servicios para soportar URLs con o sin barra final
+                .requestMatchers(HttpMethod.GET, "/api/servicios", "/api/servicios/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/servicios", "/api/servicios/**").hasAuthority("ROLE_ADMINISTRADOR")
+                .requestMatchers(HttpMethod.PUT, "/api/servicios/**").hasAuthority("ROLE_ADMINISTRADOR")
+                .requestMatchers(HttpMethod.PATCH, "/api/servicios/**").hasAuthority("ROLE_ADMINISTRADOR")
+                .requestMatchers(HttpMethod.DELETE, "/api/servicios/**").hasAuthority("ROLE_ADMINISTRADOR")
+                
+                // 4. El resto de tus endpoints intactos
                 .requestMatchers(HttpMethod.GET, "/api/usuarios/*/horarios").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/vacunas/**", "/api/recetas/**", "/api/archivos-clinicos/**").authenticated()
                 .requestMatchers("/api/vacunas/**", "/api/recetas/**", "/api/archivos-clinicos/**").hasAnyRole("VETERINARIO", "ADMINISTRADOR")
@@ -71,13 +85,14 @@ public class SeguridadConfig {
         return http.build();
     }
 
-    // <-- Define qué aplicaciones externas pueden acceder a tus endpoints
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Agrega el puerto donde corre tu frontend (Vite usa el 5173 normalmente)
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        
+        // ¡IMPORTANTE! Agregué "PATCH" que faltaba, sin esto el botón "Desactivar" iba a lanzar error.
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
         

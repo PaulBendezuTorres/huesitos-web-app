@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { 
   Stethoscope, Syringe, Activity, Microscope, HeartPulse, 
  Phone, MapPin, Mail, CheckCircle2, ShieldPlus,
@@ -12,8 +13,63 @@ import iconoFacebook from '../assets/facebook.png';
 import iconoInstagram from '../assets/social.png';
 import iconoTwitter from '../assets/gorjeo.png';
 import iconoYoutube from '../assets/youtube.png';
+import logo from '../assets/Logo Huesitos.png';
 
 const App = () => {
+ // Animación principal
+const fadeUp = {
+  hidden: {
+    opacity: 0,
+    y: 60
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: "easeOut"
+    }
+  }
+};
+
+// Animación para elementos hijos
+const staggerContainer = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.2
+    }
+  }
+};
+
+// Animación lateral
+// const fadeLeft = {
+//   hidden: {
+//     opacity: 0,
+//     x: -60
+//   },
+//   visible: {
+//     opacity: 1,
+//     x: 0,
+//     transition: {
+//       duration: 0.8
+//     }
+//   }
+// };
+
+// const fadeRight = {
+//   hidden: {
+//     opacity: 0,
+//     x: 60
+//   },
+//   visible: {
+//     opacity: 1,
+//     x: 0,
+//     transition: {
+//       duration: 0.8
+//     }
+//   }
+// };
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [categoriaActiva, setCategoriaActiva] = useState('consultas');
 
@@ -26,8 +82,11 @@ const App = () => {
           
           {/* Espacio para Logo */}
           <div className="flex items-center gap-4 cursor-pointer group">
-            <div className="w-14 h-14 bg-gradient-to-tr from-blue-700 to-sky-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-500/30 group-hover:scale-105 group-hover:rotate-3 transition-all duration-300">
-              <HeartPulse size={32} strokeWidth={2.5} />
+            <div className="w-14 h-14 bg-gradient-to-tr from-sky-500 to-cyan-300 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-sky-400/30 group-hover:scale-105 group-hover:rotate-3 transition-all duration-300">
+             <img 
+                src={logo} 
+                alt="Logo de la clínica" 
+              />
             </div>
             <div className="flex flex-col">
               <span className="font-extrabold text-3xl text-slate-900 tracking-tight">Huesitos</span>
@@ -44,15 +103,21 @@ const App = () => {
             <a href="#emergencias" className="text-red-500 font-bold hover:text-red-600 transition-colors">Emergencias 24/7</a>
           </nav>
 
-          {/* Botón Iniciar Sesión (Redirige a /login) */}
-          <div className="hidden md:flex items-center">
-            <button 
-              onClick={() => window.location.href = '/login'}
-              className="flex items-center gap-2 bg-slate-900 hover:bg-blue-700 text-white px-7 py-3 rounded-xl font-semibold shadow-xl hover:shadow-blue-600/20 transition-all duration-300 hover:-translate-y-0.5"
-            >
-              Iniciar Sesión
-            </button>
-          </div>
+{/* Botón Iniciar Sesión */}
+<div className="hidden md:flex items-center">
+  <button 
+    onClick={() => window.location.href = '/login'}
+    className="flex items-center gap-2 
+    bg-gradient-to-tr from-sky-500 to-cyan-300 
+    hover:from-sky-700 hover:to-cyan-500
+    text-white px-7 py-3 rounded-xl font-semibold 
+    shadow-xl shadow-sky-400/30 hover:shadow-sky-600/40
+    transition-all duration-500 ease-in-out 
+    hover:-translate-y-0.5"
+  >
+    Iniciar Sesión
+  </button>
+</div>
 
           {/* Botón Menú Móvil */}
           <button 
@@ -69,10 +134,9 @@ const App = () => {
       </header>
 
       {/* HERO SECTION CON IMAGEN DE FONDO VETERINARIA */}
-      <section 
+      <motion.section
         id="inicio" 
-        className="relative pt-36 pb-48 flex items-center justify-center overflow-hidden bg-cover bg-center"
-
+        className="relative pt-36 pb-48 flex items-center justify-center overflow-hidden bg-cover bg-center variants={fadeUp} "
         style={{ backgroundImage: `url(${portada})` }}
       >
         {/* Capa de oscurecimiento (Overlay) */}
@@ -103,10 +167,13 @@ const App = () => {
              </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* SECCIÓN: NOSOTROS */}
-      <section id="nosotros" className="py-32 bg-white relative">
+      <motion.section id="nosotros" className="py-32 bg-white relative"   variants={staggerContainer}
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true, amount: 0.2 }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
             <div className="relative group">
@@ -157,10 +224,14 @@ const App = () => {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* SECCIÓN: SERVICIOS Y TARIFAS */}
-<section id="servicios" className="py-32 bg-sky-100 border-y border-sky-200">
+<motion.section
+id="servicios" className="py-32 bg-sky-100 border-y border-sky-200"   variants={fadeUp}
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true, amount: 0.1 }}>
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
     <div className="text-center space-y-6 max-w-3xl mx-auto">
       <h2 className="text-4xl font-black text-slate-900">Servicios Médicos y Tarifas</h2>
@@ -348,10 +419,13 @@ const App = () => {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* SECCIÓN: UBICACIÓN Y CONTACTO DIRECTO */}
-      <section id="ubicacion" className="py-24 bg-white border-t border-slate-200">
+      <motion.section id="ubicacion" className="py-24 bg-white border-t border-slate-200"   variants={staggerContainer}
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true, amount: 0.2 }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             
@@ -369,7 +443,7 @@ const App = () => {
                   <MapPin className="text-blue-600 mt-1" size={24} />
                   <div>
                     <h4 className="font-bold text-slate-900 text-lg">Dirección Principal</h4>
-                    <p className="text-slate-600 mt-1">Pueblo Nuevo, Ica, Perú<br/>(Referencia: Cerca a la plaza principal)</p>
+                    <p className="text-slate-600 mt-1">Santo Domingo De Marcona C-22, Ica, Ica, 11001</p>
                   </div>
                 </div>
                 
@@ -384,19 +458,29 @@ const App = () => {
               </div>
             </div>
 
-            {/* Placeholder de Mapa (Aquí podrías insertar un iframe de Google Maps en el futuro) */}
-            <div className="bg-slate-200 w-full h-[450px] rounded-3xl shadow-inner flex flex-col items-center justify-center text-slate-400 overflow-hidden relative border border-slate-300">
-              <div className="absolute inset-0 opacity-30 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-              <MapPin size={48} className="mb-4 text-slate-400" />
-              <p className="font-medium text-lg">Mapa de Google Maps</p>
-              <p className="text-sm">Área reservada para iframe de ubicación</p>
+            {/* Mapa de Google Maps Integrado */}
+            <div className="w-full h-[450px] rounded-3xl shadow-lg overflow-hidden relative border border-slate-200">
+              <iframe 
+                title="Ubicación Clínica Veterinaria Huesitos"
+                src="https://maps.google.com/maps?q=Santo%20Domingo%20De%20Marcona%20C-22,%20Ica,%20Peru&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+                width="100%" 
+                height="100%" 
+                style={{ border: 0 }} 
+                allowFullScreen="" 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+                className="w-full h-full"
+              ></iframe>
             </div>
 
           </div>
         </div>
-      </section>
+      </motion.section>
       
-<section id="emergencias" className="py-24 bg-sky-100 border-t border-sky-200">
+<motion.section id="emergencias" className="py-24 bg-sky-100 border-t border-sky-200" variants={fadeUp}
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true, amount: 0.2 }}>
   <div className="max-w-4xl mx-auto px-4 text-center space-y-8">
     <div className="inline-block p-4 bg-sky-200 rounded-2xl border border-sky-300">
       <ShieldPlus size={40} className="text-sky-700" />
@@ -413,10 +497,10 @@ const App = () => {
       </a>
     </div>
   </div>
-</section>
+</motion.section>
 
       {/* FOOTER */}
-      <footer className="bg-slate-950 text-slate-400 border-t border-slate-900 relative overflow-hidden">
+      <motion.footer className="bg-slate-950 text-slate-400 border-t border-slate-900 relative overflow-hidden variants={fadeUp}">
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-900/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
@@ -459,11 +543,11 @@ const App = () => {
                 </p>
                 <p className="flex items-center gap-3 hover:text-white transition-colors cursor-pointer">
                   <span className="text-blue-500 font-bold text-base w-4 text-center">+</span>
-                  <span>+51 914-225-006</span>
+                  <span>+51 994 142 421</span>
                 </p>
                 <p className="flex items-center gap-3 hover:text-white transition-colors cursor-pointer">
                   <Mail size={16} className="text-blue-500" />
-                  <span>hola@heyvet.pe</span>
+                  <span>VeterinariaHuesito@gmail.com</span>
                 </p>
               </div>
             </div>
@@ -503,7 +587,7 @@ const App = () => {
         <div className="border-t border-slate-900 py-6 text-center text-xs text-slate-500 relative z-10">
           <p>© {new Date().getFullYear()} Clínica Veterinaria Huesitos. Todos los derechos reservados.</p>
         </div>
-      </footer>
+      </motion.footer>
 
     </div>
   );

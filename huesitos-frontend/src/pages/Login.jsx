@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Agregado para la navegación
+import logo from '../assets/Logo Huesitos.png';
 
 const BG_IMAGE_URL = null; 
 
@@ -107,16 +108,11 @@ if (response.ok) {
           <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(160deg, rgba(4,44,83,0.55) 0%, rgba(4,44,83,0.82) 50%, rgba(4,44,83,0.97) 100%)`, zIndex: 1 }} />
 
           <div style={{ position: 'relative', zIndex: 2, padding: '2.5rem 2rem 0' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{
-                width: '38px', height: '38px', borderRadius: '10px',
-                background: 'rgba(55,138,221,0.3)', border: '1px solid rgba(133,183,235,0.4)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px',
-              }}>💙</div>
-              <div>
-                <div style={{ fontSize: '17px', fontWeight: 700, color: '#fff' }}>Huesitos</div>
-                <div style={{ fontSize: '11px', color: colors.blue200, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Clínica Veterinaria</div>
-              </div>
+            <div className="w-14 h-14 bg-gradient-to-tr from-sky-500 to-cyan-300 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-sky-400/30 group-hover:scale-105 group-hover:rotate-3 transition-all duration-300">
+             <img 
+                src={logo} 
+                alt="Logo de la clínica" 
+              />
             </div>
           </div>
 
@@ -171,10 +167,12 @@ if (response.ok) {
           </button>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem' }}>
-            <div style={{
-              width: '40px', height: '40px', background: colors.blue600, borderRadius: '12px',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px',
-            }}>💙</div>
+            <div className="w-14 h-14 bg-gradient-to-tr from-sky-500 to-cyan-300 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-sky-400/30 group-hover:scale-105 group-hover:rotate-3 transition-all duration-300">
+             <img 
+                src={logo} 
+                alt="Logo de la clínica" 
+              />
+            </div>
             <div>
               <div style={{ fontSize: '18px', fontWeight: 700, color: '#0f172a' }}>Huesitos</div>
               <div style={{ fontSize: '11px', color: colors.blue600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Clínica Veterinaria</div>

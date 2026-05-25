@@ -14,39 +14,48 @@ public class ServicioServicio {
 
     private final ServicioRepositorio servicioRepositorio;
 
-    /**
-     * Registra un nuevo servicio en el catálogo.
-     * Setea por defecto el campo activo en true.
-     *
-     * @param servicio El servicio a registrar.
-     * @return El servicio guardado.
-     */
     @Transactional
     public Servicio crearServicio(Servicio servicio) {
         servicio.setActivo(true);
         return servicioRepositorio.save(servicio);
     }
 
-    /**
-     * Obtiene una lista de todos los servicios que se encuentran activos.
-     *
-     * @return Lista de servicios activos.
-     */
     @Transactional(readOnly = true)
     public List<Servicio> listarServiciosActivos() {
-        return servicioRepositorio.findByActivoTrue();
+        // Modificado de findByActivoTrue() a findAll() para que el Administrador 
+        // pueda listar y gestionar todos los servicios de la base de datos
+        return servicioRepositorio.findAll(); 
     }
 
-    /**
-     * Realiza la desactivación lógica de un servicio por su ID.
-     *
-     * @param id El ID del servicio a desactivar.
-     */
     @Transactional
     public void desactivarServicio(Long id) {
         Servicio servicio = servicioRepositorio.findById(id)
                 .orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
         servicio.setActivo(false);
         servicioRepositorio.save(servicio);
+    }
+
+    @Transactional
+    public void cambiarEstadoServicio(Long id, Boolean activo) {
+        Servicio servicio = servicioRepositorio.findById(id)
+                .orElseThrow(() -> new RuntimeException("Servicio no encontrado con ID: " + id));
+        servicio.setActivo(activo);
+        servicioRepositorio.save(servicio);
+    }
+
+    /**
+     * Actualiza los datos editables de un servicio existente preservando la consistencia en MySQL.
+     */
+    @Transactional
+    public Servicio actualizarServicio(Long id, Servicio datosNuevos) {
+        Servicio servicioExistente = servicioRepositorio.findById(id)
+                .orElseThrow(() -> new RuntimeException("Servicio no encontrado con ID: " + id));
+        
+        servicioExistente.setNombre(datosNuevos.getNombre());
+        servicioExistente.setPrecio(datosNuevos.getPrecio());
+        servicioExistente.setDescripcion(datosNuevos.getDescripcion());
+        servicioExistente.setDuracionMinutos(datosNuevos.getDuracionMinutos());
+        
+        return servicioRepositorio.save(servicioExistente);
     }
 }

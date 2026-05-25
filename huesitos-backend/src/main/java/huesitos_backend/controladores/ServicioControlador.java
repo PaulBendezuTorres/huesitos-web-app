@@ -5,6 +5,7 @@ import huesitos_backend.servicios.ServicioServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
@@ -15,13 +16,8 @@ public class ServicioControlador {
 
     private final ServicioServicio servicioServicio;
 
-    /**
-     * Endpoint para registrar un nuevo servicio.
-     *
-     * @param servicio Los datos del servicio a registrar.
-     * @return El servicio creado.
-     */
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMINISTRADOR')")
     public ResponseEntity<?> crearServicio(@RequestBody Servicio servicio) {
         try {
             Servicio resultado = servicioServicio.crearServicio(servicio);
@@ -31,12 +27,6 @@ public class ServicioControlador {
         }
     }
 
-    /**
-     * Endpoint para listar todos los servicios activos.
-     * Libre de autenticación o accesible por todos.
-     *
-     * @return Lista de servicios activos.
-     */
     @GetMapping
     public ResponseEntity<List<Servicio>> listarServiciosActivos() {
         List<Servicio> servicios = servicioServicio.listarServiciosActivos();
@@ -44,16 +34,26 @@ public class ServicioControlador {
     }
 
     /**
-     * Endpoint para desactivar lógicamente un servicio.
-     *
-     * @param id El ID del servicio a desactivar.
-     * @return Mensaje de éxito o error.
+     * Endpoint para actualizar los datos completos de un servicio (Nombre, Precio, Descripción, Duración).
+     * Vinculado al Modal de Edición del Frontend.
      */
-    @PutMapping("/{id}/desactivar")
-    public ResponseEntity<?> desactivarServicio(@PathVariable Long id) {
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMINISTRADOR')")
+    public ResponseEntity<?> actualizarServicio(@PathVariable Long id, @RequestBody Servicio servicio) {
         try {
-            servicioServicio.desactivarServicio(id);
-            return ResponseEntity.ok("Servicio desactivado con éxito");
+            Servicio resultado = servicioServicio.actualizarServicio(id, servicio);
+            return ResponseEntity.ok(resultado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("/{id}/estado")
+    @PreAuthorize("hasAuthority('ROLE_ADMINISTRADOR')")
+    public ResponseEntity<?> cambiarEstado(@PathVariable Long id, @RequestParam Boolean activo) {
+        try {
+            servicioServicio.cambiarEstadoServicio(id, activo);
+            return ResponseEntity.ok("Estado del servicio actualizado con éxito");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

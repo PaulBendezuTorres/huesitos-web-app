@@ -1,73 +1,62 @@
-const ServicioTable = ({servicios, onEditar, onEstado}) =>{
 
+
+const ServicioTable = ({ servicios, onEditar, onEstado }) => {
+  if (servicios.length === 0) {
     return (
-        <div className="overflow-x-auto">
-            <table className="min-w-full border border-gray-200">
-                <thead className="bg-gray-100">
-                    <tr>
-                        <th className="p-3 text-left">Nombre</th>
-                        <th className="p-3 text-left">Precio</th>
-                        <th className="p-3 text-left">Duración</th>
-                        <th className="p-3 text-left">Estado</th>
-                        <th className="p-3 text-center">Acciones</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                            {servicios.map((servicio) => (
-
-                    <tr key={servicio.id} className="border-t">
-
-                    <td className="p-3">{servicio.nombre}</td>
-
-                    <td className="p-3">
-                        S/. {servicio.precio}
-                    </td>
-
-                    <td className="p-3">
-                        {servicio.duracionMinutos} min
-                    </td>
-
-                    <td className="p-3">
-
-                        <span
-                        className={`px-2 py-1 rounded text-white text-sm
-                            ${servicio.activo
-                            ? "bg-green-500"
-                            : "bg-red-500"
-                            }`}
-                        >
-                        {servicio.activo ? "Activo" : "Inactivo"}
-                        </span>
-
-                    </td>
-
-                    <td className="p-3 flex gap-2 justify-center">
-
-                        <button
-                        onClick={() => onEditar(servicio)}
-                        className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
-                        >
-                        Editar
-                        </button>
-
-                        <button
-                        onClick={() =>
-                            onEstado(servicio.id, !servicio.activo)
-                        }
-                        className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded"
-                        >
-                        Estado
-                        </button>
-
-                    </td>
-
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-        </div>
+      <div className="text-center p-8 text-slate-500 bg-white rounded-xl shadow-sm border border-slate-200">
+        No hay servicios registrados aún.
+      </div>
     );
+  }
+
+  return (
+    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-slate-200">
+          <thead className="bg-slate-50">
+            <tr>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Servicio</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Precio</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Duración</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Estado</th>
+              <th className="px-6 py-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">Acciones</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-200">
+            {servicios.map((servicio) => (
+              <tr key={servicio.id} className="hover:bg-slate-50 transition">
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="font-medium text-slate-800">{servicio.nombre}</div>
+                  <div className="text-sm text-slate-500 truncate max-w-[250px]">{servicio.descripcion}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap font-medium text-slate-800">S/. {servicio.precio}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-slate-600">{servicio.duracionMinutos} min</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className={`inline-flex px-3 py-1 rounded-full text-xs font-bold ${servicio.activo ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"}`}>
+                    {servicio.activo ? "Activo" : "Inactivo"}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap flex gap-2 justify-center">
+                  <button 
+                    onClick={() => onEditar(servicio)} 
+                    className="bg-blue-50 hover:bg-blue-100 text-blue-600 px-3 py-1.5 rounded-md text-sm font-medium transition"
+                  >
+                    Editar
+                  </button>
+                  <button 
+                    onClick={() => onEstado(servicio.id, !servicio.activo)} 
+                    className={`${servicio.activo ? "bg-red-50 text-red-600 hover:bg-red-100" : "bg-emerald-50 text-emerald-600 hover:bg-emerald-100"} px-3 py-1.5 rounded-md text-sm font-medium transition`}
+                  >
+                    {servicio.activo ? "Desactivar" : "Activar"}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
 };
 
 export default ServicioTable;
