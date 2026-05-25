@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ServiciosPage from './ServicioPage'; // Importamos tu nuevo módulo
 import DashboardAnalytics from '../Modules/admin/pages/DashboardAnaliticas';
+import ConfiguracionPage from '../Modules/admin/pages/ConfiguracionDinamica';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -37,12 +38,7 @@ const AdminDashboard = () => {
           </div>
         );
       case 'configuracion':
-        return (
-          <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
-            <h2 className="text-xl font-bold text-slate-800 mb-2">Configuración Dinámica (RF-17)</h2>
-            <p className="text-slate-500">Módulo en construcción...</p>
-          </div>
-        );
+        return <ConfiguracionPage/>;
       default:
         return null;
     }
