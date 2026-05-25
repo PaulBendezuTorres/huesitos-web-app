@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ServiciosPage from './ServicioPage'; // Importamos tu nuevo módulo
+import DashboardAnalytics from '../Modules/admin/pages/DashboardAnaliticas';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -27,12 +28,7 @@ const AdminDashboard = () => {
       case 'servicios':
         return <ServiciosPage />;
       case 'dashboard':
-        return (
-          <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
-            <h2 className="text-xl font-bold text-slate-800 mb-2">Panel de Analíticas</h2>
-            <p className="text-slate-500">Módulo en construcción...</p>
-          </div>
-        );
+        return <DashboardAnalytics/>
       case 'usuarios':
         return (
           <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
