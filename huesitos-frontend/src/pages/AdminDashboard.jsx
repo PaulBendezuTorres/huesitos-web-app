@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ServiciosPage from './ServicioPage'; // Importamos tu nuevo módulo
+import ServiciosPage from './ServicioPage';
 import DashboardAnalytics from '../Modules/admin/pages/DashboardAnaliticas';
-import ConfiguracionPage from '../Modules/admin/pages/ConfiguracionDinamica';
+// Importamos y nombramos el componente como ConfiguracionDinamica
+import ConfiguracionDinamica from '../Modules/admin/pages/ConfiguracionDinamica'; 
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const AdminDashboard = () => {
       case 'servicios':
         return <ServiciosPage />;
       case 'dashboard':
-        return <DashboardAnalytics/>
+        return <DashboardAnalytics />;
       case 'usuarios':
         return (
           <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
@@ -37,8 +38,9 @@ const AdminDashboard = () => {
             <p className="text-slate-500">Módulo en construcción...</p>
           </div>
         );
-      case 'configuracion':
-        return <ConfiguracionPage/>;
+      case "configuracion":
+        // Ahora el nombre coincide con la importación superior
+        return <ConfiguracionDinamica />;
       default:
         return null;
     }
@@ -97,7 +99,7 @@ const AdminDashboard = () => {
           </div>
         </header>
 
-        {/* CONTENEDOR DINÁMICO (Aquí se inyecta el código de ServiciosPage) */}
+        {/* CONTENEDOR DINÁMICO (Aquí se inyecta el código de las páginas) */}
         <div className="flex-1 p-8 overflow-y-auto bg-slate-50">
           {renderizarVista()}
         </div>

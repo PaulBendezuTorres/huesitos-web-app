@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface ServicioRepositorio extends JpaRepository<Servicio, Long> {
     List<Servicio> findByActivoTrue();
+    long countByActivoTrue();
 }

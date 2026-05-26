@@ -1,6 +1,8 @@
 package huesitos_backend.servicios;
 
+import huesitos_backend.entidades.Actividad;
 import huesitos_backend.entidades.Servicio;
+import huesitos_backend.repositorios.ActividadRepositorio;
 import huesitos_backend.repositorios.ServicioRepositorio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,11 +16,20 @@ public class ServicioServicio {
 
     private final ServicioRepositorio servicioRepositorio;
 
-    @Transactional
-    public Servicio crearServicio(Servicio servicio) {
-        servicio.setActivo(true);
-        return servicioRepositorio.save(servicio);
-    }
+    private final ActividadRepositorio actividadRepositorio;
+
+@Transactional
+public Servicio crearServicio(Servicio servicio) {
+    servicio.setActivo(true);
+    Servicio guardado = servicioRepositorio.save(servicio);
+    Actividad act = new Actividad();
+    act.setMensaje("Se registró un nuevo servicio: " + guardado.getNombre());
+    act.setTipo("SERVICIO");
+    act.setFecha(java.time.LocalDateTime.now());
+    actividadRepositorio.save(act);
+    
+    return guardado;
+}
 
     @Transactional(readOnly = true)
     public List<Servicio> listarServiciosActivos() {

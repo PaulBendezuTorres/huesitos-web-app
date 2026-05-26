@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { motion } from 'framer-motion';
 import { 
   Stethoscope, Syringe, Activity, Microscope, HeartPulse, 
- Phone, MapPin, Mail, CheckCircle2, ShieldPlus,
+  Phone, MapPin, Mail, CheckCircle2, ShieldPlus,
   Home, Clock
 } from 'lucide-react';
 
@@ -16,62 +17,41 @@ import iconoYoutube from '../assets/youtube.png';
 import logo from '../assets/Logo Huesitos.png';
 
 const App = () => {
- // Animación principal
-const fadeUp = {
-  hidden: {
-    opacity: 0,
-    y: 60
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.8,
-      ease: "easeOut"
-    }
-  }
-};
+  // Animación principal
+  const fadeUp = {
+    hidden: { opacity: 0, y: 60 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+  };
 
-// Animación para elementos hijos
-const staggerContainer = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.2
-    }
-  }
-};
+  // Animación para elementos hijos
+  const staggerContainer = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.2 } }
+  };
 
-// Animación lateral
-// const fadeLeft = {
-//   hidden: {
-//     opacity: 0,
-//     x: -60
-//   },
-//   visible: {
-//     opacity: 1,
-//     x: 0,
-//     transition: {
-//       duration: 0.8
-//     }
-//   }
-// };
-
-// const fadeRight = {
-//   hidden: {
-//     opacity: 0,
-//     x: 60
-//   },
-//   visible: {
-//     opacity: 1,
-//     x: 0,
-//     transition: {
-//       duration: 0.8
-//     }
-//   }
-// };
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [categoriaActiva, setCategoriaActiva] = useState('consultas');
+
+  // === ESTADO DINÁMICO DE CONFIGURACIÓN ===
+  // Inicia con los datos por defecto para que la página nunca se vea vacía mientras carga
+  const [config, setConfig] = useState({
+    nombreNegocio: "Huesitos",
+    telefono: "(01) 628-2000",
+    telefonoEmergencia: "+51 994 142 421",
+    correo: "VeterinariaHuesito@gmail.com",
+    direccion: "Santo Domingo De Marcona C-22, Ica, Ica, 11001",
+    horarioSemana: "Lunes a Sábado: 08:00 AM - 08:00 PM",
+    horarioDomingo: "Domingos: 09:00 AM - 02:00 PM"
+  });
+
+  // === EFECTO PARA TRAER DATOS REALES DEL BACKEND ===
+  useEffect(() => {
+    axios.get("http://localhost:8080/api/configuracion-negocio")
+      .then((res) => {
+        if (res.data) setConfig(res.data);
+      })
+      .catch((err) => console.warn("Usando datos estáticos de respaldo:", err));
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans scroll-smooth selection:bg-blue-600 selection:text-white">
@@ -80,16 +60,13 @@ const staggerContainer = {
       <header className="bg-white/80 backdrop-blur-xl sticky top-0 z-50 border-b border-slate-200/50 shadow-sm transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-between">
           
-          {/* Espacio para Logo */}
+          {/* Espacio para Logo y Nombre Dinámico */}
           <div className="flex items-center gap-4 cursor-pointer group">
             <div className="w-14 h-14 bg-gradient-to-tr from-sky-500 to-cyan-300 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-sky-400/30 group-hover:scale-105 group-hover:rotate-3 transition-all duration-300">
-             <img 
-                src={logo} 
-                alt="Logo de la clínica" 
-              />
+             <img src={logo} alt="Logo de la clínica" />
             </div>
             <div className="flex flex-col">
-              <span className="font-extrabold text-3xl text-slate-900 tracking-tight">Huesitos</span>
+              <span className="font-extrabold text-3xl text-slate-900 tracking-tight">{config.nombreNegocio}</span>
               <span className="text-xs font-semibold text-blue-600 tracking-widest uppercase">Clínica Veterinaria</span>
             </div>
           </div>
@@ -103,27 +80,18 @@ const staggerContainer = {
             <a href="#emergencias" className="text-red-500 font-bold hover:text-red-600 transition-colors">Emergencias 24/7</a>
           </nav>
 
-{/* Botón Iniciar Sesión */}
-<div className="hidden md:flex items-center">
-  <button 
-    onClick={() => window.location.href = '/login'}
-    className="flex items-center gap-2 
-    bg-gradient-to-tr from-sky-500 to-cyan-300 
-    hover:from-sky-700 hover:to-cyan-500
-    text-white px-7 py-3 rounded-xl font-semibold 
-    shadow-xl shadow-sky-400/30 hover:shadow-sky-600/40
-    transition-all duration-500 ease-in-out 
-    hover:-translate-y-0.5"
-  >
-    Iniciar Sesión
-  </button>
-</div>
+          {/* Botón Iniciar Sesión */}
+          <div className="hidden md:flex items-center">
+            <button 
+              onClick={() => window.location.href = '/login'}
+              className="flex items-center gap-2 bg-gradient-to-tr from-sky-500 to-cyan-300 hover:from-sky-700 hover:to-cyan-500 text-white px-7 py-3 rounded-xl font-semibold shadow-xl shadow-sky-400/30 hover:shadow-sky-600/40 transition-all duration-500 ease-in-out hover:-translate-y-0.5"
+            >
+              Iniciar Sesión
+            </button>
+          </div>
 
           {/* Botón Menú Móvil */}
-          <button 
-            className="md:hidden text-slate-600 p-2"
-            onClick={() => setMenuAbierto(!menuAbierto)}
-          >
+          <button className="md:hidden text-slate-600 p-2" onClick={() => setMenuAbierto(!menuAbierto)}>
             <div className="space-y-1.5">
               <span className={`block w-6 h-0.5 bg-current transition-all ${menuAbierto ? 'rotate-45 translate-y-2' : ''}`}></span>
               <span className={`block w-6 h-0.5 bg-current transition-all ${menuAbierto ? 'opacity-0' : ''}`}></span>
@@ -133,13 +101,13 @@ const staggerContainer = {
         </div>
       </header>
 
-      {/* HERO SECTION CON IMAGEN DE FONDO VETERINARIA */}
+      {/* HERO SECTION */}
       <motion.section
         id="inicio" 
-        className="relative pt-36 pb-48 flex items-center justify-center overflow-hidden bg-cover bg-center variants={fadeUp} "
+        className="relative pt-36 pb-48 flex items-center justify-center overflow-hidden bg-cover bg-center"
+        variants={fadeUp} 
         style={{ backgroundImage: `url(${portada})` }}
       >
-        {/* Capa de oscurecimiento (Overlay) */}
         <div className="absolute inset-0 bg-slate-950/70 z-0"></div>
 
         <div className="max-w-5xl mx-auto px-4 text-center space-y-10 relative z-10 text-white animate-in fade-in zoom-in-95 duration-700">
@@ -169,16 +137,12 @@ const staggerContainer = {
         </div>
       </motion.section>
 
-      {/* SECCIÓN: NOSOTROS */}
-      <motion.section id="nosotros" className="py-32 bg-white relative"   variants={staggerContainer}
-  initial="hidden"
-  whileInView="visible"
-  viewport={{ once: true, amount: 0.2 }}>
+      {/* SECCIÓN: NOSOTROS (Texto Dinámico) */}
+      <motion.section id="nosotros" className="py-32 bg-white relative" variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
             <div className="relative group">
               <div className="absolute -inset-4 bg-gradient-to-tr from-blue-100 to-sky-100 rounded-[3rem] transform -rotate-3 group-hover:rotate-0 transition-all duration-500 -z-10"></div>
-              {/* IMAGEN DE VETERINARIO IMPORTADA */}
               <img 
                 src={imagenNosotros} 
                 alt="Equipo médico de la clínica" 
@@ -198,10 +162,10 @@ const staggerContainer = {
               
               <div className="space-y-6 text-lg text-slate-600 leading-relaxed">
                 <p>
-                  En <strong>Clínica Veterinaria Huesitos</strong> nos dedicamos a elevar el estándar de la atención médica veterinaria. Combinamos un trato profundamente humano y empático con rigurosos protocolos médicos y quirúrgicos.
+                  En <strong>Clínica Veterinaria {config.nombreNegocio}</strong> nos dedicamos a elevar el estándar de la atención médica veterinaria. Combinamos un trato profundamente humano y empático con rigurosos protocolos médicos y quirúrgicos.
                 </p>
                 <p>
-                  Contamos con infraestructura diseñada para mitigar el estrés de los pacientes, salas de procedimientos equipadas con tecnología avanzada y sistemas estrictos de control de bioseguridad, minimizando cualquier riesgo postoperatorio para la seguridad de tu engreído.
+                  Contamos con infraestructura diseñada para mitigar el estrés de los pacientes, salas de procedimientos equipadas con tecnología avanzada y sistemas estrictos de control de bioseguridad.
                 </p>
               </div>
 
@@ -227,16 +191,12 @@ const staggerContainer = {
       </motion.section>
 
       {/* SECCIÓN: SERVICIOS Y TARIFAS */}
-<motion.section
-id="servicios" className="py-32 bg-sky-100 border-y border-sky-200"   variants={fadeUp}
-  initial="hidden"
-  whileInView="visible"
-  viewport={{ once: true, amount: 0.1 }}>
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-    <div className="text-center space-y-6 max-w-3xl mx-auto">
-      <h2 className="text-4xl font-black text-slate-900">Servicios Médicos y Tarifas</h2>
-      <p className="text-lg text-slate-700">Catálogo de atenciones estructurado. Transparencia total en los costos.</p>
-    </div>
+      <motion.section id="servicios" className="py-32 bg-sky-100 border-y border-sky-200" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+          <div className="text-center space-y-6 max-w-3xl mx-auto">
+            <h2 className="text-4xl font-black text-slate-900">Servicios Médicos y Tarifas</h2>
+            <p className="text-lg text-slate-700">Catálogo de atenciones estructurado. Transparencia total en los costos.</p>
+          </div>
 
           {/* Selector de Categorías */}
           <div className="flex flex-wrap justify-center gap-4 border-b border-slate-200 pb-8">
@@ -272,7 +232,7 @@ id="servicios" className="py-32 bg-sky-100 border-y border-sky-200"   variants={
                   <div className="grid md:grid-cols-2 gap-8 items-center mb-6">
                     <p className="text-slate-600 leading-relaxed">Las consultas médicas nos ayudan a monitorear el estado de salud de tu mascota y detectar cualquier malestar o enfermedad. Nuestro equipo veterinario le brindará la atención oportuna para facilitar su recuperación.</p>
                     <div className="bg-slate-50 p-5 rounded-2xl text-xs text-slate-500 space-y-2 border border-slate-100">
-                      <p><strong>Urgencia:</strong> Atención no programada el mismo día por signos clínicos agudos que generan malestar, pero no comprometen la vida de forma inmediata.</p>
+                      <p><strong>Urgencia:</strong> Atención no programada el mismo día por signos clínicos agudos que generan malestar.</p>
                       <p><strong>Emergencia:</strong> Situación médica crítica e inmediata que representa un riesgo grave e inminente para la vida de la mascota.</p>
                     </div>
                   </div>
@@ -421,11 +381,8 @@ id="servicios" className="py-32 bg-sky-100 border-y border-sky-200"   variants={
         </div>
       </motion.section>
 
-      {/* SECCIÓN: UBICACIÓN Y CONTACTO DIRECTO */}
-      <motion.section id="ubicacion" className="py-24 bg-white border-t border-slate-200"   variants={staggerContainer}
-  initial="hidden"
-  whileInView="visible"
-  viewport={{ once: true, amount: 0.2 }}>
+      {/* SECCIÓN: UBICACIÓN Y CONTACTO (Datos Dinámicos) */}
+      <motion.section id="ubicacion" className="py-24 bg-white border-t border-slate-200" variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             
@@ -443,7 +400,8 @@ id="servicios" className="py-32 bg-sky-100 border-y border-sky-200"   variants={
                   <MapPin className="text-blue-600 mt-1" size={24} />
                   <div>
                     <h4 className="font-bold text-slate-900 text-lg">Dirección Principal</h4>
-                    <p className="text-slate-600 mt-1">Santo Domingo De Marcona C-22, Ica, Ica, 11001</p>
+                    {/* DIRECCIÓN DINÁMICA */}
+                    <p className="text-slate-600 mt-1">{config.direccion}</p>
                   </div>
                 </div>
                 
@@ -451,7 +409,11 @@ id="servicios" className="py-32 bg-sky-100 border-y border-sky-200"   variants={
                   <Clock className="text-blue-600 mt-1" size={24} />
                   <div>
                     <h4 className="font-bold text-slate-900 text-lg">Horarios de Atención</h4>
-                    <p className="text-slate-600 mt-1">Lunes a Sábado: 08:00 AM - 08:00 PM<br/>Domingos: 09:00 AM - 02:00 PM</p>
+                    {/* HORARIOS DINÁMICOS */}
+                    <p className="text-slate-600 mt-1">
+                      {config.horarioSemana} <br/>
+                      {config.horarioDomingo}
+                    </p>
                     <span className="inline-block mt-2 text-xs font-bold bg-red-100 text-red-600 px-3 py-1 rounded-full border border-red-200">Emergencias 24/7</span>
                   </div>
                 </div>
@@ -461,7 +423,7 @@ id="servicios" className="py-32 bg-sky-100 border-y border-sky-200"   variants={
             {/* Mapa de Google Maps Integrado */}
             <div className="w-full h-[450px] rounded-3xl shadow-lg overflow-hidden relative border border-slate-200">
               <iframe 
-                title="Ubicación Clínica Veterinaria Huesitos"
+                title="Ubicación Clínica Veterinaria"
                 src="https://maps.google.com/maps?q=Santo%20Domingo%20De%20Marcona%20C-22,%20Ica,%20Peru&t=&z=16&ie=UTF8&iwloc=&output=embed" 
                 width="100%" 
                 height="100%" 
@@ -477,30 +439,28 @@ id="servicios" className="py-32 bg-sky-100 border-y border-sky-200"   variants={
         </div>
       </motion.section>
       
-<motion.section id="emergencias" className="py-24 bg-sky-100 border-t border-sky-200" variants={fadeUp}
-  initial="hidden"
-  whileInView="visible"
-  viewport={{ once: true, amount: 0.2 }}>
-  <div className="max-w-4xl mx-auto px-4 text-center space-y-8">
-    <div className="inline-block p-4 bg-sky-200 rounded-2xl border border-sky-300">
-      <ShieldPlus size={40} className="text-sky-700" />
-    </div>
-    <h2 className="text-4xl md:text-5xl font-black text-slate-900">¿Tienes una Emergencia?</h2>
-    <p className="text-lg text-slate-700">
-      Si tu mascota presenta signos críticos, no esperes. Contamos con atención de emergencia las 24 horas del día. 
-      Comunícate inmediatamente para recibir asistencia prioritaria.
-    </p>
-    
-    <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-      <a href="tel:+51914225006" className="bg-sky-700 hover:bg-sky-800 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg transition-all">
-        Llamar a Emergencias (24/7)
-      </a>
-    </div>
-  </div>
-</motion.section>
+      {/* SECCIÓN EMERGENCIAS (Teléfono Dinámico) */}
+      <motion.section id="emergencias" className="py-24 bg-sky-100 border-t border-sky-200" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
+        <div className="max-w-4xl mx-auto px-4 text-center space-y-8">
+          <div className="inline-block p-4 bg-sky-200 rounded-2xl border border-sky-300">
+            <ShieldPlus size={40} className="text-sky-700" />
+          </div>
+          <h2 className="text-4xl md:text-5xl font-black text-slate-900">¿Tienes una Emergencia?</h2>
+          <p className="text-lg text-slate-700">
+            Si tu mascota presenta signos críticos, no esperes. Contamos con atención de emergencia las 24 horas del día. 
+            Comunícate inmediatamente para recibir asistencia prioritaria.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+            <a href={`tel:${config.telefonoEmergencia}`} className="bg-sky-700 hover:bg-sky-800 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg transition-all">
+              Llamar a Emergencias: {config.telefonoEmergencia}
+            </a>
+          </div>
+        </div>
+      </motion.section>
 
-      {/* FOOTER */}
-      <motion.footer className="bg-slate-950 text-slate-400 border-t border-slate-900 relative overflow-hidden variants={fadeUp}">
+      {/* FOOTER (Datos Dinámicos) */}
+      <motion.footer className="bg-slate-950 text-slate-400 border-t border-slate-900 relative overflow-hidden" variants={fadeUp}>
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-900/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
@@ -509,7 +469,7 @@ id="servicios" className="py-32 bg-sky-100 border-y border-sky-200"   variants={
             <div className="space-y-6">
               <div className="flex items-center gap-3">
                 <HeartPulse size={32} className="text-blue-500" />
-                <span className="font-extrabold text-3xl text-white tracking-tight">Huesitos</span>
+                <span className="font-extrabold text-3xl text-white tracking-tight">{config.nombreNegocio}</span>
               </div>
               <p className="text-slate-400 text-sm leading-relaxed pr-4">
                 Nuestra vocación es salvar vidas y procurar el mayor bienestar para tu familia. Laboratorio, sala de procedimientos e internamiento.
@@ -520,7 +480,7 @@ id="servicios" className="py-32 bg-sky-100 border-y border-sky-200"   variants={
               </div>
             </div>
 
-            {/* 2. Secciones de la Página (NUEVA COLUMNA) */}
+            {/* 2. Secciones de la Página */}
             <div className="space-y-4">
               <h4 className="text-white font-bold text-lg tracking-wide">Secciones</h4>
               <ul className="space-y-3 text-sm font-medium text-slate-300">
@@ -528,8 +488,6 @@ id="servicios" className="py-32 bg-sky-100 border-y border-sky-200"   variants={
                 <li><a href="#nosotros" className="hover:text-white hover:translate-x-1 inline-block transition-transform">Nosotros</a></li>
                 <li><a href="#servicios" className="hover:text-white hover:translate-x-1 inline-block transition-transform">Servicios Médicos</a></li>
                 <li><a href="#ubicacion" className="hover:text-white hover:translate-x-1 inline-block transition-transform">Ubicación</a></li>
-                <li className="pt-2">
-                </li>
               </ul>
             </div>
 
@@ -539,15 +497,15 @@ id="servicios" className="py-32 bg-sky-100 border-y border-sky-200"   variants={
               <div className="space-y-3 text-sm font-medium text-slate-300">
                 <p className="flex items-center gap-3 hover:text-white transition-colors cursor-pointer">
                   <Phone size={16} className="text-blue-500" />
-                  <span>(01) 628-2000</span>
+                  <span>{config.telefono}</span>
                 </p>
                 <p className="flex items-center gap-3 hover:text-white transition-colors cursor-pointer">
                   <span className="text-blue-500 font-bold text-base w-4 text-center">+</span>
-                  <span>+51 994 142 421</span>
+                  <span>{config.telefonoEmergencia}</span>
                 </p>
                 <p className="flex items-center gap-3 hover:text-white transition-colors cursor-pointer">
                   <Mail size={16} className="text-blue-500" />
-                  <span>VeterinariaHuesito@gmail.com</span>
+                  <span>{config.correo}</span>
                 </p>
               </div>
             </div>
@@ -556,36 +514,27 @@ id="servicios" className="py-32 bg-sky-100 border-y border-sky-200"   variants={
             <div className="space-y-4">
               <h4 className="text-white font-bold text-lg tracking-wide">Síguenos</h4>
               <div className="flex flex-wrap gap-4 pt-2">
-                
-                {/* Facebook */}
                 <a href="#" className="w-11 h-11 bg-slate-900 border border-slate-800 rounded-xl flex items-center justify-center overflow-hidden hover:border-blue-500 transition-all duration-300 hover:-translate-y-1 shadow-lg">
                   <img src={iconoFacebook} alt="Facebook" className="w-5 h-5 object-contain opacity-70 hover:opacity-100 transition-opacity" />
                 </a>
-                
-                {/* Instagram */}
                 <a href="#" className="w-11 h-11 bg-slate-900 border border-slate-800 rounded-xl flex items-center justify-center overflow-hidden hover:border-pink-500 transition-all duration-300 hover:-translate-y-1 shadow-lg">
                   <img src={iconoInstagram} alt="Instagram" className="w-5 h-5 object-contain opacity-70 hover:opacity-100 transition-opacity" />
                 </a>
-                
-                {/* Twitter */}
                 <a href="#" className="w-11 h-11 bg-slate-900 border border-slate-800 rounded-xl flex items-center justify-center overflow-hidden hover:border-slate-400 transition-all duration-300 hover:-translate-y-1 shadow-lg">
                   <img src={iconoTwitter} alt="Twitter" className="w-5 h-5 object-contain opacity-70 hover:opacity-100 transition-opacity" />
                 </a>
-                
-                {/* Youtube */}
                 <a href="#" className="w-11 h-11 bg-slate-900 border border-slate-800 rounded-xl flex items-center justify-center overflow-hidden hover:border-red-500 transition-all duration-300 hover:-translate-y-1 shadow-lg">
                   <img src={iconoYoutube} alt="Youtube" className="w-5 h-5 object-contain opacity-70 hover:opacity-100 transition-opacity" />
                 </a>
-
               </div>
             </div>
 
           </div>
         </div>
         
-        {/* Copyright */}
+        {/* Copyright Dinámico */}
         <div className="border-t border-slate-900 py-6 text-center text-xs text-slate-500 relative z-10">
-          <p>© {new Date().getFullYear()} Clínica Veterinaria Huesitos. Todos los derechos reservados.</p>
+          <p>© {new Date().getFullYear()} Clínica Veterinaria {config.nombreNegocio}. Todos los derechos reservados.</p>
         </div>
       </motion.footer>
 

@@ -50,14 +50,17 @@ public class SeguridadConfig {
                     "/api/autenticacion/restablecer-contrasena"
                 ).permitAll()
                 
-                // 3. Modificados los matchers de Servicios para soportar URLs con o sin barra final
+                // 3. Matchers de Servicios unificados con hasRole
                 .requestMatchers(HttpMethod.GET, "/api/servicios", "/api/servicios/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/servicios", "/api/servicios/**").hasAuthority("ROLE_ADMINISTRADOR")
-                .requestMatchers(HttpMethod.PUT, "/api/servicios/**").hasAuthority("ROLE_ADMINISTRADOR")
-                .requestMatchers(HttpMethod.PATCH, "/api/servicios/**").hasAuthority("ROLE_ADMINISTRADOR")
-                .requestMatchers(HttpMethod.DELETE, "/api/servicios/**").hasAuthority("ROLE_ADMINISTRADOR")
+                .requestMatchers(HttpMethod.POST, "/api/servicios", "/api/servicios/**").hasRole("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.PUT, "/api/servicios/**").hasRole("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.PATCH, "/api/servicios/**").hasRole("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.DELETE, "/api/servicios/**").hasRole("ADMINISTRADOR")
                 
-                // 4. El resto de tus endpoints intactos
+                // 4. Endpoints del Dashboard
+                .requestMatchers(HttpMethod.GET, "/api/dashboard/**").hasRole("ADMINISTRADOR")
+
+                // 5. El resto de tus endpoints intactos
                 .requestMatchers(HttpMethod.GET, "/api/usuarios/*/horarios").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/vacunas/**", "/api/recetas/**", "/api/archivos-clinicos/**").authenticated()
                 .requestMatchers("/api/vacunas/**", "/api/recetas/**", "/api/archivos-clinicos/**").hasAnyRole("VETERINARIO", "ADMINISTRADOR")
@@ -78,6 +81,9 @@ public class SeguridadConfig {
                 .requestMatchers("/api/pedidos/*/estado").hasAnyRole("RECEPCIONISTA", "ADMINISTRADOR")
                 .requestMatchers("/api/categorias/**", "/api/productos/**", "/api/inventarios/**").hasRole("ADMINISTRADOR")
                 .requestMatchers("/api/usuarios/**").hasRole("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.GET, "/api/configuracion-negocio").permitAll()
+.requestMatchers(HttpMethod.PUT, "/api/configuracion-negocio").hasRole("ADMINISTRADOR")
+                
                 .anyRequest().authenticated()
             )
             .addFilterBefore(filtroAutenticacionJwt, UsernamePasswordAuthenticationFilter.class);
@@ -90,7 +96,6 @@ public class SeguridadConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:3000"));
         
-        // ¡IMPORTANTE! Agregué "PATCH" que faltaba, sin esto el botón "Desactivar" iba a lanzar error.
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));

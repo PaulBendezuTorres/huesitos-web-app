@@ -75,7 +75,7 @@ const ServiciosPage = () => {
     <div className="space-y-6 relative">
       <div>
         <h1 className="text-2xl font-bold text-slate-800">Gestión de Catálogo de Servicios</h1>
-        <p className="text-slate-500 text-sm">Crea y administra los servicios que ofrece la clínica (RF-08).</p>
+        <p className="text-slate-500 text-sm">Crea y administra los servicios que ofrece la clínica.</p>
       </div>
 
       <ServicioForm onGuardar={guardar} />

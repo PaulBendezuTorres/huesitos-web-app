@@ -20,4 +20,7 @@ public interface TransaccionRepositorio extends JpaRepository<Transaccion, Long>
 
     @Query("SELECT SUM(t.monto) FROM Transaccion t WHERE t.estadoPago = 'APROBADO'")
     BigDecimal sumarMontoTotalAprobado();
+
+    @Query("SELECT COALESCE(SUM(t.monto), 0) FROM Transaccion t WHERE t.estadoPago = 'APROBADO'")
+    java.math.BigDecimal sumarIngresosAprobados();
 }
