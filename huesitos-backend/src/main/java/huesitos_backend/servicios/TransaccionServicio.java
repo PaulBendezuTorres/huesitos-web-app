@@ -1,144 +1,92 @@
 package huesitos_backend.servicios;
 
-import huesitos_backend.entidades.*;
-import huesitos_backend.repositorios.CitaRepositorio;
+import huesitos_backend.dto.ReporteFinanciero;
+import huesitos_backend.entidades.Cita;
+import huesitos_backend.entidades.EstadoPago;
+import huesitos_backend.entidades.MedioPago;
+import huesitos_backend.entidades.Transaccion;
 import huesitos_backend.repositorios.TransaccionRepositorio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.math.BigDecimal;
+import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class TransaccionServicio {
 
     private final TransaccionRepositorio transaccionRepositorio;
-    private final CitaRepositorio citaRepositorio;
 
-    /**
-     * Crea una orden de pago para una cita.
-     *
-     * @param cita La cita para la cual se crea la orden.
-     * @return La orden de pago (Transaccion) creada.
-     */
+    @Transactional(readOnly = true)
+    public List<Transaccion> listarTodas() {
+        return transaccionRepositorio.findAllByOrderByFechaCreacionDesc();
+    }
+
+    @Transactional(readOnly = true)
+    public ReporteFinanciero generarReporteDiario(LocalDate fecha) {
+        LocalDateTime inicioDia = fecha.atStartOfDay();
+        LocalDateTime finDia = fecha.atTime(LocalTime.MAX);
+
+        BigDecimal total = transaccionRepositorio.sumarIngresosPorRangoFecha(inicioDia, finDia);
+        
+        BigDecimal efectivo = transaccionRepositorio.sumarIngresosPorMediosYFecha(
+            Arrays.asList(MedioPago.EFECTIVO), inicioDia, finDia);
+            
+        BigDecimal tarjetas = transaccionRepositorio.sumarIngresosPorMediosYFecha(
+            Arrays.asList(MedioPago.TARJETA_CREDITO, MedioPago.TARJETA_DEBITO), inicioDia, finDia);
+            
+        BigDecimal transferencia = transaccionRepositorio.sumarIngresosPorMediosYFecha(
+            Arrays.asList(MedioPago.TRANSFERENCIA, MedioPago.YAPE, MedioPago.PLIN), inicioDia, finDia);
+
+        long completadas = transaccionRepositorio.countByEstadoPagoAndFechaCreacionBetween(EstadoPago.APROBADO, inicioDia, finDia);
+        long pendientes = transaccionRepositorio.countByEstadoPagoAndFechaCreacionBetween(EstadoPago.PENDIENTE, inicioDia, finDia);
+
+        ReporteFinanciero reporte = new ReporteFinanciero();
+        reporte.setTotalIngresos(total != null ? total : BigDecimal.ZERO);
+        reporte.setIngresosEfectivo(efectivo != null ? efectivo : BigDecimal.ZERO);
+        reporte.setIngresosTarjeta(tarjetas != null ? tarjetas : BigDecimal.ZERO);
+        reporte.setIngresosTransferencia(transferencia != null ? transferencia : BigDecimal.ZERO);
+        reporte.setTransaccionesCompletadas(completadas);
+        reporte.setTransaccionesPendientes(pendientes);
+
+        return reporte;
+    }
+
     @Transactional
-    public Transaccion crearOrdenPago(Cita cita) {
-        if (cita.getServicio() == null) {
-            throw new RuntimeException("La cita no tiene un servicio asociado");
-        }
+    public Transaccion procesarPagoCaja(Long id, MedioPago medio, String referencia) {
+        Transaccion t = transaccionRepositorio.findById(id)
+                .orElseThrow(() -> new RuntimeException("Transacción no encontrada"));
+        
+        t.setMedioPago(medio);
+        t.setEstadoPago(EstadoPago.APROBADO);
+        t.setReferenciaPago(referencia);
+        
+        return transaccionRepositorio.save(t);
+    }
 
+    // ====================================================================
+    // NUEVO MÉTODO AÑADIDO: Para crear el pago automáticamente al agendar
+    // ====================================================================
+    @Transactional
+    public void crearOrdenPago(Cita cita) {
         Transaccion transaccion = new Transaccion();
-        transaccion.setMonto(cita.getServicio().getPrecio());
-        transaccion.setEstadoPago(EstadoPago.PENDIENTE);
         transaccion.setCita(cita);
-
-        return transaccionRepositorio.save(transaccion);
-    }
-
-    /**
-     * Registra el pago presencial de una cita de forma atómica.
-     *
-     * @param citaId    El ID de la cita.
-     * @param medioPago El medio de pago utilizado.
-     * @return La transacción de pago actualizada.
-     */
-    @Transactional
-    public Transaccion registrarPagoPresencial(Long citaId, MedioPago medioPago) {
-        Transaccion transaccion = transaccionRepositorio.findByCitaId(citaId)
-                .orElseThrow(() -> new RuntimeException("Orden de pago no encontrada para esta cita"));
-
-        if (transaccion.getEstadoPago() != EstadoPago.PENDIENTE) {
-            throw new RuntimeException("Esta cita ya se encuentra pagada");
+        transaccion.setEstadoPago(EstadoPago.PENDIENTE);
+        transaccion.setReferenciaPago("SISTEMA_CITA");
+        
+        // Verifica si el servicio tiene un precio asignado, sino le pone 0
+        if (cita.getServicio() != null && cita.getServicio().getPrecio() != null) {
+            transaccion.setMonto(cita.getServicio().getPrecio());
+        } else {
+            transaccion.setMonto(BigDecimal.ZERO);
         }
-
-        transaccion.setEstadoPago(EstadoPago.APROBADO);
-        transaccion.setMedioPago(medioPago);
-        transaccion.setFechaPago(LocalDateTime.now());
-        Transaccion transaccionGuardada = transaccionRepositorio.save(transaccion);
-
-        Cita cita = transaccionGuardada.getCita();
-        cita.setEstado(EstadoCita.CONFIRMADA);
-        citaRepositorio.save(cita);
-
-        return transaccionGuardada;
-    }
-
-    /**
-     * Registra el pago virtual de una cita de forma atómica.
-     *
-     * @param citaId                El ID de la cita.
-     * @param medioPago             El medio de pago (CULQI, MERCADO_PAGO).
-     * @param idTransaccionPasarela El ID único devuelto por la pasarela de pagos.
-     * @return La transacción de pago actualizada.
-     */
-    @Transactional
-    public Transaccion registrarPagoVirtual(Long citaId, MedioPago medioPago, String idTransaccionPasarela) {
-        Transaccion transaccion = transaccionRepositorio.findByCitaId(citaId)
-                .orElseThrow(() -> new RuntimeException("Orden de pago no encontrada para esta cita"));
-
-        if (transaccion.getEstadoPago() != EstadoPago.PENDIENTE) {
-            throw new RuntimeException("Esta cita ya se encuentra pagada");
-        }
-
-        transaccion.setEstadoPago(EstadoPago.APROBADO);
-        transaccion.setMedioPago(medioPago);
-        transaccion.setFechaPago(LocalDateTime.now());
-        transaccion.setIdTransaccionPasarela(idTransaccionPasarela);
-        Transaccion transaccionGuardada = transaccionRepositorio.save(transaccion);
-
-        Cita cita = transaccionGuardada.getCita();
-        cita.setEstado(EstadoCita.CONFIRMADA);
-        citaRepositorio.save(cita);
-
-        return transaccionGuardada;
-    }
-
-    /**
-     * Obtiene el historial de transacciones de un usuario/cliente.
-     *
-     * @param usuarioId El ID del usuario/cliente.
-     * @return Lista de transacciones.
-     */
-    @Transactional(readOnly = true)
-    public java.util.List<Transaccion> obtenerTransaccionesPorUsuario(Long usuarioId) {
-        return transaccionRepositorio.findByCitaMascotaDueñoUsuarioId(usuarioId);
-    }
-
-    /**
-     * Obtiene el historial de transacciones filtrado por estado de pago.
-     *
-     * @param estado El estado del pago.
-     * @return Lista de transacciones que coinciden con el estado.
-     */
-    @Transactional(readOnly = true)
-    public java.util.List<Transaccion> obtenerTransaccionesPorEstado(EstadoPago estado) {
-        return transaccionRepositorio.findByEstadoPago(estado);
-    }
-
-    /**
-     * Obtiene el reporte financiero consolidado (diario, mensual e histórico) de ingresos.
-     *
-     * @return El DTO consolidado con las cifras.
-     */
-    @Transactional(readOnly = true)
-    public huesitos_backend.dto.ReporteFinanciero obtenerReporteFinanciero() {
-        LocalDateTime inicioDia = LocalDate.now().atStartOfDay();
-        LocalDateTime finDia = LocalDate.now().atTime(23, 59, 59);
-
-        LocalDateTime inicioMes = LocalDate.now().withDayOfMonth(1).atStartOfDay();
-        LocalDateTime finMes = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth()).atTime(23, 59, 59);
-
-        BigDecimal diario = transaccionRepositorio.sumarMontoPorFechaPagoBetween(inicioDia, finDia);
-        BigDecimal mensual = transaccionRepositorio.sumarMontoPorFechaPagoBetween(inicioMes, finMes);
-        BigDecimal total = transaccionRepositorio.sumarMontoTotalAprobado();
-
-        return new huesitos_backend.dto.ReporteFinanciero(
-            diario != null ? diario : BigDecimal.ZERO,
-            mensual != null ? mensual : BigDecimal.ZERO,
-            total != null ? total : BigDecimal.ZERO
-        );
+        
+        transaccionRepositorio.save(transaccion);
     }
 }

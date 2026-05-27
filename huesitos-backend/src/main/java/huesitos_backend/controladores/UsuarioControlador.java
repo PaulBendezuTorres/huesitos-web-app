@@ -1,12 +1,13 @@
 package huesitos_backend.controladores;
 
-import huesitos_backend.dto.SolicitudCambioRol;
 import huesitos_backend.entidades.Rol;
 import huesitos_backend.entidades.Usuario;
-import huesitos_backend.servicios.AutenticacionServicio;
+import huesitos_backend.servicios.UsuarioServicio;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,74 +15,76 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/usuarios")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMINISTRADOR')")
 public class UsuarioControlador {
 
-    private final AutenticacionServicio autenticacionServicio;
+    private final UsuarioServicio usuarioServicio;
 
-    /**
-     * Endpoint para listar todos los usuarios, con filtro opcional por rol.
-     */
     @GetMapping
-    public ResponseEntity<?> listarUsuarios(@RequestParam(required = false) String rol) {
-        try {
-            Rol rolEnum = null;
-            if (rol != null && !rol.trim().isEmpty()) {
-                rolEnum = Rol.valueOf(rol.toUpperCase());
-            }
-            List<Usuario> usuarios = autenticacionServicio.listarUsuarios(rolEnum);
-            return ResponseEntity.ok(usuarios);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("El rol especificado no es válido");
-        }
+    public ResponseEntity<List<Usuario>> listarUsuarios() {
+        return ResponseEntity.ok(usuarioServicio.listarTodos());
     }
 
-    /**
-     * Endpoint para obtener la lista de roles disponibles en el sistema.
-     */
-    @GetMapping("/roles")
-    public ResponseEntity<Rol[]> obtenerRoles() {
-        return ResponseEntity.ok(Rol.values());
+    @GetMapping("/{id}/dueño")
+    public ResponseEntity<?> obtenerDatosDueño(@PathVariable Long id) {
+        return usuarioServicio.obtenerDatosDueño(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Endpoint para registrar un nuevo miembro del personal.
-     */
+    // ==========================================
+    // NUEVO ENDPOINT: CREACIÓN DE PERSONAL
+    // ==========================================
     @PostMapping
-    public ResponseEntity<?> registrarPersonal(@RequestBody Usuario usuario) {
+    public ResponseEntity<?> registrarPersonal(@RequestBody SolicitudRegistro dto) {
         try {
-            Usuario resultado = autenticacionServicio.registrarPersonal(usuario);
+            Usuario resultado = usuarioServicio.registrarPersonal(dto.getCorreo(), dto.getContrasena(), dto.getRol());
             return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    /**
-     * Endpoint para actualizar el rol de un usuario.
-     */
-    @PutMapping("/{id}/rol")
-    public ResponseEntity<?> cambiarRol(@PathVariable Long id, @RequestBody SolicitudCambioRol solicitud) {
+    @PatchMapping("/{id}/rol")
+    public ResponseEntity<?> cambiarRol(@PathVariable Long id, @RequestParam Rol rol) {
         try {
-            Rol nuevoRol = Rol.valueOf(solicitud.rol());
-            Usuario usuarioActualizado = autenticacionServicio.cambiarRolUsuario(id, nuevoRol);
+            Usuario usuarioActualizado = usuarioServicio.cambiarRolUsuario(id, rol);
             return ResponseEntity.ok(usuarioActualizado);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El rol especificado no es válido");
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    /**
-     * Endpoint para activar o desactivar un usuario.
-     */
-    @PutMapping("/{id}/estado")
-    public ResponseEntity<?> cambiarEstado(@PathVariable Long id, @RequestParam boolean activo) {
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<?> cambiarEstado(@PathVariable Long id, @RequestParam Boolean activo) {
         try {
-            Usuario resultado = autenticacionServicio.cambiarEstadoUsuario(id, activo);
+            Usuario resultado = usuarioServicio.cambiarEstadoUsuario(id, activo);
             return ResponseEntity.ok(resultado);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @PatchMapping("/{id}/credenciales")
+    public ResponseEntity<?> actualizarCredenciales(@PathVariable Long id, @RequestBody SolicitudCredenciales dto) {
+        try {
+            Usuario resultado = usuarioServicio.actualizarCredenciales(id, dto.getCorreo(), dto.getContrasena());
+            return ResponseEntity.ok(resultado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Data
+    static class SolicitudCredenciales {
+        private String correo;
+        private String contrasena;
+    }
+
+    @Data
+    static class SolicitudRegistro {
+        private String correo;
+        private String contrasena;
+        private Rol rol;
     }
 }

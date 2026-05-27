@@ -2,10 +2,9 @@ package huesitos_backend.entidades;
 
 public enum MedioPago {
     EFECTIVO,
-    TARJETA,
+    TARJETA_CREDITO,
+    TARJETA_DEBITO,
     TRANSFERENCIA,
     YAPE,
-    PLIN,
-    CULQI,
-    MERCADO_PAGO
+    PLIN
 }

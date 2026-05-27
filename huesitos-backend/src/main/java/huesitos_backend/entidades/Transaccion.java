@@ -37,7 +37,30 @@ public class Transaccion {
     @Column(name = "id_transaccion_pasarela", length = 150)
     private String idTransaccionPasarela;
 
+    // === CAMPOS NUEVOS NECESARIOS PARA EL MÓDULO DE FINANZAS ===
+    
+    @Column(name = "referencia_pago", length = 100)
+    private String referenciaPago;
+
+    @Column(name = "fecha_creacion", nullable = false, updatable = false)
+    private LocalDateTime fechaCreacion;
+
+    @Column(name = "fecha_actualizacion")
+    private LocalDateTime fechaActualizacion;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cita_id", nullable = false)
     private Cita cita;
+
+    // Métodos para asegurar que las fechas se guarden automáticamente
+    @PrePersist
+    protected void onCreate() {
+        fechaCreacion = LocalDateTime.now();
+        fechaActualizacion = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        fechaActualizacion = LocalDateTime.now();
+    }
 }
