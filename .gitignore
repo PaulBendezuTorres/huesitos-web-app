@@ -30,3 +30,12 @@ dist-ssr
 .DS_Store
 Thumbs.db
 
+
+# Local Agent Skills
+.skills/
+
+# Project Progress Document
+memoria.md
+
+# Cursor Config
+.cursorrules
