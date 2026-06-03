@@ -116,13 +116,13 @@
       5. Pie de página (Footer) en tono azul oscuro (slate-950) con datos de contacto (Teléfono, Correo, Dirección en Santo Domingo De Marcona C-22, Ica, Perú) y redes sociales.
       ```
       </details>
-    - [/] **Registro, Login y Recuperación**: Registro de propietario, inicio de sesión JWT y flujos de recuperación.
+    - [x] **Registro, Login y Recuperación**: Registro de propietario, inicio de sesión JWT y flujos de recuperación.
       <details>
       <summary>Prompts Figma / Stitch (Registro, Recuperación y Verificación)</summary>
 
       * **[x] Inicio de Sesión (Login)**: Implementado.
-      * **[ ] Registro**: Pendiente.
-      * **[ ] Recuperación y Verificación**: Pendiente.
+      * **[x] Registro**: Registro de cliente (dueño + usuario) con campos completos y foto de perfil por defecto.
+      * **[x] Recuperación y Verificación**: Enlace de recuperación por correo y restablecimiento con token UUID.
 
       **Registro**:
       ```text
