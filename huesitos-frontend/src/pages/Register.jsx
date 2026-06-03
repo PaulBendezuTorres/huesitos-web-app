@@ -5,7 +5,7 @@ import logo from '../assets/Logo Huesitos.png';
 const VetRegister = () => {
   const [nombreCompleto, setNombreCompleto] = useState('');
   const [telefono, setTelefono] = useState('');
-  const [direccion, setDireccion] = useState('Marcona, Ica, Perú');
+  const [direccion, setDireccion] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -39,6 +39,11 @@ const VetRegister = () => {
 
     if (!nombreCompleto || !telefono || !direccion || !email || !password || !confirmPassword) {
       setErrorMsg('Todos los campos son obligatorios');
+      return;
+    }
+
+    if (telefono.length !== 9) {
+      setErrorMsg('El teléfono móvil debe tener exactamente 9 dígitos');
       return;
     }
 
@@ -192,7 +197,9 @@ const VetRegister = () => {
               <div style={{ width: '130px' }}>
                 <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '5px' }}>Teléfono móvil</label>
                 <input
-                  type="tel" value={telefono} onChange={e => setTelefono(e.target.value)} placeholder="999888777" required
+                  type="tel" value={telefono} 
+                  onChange={e => setTelefono(e.target.value.replace(/\D/g, '').slice(0, 9))} 
+                  placeholder="999888777" required
                   style={{
                     width: '100%', padding: '0 12px', height: '40px', borderRadius: '10px', border: '1px solid #e2e8f0',
                     background: '#f8fafc', fontSize: '13px', color: '#0f172a', outline: 'none', boxSizing: 'border-box',
@@ -202,7 +209,7 @@ const VetRegister = () => {
             </div>
 
             <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '5px' }}>Dirección (Marcona, Ica)</label>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '5px' }}>Dirección</label>
               <input
                 type="text" value={direccion} onChange={e => setDireccion(e.target.value)} placeholder="Av. Bolognesi 123" required
                 style={{
