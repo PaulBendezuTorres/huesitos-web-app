@@ -18,24 +18,7 @@ Este es el repositorio principal (monorepo) del proyecto Huesitos.
 
 ---
 
-## 📜 Reglas de Desarrollo y Flujo de Git
 
-### Flujo de Ramas
-* **`main`**: Solo código en producción 100% funcional.
-* **`develop`**: Rama de integración de características.
-* **`feature/nombre-funcion`**: Ramas temporales para avanzar tareas específicas.
-
-### Regla de Merge (Fusión)
-Se trabaja en la rama `feature/`. Al terminar y probar por completo la función o integración, se realiza el merge hacia la rama `develop`.
-
-### Reglas de Commits (Mensajes en español)
-* **`feat`**: Nueva funcionalidad (ej. `feat: agregar registro de mascotas`).
-* **`fix`**: Corrección de errores (ej. `fix: reparar conexion mysql`).
-* **`docs`**: Cambios en documentación (ej. `docs: actualizar readme`).
-* **`style`**: Cambios visuales con Tailwind (ej. `style: ajustar botones`).
-
-### Idioma General
-Todo el código (clases, variables, métodos, tablas en minúscula/plural) y la documentación se escriben estrictamente en **español**.
 # Huesitos Frontend
 
 Aplicación web construida con **React 18** y **Tailwind CSS 3.4** para el proyecto Huesitos.
