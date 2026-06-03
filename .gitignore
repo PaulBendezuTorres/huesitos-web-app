@@ -32,10 +32,10 @@ Thumbs.db
 
 
 # Local Agent Skills
-.skills/
+.agents/
 
 # Project Progress Document
 memoria.md
 
-# Cursor Config
-.cursorrules
+# Figma Prompts File (Ignored)
+prompts_figma.md
