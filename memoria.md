@@ -100,56 +100,34 @@
 - **Base de Datos (MySQL)**: Base de datos `huesitos` inicializada. Hibernate crea/actualiza las tablas `usuarios`, `duenos`, `mascotas`, `citas`, `consultas_medicas`, `servicios`, `transacciones`, `horarios_personal`, `vacunas`, `historial_vacunas`, `recetas`, `archivos_clinicos`, `categorias`, `productos` y `inventarios` al levantar la aplicación.
 
 ## 🛠️ Próximos Pasos (Pendientes)
-- [x] Creación de entidad JPA `Cita`.
-- [x] Implementación de repositorio y servicio para `Cita`.
-- [x] Implementación de controlador REST para `Cita`.
-- [x] Implementar la generación y respuesta de tokens en el inicio de sesión.
-- [x] Creación de la entidad JPA `ConsultaMedica` (Fase 4).
-- [x] Implementación de repositorio y servicio para `ConsultaMedica` (Fase 4).
-- [x] Implementación de controlador REST para `ConsultaMedica` (Fase 4).
-- [x] Creación de la entidad JPA `Servicio` (Fase 4).
-- [x] Implementación de repositorio para `Servicio` (Fase 4).
-- [x] Implementación de servicio para `Servicio` (Fase 4).
-- [x] Implementación de controlador REST para `Servicio` (Fase 4).
-- [x] Creación de la entidad JPA `Transaccion` (Fase 4).
-- [x] Implementación de repositorio y servicio para `Transaccion` (Fase 4).
-- [x] Implementación de controlador REST para `Transaccion` (Fase 4).
-- [x] Sesión de pruebas QA Fase 3 y 4 (agendar cita, cambiar estado, listar calendario, validar cruces de horario, pagos en caja y registro de consultas médicas).
-- [x] Integración de controladores REST, compresión de imágenes, recuperación de contraseña y variables de rol (Fase 5).
-- [x] **Fase 6: Backend - Gestión de Usuarios, Roles, Horarios del Personal y Seguridad Avanzada**
-  - [x] Implementar endpoint para bloqueo/desbloqueo de usuarios (`PUT /api/usuarios/{id}/estado`).
-  - [x] Implementar endpoint de creación segura de usuarios con roles de Veterinario y Recepcionista por el Administrador.
-  - [x] Implementar API para consulta y gestión de permisos/roles.
-  - [x] Diseñar entidad JPA `HorarioPersonal` (asociada a `Usuario`) para definir días laborales, horas de entrada/salida y días libres del personal.
-  - [x] Implementar repositorios, servicios y controladores para que el Administrador configure y gestione los horarios del personal.
-- [x] **Fase 7: Backend - Módulo Clínico Avanzado (Vacunas, Recetas y Archivos Médicos)**
-  - [x] Diseñar entidades JPA y tablas relacionales para `Vacuna` (e `HistorialVacunacion`) y `Receta` vinculadas a la Mascota/ConsultaMedica.
-  - [x] Implementar repositorios, servicios y controladores REST para listar, agendar y registrar vacunas.
-  - [x] Implementar controlador de Recetas Médicas con generación y descarga de PDF.
-  - [x] Implementar endpoints para la subida, almacenamiento y asociación de resultados de laboratorio y exámenes (ecografías, rayos x) a las fichas clínicas.
-- [x] **Fase 8A: Backend - Cancelación, reprogramación y check-in de Citas**
-  - [x] Implementar la API para cancelar y reprogramar citas (`PUT /api/citas/{id}/cancelar` y `PUT /api/citas/{id}/reprogramar`), validando cruces horarias.
-  - [x] Implementar endpoint de check-in para registrar la llegada física de la mascota en clínica.
-- [x] **Fase 8B: Backend - Validación de Citas contra Horarios de Personal**
-  - [x] Integrar validación en `CitaServicio` para que las citas agendadas coincidan con la jornada laboral activa en `HorarioPersonal` del veterinario asignado (si tiene horarios configurados).
-- [x] **Fase 8C: Backend - Agenda Completa y Calendarios Clínicos**
-  - [x] Implementar endpoints para consultar la agenda global de citas con filtros avanzados (rango de fechas, veterinario asignado, estado de cita).
-- [x] **Fase 9A: Backend - Cobros y Pagos Online**
-  - [x] Implementar endpoint/webhook de pago online simulado para transacciones en estado `PENDIENTE`.
-  - [x] Implementar API para registrar cobros presenciales en caja con distintos medios de pago.
-- [x] **Fase 9B: Backend - Boletas en PDF y Reportes Financieros**
-  - [x] Desarrollar servicio para generación y descarga de boletas/facturas de pago en formato PDF.
-  - [x] Implementar endpoints de reportes financieros: flujo de caja diario, ingresos mensuales y ganancias para el Administrador.
-- [x] **Fase 10A: Backend - Modelado y CRUD de Inventario**
-  - [x] Diseñar entidades JPA para `Producto`, `Categoria` e `Inventario` (lotes, stock, fecha de vencimiento).
-  - [x] Implementar repositorios, servicios y controladores para la gestión CRUD del inventario.
-- [x] **Fase 10B: Backend - Alertas de Insumos y Control de Vencimientos**
-  - [x] Implementar lógica de alertas automáticas para bajo stock de insumos y productos próximos a vencer.
-- [x] **Fase 11A: Backend - Catálogo y Pedidos de Tienda Online**
-  - [x] Implementar API del catálogo de productos públicos para venta (búsqueda, filtros, stock) y persistencia de carritos/pedidos de alimentos/accesorios.
-- [x] **Fase 11B: Backend - Tareas Programadas y Campañas de Marketing**
-  - [x] Implementar tareas programadas (`@Scheduled` de Spring) para procesar y listar recordatorios de vacunas/desparasitaciones.
-  - [x] Implementar API de ofertas y campañas de marketing.
+- [ ] **Desarrollo del Frontend (React + Tailwind CSS)**:
+  - **Vistas de Cliente / Público (Visitantes)**:
+    - [ ] **Landing Page**: Página de inicio, servicios destacados, contacto (Marcona, Ica) y emergencias.
+    - [ ] **Registro, Login y Recuperación**: Registro de propietario, inicio de sesión JWT, y flujo de recuperación con token de 6 dígitos.
+    - [ ] **Dashboard de Cliente**: Grid de mascotas, próximas citas agendadas y accesos rápidos.
+    - [ ] **Ficha de Mascota e Historial Clínico**: Línea de tiempo de consultas, vacunas aplicadas y descarga de recetas.
+    - [ ] **Agendamiento de Citas**: Formulario interactivo en 4 pasos (Mascota, Servicio, Profesional, Horario/Fecha).
+    - [ ] **Tienda Online**: Catálogo de productos, buscador por categorías, carrito de compras lateral y checkout.
+  - **Vistas de Veterinario**:
+    - [ ] **Agenda y Sala de Espera (Tablet)**: Lista de mascotas en espera con botón de inicio de consulta.
+    - [ ] **Ficha Clínica Activa (Tablet)**: Registro de diagnóstico, vacunas, recetas (PDF A5) y subida de archivos ecográficos/análisis.
+  - **Vistas de Recepcionista**:
+    - [ ] **Punto de Venta (POS) y Caja**: Cobros de citas y tienda con múltiples métodos de pago (Yape/Plin, tarjeta, efectivo), cálculo de vuelto e impresión de Boleta A5 en PDF.
+    - [ ] **Despacho de Pedidos**: Control y entrega de las compras realizadas en la tienda online.
+    - [ ] **Agenda Semanal de Citas**: Gestión de turnos y arrastre para reprogramación.
+  - **Vistas de Administrador**:
+    - [ ] **Dashboard Financiero**: Métricas clave en soles (S/), gráficos de ingresos y servicios más solicitados.
+    - [ ] **Gestión de Personal**: Registro de veterinarios y recepcionistas, y control de bloqueo lógico de cuentas.
+    - [ ] **Configuración de Horarios**: Grilla semanal de trabajo por empleado y calendario de excepciones/vacaciones.
+    - [ ] **Gestión de Inventario FEFO**: Control de stock general, alerta de bajo stock y detalle de lotes con fechas de vencimiento.
+    - [ ] **Catálogo de Servicios y Tarifas**: CRUD y activación lógica de servicios médicos.
+    - [ ] **Campañas y Ofertas**: Creación de campañas de marketing e indicadores de expiración.
+  - **Componentes y Vistas Reutilizables**:
+    - [ ] **Historial Clínico / Ficha de Mascota**: Reutilizable entre el *Cliente* (lectura) y el *Veterinario* (consulta durante la atención).
+    - [ ] **Agenda Semanal de Citas**: Compartido y reutilizable entre la *Recepcionista* (gestión operativa) y el *Administrador* (vista de supervisión).
+    - [ ] **Inventario Crítico / Alertas**: La alerta de bajo stock y próximos a vencer se reutiliza en el dashboard del *Administrador* y en el panel POS de la *Recepcionista*.
+    - [ ] **Gestión de Pedidos**: Compartido entre la *Recepcionista* (despacho físico) y el *Administrador* (auditoría).
+
  
  
 ## 🧠 Decisiones Clave y Notas
@@ -164,4 +142,7 @@
 - **Validación Flexible de Horarios**: En el agendamiento de citas (Fase 8), la validación contra el horario del veterinario será dinámica. Si un veterinario no tiene horarios registrados en la base de datos, el sistema no impondrá restricciones, permitiendo flexibilidad. Si el Administrador configura un horario para el veterinario, este se validará estrictamente.
 - **Cruce de Horario en Reprogramación**: Para la reprogramación de citas se verifica que no existan colisiones de horario para el veterinario en la nueva fecha y hora propuesta, excluyendo la propia cita actual del cálculo para evitar falsos positivos de cruces de agenda cuando no se cambia la hora.
 - **División de Fases y Commits**: A partir de la Fase 11A, se decide realizar una división más granular de las fases y sus correspondientes commits. Esto asegura que cada commit al final de una fase contenga de manera explícita y pormenorizada los puntos y archivos específicos modificados, mejorando enormemente la claridad y control de los cambios realizados.
+- **Planificación de Vistas Frontend (Figma / Stitch)**: Estructuración y diseño inicial del frontend mapeados a las APIs del backend de Huesitos para facilitar la maquetación rápida en Figma y generación con Stitch.
+
+
 
