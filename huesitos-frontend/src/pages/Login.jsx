@@ -226,7 +226,15 @@ if (response.ok) {
           </div>
 
           <div style={{ textAlign: 'right', marginBottom: '1.25rem' }}>
-            <a href="#" style={{ fontSize: '12px', color: colors.blue600, textDecoration: 'none', fontWeight: 500 }}>¿Olvidaste tu contraseña?</a>
+            <button
+              onClick={() => navigate('/olvide-contrasena')}
+              style={{
+                background: 'none', border: 'none', padding: 0, font: 'inherit',
+                color: colors.blue600, cursor: 'pointer', fontSize: '12px', fontWeight: 500
+              }}
+            >
+              ¿Olvidaste tu contraseña?
+            </button>
           </div>
 
           <button
@@ -244,7 +252,16 @@ if (response.ok) {
           </div>
 
           <p style={{ textAlign: 'center', fontSize: '12px', color: '#64748b', marginTop: '1rem' }}>
-            ¿Nuevo aquí? <a href="#" style={{ color: colors.blue600, textDecoration: 'none', fontWeight: 600 }}>Crea una cuenta</a>
+            ¿Nuevo aquí?{' '}
+            <button
+              onClick={() => navigate('/registro')}
+              style={{
+                background: 'none', border: 'none', padding: 0, font: 'inherit',
+                color: colors.blue600, cursor: 'pointer', fontWeight: 600
+              }}
+            >
+              Crea una cuenta
+            </button>
           </p>
 
         </div>

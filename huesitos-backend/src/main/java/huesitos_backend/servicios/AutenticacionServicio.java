@@ -45,10 +45,13 @@ public class AutenticacionServicio {
             throw new RuntimeException("El teléfono ya está registrado");
         }
 
-        // 3. Forzar rol CLIENTE, estado activo = true y encriptar contraseña
+        // 3. Forzar rol CLIENTE, estado activo = true, encriptar contraseña y poner foto por defecto si es nula
         usuario.setRol(Rol.CLIENTE);
         usuario.setActivo(true);
         usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
+        if (usuario.getFotoPerfilUrl() == null) {
+            usuario.setFotoPerfilUrl("/uploads/defecto-usuario.png");
+        }
 
         // 4. Guardar primero el Usuario en su repositorio
         Usuario usuarioGuardado = usuarioRepositorio.save(usuario);
