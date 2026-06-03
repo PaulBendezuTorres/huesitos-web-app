@@ -102,7 +102,7 @@
 ## 🛠️ Próximos Pasos (Pendientes)
 - [ ] **Desarrollo del Frontend (React + Tailwind CSS)**:
   - **Vistas de Cliente / Público (Visitantes)**:
-    - [ ] **Landing Page**: Página de inicio, servicios destacados, contacto (Marcona, Ica) y emergencias.
+    - [x] **Landing Page**: Página de inicio, servicios destacados, contacto (Marcona, Ica) y emergencias.
       <details>
       <summary>Prompt Figma / Stitch</summary>
 
@@ -116,9 +116,13 @@
       5. Pie de página (Footer) en tono azul oscuro (slate-950) con datos de contacto (Teléfono, Correo, Dirección en Santo Domingo De Marcona C-22, Ica, Perú) y redes sociales.
       ```
       </details>
-    - [ ] **Registro, Login y Recuperación**: Registro de propietario, inicio de sesión JWT y flujos de recuperación.
+    - [/] **Registro, Login y Recuperación**: Registro de propietario, inicio de sesión JWT y flujos de recuperación.
       <details>
       <summary>Prompts Figma / Stitch (Registro, Recuperación y Verificación)</summary>
+
+      * **[x] Inicio de Sesión (Login)**: Implementado.
+      * **[ ] Registro**: Pendiente.
+      * **[ ] Recuperación y Verificación**: Pendiente.
 
       **Registro**:
       ```text
@@ -283,7 +287,7 @@
       </details>
 
   - **Vistas de Administrador**:
-    - [ ] **Dashboard Financiero**: Métricas clave en soles (S/), gráficos de ingresos y servicios más solicitados.
+    - [x] **Dashboard Financiero**: Métricas clave en soles (S/), gráficos de ingresos y servicios más solicitados.
       <details>
       <summary>Prompt Figma / Stitch</summary>
 
@@ -300,7 +304,7 @@
       4. Diseño con colores armoniosos (azul-600 para marcas, esmeralda-500 para tendencias positivas, y rojo para alertas de inventario).
       ```
       </details>
-    - [ ] **Gestión de Personal**: Registro de veterinarios y recepcionistas, y control de bloqueo lógico de cuentas.
+    - [x] **Gestión de Personal**: Registro de veterinarios y recepcionistas, y control de bloqueo lógico de cuentas.
       <details>
       <summary>Prompt Figma / Stitch</summary>
 
@@ -342,7 +346,7 @@
       4. Botón flotante o superior azul: "+ Registrar Nuevo Lote / Producto" con un formulario modal limpio de fondo.
       ```
       </details>
-    - [ ] **Catálogo de Servicios y Tarifas**: CRUD y activación lógica de servicios médicos.
+    - [x] **Catálogo de Servicios y Tarifas**: CRUD y activación lógica de servicios médicos.
       <details>
       <summary>Prompt Figma / Stitch</summary>
 
