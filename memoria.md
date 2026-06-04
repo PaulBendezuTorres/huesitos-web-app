@@ -1,6 +1,6 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-05-24 (Fase 10B de backend - Alertas de Insumos y Control de Vencimientos implementada con éxito)
+Última actualización: 2026-06-04 (Implementación de Vistas del Cliente en Frontend: Historial Clínico, Agendamiento y Tienda)
 
 ## 🚀 Logros Recientes
 - [x] Rama `develop` creada y publicada en GitHub.
@@ -90,13 +90,22 @@
   - Implementados `DesparasitacionServicio` y `CampanaOfertaServicio` con CRUDs completos, auto-cálculos de porcentaje/precio de ofertas e inactivación de expirados.
   - Implementado `TareaProgramadaServicio` con métodos programados `@Scheduled` para:
     - Escaneo diario de próximas dosis de vacunas y desparasitaciones a 7 días y generación automática de `Recordatorio` en base de datos.
-    - Inactivación automática de campañas y ofertas expiradas en base a la fecha de fin.
   - Creados controladores para desparasitaciones, recordatorios (incluyendo endpoints manuales de control `/procesar-manual` y `/inactivar-campanas-manual` para pruebas de QA) y campañas/ofertas.
   - Configurado `SeguridadConfig` permitiendo visualización pública de campañas y ofertas, y restringiendo mutaciones a Veterinario/Administrador.
+- [x] **Frontend - Historial Clínico del Cliente**:
+  - Creado `mascotaAPI.js` para consumir endpoints de mascotas, consultas, vacunas, recetas PDF y archivos.
+  - Creado hook personalizado `useHistorialClinico.js` para carga paralela unificada y cronológica.
+  - Reescrito `MascotaFichaHistorial.jsx` con buscador, filtros y un timeline premium adaptativo.
+  - Creado `ClienteMascotas.jsx` y enlazado desde el panel y el inicio.
+- [x] **Frontend - Agendamiento de Citas e Integración de Tienda**:
+  - Creado `citaAPI.js` y `tiendaAPI.js` para conectar con la API de citas y tienda.
+  - Desarrollada vista `ClienteAgendarCita.jsx` interactiva en 4 pasos (Mascota, Servicio, Profesional, Horario/Fecha).
+  - Desarrollada vista `ClienteTienda.jsx` con catálogo, buscador de productos, carrito lateral (drawer) y checkout FEFO.
+  - Integradas todas las vistas en el ruteo de `App.jsx` y la botonera de `ClienteDashboard.jsx`.
 
 ## 📌 Estado Actual de los Componentes
 - **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF, Subida de Archivos Clínicos, Modelado e Inventario, Catálogo y Pedidos de Tienda Online, y el módulo de Tareas Programadas y Campañas de Marketing (Fase 11B finalizada) completamente implementados y validados.
-- **Frontend (React)**: Inicializado con React 18, Vite y Tailwind CSS 3.4 con página de bienvenida premium en español.
+- **Frontend (React)**: Inicializado con React 18, Vite y Tailwind CSS 3.4. Vistas del cliente implementadas por completo: Inicio, Mis Mascotas, Historial Clínico (Timeline), Agendamiento de Citas (4 pasos) y Tienda Online con carrito y checkout FEFO. Compilación validada.
 - **Base de Datos (MySQL)**: Base de datos `huesitos` inicializada. Hibernate crea/actualiza las tablas `usuarios`, `duenos`, `mascotas`, `citas`, `consultas_medicas`, `servicios`, `transacciones`, `horarios_personal`, `vacunas`, `historial_vacunas`, `recetas`, `archivos_clinicos`, `categorias`, `productos` y `inventarios` al levantar la aplicación.
 
 ## 🛠️ Próximos Pasos (Pendientes)
@@ -174,48 +183,9 @@
       Diseño responsivo para móviles y escritorio con fuentes modernas (Inter o Outfit).
       ```
       </details>
-    - [ ] **Ficha de Mascota e Historial Clínico**: Línea de tiempo de consultas, vacunas aplicadas y descarga de recetas.
-      <details>
-      <summary>Prompt Figma / Stitch</summary>
-
-      ```text
-      Diseña una página de Historial Clínico interactiva en español peruano para que un cliente vea la salud de su mascota en la veterinaria Huesitos. Estilo de diseño limpio, fondo slate-50, contenedor principal blanco y bordes rounded-3xl.
-      Componentes de la interfaz:
-      1. Resumen superior de la mascota: Card horizontal con la foto de perfil de la mascota ("Toby"), nombre, especie ("Perro - Boxer"), edad ("4 años"), peso ("28 kg"), y badges de estado de vacunas y desparasitaciones al día.
-      2. Buscador y Filtros: Campo de entrada para buscar por tipo de atención y botones de filtro rápido (Todos, Consultas, Vacunas, Exámenes, Recetas).
-      3. Línea de Tiempo (Timeline): Una línea de tiempo vertical con las atenciones:
-         - Evento 1 (Consulta Médica): Badge de fecha ("15 May 2026"). Título "Consulta por Otitis". Veterinario asignado, diagnóstico corto, y un botón blanco para "Ver Receta PDF (A5)".
-         - Evento 2 (Vacunación): Badge de fecha ("10 Abr 2026"). Título "Vacuna Antirrábica aplicada". Nombre de la vacuna, lote, y fecha recomendada del próximo refuerzo.
-         - Evento 3 (Examen de Laboratorio): Badge de fecha ("05 Mar 2026"). Título "Hemograma Completo". Descripción del resultado y un botón con icono de descarga para "Descargar Resultados Clínicos".
-      4. Estética premium con tipografía de alto contraste (Slate-900) e iconos limpios de Lucide (Stethoscope, Syringe, FileText).
-      ```
-      </details>
-    - [ ] **Agendamiento de Citas**: Formulario interactivo en 4 pasos (Mascota, Servicio, Profesional, Horario/Fecha).
-      <details>
-      <summary>Prompt Figma / Stitch</summary>
-
-      ```text
-      Diseña una interfaz de formulario interactivo para agendar una cita veterinaria en español para Huesitos Perú. Estilo de diseño ultra-limpio, minimalista y con bordes suaves (rounded-2xl). Fondo slate-50, contenedor principal en blanco con sombra suave.
-      El formulario debe dividirse en 4 pasos claros (Steppers superiores: 1. Mascota, 2. Servicio, 3. Profesional, 4. Horario):
-      1. Selector de Mascota: Cards pequeñas interactivas con foto y nombre de las mascotas del usuario ("Luna", "Toby").
-      2. Selector de Servicio: Lista desplegable o grid de tarjetas con iconos de servicios con precios en Soles peruanos ("Consulta General - S/ 80.00", "Vacuna Quíntuple - S/ 100.00", "Perfil Bioquímico - S/ 200.00").
-      3. Selector de Veterinario: Perfiles circulares rápidos con nombre y especialidad ("Dra. Ana Martínez - Pediatría", "Dr. Luis Gómez - General").
-      4. Selector de Fecha y Hora: Un mini-calendario visual interactivo para seleccionar el día del mes, seguido de un grid de horarios disponibles en formato de chips de texto ("09:00 AM", "10:30 AM", "03:00 PM").
-      Al final, un resumen de la cita con el precio total en Soles (S/), un botón azul grande para "Proceder al Pago / Confirmar Cita" y una advertencia en rojo suave sobre la política de cancelación de 24 horas.
-      ```
-      </details>
-    - [ ] **Tienda Online**: Catálogo de productos, buscador por categorías, carrito de compras lateral y checkout.
-      <details>
-      <summary>Prompt Figma / Stitch</summary>
-
-      ```text
-      Diseña una página de tienda online (E-commerce) integrada en el portal de la veterinaria Huesitos en Perú. El catálogo debe vender alimentos y accesorios. Diseño moderno, limpio y amigable.
-      Componentes requeridos:
-      1. Cabecera con barra de búsqueda destacada que diga "Buscar comida, juguetes, medicinas...", un selector de categorías (Alimentos, Juguetes, Farmacia, Higiene) y un botón de Carrito con badge flotante indicador del número de ítems.
-      2. Grid de productos: Cards de productos con foto del producto, nombre ("Alimento Premium Perro Adulto 15kg"), categoría, precio destacado en Soles ("S/ 185.00"), stock disponible ("12 unidades"), y un botón con icono de carrito para "Añadir". Si el stock es menor a 3, mostrar una alerta discreta en naranja de "¡Últimas unidades!".
-      3. Carrito de Compras Lateral (Drawer/Sidebar): Se desliza desde la derecha y muestra los productos seleccionados, cantidad modificable (+ / -), subtotal, un descuento por campaña aplicado ("Descuento - S/ 15.00"), total general en Soles (S/), y un botón azul de "Finalizar Compra (Checkout FEFO)".
-      ```
-      </details>
+    - [x] **Ficha de Mascota e Historial Clínico**: Línea de tiempo de consultas, vacunas aplicadas y descarga de recetas.
+    - [x] **Agendamiento de Citas**: Formulario interactivo en 4 pasos (Mascota, Servicio, Profesional, Horario/Fecha).
+    - [x] **Tienda Online**: Catálogo de productos, buscador por categorías, carrito de compras lateral y checkout.
 
   - **Vistas de Veterinario**:
     - [ ] **Agenda y Sala de Espera, y Ficha Clínica Activa (Tablet)**: Gestión completa de citas del día y edición del historial.
