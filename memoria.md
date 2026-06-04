@@ -1,6 +1,6 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-04 (Configuración de Horarios del Personal e Integración de Agenda)
+Última actualización: 2026-06-04 (Gestión de Inventario FEFO, Horarios y Citas)
 
 ## 🚀 Logros Recientes
 - [x] Rama `develop` creada y publicada en GitHub.
@@ -126,6 +126,10 @@
   - Corregido el endpoint de horarios del personal en `citaAPI.js` para usar `/api/usuarios/{usuarioId}/horarios` y agregada la función `guardarHorarioPersonal`.
   - Diseñada e implementada la vista `ConfiguracionHorarios.jsx` con selector de personal, switches por día de la semana y horas de entrada/salida.
   - Añadido bloqueo de excepciones (vacaciones/licencias) almacenado localmente y enlazado a los filtros de agendamiento y reprogramación.
+- [x] **Frontend - Gestión de Inventario FEFO**:
+  - Añadidas las funciones CRUD en `tiendaAPI.js` para categorías, productos y lotes.
+  - Creada la vista `InventarioPage.jsx` con grilla de productos con lotes expandibles, alertas de stock mínimo y vencimientos, y modales para registrar productos, lotes y ajustar cantidades de stock.
+  - Integrada la vista de inventario en `AdminDashboard.jsx` con botón de acceso directo en el panel lateral.
 
 ## 📌 Estado Actual de los Componentes
 - **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF, Subida de Archivos Clínicos, Modelado e Inventario, Catálogo y Pedidos de Tienda Online, y el módulo de Tareas Programadas y Campañas de Marketing (Fase 11B finalizada) completamente implementados y validados.
@@ -276,7 +280,7 @@
       4. Botón de acción principal inferior: "Guardar Jornada Semanal" en azul brillante y un botón de cancelación en gris.
       ```
       </details>
-    - [ ] **Gestión de Inventario FEFO**: Control de stock general, alerta de bajo stock y detalle de lotes con fechas de vencimiento.
+    - [x] **Gestión de Inventario FEFO**: Control de stock general, alerta de bajo stock y detalle de lotes con fechas de vencimiento.
       <details>
       <summary>Prompt Figma / Stitch</summary>
 
