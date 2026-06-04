@@ -1,42 +1,35 @@
-# IDEs and Editors
-.idea/
-.vscode/
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+# Ignorar todo por defecto en el monorepo
+*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Permitir explícitamente el archivo .gitignore y README.md
+!/.gitignore
+!/README.md
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# Permitir las carpetas de los subproyectos
+!/huesitos-backend/
+!/huesitos-frontend/
 
-# System Files
-.DS_Store
-Thumbs.db
+# Exclusiones de Git para huesitos-backend (Java/Spring Boot)
+huesitos-backend/target/
+huesitos-backend/bin/
+huesitos-backend/.settings/
+huesitos-backend/.classpath
+huesitos-backend/.project
+huesitos-backend/.idea/
+huesitos-backend/*.log
+huesitos-backend/out/
+huesitos-backend/.mvn/wrapper/maven-wrapper.jar
 
-
-# Local Agent Skills
-.agents/
-graphify-out/
-.venv/
-# Project Progress Document
-memoria.md
-
-# Figma Prompts File (Ignored)
-prompts_figma.md
+# Exclusiones de Git para huesitos-frontend (React/Vite)
+huesitos-frontend/node_modules/
+huesitos-frontend/dist/
+huesitos-frontend/dist-ssr/
+huesitos-frontend/*.local
+huesitos-frontend/.vscode/
+huesitos-frontend/.idea/
+huesitos-frontend/*.log
+huesitos-frontend/npm-debug.log*
+huesitos-frontend/yarn-debug.log*
+huesitos-frontend/yarn-error.log*
+huesitos-frontend/pnpm-debug.log*
+huesitos-frontend/lerna-debug.log*
