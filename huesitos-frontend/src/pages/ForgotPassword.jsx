@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Mail, ArrowLeft } from 'lucide-react';
 import logo from '../assets/Logo Huesitos.png';
 
 const VetForgotPassword = () => {
@@ -9,22 +10,6 @@ const VetForgotPassword = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-
-  const colors = {
-    blue900: '#042C53',
-    blue800: '#0C447C',
-    blue600: '#185FA5',
-    blue400: '#378ADD',
-    blue200: '#85B7EB',
-    blue100: '#B5D4F4',
-    blue50:  '#E6F1FB',
-    red100:  '#F7C1C1',
-    red600:  '#A32D2D',
-    red50:   '#FCEBEB',
-    green50: '#ECFDF5',
-    green600: '#059669',
-    green100: '#A7F3D0'
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -62,122 +47,88 @@ const VetForgotPassword = () => {
   };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: '#f1f5f9',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '2rem 1rem',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-    }}>
-      <div style={{
-        display: 'flex',
-        width: '100%',
-        maxWidth: '840px',
-        borderRadius: '20px',
-        overflow: 'hidden',
-        border: '1px solid #e2e8f0',
-        boxShadow: '0 4px 32px rgba(0,0,0,0.10)',
-        position: 'relative',
-      }}>
+    <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4 selection:bg-sky-500 selection:text-white font-sans">
+      <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-hidden min-h-[500px] relative animate-in fade-in duration-200">
+        
+        {/* ======================== PANEL IZQUIERDO ======================== */}
+        <div className="w-full md:w-[52%] bg-gradient-to-tr from-sky-600 to-slate-900 text-white p-8 md:p-12 flex flex-col justify-between relative min-h-[300px] md:min-h-0 shrink-0">
+          <div className="absolute inset-0 bg-slate-950/60 z-0" />
 
-        {/* ======================== PANEL IZQUIERDO (GRADIENT) ======================== */}
-        <div style={{
-          width: '52%',
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: "space-between",
-          overflow: 'hidden',
-          minHeight: '500px',
-          background: `linear-gradient(135deg, ${colors.blue600} 0%, ${colors.blue900} 100%)`,
-        }}>
-          <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(160deg, rgba(4,44,83,0.55) 0%, rgba(4,44,83,0.82) 50%, rgba(4,44,83,0.97) 100%)`, zIndex: 1 }} />
-
-          <div style={{ position: 'relative', zIndex: 2, padding: '2.5rem 2rem 0' }}>
-            <div className="w-14 h-14 bg-gradient-to-tr from-sky-500 to-cyan-300 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-sky-400/30">
-              <img src={logo} alt="Logo de la clínica" />
+          <div className="relative z-10 flex items-center gap-2.5">
+            <div className="w-10 h-10 bg-gradient-to-tr from-sky-500 to-cyan-300 rounded-xl flex items-center justify-center text-white shadow-md shadow-sky-500/15">
+              <img src={logo} alt="Logo" className="w-8 h-8 object-contain" />
             </div>
+            <span className="text-lg font-bold text-white tracking-tight">Vet. Huesitos</span>
           </div>
 
-          <div style={{ position: 'relative', zIndex: 2, padding: '0 2rem 2.5rem', marginBottom: '6rem' }}>
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: '8px',
-              background: 'rgba(55,138,221,0.18)', border: '1px solid rgba(133,183,235,0.3)',
-              borderRadius: '999px', padding: '5px 14px', marginBottom: '1rem',
-            }}>
-              <span style={{ fontSize: '14px' }}>🔑</span>
-              <span style={{ fontSize: '11px', color: colors.blue200, fontWeight: 500, letterSpacing: '0.04em' }}>Seguridad de cuenta</span>
+          <div className="relative z-10 space-y-4 mt-auto">
+            <div className="inline-flex items-center gap-2 bg-sky-500/15 border border-sky-400/20 rounded-full px-3.5 py-1 text-sky-300">
+              <span className="text-sm">🔑</span>
+              <span className="text-[10px] font-semibold tracking-wider uppercase">Recuperación de contraseña</span>
             </div>
-            <h2 style={{ fontSize: '24px', fontWeight: 700, color: '#fff', lineHeight: 1.3, marginBottom: '10px' }}>
-              Recupera tu acceso de <span style={{ color: colors.blue200 }}>forma segura</span>
+            <h2 className="text-2xl md:text-3xl font-bold leading-tight">
+              ¿Olvidaste tu <span className="text-sky-300">contraseña?</span>
             </h2>
-            <p style={{ fontSize: '13px', color: colors.blue100, lineHeight: 1.6, marginBottom: '1.25rem', maxWidth: '280px' }}>
-              Te enviaremos un token temporal de recuperación que podrás usar para establecer una nueva contraseña de acceso.
+            <p className="text-xs text-slate-350 leading-relaxed max-w-xs text-slate-300">
+              No te preocupes. Ingresa tu correo electrónico registrado y te enviaremos un código de seguridad para restablecer tu acceso.
             </p>
           </div>
         </div>
 
-        {/* ======================== PANEL DERECHO (FORMULARIO) ======================== */}
-        <div style={{
-          width: '48%', background: '#fff', padding: '2.5rem 2rem', display: 'flex',
-          flexDirection: 'column', justifyContent: 'center', position: 'relative'
-        }}>
+        {/* ======================== PANEL DERECHO ======================== */}
+        <div className="w-full md:w-[48%] bg-white p-8 md:p-12 flex flex-col justify-center relative">
           
           {/* BOTÓN VOLVER */}
           <button 
             onClick={() => navigate('/login')} 
-            style={{
-              position: 'absolute', top: '20px', right: '20px', background: 'none', border: 'none',
-              color: '#64748b', fontSize: '13px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px'
-            }}
+            className="absolute top-6 right-6 text-slate-400 hover:text-slate-650 transition-colors flex items-center gap-1.5 text-xs font-semibold"
           >
-            ← Volver al login
+            <ArrowLeft size={14} />
+            Volver al login
           </button>
 
-          <div style={{ marginBottom: '2rem' }}>
-            <h2 style={{ fontSize: '21px', fontWeight: 700, color: '#0f172a', marginBottom: '3px' }}>Restablecer contraseña</h2>
-            <p style={{ fontSize: '13px', color: '#64748b' }}>Ingresa tu correo para recibir el código de verificación</p>
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-slate-800">Recuperar contraseña</h2>
+            <p className="text-xs text-slate-400 mt-1 font-semibold">Solicita tu código de verificación de 6 dígitos</p>
           </div>
 
           {/* Mensajes de error/éxito */}
           {errorMsg && (
-            <div style={{ background: colors.red50, color: colors.red600, padding: '10px', borderRadius: '8px', fontSize: '12px', marginBottom: '1rem', border: `1px solid ${colors.red100}` }}>
+            <div className="bg-red-50 text-red-650 border border-red-100 rounded-xl p-3 text-xs font-semibold mb-4">
               {errorMsg}
             </div>
           )}
 
           {successMsg && (
-            <div style={{ background: colors.green50, color: colors.green600, padding: '10px', borderRadius: '8px', fontSize: '12px', marginBottom: '1rem', border: `1px solid ${colors.green100}` }}>
+            <div className="bg-emerald-50 text-emerald-650 border border-emerald-100 rounded-xl p-3 text-xs font-semibold mb-4">
               {successMsg}
             </div>
           )}
 
-          <form onSubmit={handleSubmit}>
-            <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '5px' }}>Correo electrónico</label>
-              <div style={{ position: 'relative' }}>
-                <span style={{ position: 'absolute', left: '11px', top: '50%', transform: 'translateY(-50%)', fontSize: '16px', color: '#94a3b8' }}>✉</span>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="block text-xs font-semibold text-slate-600 mb-1.5 tracking-wide">Correo electrónico</label>
+              <div className="relative">
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
+                  <Mail size={16} />
+                </span>
                 <input
-                  type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="correo@ejemplo.com" required
-                  style={{
-                    width: '100%', padding: '0 11px 0 35px', height: '42px', borderRadius: '10px', border: '1px solid #e2e8f0',
-                    background: '#f8fafc', fontSize: '13px', color: '#0f172a', outline: 'none', boxSizing: 'border-box',
-                  }}
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="correo@ejemplo.com"
+                  required
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 focus:bg-white"
                 />
               </div>
             </div>
 
             <button
-              type="submit" disabled={loading}
-              style={{
-                width: '100%', height: '44px', background: colors.blue600, color: '#fff', border: 'none', borderRadius: '10px',
-                fontSize: '14px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', transition: 'background 0.15s',
-                opacity: loading ? 0.7 : 1,
-              }}
+              type="submit"
+              disabled={loading}
+              className="w-full py-3 bg-sky-500 hover:bg-sky-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-sky-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-70"
             >
-              {loading ? 'Procesando...' : 'Enviar Token de Recuperación'}
+              {loading ? 'Enviando...' : 'Enviar código de verificación'}
             </button>
           </form>
 

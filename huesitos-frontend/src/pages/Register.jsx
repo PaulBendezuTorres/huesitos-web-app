@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { User, Phone, MapPin, Mail, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import logo from '../assets/Logo Huesitos.png';
 
 const VetRegister = () => {
@@ -15,22 +16,6 @@ const VetRegister = () => {
   const [successMsg, setSuccessMsg] = useState('');
 
   const navigate = useNavigate();
-
-  const colors = {
-    blue900: '#042C53',
-    blue800: '#0C447C',
-    blue600: '#185FA5',
-    blue400: '#378ADD',
-    blue200: '#85B7EB',
-    blue100: '#B5D4F4',
-    blue50:  '#E6F1FB',
-    red100:  '#F7C1C1',
-    red600:  '#A32D2D',
-    red50:   '#FCEBEB',
-    green50: '#ECFDF5',
-    green600: '#059669',
-    green100: '#A7F3D0'
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -90,195 +75,194 @@ const VetRegister = () => {
   };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: '#f1f5f9',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '2rem 1rem',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-    }}>
-      <div style={{
-        display: 'flex',
-        width: '100%',
-        maxWidth: '920px',
-        borderRadius: '20px',
-        overflow: 'hidden',
-        border: '1px solid #e2e8f0',
-        boxShadow: '0 4px 32px rgba(0,0,0,0.10)',
-        position: 'relative',
-      }}>
+    <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4 selection:bg-sky-500 selection:text-white font-sans">
+      <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-hidden min-h-[620px] relative animate-in fade-in duration-200">
+        
+        {/* ======================== PANEL IZQUIERDO ======================== */}
+        <div className="w-full md:w-[45%] bg-gradient-to-tr from-sky-600 to-slate-900 text-white p-8 md:p-12 flex flex-col justify-between relative min-h-[300px] md:min-h-0 shrink-0">
+          <div className="absolute inset-0 bg-slate-950/60 z-0" />
 
-        {/* ======================== PANEL IZQUIERDO (GRADIENT) ======================== */}
-        <div style={{
-          width: '45%',
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: "space-between",
-          overflow: 'hidden',
-          minHeight: '620px',
-          background: `linear-gradient(135deg, ${colors.blue600} 0%, ${colors.blue900} 100%)`,
-        }}>
-          <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(160deg, rgba(4,44,83,0.55) 0%, rgba(4,44,83,0.82) 50%, rgba(4,44,83,0.97) 100%)`, zIndex: 1 }} />
-
-          <div style={{ position: 'relative', zIndex: 2, padding: '2.5rem 2rem 0' }}>
-            <div className="w-14 h-14 bg-gradient-to-tr from-sky-500 to-cyan-300 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-sky-400/30">
-              <img src={logo} alt="Logo de la clínica" />
+          <div className="relative z-10 flex items-center gap-2.5">
+            <div className="w-10 h-10 bg-gradient-to-tr from-sky-500 to-cyan-300 rounded-xl flex items-center justify-center text-white shadow-md shadow-sky-500/15">
+              <img src={logo} alt="Logo" className="w-8 h-8 object-contain" />
             </div>
+            <span className="text-lg font-bold text-white tracking-tight">Vet. Huesitos</span>
           </div>
 
-          <div style={{ position: 'relative', zIndex: 2, padding: '0 2rem 2.5rem', marginBottom: '4rem' }}>
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: '8px',
-              background: 'rgba(55,138,221,0.18)', border: '1px solid rgba(133,183,235,0.3)',
-              borderRadius: '999px', padding: '5px 14px', marginBottom: '1rem',
-            }}>
-              <span style={{ fontSize: '14px' }}>🐶</span>
-              <span style={{ fontSize: '11px', color: colors.blue200, fontWeight: 500, letterSpacing: '0.04em' }}>Únete a la familia Huesitos</span>
+          <div className="relative z-10 space-y-4 mt-auto">
+            <div className="inline-flex items-center gap-2 bg-sky-500/15 border border-sky-400/20 rounded-full px-3.5 py-1 text-sky-300">
+              <span className="text-sm">🐶</span>
+              <span className="text-[10px] font-semibold tracking-wider uppercase">Únete a la familia Huesitos</span>
             </div>
-            <h2 style={{ fontSize: '24px', fontWeight: 700, color: '#fff', lineHeight: 1.3, marginBottom: '10px' }}>
-              La salud de tu mascota en <span style={{ color: colors.blue200 }}>buenas manos</span>
+            <h2 className="text-2xl md:text-3xl font-bold leading-tight">
+              La salud de tu mascota en <span className="text-sky-300">buenas manos</span>
             </h2>
-            <p style={{ fontSize: '13px', color: colors.blue100, lineHeight: 1.6, marginBottom: '1.25rem', maxWidth: '280px' }}>
+            <p className="text-xs text-slate-350 leading-relaxed max-w-xs text-slate-300">
               Crea una cuenta para agendar citas médicas, acceder al historial clínico y comprar en nuestra tienda online.
             </p>
           </div>
         </div>
 
-        {/* ======================== PANEL DERECHO (FORMULARIO) ======================== */}
-        <div style={{
-          width: '55%', background: '#fff', padding: '2.5rem 2.5rem', display: 'flex',
-          flexDirection: 'column', justifyContent: 'center', position: 'relative'
-        }}>
+        {/* ======================== PANEL DERECHO ======================== */}
+        <div className="w-full md:w-[55%] bg-white p-8 md:p-10 flex flex-col justify-center relative">
           
           {/* BOTÓN VOLVER */}
           <button 
             onClick={() => navigate('/login')} 
-            style={{
-              position: 'absolute', top: '20px', right: '20px', background: 'none', border: 'none',
-              color: '#64748b', fontSize: '13px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px'
-            }}
+            className="absolute top-6 right-6 text-slate-400 hover:text-slate-650 transition-colors flex items-center gap-1.5 text-xs font-semibold"
           >
-            ← Volver al login
+            <ArrowLeft size={14} />
+            Volver al login
           </button>
 
-          <div style={{ marginBottom: '1.5rem', marginTop: '1rem' }}>
-            <h2 style={{ fontSize: '21px', fontWeight: 700, color: '#0f172a', marginBottom: '3px' }}>Crea tu cuenta</h2>
-            <p style={{ fontSize: '13px', color: '#64748b' }}>Registra tus datos como dueño de mascota</p>
+          <div className="mb-6 mt-4">
+            <h2 className="text-2xl font-bold text-slate-800">Crea tu cuenta</h2>
+            <p className="text-xs text-slate-400 mt-1 font-semibold">Registra tus datos como dueño de mascota</p>
           </div>
 
           {/* Mensajes de error/éxito */}
           {errorMsg && (
-            <div style={{ background: colors.red50, color: colors.red600, padding: '10px', borderRadius: '8px', fontSize: '12px', marginBottom: '1rem', border: `1px solid ${colors.red100}` }}>
+            <div className="bg-red-50 text-red-650 border border-red-100 rounded-xl p-3 text-xs font-semibold mb-4">
               {errorMsg}
             </div>
           )}
 
           {successMsg && (
-            <div style={{ background: colors.green50, color: colors.green600, padding: '10px', borderRadius: '8px', fontSize: '12px', marginBottom: '1rem', border: `1px solid ${colors.green100}` }}>
+            <div className="bg-emerald-50 text-emerald-650 border border-emerald-100 rounded-xl p-3 text-xs font-semibold mb-4">
               {successMsg}
             </div>
           )}
 
-          <form onSubmit={handleSubmit}>
-            <div style={{ display: 'flex', gap: '15px', marginBottom: '1rem' }}>
-              <div style={{ flex: 1 }}>
-                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '5px' }}>Nombre completo</label>
-                <input
-                  type="text" value={nombreCompleto} onChange={e => setNombreCompleto(e.target.value)} placeholder="Juan Pérez" required
-                  style={{
-                    width: '100%', padding: '0 12px', height: '40px', borderRadius: '10px', border: '1px solid #e2e8f0',
-                    background: '#f8fafc', fontSize: '13px', color: '#0f172a', outline: 'none', boxSizing: 'border-box',
-                  }}
-                />
-              </div>
-              <div style={{ width: '130px' }}>
-                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '5px' }}>Teléfono móvil</label>
-                <input
-                  type="tel" value={telefono} 
-                  onChange={e => setTelefono(e.target.value.replace(/\D/g, '').slice(0, 9))} 
-                  placeholder="999888777" required
-                  style={{
-                    width: '100%', padding: '0 12px', height: '40px', borderRadius: '10px', border: '1px solid #e2e8f0',
-                    background: '#f8fafc', fontSize: '13px', color: '#0f172a', outline: 'none', boxSizing: 'border-box',
-                  }}
-                />
-              </div>
-            </div>
-
-            <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '5px' }}>Dirección</label>
-              <input
-                type="text" value={direccion} onChange={e => setDireccion(e.target.value)} placeholder="Av. Bolognesi 123" required
-                style={{
-                  width: '100%', padding: '0 12px', height: '40px', borderRadius: '10px', border: '1px solid #e2e8f0',
-                  background: '#f8fafc', fontSize: '13px', color: '#0f172a', outline: 'none', boxSizing: 'border-box',
-                }}
-              />
-            </div>
-
-            <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '5px' }}>Correo electrónico</label>
-              <input
-                type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="correo@ejemplo.com" required
-                style={{
-                  width: '100%', padding: '0 12px', height: '40px', borderRadius: '10px', border: '1px solid #e2e8f0',
-                  background: '#f8fafc', fontSize: '13px', color: '#0f172a', outline: 'none', boxSizing: 'border-box',
-                }}
-              />
-            </div>
-
-            <div style={{ display: 'flex', gap: '15px', marginBottom: '1.25rem' }}>
-              <div style={{ flex: 1 }}>
-                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '5px' }}>Contraseña</label>
-                <div style={{ position: 'relative' }}>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-semibold text-slate-600 mb-1.5 tracking-wide">Nombre completo</label>
+                <div className="relative">
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
+                    <User size={16} />
+                  </span>
                   <input
-                    type={showPass ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" required
-                    style={{
-                      width: '100%', padding: '0 35px 0 12px', height: '40px', borderRadius: '10px', border: '1px solid #e2e8f0',
-                      background: '#f8fafc', fontSize: '13px', color: '#0f172a', outline: 'none', boxSizing: 'border-box',
-                    }}
+                    type="text"
+                    value={nombreCompleto}
+                    onChange={e => setNombreCompleto(e.target.value)}
+                    placeholder="Juan Pérez"
+                    required
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 focus:bg-white"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 mb-1.5 tracking-wide">Teléfono móvil</label>
+                <div className="relative">
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
+                    <Phone size={16} />
+                  </span>
+                  <input
+                    type="tel"
+                    value={telefono}
+                    onChange={e => setTelefono(e.target.value.replace(/\D/g, '').slice(0, 9))}
+                    placeholder="999888777"
+                    required
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 focus:bg-white"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-600 mb-1.5 tracking-wide">Dirección</label>
+              <div className="relative">
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
+                  <MapPin size={16} />
+                </span>
+                <input
+                  type="text"
+                  value={direccion}
+                  onChange={e => setDireccion(e.target.value)}
+                  placeholder="Av. Bolognesi 123"
+                  required
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 focus:bg-white"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-600 mb-1.5 tracking-wide">Correo electrónico</label>
+              <div className="relative">
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
+                  <Mail size={16} />
+                </span>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="correo@ejemplo.com"
+                  required
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 focus:bg-white"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 mb-1.5 tracking-wide">Contraseña</label>
+                <div className="relative">
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
+                    <Lock size={16} />
+                  </span>
+                  <input
+                    type={showPass ? 'text' : 'password'}
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    required
+                    className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 focus:bg-white"
                   />
                   <button
-                    type="button" onClick={() => setShowPass(!showPass)}
-                    style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', fontSize: '16px', padding: 0 }}
+                    type="button"
+                    onClick={() => setShowPass(!showPass)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-650 transition-colors"
                   >
-                    {showPass ? '🙈' : '👁'}
+                    {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
               </div>
-              <div style={{ flex: 1 }}>
-                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '5px' }}>Confirmar Contraseña</label>
-                <input
-                  type={showPass ? 'text' : 'password'} value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="••••••••" required
-                  style={{
-                    width: '100%', padding: '0 12px', height: '40px', borderRadius: '10px', border: '1px solid #e2e8f0',
-                    background: '#f8fafc', fontSize: '13px', color: '#0f172a', outline: 'none', boxSizing: 'border-box',
-                  }}
-                />
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 mb-1.5 tracking-wide">Confirmar contraseña</label>
+                <div className="relative">
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
+                    <Lock size={16} />
+                  </span>
+                  <input
+                    type={showPass ? 'text' : 'password'}
+                    value={confirmPassword}
+                    onChange={e => setConfirmPassword(e.target.value)}
+                    placeholder="••••••••"
+                    required
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 focus:bg-white"
+                  />
+                </div>
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '1.5rem' }}>
+            <div className="flex items-start gap-2.5 py-1">
               <input
-                type="checkbox" id="terminos" checked={aceptaTerminos} onChange={e => setAceptaTerminos(e.target.checked)}
-                style={{ cursor: 'pointer' }}
+                type="checkbox"
+                id="terminos"
+                checked={aceptaTerminos}
+                onChange={e => setAceptaTerminos(e.target.checked)}
+                className="w-4 h-4 text-sky-500 border-slate-300 rounded focus:ring-sky-400 focus:ring-2 outline-none cursor-pointer mt-0.5"
               />
-              <label htmlFor="terminos" style={{ fontSize: '12px', color: '#64748b', cursor: 'pointer' }}>
+              <label htmlFor="terminos" className="text-[11px] text-slate-500 font-semibold cursor-pointer select-none leading-relaxed">
                 Acepto los términos y condiciones de privacidad de datos personales.
               </label>
             </div>
 
             <button
               type="submit"
-              style={{
-                width: '100%', height: '44px', background: colors.blue600, color: '#fff', border: 'none', borderRadius: '10px',
-                fontSize: '14px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', transition: 'background 0.15s',
-              }}
+              className="w-full py-3 bg-sky-500 hover:bg-sky-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-sky-500/20 transition-all flex items-center justify-center gap-2"
             >
-              Crear Cuenta
+              Crear cuenta
             </button>
           </form>
 
