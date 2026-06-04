@@ -374,10 +374,10 @@
       - [x] Rediseñar `VeterinarioAgenda.jsx` (sala de espera interactiva responsiva con KPIs médicos).
       - [x] Rediseñar `ConsultaActiva.jsx` (pestañas clínicas, recetas y descarga de PDFs responsivos).
       - [x] Garantizar el uso correcto y coherente de mayúsculas y minúsculas (Casing) en diagnósticos, prescripciones y listados.
-    - [ ] **Fase C: Rediseño Responsivo y Estético de Vista Recepcionista**:
-      - [ ] Rediseñar `RecepcionistaDashboard.jsx` (Layout adaptativo para tablets/móviles).
-      - [ ] Rediseñar `CajaPOS.jsx` (caja registradora táctil responsiva y flujo simétrico de cobros y vuelto).
-      - [ ] Garantizar el uso correcto y coherente de mayúsculas y minúsculas (Casing) en la botonera táctil, reportes e importes.
+    - [x] **Fase C: Rediseño Responsivo y Estético de Vista Recepcionista**:
+      - [x] Rediseñar `RecepcionistaDashboard.jsx` (Layout adaptativo para tablets/móviles).
+      - [x] Rediseñar `CajaPOS.jsx` (caja registradora táctil responsiva y flujo simétrico de cobros y vuelto).
+      - [x] Garantizar el uso correcto y coherente de mayúsculas y minúsculas (Casing) en la botonera táctil, reportes e importes.
 
 
 ## 🧠 Decisiones Clave y Notas
