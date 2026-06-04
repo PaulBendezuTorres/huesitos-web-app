@@ -107,10 +107,16 @@
   - Diseñada e implementada la interfaz `VeterinarioDashboard.jsx` optimizada para tablets en formato Split View 30/70.
   - Integrada la sala de espera del día y el inicio de consultas con diagnóstico, prescripción de recetas y carga multipart de análisis de laboratorio.
   - Configuradas las rutas correspondientes y redirección dinámica en login por rol.
+- [x] **Frontend - Vista de Recepcionista (POS y Caja)**:
+  - Agregadas las llamadas al POS de caja, alertas de stock mínimo, vencimientos (FEFO) y boleta PDF en `finanzasService.js`.
+  - Diseñada e implementada la interfaz táctil `RecepcionistaDashboard.jsx` en formato Split View 40/60 para tablets.
+  - Integrado el modal de cobro táctil con cálculo de vuelto por efectivo, códigos de referencia y descarga/impresión inmediata de la boleta de venta en formato PDF A5.
+  - Expuesto el endpoint `GET /api/pagos/{id}/boleta` en `TransaccionControlador.java` del backend para vincular `BoletaPdfServicio`.
+  - Registradas las rutas y redirecciones en `App.jsx` y `Login.jsx` respectivamente.
 
 ## 📌 Estado Actual de los Componentes
 - **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF, Subida de Archivos Clínicos, Modelado e Inventario, Catálogo y Pedidos de Tienda Online, y el módulo de Tareas Programadas y Campañas de Marketing (Fase 11B finalizada) completamente implementados y validados.
-- **Frontend (React)**: Inicializado con React 18, Vite y Tailwind CSS 3.4. Vistas implementadas: Landing Page, Cliente (Inicio, Mascotas, Historial/Timeline, Agendar Cita, Tienda y Carrito), y Veterinario (Agenda, Sala de Espera y Ficha Clínica Activa para Tablet). Compilación validada con éxito.
+- **Frontend (React)**: Inicializado con React 18, Vite y Tailwind CSS 3.4. Vistas implementadas: Landing Page, Cliente (Inicio, Mascotas, Historial/Timeline, Agendar Cita, Tienda y Carrito), Veterinario (Agenda, Sala de Espera y Ficha Clínica Activa) y Recepcionista (POS, Caja y alertas FEFO). Compilación validada con éxito.
 - **Base de Datos (MySQL)**: Base de datos `huesitos` inicializada. Hibernate crea/actualiza las tablas `usuarios`, `duenos`, `mascotas`, `citas`, `consultas_medicas`, `servicios`, `transacciones`, `horarios_personal`, `vacunas`, `historial_vacunas`, `recetas`, `archivos_clinicos`, `categorias`, `productos` y `inventarios` al levantar la aplicación.
 
 ## 🛠️ Próximos Pasos (Pendientes)
@@ -196,25 +202,7 @@
     - [x] **Agenda y Sala de Espera, y Ficha Clínica Activa (Tablet)**: Gestión completa de citas del día y edición del historial.
 
   - **Vistas de Recepcionista**:
-    - [ ] **Punto de Venta (POS) y Caja**: Cobros de citas y tienda con múltiples métodos de pago, vuelto e impresión de Boleta A5 PDF.
-      <details>
-      <summary>Prompt Figma / Stitch</summary>
-
-      ```text
-      Diseña una interfaz de punto de venta (POS) y caja de la clínica veterinaria Huesitos Perú orientada a una Recepcionista. Formato tablet/pantalla táctil, muy intuitiva y de acceso rápido.
-      Debe tener:
-      1. Panel de Transacciones Pendientes: Grid o lista de facturas pendientes de pago. Cada fila muestra: Número de orden, Cliente (Nombre y DNI peruano), Detalle ("Consulta Médica + Vacuna Triple"), Total ("S/ 170.00"), y un botón "Cobrar".
-      2. Ventana Modal de Procesamiento de Pago:
-         - Resumen de ítems y precios en Soles (S/).
-         - Selector de Medio de Pago con botones táctiles grandes típicos de Perú: Efectivo, Tarjeta de Crédito/Débito, Transferencia Bancaria, Pago Digital (Yape / Plin).
-         - Campo para ingresar "Monto Recibido" y cálculo automático de "Vuelto".
-         - Switch interactivo para: "Generar Boleta de Venta" o "Generar Factura".
-         - Botón verde grande "Confirmar Pago e Imprimir Comprobante (Boleta A5 PDF)".
-      3. Módulo de Inventario Crítico (Bajo Stock & Vencimiento):
-         - Alerta en rojo en la esquina superior si hay productos con stock menor al mínimo o lotes próximos a vencer.
-         - Tabla de inventarios que resalte productos próximos a vencer según orden FEFO (fecha de vencimiento más cercana).
-      ```
-      </details>
+    - [x] **Punto de Venta (POS) y Caja**: Cobros de citas y tienda con múltiples métodos de pago, vuelto e impresión de Boleta A5 PDF.
     - [ ] **Despacho de Pedidos**: Control y entrega de las compras realizadas en la tienda online.
       <details>
       <summary>Prompt Figma / Stitch</summary>
