@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ShoppingBag, Truck, Check, X } from 'lucide-react';
+import { ShoppingBag, Truck, Check, X, ChevronLeft } from 'lucide-react';
 import { obtenerTodosLosPedidos, cambiarEstadoPedido } from '../api/tiendaAPI';
 
 const GestionPedidos = () => {
@@ -45,18 +45,31 @@ const GestionPedidos = () => {
     return p.estado === filtroEstadoPedido;
   });
 
+  const formatEstado = (est) => {
+    switch (est) {
+      case 'TODOS': return 'Todos';
+      case 'PENDIENTE': return 'Pendientes';
+      case 'PAGADO': return 'Pagados';
+      case 'ENTREGADO': return 'Entregados';
+      case 'CANCELADO': return 'Cancelados';
+      default: return est;
+    }
+  };
+
   return (
-    <div className="flex-1 flex overflow-hidden h-full bg-slate-50">
-      {/* PANEL IZQUIERDO: Listado de pedidos (45% de ancho) */}
-      <section className="w-[45%] bg-white border-r border-slate-200 flex flex-col overflow-hidden animate-in fade-in duration-200">
+    <div className="flex-1 flex flex-col lg:flex-row overflow-hidden h-full bg-slate-50 w-full">
+      {/* PANEL IZQUIERDO: Listado de pedidos */}
+      <section className={`w-full lg:w-[40%] lg:max-w-md bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col overflow-hidden animate-in fade-in duration-200 shrink-0 ${
+        pedidoSeleccionado ? 'hidden lg:flex' : 'flex'
+      }`}>
         <div className="p-4 border-b border-slate-100 bg-slate-50/50 shrink-0">
           <div className="flex justify-between items-center mb-3">
             <div className="flex items-center gap-2">
-              <ShoppingBag size={18} className="text-sky-500" />
-              <h2 className="font-black text-slate-800 text-sm tracking-wide uppercase">Pedidos Tienda Online</h2>
+              <ShoppingBag size={16} className="text-sky-500" />
+              <h2 className="font-bold text-slate-800 text-sm tracking-tight">Pedidos de tienda online</h2>
             </div>
-            <span className="bg-sky-100 text-sky-700 text-[10px] font-black px-2 py-0.5 rounded-full">
-              {pedidosFiltrados.length} Total
+            <span className="bg-sky-100 text-sky-700 text-[10px] font-bold px-2 py-0.5 rounded-full">
+              {pedidosFiltrados.length} total
             </span>
           </div>
 
@@ -66,13 +79,13 @@ const GestionPedidos = () => {
               <button
                 key={estado}
                 onClick={() => setFiltroEstadoPedido(estado)}
-                className={`px-3 py-1.5 rounded-lg font-bold text-[9px] tracking-wider uppercase border transition-all shrink-0 ${
+                className={`px-3 py-1.5 rounded-lg font-semibold text-[10px] tracking-wide border transition-all shrink-0 ${
                   filtroEstadoPedido === estado
                     ? 'bg-sky-500 text-white border-sky-500 shadow-md shadow-sky-500/15'
                     : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'
                 }`}
               >
-                {estado}
+                {formatEstado(estado)}
               </button>
             ))}
           </div>
@@ -84,7 +97,7 @@ const GestionPedidos = () => {
               Consultando pedidos entrantes...
             </div>
           ) : pedidosFiltrados.length === 0 ? (
-            <div className="text-center py-10 text-slate-400 text-xs font-bold">
+            <div className="text-center py-10 text-slate-400 text-xs font-semibold">
               No se encontraron pedidos con el estado seleccionado.
             </div>
           ) : (
@@ -95,6 +108,13 @@ const GestionPedidos = () => {
                 ENTREGADO: 'bg-emerald-50 text-emerald-600 border-emerald-200',
                 CANCELADO: 'bg-red-50 text-red-600 border-red-200'
               }[pedido.estado];
+
+              const labelEstado = {
+                PENDIENTE: 'Pendiente',
+                PAGADO: 'Pagado',
+                ENTREGADO: 'Entregado',
+                CANCELADO: 'Cancelado'
+              }[pedido.estado] || pedido.estado;
 
               return (
                 <div 
@@ -108,21 +128,21 @@ const GestionPedidos = () => {
                 >
                   <div className="flex justify-between items-start mb-2">
                     <div>
-                      <span className="text-[10px] text-slate-400 font-bold">PEDIDO #{pedido.id}</span>
+                      <span className="text-[10px] text-slate-400 font-semibold">Pedido #{pedido.id}</span>
                       <h4 className="font-bold text-slate-800 text-sm tracking-tight mt-0.5">
                         {pedido.cliente ? pedido.cliente.correo : 'Cliente Huesitos'}
                       </h4>
                     </div>
-                    <span className={`text-[9px] font-black px-2 py-0.5 rounded-full uppercase border ${colorEstado}`}>
-                      {pedido.estado}
+                    <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${colorEstado}`}>
+                      {labelEstado}
                     </span>
                   </div>
 
                   <div className="flex justify-between items-center text-xs pt-1">
-                    <span className="text-slate-400 font-medium">
+                    <span className="text-slate-400 font-semibold">
                       {new Date(pedido.fecha).toLocaleDateString('es-PE')}
                     </span>
-                    <span className="font-black text-slate-800">
+                    <span className="font-bold text-slate-800">
                       S/ {pedido.total ? pedido.total.toFixed(2) : '0.00'}
                     </span>
                   </div>
@@ -133,16 +153,28 @@ const GestionPedidos = () => {
         </div>
       </section>
 
-      {/* PANEL DERECHO: Detalle del pedido seleccionado (55% de ancho) */}
-      <section className="flex-1 bg-slate-50 flex flex-col overflow-hidden animate-in fade-in duration-200">
+      {/* PANEL DERECHO: Detalle del pedido seleccionado */}
+      <section className={`flex-1 bg-slate-50 flex flex-col overflow-hidden animate-in fade-in duration-200 ${
+        pedidoSeleccionado ? 'flex' : 'hidden lg:flex'
+      }`}>
         {pedidoSeleccionado ? (
           <>
             <div className="bg-white p-5 border-b border-slate-200 flex justify-between items-center shrink-0">
-              <div>
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Detalles de Compra</span>
-                <h3 className="text-lg font-black text-slate-800 tracking-tight mt-0.5">
-                  Pedido #{pedidoSeleccionado.id}
-                </h3>
+              <div className="flex items-center">
+                {/* Botón Volver para móviles */}
+                <button
+                  onClick={() => setPedidoSeleccionado(null)}
+                  className="lg:hidden p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors mr-2 flex items-center justify-center"
+                  title="Volver al listado"
+                >
+                  <ChevronLeft size={20} />
+                </button>
+                <div>
+                  <span className="text-[10px] text-slate-400 font-bold tracking-wider">Detalles de compra</span>
+                  <h3 className="text-base font-bold text-slate-800 tracking-tight mt-0.5">
+                    Pedido #{pedidoSeleccionado.id}
+                  </h3>
+                </div>
               </div>
               
               {/* Botones de acción según el estado actual */}
@@ -153,7 +185,7 @@ const GestionPedidos = () => {
                     disabled={procesandoDespacho}
                     className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md shadow-sky-500/10 transition-colors disabled:opacity-50"
                   >
-                    Confirmar Pago
+                    Confirmar pago
                   </button>
                 )}
                 {pedidoSeleccionado.estado === 'PAGADO' && (
@@ -162,16 +194,16 @@ const GestionPedidos = () => {
                     disabled={procesandoDespacho}
                     className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md shadow-emerald-500/10 transition-colors disabled:opacity-50 flex items-center gap-1.5"
                   >
-                    <Check size={14} /> Marcar como Entregado
+                    <Check size={14} /> Marcar como entregado
                   </button>
                 )}
                 {pedidoSeleccionado.estado !== 'ENTREGADO' && pedidoSeleccionado.estado !== 'CANCELADO' && (
                   <button
-                    onClick={() => actualizarEstadoPedido(pedidoSeleccionado.id, 'CANCELA')}
+                    onClick={() => actualizarEstadoPedido(pedidoSeleccionado.id, 'CANCELADO')}
                     disabled={procesandoDespacho}
-                    className="bg-red-50 hover:bg-red-100 text-red-500 border border-red-200 px-4 py-2 rounded-xl text-xs font-bold transition-colors disabled:opacity-50"
+                    className="bg-red-50 hover:bg-red-150 text-red-500 border border-red-200 px-4 py-2 rounded-xl text-xs font-bold transition-colors disabled:opacity-50"
                   >
-                    Cancelar Compra
+                    Cancelar compra
                   </button>
                 )}
               </div>
@@ -180,16 +212,16 @@ const GestionPedidos = () => {
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
               {/* Tarjeta de información del cliente */}
               <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm space-y-4">
-                <h4 className="font-bold text-slate-800 text-xs uppercase tracking-wider border-b border-slate-100 pb-2">
-                  Contacto y Entrega
+                <h4 className="font-bold text-slate-800 text-xs tracking-wide border-b border-slate-100 pb-2">
+                  Contacto y entrega
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-medium">
                   <div>
-                    <span className="block text-[9px] text-slate-400 font-bold uppercase mb-0.5">Correo Registrado</span>
+                    <span className="block text-[9px] text-slate-400 font-semibold mb-0.5">Correo registrado</span>
                     <span className="text-slate-800">{pedidoSeleccionado.cliente?.correo}</span>
                   </div>
                   <div>
-                    <span className="block text-[9px] text-slate-400 font-bold uppercase mb-0.5">Fecha de Operación</span>
+                    <span className="block text-[9px] text-slate-400 font-semibold mb-0.5">Fecha de operación</span>
                     <span className="text-slate-800">
                       {new Date(pedidoSeleccionado.fecha).toLocaleString('es-PE')}
                     </span>
@@ -199,8 +231,8 @@ const GestionPedidos = () => {
 
               {/* Desglose de productos comprados */}
               <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm space-y-4">
-                <h4 className="font-bold text-slate-800 text-xs uppercase tracking-wider border-b border-slate-100 pb-2">
-                  Artículos del Carrito
+                <h4 className="font-bold text-slate-800 text-xs tracking-wide border-b border-slate-100 pb-2">
+                  Artículos del carrito
                 </h4>
                 
                 <div className="divide-y divide-slate-100">
@@ -220,7 +252,7 @@ const GestionPedidos = () => {
                             </span>
                           )}
                         </div>
-                        <span className="text-xs font-black text-slate-800">
+                        <span className="text-xs font-bold text-slate-800">
                           S/ {(item.cantidad * item.precioUnitario)?.toFixed(2)}
                         </span>
                       </div>
@@ -231,8 +263,8 @@ const GestionPedidos = () => {
                 </div>
 
                 <div className="border-t border-slate-100 pt-4 flex justify-between items-center">
-                  <span className="font-black text-slate-800 text-xs uppercase tracking-wider">Monto Total</span>
-                  <span className="text-lg font-black text-slate-850">
+                  <span className="font-semibold text-slate-600 text-xs tracking-wider">Monto total</span>
+                  <span className="text-base font-bold text-slate-850">
                     S/ {pedidoSeleccionado.total ? pedidoSeleccionado.total.toFixed(2) : '0.00'}
                   </span>
                 </div>
@@ -244,8 +276,8 @@ const GestionPedidos = () => {
             <div className="w-16 h-16 bg-slate-200/50 rounded-full flex items-center justify-center text-slate-400 mb-4 animate-pulse">
               <Truck size={32} />
             </div>
-            <h3 className="text-lg font-black text-slate-800 tracking-tight">Despacho de Pedidos</h3>
-            <p className="text-xs text-slate-400 max-w-sm mt-1">
+            <h3 className="text-base font-bold text-slate-800 tracking-tight">Despacho de pedidos</h3>
+            <p className="text-xs text-slate-400 max-w-sm mt-1 font-medium">
               Selecciona un pedido entrante de la lista para gestionar su estado de pago, control de inventario FEFO y despacho físico del producto.
             </p>
           </div>

@@ -91,61 +91,59 @@ const CajaPOS = () => {
     } finally {
       setProcesandoPago(false);
     }
-  };
-
-  return (
-    <>
-      {/* PANEL IZQUIERDO (40%) */}
-      <section className="w-[40%] bg-white border-r border-slate-200 flex flex-col overflow-hidden animate-in fade-in duration-200">
-        <div className="p-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center shrink-0">
+  };  return (
+    <div className="flex-1 flex flex-col lg:flex-row h-full overflow-y-auto lg:overflow-hidden w-full">
+      {/* PANEL IZQUIERDO: Cuentas por cobrar */}
+      <section className="w-full lg:w-[40%] lg:max-w-md bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col lg:h-full overflow-visible lg:overflow-hidden animate-in fade-in duration-200 shrink-0">
+        <div className="p-4 border-b border-slate-150 bg-slate-50/50 flex justify-between items-center shrink-0">
           <div className="flex items-center gap-2">
-            <Wallet size={18} className="text-sky-500" />
-            <h2 className="font-black text-slate-800 text-sm tracking-wide uppercase">Cuentas por Cobrar</h2>
+            <Wallet size={16} className="text-sky-500" />
+            <h2 className="font-bold text-slate-800 text-sm tracking-tight">Cuentas por cobrar</h2>
           </div>
-          <span className="bg-sky-100 text-sky-700 text-[10px] font-black px-2 py-0.5 rounded-full">
-            {transacciones.length} Pendientes
+          <span className="bg-sky-100 text-sky-700 text-[10px] font-bold px-2 py-0.5 rounded-full">
+            {transacciones.length} pendientes
           </span>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">
+        <div className="p-4 space-y-3 overflow-visible lg:flex-1 lg:overflow-y-auto">
           {loadingTransacciones ? (
             <div className="text-center py-10 text-xs font-bold text-slate-400 animate-pulse">
               Consultando transacciones de caja...
             </div>
           ) : transacciones.length === 0 ? (
-            <div className="text-center py-10 text-slate-400 text-xs font-bold">
+            <div className="text-center py-10 text-slate-450 text-xs font-semibold text-slate-400">
               No hay órdenes de cobro pendientes.
             </div>
           ) : (
             transacciones.map((tx) => (
               <div 
                 key={tx.id} 
-                className="p-4 rounded-2xl border border-slate-200 hover:border-sky-300 hover:shadow-md hover:shadow-sky-500/5 transition-all duration-300 space-y-3"
+                className="p-4 rounded-2xl border border-slate-200 hover:border-sky-350 hover:shadow-md hover:shadow-sky-500/5 transition-all duration-300 space-y-3"
               >
                 <div className="flex justify-between items-start">
                   <div>
-                    <span className="text-[10px] text-slate-400 font-bold">ORDEN #{tx.id}</span>
+                    <span className="text-[10px] text-slate-400 font-semibold">Orden #{tx.id}</span>
                     <h4 className="font-bold text-slate-800 text-sm tracking-tight mt-0.5">
                       {tx.cita && tx.cita.mascota ? tx.cita.mascota.nombre : 'Paciente'}
                     </h4>
-                    <p className="text-[10px] text-slate-505 text-slate-500 font-medium mt-0.5">
+                    <p className="text-[10px] text-slate-500 font-medium mt-0.5">
                       Propietario: {tx.cita && tx.cita.mascota && tx.cita.mascota.dueño ? tx.cita.mascota.dueño.nombreCompleto : 'Cliente'}
                     </p>
                   </div>
-                  <span className="text-sm font-black text-slate-800">
+                  <span className="text-sm font-bold text-slate-800">
                     S/ {tx.monto ? tx.monto.toFixed(2) : '0.00'}
                   </span>
                 </div>
 
-                <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-xs text-slate-600 font-medium">
-                  {tx.cita && tx.cita.servicio ? tx.cita.servicio.nombre : 'Servicio Médico'}
+                <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-xs text-slate-650 font-medium">
+                  {tx.cita && tx.cita.servicio ? tx.cita.servicio.nombre : 'Servicio médico'}
                 </div>
 
                 <button 
                   onClick={() => abrirCobro(tx)}
-                  className="w-full bg-sky-500 hover:bg-sky-600 text-white py-2 rounded-xl text-xs font-bold shadow-md shadow-sky-500/10 transition-all flex items-center justify-center gap-2"
+                  className="w-full bg-sky-500 hover:bg-sky-600 text-white py-2.5 rounded-xl text-xs font-bold shadow-md shadow-sky-500/10 transition-all flex items-center justify-center gap-2"
                 >
-                  <DollarSign size={14} /> Registrar Cobro
+                  <DollarSign size={14} /> Registrar cobro
                 </button>
               </div>
             ))
@@ -153,17 +151,17 @@ const CajaPOS = () => {
         </div>
       </section>
 
-      {/* PANEL DERECHO (60%) */}
-      <section className="flex-1 bg-slate-50 flex flex-col overflow-hidden animate-in fade-in duration-200">
+      {/* PANEL DERECHO: Inventario crítico y políticas */}
+      <section className="flex-1 bg-slate-50 flex flex-col lg:h-full overflow-visible lg:overflow-hidden animate-in fade-in duration-200">
         <InventarioCriticoWidget />
 
         <div className="p-6 pt-0 shrink-0">
           <div className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm space-y-3">
             <div className="flex items-center gap-2 text-slate-800">
               <HelpCircle size={18} className="text-sky-500" />
-              <h4 className="font-bold text-sm">Políticas del Punto de Venta</h4>
+              <h4 className="font-bold text-sm text-slate-850">Políticas del punto de venta</h4>
             </div>
-            <p className="text-xs text-slate-500 leading-relaxed">
+            <p className="text-xs text-slate-500 leading-relaxed font-medium">
               Todas las citas de atención médica, laboratorios y vacunas se registran y envían de forma automática como transacciones en estado **Pendiente** a este panel.
               Una vez efectuado el cobro físico en caja, selecciona el medio de pago correspondiente para liberar la boleta de venta en formato PDF y actualizar el estado a **Aprobado** en el sistema.
             </p>
@@ -176,8 +174,8 @@ const CajaPOS = () => {
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
           <div className="bg-white rounded-3xl shadow-2xl border border-slate-200 max-w-lg w-full overflow-hidden flex flex-col">
             <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-              <h3 className="text-lg font-black text-slate-800 flex items-center gap-2">
-                <DollarSign className="text-sky-500" size={20} /> Registrar Cobro en Caja
+              <h3 className="text-base font-bold text-slate-850 flex items-center gap-2 text-slate-800">
+                <DollarSign className="text-sky-500" size={18} /> Registrar cobro en caja
               </h3>
               <button 
                 onClick={() => setCobroSeleccionado(null)}
@@ -190,14 +188,14 @@ const CajaPOS = () => {
             <form onSubmit={ejecutarCobro} className="p-6 space-y-5">
               <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex justify-between items-center">
                 <div>
-                  <span className="block text-[9px] font-black text-slate-400 uppercase tracking-widest">Paciente</span>
+                  <span className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider">Paciente</span>
                   <p className="font-bold text-slate-800 text-sm">
                     {cobroSeleccionado.cita && cobroSeleccionado.cita.mascota ? cobroSeleccionado.cita.mascota.nombre : 'Paciente'}
                   </p>
                 </div>
                 <div className="text-right">
-                  <span className="block text-[9px] font-black text-slate-400 uppercase tracking-widest">Monto a Pagar</span>
-                  <p className="font-black text-slate-850 text-xl">
+                  <span className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider">Monto a pagar</span>
+                  <p className="font-bold text-slate-800 text-lg">
                     S/ {cobroSeleccionado.monto ? cobroSeleccionado.monto.toFixed(2) : '0.00'}
                   </p>
                 </div>
@@ -205,14 +203,14 @@ const CajaPOS = () => {
 
               {/* Selector Táctil de Medio de Pago */}
               <div>
-                <label className="block text-xs font-bold text-slate-500 mb-2.5 uppercase tracking-wide">
-                  Medio de Pago
+                <label className="block text-xs font-semibold text-slate-500 mb-2 tracking-wide">
+                  Medio de pago
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {[
                     { id: 'EFECTIVO', label: 'Efectivo', icon: DollarSign },
-                    { id: 'TARJETA_CREDITO', label: 'Tar. Crédito', icon: CreditCard },
-                    { id: 'TARJETA_DEBITO', label: 'Tar. Débito', icon: CreditCard },
+                    { id: 'TARJETA_CREDITO', label: 'Tar. crédito', icon: CreditCard },
+                    { id: 'TARJETA_DEBITO', label: 'Tar. débito', icon: CreditCard },
                     { id: 'YAPE', label: 'Yape', icon: CheckCircle },
                     { id: 'PLIN', label: 'Plin', icon: CheckCircle },
                     { id: 'TRANSFERENCIA', label: 'Transf.', icon: Wallet }
@@ -231,7 +229,7 @@ const CajaPOS = () => {
                         }`}
                       >
                         <Icon size={18} />
-                        <span className="text-[10px] font-bold">{medio.label}</span>
+                        <span className="text-[10px] font-semibold">{medio.label}</span>
                       </button>
                     );
                   })}
@@ -242,7 +240,7 @@ const CajaPOS = () => {
               {medioPago === 'EFECTIVO' && (
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Monto Recibido (S/)</label>
+                    <label className="block text-xs font-semibold text-slate-500 mb-1.5 tracking-wide">Monto recibido (S/)</label>
                     <input
                       type="number"
                       step="0.10"
@@ -250,12 +248,12 @@ const CajaPOS = () => {
                       onChange={e => handleMontoRecibidoChange(e.target.value)}
                       placeholder="0.00"
                       required={medioPago === 'EFECTIVO'}
-                      className="w-full border border-slate-300 p-2.5 rounded-xl text-slate-800 text-sm font-bold focus:ring-2 focus:ring-sky-500 outline-none transition-all"
+                      className="w-full border border-slate-350 p-2.5 rounded-xl text-slate-800 text-sm font-bold focus:ring-2 focus:ring-sky-100 outline-none transition-all focus:border-sky-400"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Vuelto (S/)</label>
-                    <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-sm font-black text-emerald-600 h-[42px] flex items-center">
+                    <label className="block text-xs font-semibold text-slate-500 mb-1.5 tracking-wide">Vuelto (S/)</label>
+                    <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-sm font-bold text-emerald-600 h-[42px] flex items-center">
                       S/ {vuelto.toFixed(2)}
                     </div>
                   </div>
@@ -265,13 +263,13 @@ const CajaPOS = () => {
               {/* Referencia (para Yape, Tarjeta o Transferencia) */}
               {medioPago !== 'EFECTIVO' && (
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Código de Referencia / Operación</label>
+                  <label className="block text-xs font-semibold text-slate-500 mb-1.5 tracking-wide">Código de referencia / operación</label>
                   <input
                     type="text"
                     value={referencia}
                     onChange={e => setReferencia(e.target.value)}
                     placeholder="Ej: 123456"
-                    className="w-full border border-slate-300 p-2.5 rounded-xl text-slate-800 text-xs focus:ring-2 focus:ring-sky-500 outline-none transition-all bg-slate-50 focus:bg-white"
+                    className="w-full border border-slate-300 p-2.5 rounded-xl text-slate-800 text-xs focus:ring-2 focus:ring-sky-100 outline-none transition-all bg-slate-50 focus:bg-white focus:border-sky-400"
                   />
                 </div>
               )}
@@ -289,14 +287,14 @@ const CajaPOS = () => {
                   disabled={procesandoPago}
                   className="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-1.5 disabled:opacity-50"
                 >
-                  <Printer size={14} /> {procesandoPago ? 'Procesando...' : 'Confirmar e Imprimir Boleta'}
+                  <Printer size={14} /> {procesandoPago ? 'Procesando...' : 'Confirmar e imprimir boleta'}
                 </button>
               </div>
             </form>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

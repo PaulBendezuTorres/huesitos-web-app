@@ -60,6 +60,23 @@ const AgendaSemanal = () => {
   const [guardandoReprogramacion, setGuardandoReprogramacion] = useState(false);
   const [errorReprogramar, setErrorReprogramar] = useState('');
 
+  // Helpers de formato para Sentence case
+  const formatEstadoCita = (est) => {
+    switch (est) {
+      case 'PENDIENTE': return 'Pendiente';
+      case 'CONFIRMADA': return 'Confirmada';
+      case 'EN_ESPERA': return 'En espera';
+      case 'COMPLETADA': return 'Completada';
+      case 'CANCELADA': return 'Cancelada';
+      default: return est;
+    }
+  };
+
+  const formatEspecie = (esp) => {
+    if (!esp) return '';
+    return esp.charAt(0).toUpperCase() + esp.slice(1).toLowerCase();
+  };
+
   // Formatear fecha como YYYY-MM-DD
   const formatarFechaYMD = (date) => {
     const yyyy = date.getFullYear();
@@ -289,7 +306,7 @@ const AgendaSemanal = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300 font-sans text-slate-700">
+    <div className="space-y-6 animate-in fade-in duration-300 font-sans text-slate-700 w-full">
       
       {/* SECCIÓN SUPERIOR: CABECERA Y FILTROS */}
       <div className="bg-white rounded-xl border border-slate-200/50 p-4 md:p-5 shadow-sm space-y-4">
@@ -297,9 +314,9 @@ const AgendaSemanal = () => {
           <div>
             <h2 className="text-lg md:text-xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
               <Calendar className="text-sky-500" size={20} />
-              Agenda Semanal de Citas
+              Agenda semanal de citas
             </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-400 mt-0.5 font-medium">
               Consulta, filtra y gestiona la programación semanal de atención veterinaria.
             </p>
           </div>
@@ -308,24 +325,24 @@ const AgendaSemanal = () => {
           <div className="flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-lg p-1 self-start md:self-auto shrink-0">
             <button
               onClick={() => setOffsetSemanas(o => o - 1)}
-              className="p-1.5 rounded hover:bg-white hover:shadow-sm text-slate-650 transition-all"
+              className="p-1.5 rounded hover:bg-white hover:shadow-sm text-slate-600 hover:text-sky-500 transition-all"
               title="Semana anterior"
             >
               <ChevronLeft size={14} />
             </button>
             <button
               onClick={() => setOffsetSemanas(0)}
-              className={`px-3 py-1 text-xs font-bold rounded transition-all ${
+              className={`px-3 py-1 text-xs font-semibold rounded transition-all ${
                 offsetSemanas === 0
-                  ? 'bg-sky-500 text-white shadow-sm'
-                  : 'text-slate-650 hover:bg-white'
+                  ? 'bg-sky-500 text-white shadow-sm font-bold'
+                  : 'text-slate-600 hover:bg-white'
               }`}
             >
-              Semana Actual
+              Semana actual
             </button>
             <button
               onClick={() => setOffsetSemanas(o => o + 1)}
-              className="p-1.5 rounded hover:bg-white hover:shadow-sm text-slate-650 transition-all"
+              className="p-1.5 rounded hover:bg-white hover:shadow-sm text-slate-600 hover:text-sky-500 transition-all"
               title="Semana siguiente"
             >
               <ChevronRight size={14} />
@@ -389,7 +406,7 @@ const AgendaSemanal = () => {
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-center gap-3">
           <AlertTriangle size={18} className="text-red-500 shrink-0" />
-          <p className="text-sm text-red-700 font-medium">{error}</p>
+          <p className="text-sm text-red-700 font-semibold">{error}</p>
         </div>
       )}
 
@@ -397,94 +414,96 @@ const AgendaSemanal = () => {
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-slate-200/60 shadow-sm">
           <Loader2 className="text-sky-500 animate-spin mb-3" size={32} />
-          <span className="text-sm font-bold text-slate-400">Consultando agenda...</span>
+          <span className="text-sm font-semibold text-slate-400">Consultando agenda...</span>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-4">
-          {diasSemana.map((dia) => {
-            const citasDia = citasPorDia[dia.fechaStr] || [];
-            const esHoy = formatarFechaYMD(new Date()) === dia.fechaStr;
-            return (
-              <div
-                key={dia.fechaStr}
-                className={`bg-white rounded-lg border ${
-                  esHoy ? 'border-sky-400 ring-2 ring-sky-100' : 'border-slate-200/60'
-                } shadow-sm flex flex-col min-h-[300px] overflow-hidden`}
-              >
-                {/* Cabecera del día */}
-                <div className={`p-2.5 border-b text-center ${
-                  esHoy ? 'bg-sky-50/50' : 'bg-slate-50/50'
-                }`}>
-                  <p className={`text-[10px] font-bold uppercase tracking-wider ${
-                    esHoy ? 'text-sky-600' : 'text-slate-500'
+        <div className="overflow-x-auto pb-4 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0">
+          <div className="grid grid-cols-7 gap-4 min-w-[1000px] lg:min-w-0">
+            {diasSemana.map((dia) => {
+              const citasDia = citasPorDia[dia.fechaStr] || [];
+              const esHoy = formatarFechaYMD(new Date()) === dia.fechaStr;
+              return (
+                <div
+                  key={dia.fechaStr}
+                  className={`bg-white rounded-xl border ${
+                    esHoy ? 'border-sky-400 ring-2 ring-sky-100' : 'border-slate-200/60'
+                  } shadow-sm flex flex-col min-h-[350px] overflow-hidden`}
+                >
+                  {/* Cabecera del día */}
+                  <div className={`p-3 border-b text-center ${
+                    esHoy ? 'bg-sky-50/50' : 'bg-slate-50/50'
                   }`}>
-                    {dia.nombre}
-                  </p>
-                  <p className={`text-xs font-bold mt-0.5 ${
-                    esHoy ? 'text-sky-700' : 'text-slate-700'
-                  }`}>
-                    {dia.fechaLabel}
-                  </p>
+                    <p className={`text-[10px] font-bold tracking-wide ${
+                      esHoy ? 'text-sky-600' : 'text-slate-500'
+                    }`}>
+                      {dia.nombre}
+                    </p>
+                    <p className={`text-xs font-bold mt-0.5 ${
+                      esHoy ? 'text-sky-700' : 'text-slate-700'
+                    }`}>
+                      {dia.fechaLabel}
+                    </p>
+                  </div>
+
+                  {/* Lista de citas */}
+                  <div className="p-2 flex-1 space-y-2 overflow-y-auto max-h-[450px]">
+                    {citasDia.length === 0 ? (
+                      <div className="h-full flex flex-col items-center justify-center py-12 text-center text-slate-350">
+                        <PawPrint size={18} className="stroke-[1.5] mb-1.5 opacity-60 text-slate-400" />
+                        <span className="text-[9px] font-semibold tracking-wider text-slate-400">Sin citas</span>
+                      </div>
+                    ) : (
+                      citasDia.map((cita) => {
+                        const hora = cita.fechaHora ? cita.fechaHora.substring(11, 16) : '';
+                        return (
+                          <div
+                            key={cita.id}
+                            onClick={() => abrirModalReprogramar(cita)}
+                            className="group border border-slate-100 hover:border-sky-200 bg-white rounded-xl p-2.5 shadow-sm hover:shadow-md hover:shadow-sky-500/5 transition-all duration-200 cursor-pointer text-left relative"
+                          >
+                            <div className="flex items-center justify-between gap-1 mb-1">
+                              <span className="text-[10px] font-bold text-slate-800 flex items-center gap-1">
+                                <Clock size={10} className="text-slate-400" />
+                                {hora}
+                              </span>
+                              <span className={`text-[8.5px] font-bold px-1.5 py-0.5 rounded border ${obtenerEstiloEstado(cita.estado)}`}>
+                                {formatEstadoCita(cita.estado)}
+                              </span>
+                            </div>
+
+                            <h4 className="text-xs font-bold text-slate-800 tracking-tight group-hover:text-sky-500 transition-colors">
+                              {cita.mascota?.nombre}
+                            </h4>
+                            
+                            <p className="text-[9px] font-semibold text-slate-500 mt-0.5 truncate">
+                              {formatEspecie(cita.mascota?.especie)} {cita.mascota?.raza ? `· ${cita.mascota.raza}` : ''}
+                            </p>
+
+                            <div className="mt-1.5 pt-1.5 border-t border-slate-50 space-y-0.5 text-[9px] font-medium">
+                              <p className="text-slate-500 truncate">
+                                <span className="font-semibold text-slate-600">Serv:</span> {cita.servicio?.nombre}
+                              </p>
+                              <p className="text-slate-500 truncate">
+                                <span className="font-semibold text-slate-600">Vet:</span> {cita.veterinario ? (cita.veterinario.nombre || cita.veterinario.correo) : 'Sin asignar'}
+                              </p>
+                              <p className="text-slate-400 truncate">
+                                <span className="font-semibold text-slate-500">Prop:</span> {cita.mascota?.dueño?.nombreCompleto || 'Cliente'}
+                              </p>
+                            </div>
+
+                            {/* Hover Overlay indicator */}
+                            <div className="absolute right-1.5 bottom-1.5 opacity-0 group-hover:opacity-100 transition-opacity bg-sky-50 p-1 rounded border border-sky-100">
+                              <RefreshCw size={9} className="text-sky-500 animate-spin-slow" />
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
                 </div>
-
-                {/* Lista de citas */}
-                <div className="p-2 flex-1 space-y-2 overflow-y-auto max-h-[450px]">
-                  {citasDia.length === 0 ? (
-                    <div className="h-full flex flex-col items-center justify-center py-10 text-center text-slate-350">
-                      <PawPrint size={18} className="stroke-[1.5] mb-1.5 opacity-60" />
-                      <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">Sin citas</span>
-                    </div>
-                  ) : (
-                    citasDia.map((cita) => {
-                      const hora = cita.fechaHora ? cita.fechaHora.substring(11, 16) : '';
-                      return (
-                        <div
-                          key={cita.id}
-                          onClick={() => abrirModalReprogramar(cita)}
-                          className="group border border-slate-100 hover:border-sky-200 bg-white rounded-lg p-2.5 shadow-sm hover:shadow-md hover:shadow-sky-500/5 transition-all duration-200 cursor-pointer text-left relative"
-                        >
-                          <div className="flex items-center justify-between gap-1 mb-1">
-                            <span className="text-[10px] font-bold text-slate-800 flex items-center gap-1">
-                              <Clock size={10} className="text-slate-400" />
-                              {hora}
-                            </span>
-                            <span className={`text-[8.5px] font-bold px-1.5 py-0.5 rounded border ${obtenerEstiloEstado(cita.estado)}`}>
-                              {cita.estado}
-                            </span>
-                          </div>
-
-                          <h4 className="text-xs font-bold text-slate-800 tracking-tight group-hover:text-sky-500 transition-colors">
-                            {cita.mascota?.nombre}
-                          </h4>
-                          
-                          <p className="text-[9px] font-medium text-slate-455 uppercase mt-0.5 truncate">
-                            {cita.mascota?.especie} {cita.mascota?.raza ? `· ${cita.mascota.raza}` : ''}
-                          </p>
-
-                          <div className="mt-1.5 pt-1.5 border-t border-slate-50 space-y-0.5 text-[9px]">
-                            <p className="text-slate-500 truncate">
-                              <span className="font-semibold text-slate-605">Serv:</span> {cita.servicio?.nombre}
-                            </p>
-                            <p className="text-slate-500 truncate">
-                              <span className="font-semibold text-slate-605">Vet:</span> {cita.veterinario ? (cita.veterinario.nombre || cita.veterinario.correo) : 'Sin asignar'}
-                            </p>
-                            <p className="text-slate-400 truncate">
-                              <span className="font-semibold text-slate-500">Prop:</span> {cita.mascota?.dueño?.nombreCompleto || 'Cliente'}
-                            </p>
-                          </div>
-
-                          {/* Hover Overlay indicator */}
-                          <div className="absolute right-1.5 bottom-1.5 opacity-0 group-hover:opacity-100 transition-opacity bg-sky-50 p-1 rounded border border-sky-100">
-                            <RefreshCw size={9} className="text-sky-500 animate-spin-slow" />
-                          </div>
-                        </div>
-                      );
-                    })
-                  )}
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       )}
 
@@ -495,8 +514,8 @@ const AgendaSemanal = () => {
             {/* Header Modal */}
             <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
               <div>
-                <h3 className="font-black text-slate-800 text-base tracking-tight">Reprogramar Cita</h3>
-                <p className="text-xs text-slate-400 mt-0.5">ID Cita: #{citaSeleccionada.id}</p>
+                <h3 className="font-bold text-slate-800 text-base tracking-tight">Reprogramar cita</h3>
+                <p className="text-xs text-slate-400 mt-0.5 font-medium">ID cita: #{citaSeleccionada.id}</p>
               </div>
               <button
                 onClick={() => setCitaSeleccionada(null)}
@@ -512,22 +531,22 @@ const AgendaSemanal = () => {
               <div className="bg-slate-50 rounded-xl p-3.5 border border-slate-100 space-y-2">
                 <div className="flex justify-between items-start">
                   <div>
-                    <span className="text-[9px] font-bold text-sky-500 uppercase tracking-widest">Paciente</span>
+                    <span className="text-[9px] font-bold text-sky-500 uppercase tracking-wider">Paciente</span>
                     <h4 className="font-bold text-slate-800 text-sm">{citaSeleccionada.mascota?.nombre}</h4>
                     <p className="text-[10px] text-slate-400 font-semibold">{citaSeleccionada.mascota?.dueño?.nombreCompleto || 'Propietario'}</p>
                   </div>
                   <div className="text-right">
-                    <span className="text-[9px] font-bold text-emerald-500 uppercase tracking-widest">Servicio</span>
+                    <span className="text-[9px] font-bold text-emerald-500 uppercase tracking-wider">Servicio</span>
                     <p className="font-bold text-slate-800 text-xs">{citaSeleccionada.servicio?.nombre}</p>
                   </div>
                 </div>
 
                 <div className="pt-2 border-t border-slate-200/50 flex justify-between text-[10px] text-slate-500">
-                  <span className="flex items-center gap-1 font-medium">
+                  <span className="flex items-center gap-1 font-semibold">
                     <User size={12} className="text-slate-400" />
                     Vet: {citaSeleccionada.veterinario ? (citaSeleccionada.veterinario.nombre || citaSeleccionada.veterinario.correo) : 'Sin asignar'}
                   </span>
-                  <span className="flex items-center gap-1 font-medium">
+                  <span className="flex items-center gap-1 font-semibold">
                     <Clock size={12} className="text-slate-400" />
                     Actual: {citaSeleccionada.fechaHora ? new Date(citaSeleccionada.fechaHora).toLocaleString('es-PE', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''}
                   </span>
@@ -536,8 +555,8 @@ const AgendaSemanal = () => {
 
               {/* Selector de nueva Fecha */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block">
-                  Nueva Fecha
+                <label className="text-xs font-semibold text-slate-500 tracking-wide block">
+                  Nueva fecha
                 </label>
                 <input
                   type="date"
@@ -552,14 +571,14 @@ const AgendaSemanal = () => {
               {/* Selector de nueva Hora (Slots) */}
               {fechaReprogramar && (
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block">
+                  <label className="text-xs font-semibold text-slate-500 tracking-wide block">
                     Horarios disponibles
                   </label>
                   
                   {cargandoSlots ? (
                     <div className="flex items-center justify-center py-6 bg-slate-50 border border-slate-200 rounded-xl">
                       <Loader2 className="text-sky-500 animate-spin mr-2" size={16} />
-                      <span className="text-xs font-bold text-slate-400">Verificando horarios...</span>
+                      <span className="text-xs font-semibold text-slate-400">Verificando horarios...</span>
                     </div>
                   ) : slotsDisponibles.length === 0 ? (
                     <div className="text-center py-6 bg-slate-50 border border-slate-200 rounded-xl">
@@ -617,7 +636,7 @@ const AgendaSemanal = () => {
                     </>
                   ) : (
                     <>
-                      <Check size={12} /> Reprogramar Cita
+                      <Check size={12} /> Reprogramar cita
                     </>
                   )}
                 </button>
