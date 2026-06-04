@@ -2,7 +2,9 @@ package huesitos_backend.controladores;
 
 import huesitos_backend.dto.RespuestaLogin;
 import huesitos_backend.entidades.Dueño;
+import huesitos_backend.entidades.Rol;
 import huesitos_backend.entidades.Usuario;
+import huesitos_backend.repositorios.DueñoRepositorio;
 import huesitos_backend.repositorios.UsuarioRepositorio;
 import huesitos_backend.servicios.AutenticacionAvanzadaServicio;
 import huesitos_backend.servicios.AutenticacionServicio;
@@ -22,6 +24,7 @@ public class AutenticacionControlador {
     private final AutenticacionServicio autenticacionServicio;
     private final AutenticacionAvanzadaServicio autenticacionAvanzadaServicio;
     private final UsuarioRepositorio usuarioRepositorio;
+    private final DueñoRepositorio dueñoRepositorio;
 
     /**
      * Endpoint para registrar un nuevo cliente (Dueño + Usuario).
@@ -47,7 +50,15 @@ public class AutenticacionControlador {
             Usuario usuario = usuarioRepositorio.findByCorreo(datosLogin.getCorreo())
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
             
-            RespuestaLogin respuesta = new RespuestaLogin(token, usuario.getCorreo(), usuario.getRol().name());
+            // Si el usuario es CLIENTE, buscar su duenoId asociado
+            Long duenoId = null;
+            if (usuario.getRol() == Rol.CLIENTE) {
+                duenoId = dueñoRepositorio.findByUsuarioId(usuario.getId())
+                        .map(Dueño::getId)
+                        .orElse(null);
+            }
+            
+            RespuestaLogin respuesta = new RespuestaLogin(token, usuario.getCorreo(), usuario.getRol().name(), usuario.getId(), duenoId);
             return ResponseEntity.ok(respuesta);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
@@ -62,7 +73,7 @@ public class AutenticacionControlador {
         try {
             autenticacionAvanzadaServicio.solicitarRestablecimiento(correo);
             Map<String, String> respuesta = new HashMap<>();
-            respuesta.put("mensaje", "Se ha generado el enlace de recuperación (revisa la consola del backend)");
+            respuesta.put("mensaje", "Se ha enviado el código de recuperación a tu correo electrónico");
             return ResponseEntity.ok(respuesta);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

@@ -1,10 +1,9 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import logo from '../assets/Logo Huesitos.png';
 
 const VetResetPassword = () => {
-  const [searchParams] = useSearchParams();
-  const [token, setToken] = useState('');
+  const [codigo, setCodigo] = useState(['', '', '', '', '', '']);
   const [nuevaContrasena, setNuevaContrasena] = useState('');
   const [confirmarContrasena, setConfirmarContrasena] = useState('');
   const [showPass, setShowPass] = useState(false);
@@ -12,15 +11,34 @@ const VetResetPassword = () => {
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
+  // Temporizador de 15 minutos (900 segundos)
+  const [timeLeft, setTimeLeft] = useState(900);
+  const [timerActive, setTimerActive] = useState(true);
 
-  // Leer token desde los parámetros de búsqueda de la URL
+  const navigate = useNavigate();
+  const inputRefs = [useRef(), useRef(), useRef(), useRef(), useRef(), useRef()];
+
+  // Efecto para el temporizador de cuenta regresiva
   useEffect(() => {
-    const tokenParam = searchParams.get('token');
-    if (tokenParam) {
-      setToken(tokenParam);
+    if (!timerActive || timeLeft <= 0) {
+      if (timeLeft <= 0) {
+        setErrorMsg('El código de verificación ha expirado. Por favor, solicita uno nuevo.');
+      }
+      return;
     }
-  }, [searchParams]);
+
+    const interval = setInterval(() => {
+      setTimeLeft((prevTime) => prevTime - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [timeLeft, timerActive]);
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  };
 
   const colors = {
     blue900: '#042C53',
@@ -38,13 +56,64 @@ const VetResetPassword = () => {
     green100: '#A7F3D0'
   };
 
+  const handleInputChange = (index, value) => {
+    // Solo permitir números
+    const cleanValue = value.replace(/\D/g, '');
+    if (!cleanValue) {
+      const newCodigo = [...codigo];
+      newCodigo[index] = '';
+      setCodigo(newCodigo);
+      return;
+    }
+
+    const digit = cleanValue.slice(-1);
+    const newCodigo = [...codigo];
+    newCodigo[index] = digit;
+    setCodigo(newCodigo);
+
+    // Mover foco al siguiente input si existe
+    if (index < 5) {
+      inputRefs[index + 1].current.focus();
+    }
+  };
+
+  const handleKeyDown = (index, e) => {
+    // Mover foco atrás si presiona backspace en un campo vacío
+    if (e.key === 'Backspace' && !codigo[index] && index > 0) {
+      inputRefs[index - 1].current.focus();
+    }
+  };
+
+  const handlePaste = (e) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    if (pastedData.length > 0) {
+      const newCodigo = [...codigo];
+      for (let i = 0; i < 6; i++) {
+        if (pastedData[i]) {
+          newCodigo[i] = pastedData[i];
+        }
+      }
+      setCodigo(newCodigo);
+      // Enfocar el último input rellenado o el 5
+      const focusIndex = Math.min(pastedData.length, 5);
+      inputRefs[focusIndex].current.focus();
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
     setSuccessMsg('');
 
-    if (!token) {
-      setErrorMsg('El token de recuperación es obligatorio');
+    const token = codigo.join('');
+    if (token.length !== 6) {
+      setErrorMsg('Por favor, ingresa el código de verificación completo de 6 dígitos');
+      return;
+    }
+
+    if (timeLeft <= 0) {
+      setErrorMsg('El código de verificación ha expirado. Por favor, solicita uno nuevo en la página anterior.');
       return;
     }
 
@@ -69,13 +138,14 @@ const VetResetPassword = () => {
       );
 
       if (response.ok) {
+        setTimerActive(false);
         setSuccessMsg('Contraseña restablecida correctamente. Redirigiendo al inicio de sesión...');
         setTimeout(() => {
           navigate('/login');
         }, 2500);
       } else {
         const errorText = await response.text();
-        setErrorMsg(errorText || 'Error al restablecer la contraseña');
+        setErrorMsg(errorText || 'El código ingresado es incorrecto o ha expirado');
       }
     } catch (error) {
       console.error('Error de red:', error);
@@ -138,7 +208,7 @@ const VetResetPassword = () => {
               Define tu nueva <span style={{ color: colors.blue200 }}>contraseña</span>
             </h2>
             <p style={{ fontSize: '13px', color: colors.blue100, lineHeight: 1.6, marginBottom: '1.25rem', maxWidth: '280px' }}>
-              Ingresa el token UUID recibido y la nueva contraseña que deseas configurar para tu cuenta de Huesitos.
+              Ingresa el código de 6 dígitos enviado a tu correo y configura tu nueva clave de acceso para Huesitos.
             </p>
           </div>
         </div>
@@ -161,8 +231,26 @@ const VetResetPassword = () => {
           </button>
 
           <div style={{ marginBottom: '1.5rem' }}>
-            <h2 style={{ fontSize: '21px', fontWeight: 700, color: '#0f172a', marginBottom: '3px' }}>Nueva Contraseña</h2>
-            <p style={{ fontSize: '13px', color: '#64748b' }}>Completa los campos para restablecer tu acceso</p>
+            <h2 style={{ fontSize: '21px', fontWeight: 700, color: '#0f172a', marginBottom: '3px' }}>Verifica tu cuenta</h2>
+            <p style={{ fontSize: '13px', color: '#64748b' }}>Ingresa el código de seguridad de 6 dígitos</p>
+          </div>
+
+          {/* Temporizador visual */}
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '8px', 
+            background: timeLeft > 60 ? '#f8fafc' : colors.red50, 
+            border: `1px solid ${timeLeft > 60 ? '#e2e8f0' : colors.red100}`, 
+            padding: '8px 12px', 
+            borderRadius: '10px', 
+            fontSize: '13px', 
+            fontWeight: 600,
+            color: timeLeft > 60 ? '#475569' : colors.red600,
+            marginBottom: '1.25rem' 
+          }}>
+            <span>⏳</span>
+            <span>El código expira en: {formatTime(timeLeft)}</span>
           </div>
 
           {/* Mensajes de error/éxito */}
@@ -179,15 +267,40 @@ const VetResetPassword = () => {
           )}
 
           <form onSubmit={handleSubmit}>
-            <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '5px' }}>Token de Recuperación (UUID)</label>
-              <input
-                type="text" value={token} onChange={e => setToken(e.target.value)} placeholder="Ej: 123e4567-e89b-12d3-a456-426614174000" required
-                style={{
-                  width: '100%', padding: '0 12px', height: '40px', borderRadius: '10px', border: '1px solid #e2e8f0',
-                  background: '#f8fafc', fontSize: '13px', color: '#0f172a', outline: 'none', boxSizing: 'border-box',
-                }}
-              />
+            {/* Casilleros del código */}
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>
+                Código de 6 dígitos
+              </label>
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: '8px' }}>
+                {codigo.map((digit, idx) => (
+                  <input
+                    key={idx}
+                    id={`code-input-${idx}`}
+                    ref={inputRefs[idx]}
+                    type="text"
+                    maxLength={1}
+                    value={digit}
+                    onChange={(e) => handleInputChange(idx, e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(idx, e)}
+                    onPaste={idx === 0 ? handlePaste : undefined}
+                    disabled={timeLeft <= 0}
+                    style={{
+                      width: '42px',
+                      height: '46px',
+                      textAlign: 'center',
+                      fontSize: '18px',
+                      fontWeight: 'bold',
+                      borderRadius: '8px',
+                      border: '1px solid #e2e8f0',
+                      background: '#f8fafc',
+                      outline: 'none',
+                      color: colors.blue900,
+                      boxSizing: 'border-box',
+                    }}
+                  />
+                ))}
+              </div>
             </div>
 
             <div style={{ marginBottom: '1rem' }}>
@@ -195,6 +308,7 @@ const VetResetPassword = () => {
               <div style={{ position: 'relative' }}>
                 <input
                   type={showPass ? 'text' : 'password'} value={nuevaContrasena} onChange={e => setNuevaContrasena(e.target.value)} placeholder="••••••••" required
+                  disabled={timeLeft <= 0}
                   style={{
                     width: '100%', padding: '0 35px 0 12px', height: '40px', borderRadius: '10px', border: '1px solid #e2e8f0',
                     background: '#f8fafc', fontSize: '13px', color: '#0f172a', outline: 'none', boxSizing: 'border-box',
@@ -202,6 +316,7 @@ const VetResetPassword = () => {
                 />
                 <button
                   type="button" onClick={() => setShowPass(!showPass)}
+                  disabled={timeLeft <= 0}
                   style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', fontSize: '16px', padding: 0 }}
                 >
                   {showPass ? '🙈' : '👁'}
@@ -213,6 +328,7 @@ const VetResetPassword = () => {
               <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '5px' }}>Confirmar nueva contraseña</label>
               <input
                 type={showPass ? 'text' : 'password'} value={confirmarContrasena} onChange={e => setConfirmarContrasena(e.target.value)} placeholder="••••••••" required
+                disabled={timeLeft <= 0}
                 style={{
                   width: '100%', padding: '0 12px', height: '40px', borderRadius: '10px', border: '1px solid #e2e8f0',
                   background: '#f8fafc', fontSize: '13px', color: '#0f172a', outline: 'none', boxSizing: 'border-box',
@@ -221,11 +337,11 @@ const VetResetPassword = () => {
             </div>
 
             <button
-              type="submit" disabled={loading}
+              type="submit" disabled={loading || timeLeft <= 0}
               style={{
                 width: '100%', height: '44px', background: colors.blue600, color: '#fff', border: 'none', borderRadius: '10px',
                 fontSize: '14px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', transition: 'background 0.15s',
-                opacity: loading ? 0.7 : 1,
+                opacity: (loading || timeLeft <= 0) ? 0.7 : 1,
               }}
             >
               {loading ? 'Restableciendo...' : 'Restablecer Contraseña'}

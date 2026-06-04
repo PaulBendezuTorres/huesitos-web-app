@@ -44,11 +44,11 @@ const VetForgotPassword = () => {
       });
 
       if (response.ok) {
-        setSuccessMsg('Enlace de recuperación generado. Si estás en modo desarrollo, revisa la consola de Spring Boot para obtener el token UUID.');
-        // También podemos redirigir después de unos segundos a la pantalla de restablecer contraseña
+        setSuccessMsg('¡Código enviado! Revisa tu bandeja de entrada (o spam) para obtener tu código de 6 dígitos.');
+        // Redirigir rápidamente a la pantalla de ingresar código
         setTimeout(() => {
           navigate('/restablecer-contrasena');
-        }, 5000);
+        }, 1500);
       } else {
         const errorText = await response.text();
         setErrorMsg(errorText || 'Error al procesar la solicitud');

@@ -16,25 +16,27 @@ public class AutenticacionAvanzadaServicio {
 
     private final UsuarioRepositorio usuarioRepositorio;
     private final PasswordEncoder passwordEncoder;
+    private final CorreoServicio correoServicio;
 
     /**
      * Inicia el proceso de restablecimiento de contraseña para un usuario.
-     * Genera un token UUID temporal válido por 15 minutos.
+     * Genera un código de 6 dígitos temporal válido por 15 minutos y lo envía por correo real.
      */
     @Transactional
     public void solicitarRestablecimiento(String correo) {
         Usuario usuario = usuarioRepositorio.findByCorreo(correo)
                 .orElseThrow(() -> new RuntimeException("No existe un usuario registrado con ese correo electrónico"));
 
-        String token = UUID.randomUUID().toString();
+        // Generar un código aleatorio de 6 dígitos
+        String token = String.format("%06d", new java.util.Random().nextInt(1000000));
         LocalDateTime expiracion = LocalDateTime.now().plusMinutes(15);
 
         usuario.setTokenRecuperacion(token);
         usuario.setExpiracionToken(expiracion);
         usuarioRepositorio.save(usuario);
 
-        // Simulación de envío de correo en consola
-        System.out.println("[EMAIL SIMULADOR] Para restablecer tu contraseña de Huesitos, usa el siguiente token: http://localhost:8080/api/autenticacion/restablecer?token=" + token);
+        // Envío real del código al correo del usuario
+        correoServicio.enviarCodigoRecuperacion(correo, token);
     }
 
     /**
@@ -44,10 +46,10 @@ public class AutenticacionAvanzadaServicio {
     @Transactional
     public void completarRestablecimiento(String token, String nuevaContrasena) {
         Usuario usuario = usuarioRepositorio.findByTokenRecuperacion(token)
-                .orElseThrow(() -> new RuntimeException("El token de recuperación no es válido"));
+                .orElseThrow(() -> new RuntimeException("El código de recuperación no es válido"));
 
         if (usuario.getExpiracionToken() == null || usuario.getExpiracionToken().isBefore(LocalDateTime.now())) {
-            throw new RuntimeException("El enlace de recuperación ha expirado. Solicita uno nuevo.");
+            throw new RuntimeException("El código de recuperación ha expirado. Solicita uno nuevo.");
         }
 
         usuario.setContrasena(passwordEncoder.encode(nuevaContrasena));

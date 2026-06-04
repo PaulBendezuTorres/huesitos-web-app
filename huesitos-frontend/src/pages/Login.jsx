@@ -36,6 +36,8 @@ if (response.ok) {
   localStorage.setItem('token', data.token);
   localStorage.setItem('usuarioCorreo', data.correo);
   localStorage.setItem('usuarioRol', data.rol);
+  if (data.usuarioId) localStorage.setItem('usuarioId', data.usuarioId);
+  if (data.duenoId) localStorage.setItem('duenoId', data.duenoId);
 
   // Redirección dinámica según el rol
   if (data.rol === 'ADMINISTRADOR') {

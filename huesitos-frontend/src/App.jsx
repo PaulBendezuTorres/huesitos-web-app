@@ -6,6 +6,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import VetRegister from './pages/Register';
 import VetForgotPassword from './pages/ForgotPassword';
 import VetResetPassword from './pages/ResetPassword';
+import ClienteDashboard from './pages/ClienteDashboard';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/olvide-contrasena" element={<VetForgotPassword />} />
         <Route path="/restablecer-contrasena" element={<VetResetPassword />} />
         <Route path="/admin" element={<AdminDashboard />} /> 
+        <Route path="/cliente" element={<ClienteDashboard />} />
       </Routes>
     </Router>
   );

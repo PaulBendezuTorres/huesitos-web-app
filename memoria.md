@@ -160,7 +160,7 @@
       - Columna derecha: Foto de un veterinario y una dueña conversando alegremente en una sala de consulta de la clínica.
       ```
       </details>
-    - [ ] **Dashboard de Cliente**: Grid de mascotas, próximas citas agendadas y accesos rápidos.
+    - [x] **Dashboard de Cliente**: Grid de mascotas, próximas citas agendadas y accesos rápidos.
       <details>
       <summary>Prompt Figma / Stitch</summary>
 
