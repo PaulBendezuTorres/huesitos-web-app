@@ -8,6 +8,7 @@ import VetForgotPassword from './pages/ForgotPassword';
 import VetResetPassword from './pages/ResetPassword';
 import ClienteDashboard from './pages/ClienteDashboard';
 import MascotaFichaHistorial from './pages/MascotaFichaHistorial';
+import VeterinarioDashboard from './pages/VeterinarioDashboard';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/admin" element={<AdminDashboard />} /> 
         <Route path="/cliente" element={<ClienteDashboard />} />
         <Route path="/cliente/mascota/:mascotaId" element={<MascotaFichaHistorial />} />
+        <Route path="/veterinario" element={<VeterinarioDashboard />} />
       </Routes>
     </Router>
   );
