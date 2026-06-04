@@ -162,7 +162,6 @@ const ConsultaActiva = ({
                   </label>
                   <textarea
                     rows="4"
-                    value={consultaForm.treatment}
                     name="tratamiento"
                     value={consultaForm.tratamiento}
                     onChange={e => setConsultaForm({...consultaForm, tratamiento: e.target.value})}
