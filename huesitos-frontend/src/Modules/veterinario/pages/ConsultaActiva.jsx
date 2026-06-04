@@ -34,18 +34,18 @@ const ConsultaActiva = ({
   if (!citaActiva) {
     return (
       <div className="bg-white p-12 rounded-3xl border border-slate-200/60 shadow-sm text-center max-w-2xl mx-auto space-y-4">
-        <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-450">
+        <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-400">
           <Stethoscope size={30} />
         </div>
-        <h3 className="text-lg font-black text-slate-800 tracking-tight">Ficha Clínica Inactiva</h3>
+        <h3 className="text-lg font-bold text-slate-800 tracking-tight">Ficha clínica inactiva</h3>
         <p className="text-xs text-slate-400 max-w-md mx-auto">
-          No hay ninguna atención médica activa en este momento. Por favor ve a la pestaña **Agenda del Día** y selecciona un paciente para iniciar su diagnóstico.
+          No hay ninguna atención médica activa en este momento. Por favor ve a la pestaña **Agenda del día** y selecciona un paciente para iniciar su diagnóstico.
         </p>
         <button 
           onClick={() => setVistaActual('agenda')}
-          className="bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow-md transition-all inline-block"
+          className="bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-semibold text-xs shadow-md transition-all inline-block"
         >
-          Ver Agenda del Día
+          Ver agenda del día
         </button>
       </div>
     );
@@ -56,15 +56,15 @@ const ConsultaActiva = ({
       {/* Cabecera del Paciente Activo */}
       <div className="bg-white p-6 rounded-3xl border border-slate-200/60 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white text-xl font-black shadow-md shadow-emerald-500/20">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white text-xl font-bold shadow-md shadow-emerald-500/10">
             {citaActiva.mascota.nombre.charAt(0)}
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-xl font-black text-slate-800 tracking-tight">
+              <h3 className="text-xl font-bold text-slate-850 tracking-tight">
                 {citaActiva.mascota.nombre}
               </h3>
-              <span className="text-[10px] bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-md font-bold text-slate-600">
+              <span className="text-[10px] bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-md font-semibold text-slate-650">
                 {citaActiva.mascota.especie} {citaActiva.mascota.raza ? `- ${citaActiva.mascota.raza}` : ''}
               </span>
             </div>
@@ -79,18 +79,18 @@ const ConsultaActiva = ({
             onClick={finalizarAtencion}
             className="bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 shadow-lg shadow-emerald-500/20 transition-all"
           >
-            <CheckCircle size={16} /> Finalizar Atención
+            <CheckCircle size={16} /> Finalizar atención
           </button>
         </div>
       </div>
 
       {/* Sub-Navegación de Ficha */}
-      <div className="bg-white px-6 rounded-t-3xl border-t border-x border-slate-250/60 flex gap-6 overflow-x-auto scrollbar-none">
+      <div className="bg-white px-6 rounded-t-3xl border-t border-x border-slate-200/60 flex gap-6 overflow-x-auto scrollbar-none">
         {[
-          { id: 'diagnostico', label: 'Diagnóstico & Consulta', icon: ClipboardList },
-          { id: 'historial', label: 'Expediente Histórico', icon: History },
-          { id: 'receta', label: 'Prescribir Receta', icon: FileText },
-          { id: 'archivos', label: 'Subir Archivos', icon: Paperclip }
+          { id: 'diagnostico', label: 'Diagnóstico y consulta', icon: ClipboardList },
+          { id: 'historial', label: 'Expediente histórico', icon: History },
+          { id: 'receta', label: 'Prescribir receta', icon: FileText },
+          { id: 'archivos', label: 'Subir archivos', icon: Paperclip }
         ].map(pestana => {
           const Icon = pestana.icon;
           const activa = pestanaActiva === pestana.id;
@@ -98,10 +98,10 @@ const ConsultaActiva = ({
             <button
               key={pestana.id}
               onClick={() => setPestanaActiva(pestana.id)}
-              className={`py-4 border-b-2 font-bold text-xs flex items-center gap-2 transition-all shrink-0 ${
+              className={`py-4 border-b-2 font-semibold text-xs flex items-center gap-2 transition-all shrink-0 ${
                 activa 
                   ? 'border-emerald-500 text-emerald-600' 
-                  : 'border-transparent text-slate-400 hover:text-slate-650'
+                  : 'border-transparent text-slate-400 hover:text-slate-600'
               }`}
             >
               <Icon size={16} />
@@ -112,25 +112,25 @@ const ConsultaActiva = ({
       </div>
 
       {/* Contenedor de Vistas de Pestaña */}
-      <div className="bg-white p-6 rounded-b-3xl border-b border-x border-slate-250/60 shadow-sm min-h-[400px]">
+      <div className="bg-white p-6 rounded-b-3xl border-b border-x border-slate-200/60 shadow-sm min-h-[400px]">
         {/* PESTAÑA: DIAGNÓSTICO */}
         {pestanaActiva === 'diagnostico' && (
           <div className="space-y-5 max-w-4xl">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200/60">
               <div>
-                <span className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Motivo de Cita</span>
-                <p className="font-bold text-slate-800 text-xs">{consultaForm.motivoConsulta}</p>
+                <span className="block text-[10px] font-semibold text-slate-500 mb-1">Motivo de cita</span>
+                <p className="font-semibold text-slate-700 text-xs">{consultaForm.motivoConsulta}</p>
               </div>
               <div>
-                <span className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Fisiológico</span>
-                <p className="font-bold text-slate-800 text-xs">Mascota: {citaActiva.mascota.nombre}</p>
+                <span className="block text-[10px] font-semibold text-slate-500 mb-1">Fisiológico</span>
+                <p className="font-semibold text-slate-700 text-xs">Mascota: {citaActiva.mascota.nombre}</p>
               </div>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">
-                  Síntomas Presentados <span className="text-red-500">*</span>
+                <label className="block text-xs font-semibold text-slate-655 mb-1.5">
+                  Síntomas presentados <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   rows="2"
@@ -144,8 +144,8 @@ const ConsultaActiva = ({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">
-                    Diagnóstico Médico <span className="text-red-500">*</span>
+                  <label className="block text-xs font-semibold text-slate-655 mb-1.5">
+                    Diagnóstico médico <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     rows="4"
@@ -157,8 +157,8 @@ const ConsultaActiva = ({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">
-                    Tratamiento Recomendado <span className="text-red-500">*</span>
+                  <label className="block text-xs font-semibold text-slate-655 mb-1.5">
+                    Tratamiento recomendado <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     rows="4"
@@ -173,8 +173,8 @@ const ConsultaActiva = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">
-                  Observaciones Adicionales
+                <label className="block text-xs font-semibold text-slate-655 mb-1.5">
+                  Observaciones adicionales
                 </label>
                 <textarea
                   rows="2"
@@ -201,21 +201,21 @@ const ConsultaActiva = ({
             <div className="flex justify-between items-center border-b border-slate-100 pb-3">
               <div>
                 <h4 className="font-bold text-slate-800 text-sm">
-                  Redacción de Receta Médica
+                  Redacción de receta médica
                 </h4>
                 <p className="text-xs text-slate-400 mt-0.5">La receta se compilará en formato PDF para el cliente al finalizar.</p>
               </div>
               {recetaGuardada && (
-                <span className="bg-emerald-50 text-emerald-600 border border-emerald-200 text-[10px] font-black px-2.5 py-1 rounded-lg flex items-center gap-1.5">
-                  <CheckCircle size={12} /> Redactada y Lista
+                <span className="bg-emerald-50 text-emerald-600 border border-emerald-200 text-[10px] font-semibold px-2.5 py-1 rounded-lg flex items-center gap-1.5">
+                  <CheckCircle size={12} /> Redactada y lista
                 </span>
               )}
             </div>
 
             <form onSubmit={handleGuardarReceta} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">
-                  Medicamentos y Dosis <span className="text-red-500">*</span>
+                <label className="block text-xs font-semibold text-slate-655 mb-1.5">
+                  Medicamentos y dosis <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   rows="4"
@@ -228,8 +228,8 @@ const ConsultaActiva = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">
-                  Indicaciones y Duración <span className="text-red-500">*</span>
+                <label className="block text-xs font-semibold text-slate-655 mb-1.5">
+                  Indicaciones y duración <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   rows="3"
@@ -244,9 +244,9 @@ const ConsultaActiva = ({
               <div className="flex justify-end pt-2">
                 <button
                   type="submit"
-                  className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow-md transition-colors"
+                  className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl font-semibold text-xs shadow-md transition-colors"
                 >
-                  Guardar Receta
+                  Guardar receta
                 </button>
               </div>
             </form>
@@ -258,27 +258,27 @@ const ConsultaActiva = ({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-5xl">
             {/* Formulario de carga */}
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200/60 space-y-4 h-fit">
-              <h4 className="font-black text-slate-800 text-xs uppercase tracking-wider mb-2 border-b border-slate-150 pb-2">
-                Nuevo Archivo Clínico
+              <h4 className="font-bold text-slate-850 text-xs mb-2 border-b border-slate-100 pb-2">
+                Nuevo archivo clínico
               </h4>
 
               <form onSubmit={handleSubirArchivo} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Tipo de Examen</label>
+                  <label className="block text-xs font-semibold text-slate-655 mb-1.5">Tipo de examen</label>
                   <select
                     value={archivoForm.tipoExamen}
                     onChange={e => setArchivoForm({...archivoForm, tipoExamen: e.target.value})}
-                    className="w-full border border-slate-300 p-2.5 rounded-xl text-slate-800 text-xs font-bold bg-white cursor-pointer"
+                    className="w-full border border-slate-300 p-2.5 rounded-xl text-slate-800 text-xs font-semibold bg-white cursor-pointer"
                   >
-                    <option value="LABORATORIO">LABORATORIO</option>
-                    <option value="ECOGRAFIA">ECOGRAFIA</option>
-                    <option value="RAYOS_X">RAYOS_X</option>
-                    <option value="OTROS">OTROS</option>
+                    <option value="LABORATORIO">Laboratorio</option>
+                    <option value="ECOGRAFIA">Ecografía</option>
+                    <option value="RAYOS_X">Rayos X</option>
+                    <option value="OTROS">Otros</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Descripción del Reporte</label>
+                  <label className="block text-xs font-semibold text-slate-655 mb-1.5">Descripción del reporte</label>
                   <input
                     type="text"
                     value={archivoForm.descripcion}
@@ -289,7 +289,7 @@ const ConsultaActiva = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Seleccionar Archivo (PDF, JPG, PNG)</label>
+                  <label className="block text-xs font-semibold text-slate-655 mb-1.5">Seleccionar archivo (PDF, JPG, PNG)</label>
                   <div className="border-2 border-dashed border-slate-300 rounded-2xl p-6 flex flex-col items-center justify-center bg-white hover:bg-slate-50 transition-all cursor-pointer relative">
                     <input
                       type="file"
@@ -298,7 +298,7 @@ const ConsultaActiva = ({
                       className="absolute inset-0 opacity-0 cursor-pointer"
                     />
                     <Upload className="text-slate-400 mb-2" size={24} />
-                    <p className="text-xs text-slate-650 font-bold">
+                    <p className="text-xs text-slate-600 font-semibold">
                       {selectedFile ? selectedFile.name : 'Haz clic para subir o arrastra'}
                     </p>
                     <p className="text-[10px] text-slate-400 mt-1">Soporta PDF o Imágenes (Máx. 5MB)</p>
@@ -308,22 +308,22 @@ const ConsultaActiva = ({
                 <button
                   type="submit"
                   disabled={subiendoArchivo}
-                  className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md transition-colors disabled:opacity-50"
+                  className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-2.5 rounded-xl font-semibold text-xs shadow-md transition-colors disabled:opacity-50"
                 >
-                  {subiendoArchivo ? 'Subiendo...' : 'Subir Archivo Clínico'}
+                  {subiendoArchivo ? 'Subiendo...' : 'Subir archivo clínico'}
                 </button>
               </form>
             </div>
 
             {/* Lista de archivos subidos */}
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200/60 flex flex-col min-h-[300px]">
-              <h4 className="font-black text-slate-800 text-xs uppercase tracking-wider mb-3 border-b border-slate-150 pb-2">
-                Archivos Clínicos de esta Sesión
+              <h4 className="font-bold text-slate-850 text-xs mb-3 border-b border-slate-100 pb-2">
+                Archivos clínicos de esta sesión
               </h4>
               
               <div className="flex-1 overflow-y-auto space-y-3">
                 {archivosMascota.length === 0 ? (
-                  <div className="text-center py-10 text-xs font-bold text-slate-400">
+                  <div className="text-center py-10 text-xs font-semibold text-slate-400">
                     No hay archivos subidos en esta consulta aún.
                   </div>
                 ) : (
@@ -334,7 +334,7 @@ const ConsultaActiva = ({
                           <FileText size={16} />
                         </div>
                         <div className="text-left">
-                          <p className="text-xs font-bold text-slate-800 truncate max-w-[180px]">{archivo.nombreOriginal}</p>
+                          <p className="text-xs font-semibold text-slate-850 truncate max-w-[180px]">{archivo.nombreOriginal}</p>
                           <p className="text-[9px] text-slate-400 font-medium">Examen: {archivo.tipoExamen}</p>
                         </div>
                       </div>
