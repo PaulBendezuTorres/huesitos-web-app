@@ -155,7 +155,7 @@
 - **Base de Datos (MySQL)**: Base de datos `huesitos` inicializada. Hibernate crea/actualiza las tablas `usuarios`, `duenos`, `mascotas`, `citas`, `consultas_medicas`, `servicios`, `transacciones`, `horarios_personal`, `vacunas`, `historial_vacunas`, `recetas`, `archivos_clinicos`, `categorias`, `productos` y `inventarios` al levantar la aplicación.
 
 ## 🛠️ Próximos Pasos (Pendientes)
-- [ ] **Desarrollo del Frontend (React + Tailwind CSS)**:
+- [x] **Desarrollo del Frontend (React + Tailwind CSS)**:
   - **Vistas de Cliente / Público (Visitantes)**:
     - [x] **Landing Page**: Página de inicio, servicios destacados, contacto (Marcona, Ica) y emergencias.
       <details>
