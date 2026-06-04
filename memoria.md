@@ -1,6 +1,6 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-04 (Historial Clínico Compartido, Campañas y Ofertas)
+Última actualización: 2026-06-04 (Agenda Semanal Compartida, Historial Clínico Compartido)
 
 ## 🚀 Logros Recientes
 - [x] Rama `develop` creada y publicada en GitHub.
@@ -138,6 +138,9 @@
   - Creado el componente reutilizable `MascotaHistorialTimeline.jsx` que centraliza la carga y visualización unificada del historial clínico (consultas, vacunas y archivos médicos), ofreciendo buscador de texto, filtros avanzados y descargas de recetas en PDF.
   - Refactorizado `MascotaFichaHistorial.jsx` para delegar la interfaz al componente compartido en modo completo.
   - Modificado `VeterinarioDashboard.jsx` para integrar el componente en la pestaña de consulta activa, eliminando estados y llamadas API duplicadas.
+- [x] **Frontend - Agenda Semanal de Citas Compartida**:
+  - Renombrado y refactorizado el componente `RecepcionistaAgenda.jsx` a `AgendaSemanal.jsx` (y su componente interno a `AgendaSemanal`) para desvincular el prefijo específico del rol y hacerlo genérico.
+  - Actualizadas las referencias e importaciones en `AdminDashboard.jsx` y `RecepcionistaDashboard.jsx`.
 
 ## 📌 Estado Actual de los Componentes
 - **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF, Subida de Archivos Clínicos, Modelado e Inventario, Catálogo y Pedidos de Tienda Online, y el módulo de Tareas Programadas y Campañas de Marketing (Fase 11B finalizada) completamente implementados y validados.
@@ -331,7 +334,7 @@
 
   - **Componentes y Vistas Reutilizables**:
     - [x] **Historial Clínico / Ficha de Mascota**: Reutilizable entre el *Cliente* (lectura) y el *Veterinario* (consulta durante la atención).
-    - [ ] **Agenda Semanal de Citas**: Compartido y reutilizable entre la *Recepcionista* (gestión operativa) y el *Administrador* (vista de supervisión).
+    - [x] **Agenda Semanal de Citas**: Compartido y reutilizable entre la *Recepcionista* (gestión operativa) y el *Administrador* (vista de supervisión).
     - [ ] **Inventario Crítico / Alertas**: La alerta de bajo stock y próximos a vencer se reutiliza en el dashboard del *Administrador* y en el panel POS de la *Recepcionista*.
     - [ ] **Gestión de Pedidos**: Compartido entre la *Recepcionista* (despacho físico) y el *Administrador* (auditoría).
 

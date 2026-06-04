@@ -38,7 +38,7 @@ const HORARIOS_BASE = [
   '16:00', '16:30', '17:00', '17:30',
 ];
 
-const RecepcionistaAgenda = () => {
+const AgendaSemanal = () => {
   // Filtros
   const [offsetSemanas, setOffsetSemanas] = useState(0);
   const [veterinarios, setVeterinarios] = useState([]);
@@ -642,4 +642,4 @@ const RecepcionistaAgenda = () => {
   );
 };
 
-export default RecepcionistaAgenda;
+export default AgendaSemanal;

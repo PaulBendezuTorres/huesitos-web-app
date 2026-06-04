@@ -21,7 +21,7 @@ import ConfiguracionDinamica from '../Modules/admin/pages/ConfiguracionDinamica'
 import UsuariosPage from '../Modules/admin/pages/UsuariosPage';
 import FinanzasPage from '../Modules/admin/pages/FinanzasPage';
 import DuenosPage from '../Modules/admin/pages/DuenosPage';
-import RecepcionistaAgenda from './RecepcionistaAgenda';
+import AgendaSemanal from './AgendaSemanal';
 import ConfiguracionHorarios from '../Modules/admin/pages/ConfiguracionHorarios';
 import InventarioPage from '../Modules/admin/pages/InventarioPage';
 import CampanasPage from '../Modules/admin/pages/CampanasPage';
@@ -51,7 +51,7 @@ const AdminDashboard = () => {
       case 'servicios': return <ServiciosPage />;
       case 'usuarios': return <UsuariosPage />;
       case 'duenos': return <DuenosPage />;
-      case 'agenda': return <RecepcionistaAgenda />;
+      case 'agenda': return <AgendaSemanal />;
       case 'horarios': return <ConfiguracionHorarios />;
       case 'inventario': return <InventarioPage />;
       case 'finanzas': return <FinanzasPage />;

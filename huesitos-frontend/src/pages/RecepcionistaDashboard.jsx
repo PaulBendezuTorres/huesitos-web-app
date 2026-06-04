@@ -32,7 +32,7 @@ import {
   obtenerTodosLosPedidos,
   cambiarEstadoPedido
 } from '../api/tiendaAPI';
-import RecepcionistaAgenda from './RecepcionistaAgenda';
+import AgendaSemanal from './AgendaSemanal';
 
 const RecepcionistaDashboard = () => {
   const navigate = useNavigate();
@@ -626,7 +626,7 @@ const RecepcionistaDashboard = () => {
         {/* 3. SECCIÓN: AGENDA SEMANAL */}
         {seccionActiva === 'agenda' && (
           <section className="flex-1 bg-slate-50 p-6 overflow-y-auto h-full animate-in fade-in duration-200">
-            <RecepcionistaAgenda />
+            <AgendaSemanal />
           </section>
         )}
 
