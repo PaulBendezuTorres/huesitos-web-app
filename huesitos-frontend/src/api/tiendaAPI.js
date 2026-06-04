@@ -80,3 +80,51 @@ export const cambiarEstadoPedido = async (id, estado) => {
   const respuesta = await axios.put(`${API_BASE}/pedidos/${id}/estado?estado=${estado}`, {}, obtenerHeaders());
   return respuesta.data;
 };
+
+/** Obtener lista de categorías */
+export const obtenerCategorias = async () => {
+  const respuesta = await axios.get(`${API_BASE}/categorias`);
+  return respuesta.data;
+};
+
+/** Obtener todos los lotes activos */
+export const obtenerLotes = async () => {
+  const respuesta = await axios.get(`${API_BASE}/inventarios`, obtenerHeaders());
+  return respuesta.data;
+};
+
+/** Obtener lotes de un producto específico */
+export const obtenerLotesPorProducto = async (productoId) => {
+  const respuesta = await axios.get(`${API_BASE}/inventarios/producto/${productoId}`, obtenerHeaders());
+  return respuesta.data;
+};
+
+/** Registrar nuevo lote de inventario */
+export const registrarLote = async (loteData) => {
+  const respuesta = await axios.post(`${API_BASE}/inventarios`, loteData, obtenerHeaders());
+  return respuesta.data;
+};
+
+/** Ajustar stock de un lote */
+export const ajustarStockLote = async (id, stock) => {
+  const respuesta = await axios.put(`${API_BASE}/inventarios/${id}/ajuste`, { stock }, obtenerHeaders());
+  return respuesta.data;
+};
+
+/** Desactivar un lote de inventario */
+export const desactivarLote = async (id) => {
+  const respuesta = await axios.delete(`${API_BASE}/inventarios/${id}`, obtenerHeaders());
+  return respuesta.data;
+};
+
+/** Registrar nuevo producto */
+export const registrarProducto = async (productoData) => {
+  const respuesta = await axios.post(`${API_BASE}/productos`, productoData, obtenerHeaders());
+  return respuesta.data;
+};
+
+/** Desactivar un producto */
+export const desactivarProducto = async (id) => {
+  const respuesta = await axios.delete(`${API_BASE}/productos/${id}`, obtenerHeaders());
+  return respuesta.data;
+};
