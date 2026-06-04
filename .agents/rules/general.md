@@ -46,17 +46,19 @@ description: Reglas generales del proyecto, estándares de codificación, flujo 
   - **.agents/specs/**: Se crea y utiliza únicamente para características (features) complejas y módulos grandes. No se crea un archivo de especificaciones para pequeños cambios de diseño.
   - Es obligatorio actualizar el archivo `memoria.md` inmediatamente después de completar el desarrollo y/o las pruebas de un plan de trabajo.
 
-## Prioridad y Uso de Skills (.agents/skills/)
-Al diseñar e implementar soluciones en el proyecto, se deben revisar y priorizar los skills locales en la carpeta `.agents/skills/` en el siguiente orden de importancia:
-1. **Desarrollo Backend y Base de Datos (Prioridad Alta)**:
+## Uso de Skills (.agents/skills/)
+Los skills locales en la carpeta `.agents/skills/` deben revisarse y utilizarse únicamente cuando sea estrictamente necesario para el desarrollo de la tarea actual o cuando se requiera su uso de manera explícita. No es obligatorio leerlos si no se requiere su aplicación en la tarea en curso.
+
+A continuación se listan las skills disponibles:
+1. **Desarrollo Backend y Base de Datos**:
    - [java-springboot](.agents/skills/java-springboot/SKILL.md): Reglas específicas para Spring Boot 4 y Java 26.
    - [springboot-security](.agents/skills/springboot-security/SKILL.md): Configuración de seguridad, filtros y cifrado JWT.
    - [backend-patterns](.agents/skills/backend-patterns/SKILL.md): Estructuras, inyección de dependencias y organización en capas.
    - [mysql](.agents/skills/mysql/SKILL.md): Diseño de tablas en plural/minúsculas y mapeo JPA.
    - [error-handling-patterns](.agents/skills/error-handling-patterns/SKILL.md): Control y gestión de excepciones y respuestas de error uniformes.
-2. **Desarrollo Frontend (Prioridad Media)**:
+2. **Desarrollo Frontend**:
    - [frontend-design](.agents/skills/frontend-design/SKILL.md): Arquitectura limpia y reusable en React con Tailwind CSS.
-3. **Flujo de Trabajo (Prioridad Soporte)**:
+3. **Flujo de Trabajo**:
    - [resumen-memoria](.agents/skills/resumen-memoria/SKILL.md): Generar, actualizar o consultar la bitácora de progreso `memoria.md` bajo el modelo híbrido (manteniendo la fecha, logros de la semana y tareas pendientes, sin duplicar especificaciones de `.agents/specs/` ni reglas de `.agents/rules/`).
 
 ## Idioma y Nomenclatura
