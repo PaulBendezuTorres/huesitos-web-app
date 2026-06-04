@@ -1,6 +1,6 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-04 (Tablero de Veterinario Reestructurado, Gestión de Pedidos Compartida)
+Última actualización: 2026-06-04 (Modularización de Módulos Clínicos y POS, Tablero de Veterinario Reestructurado)
 
 ## 🚀 Logros Recientes
 - [x] Rama `develop` creada y publicada en GitHub.
@@ -151,6 +151,10 @@
 - [x] **Frontend - Reestructuración del Tablero de Veterinario**:
   - Rediseñado completamente `VeterinarioDashboard.jsx` utilizando sintaxis de función flecha y Tailwind CSS para eliminar el diseño Split-View.
   - Implementada una estructura clásica con Sidebar oscuro, cabecera superior y área de contenido dinámico para las vistas de Agenda del Día (con KPIs y tarjetas de pacientes), Consulta Médica Activa (con sub-pestañas y placeholder animado) y Buscador General de Expedientes.
+- [x] **Frontend - Modularización de Módulos Clínicos y POS**:
+  - Creadas las carpetas `Modules/recepcionista/pages` y `Modules/veterinario/pages` para estructurar sus sub-páginas de forma simétrica con `admin` y `cliente`.
+  - Extraído el componente `CajaPOS.jsx` que maneja todo el Punto de Venta (POS) y cobros presenciales de la Recepcionista, simplificando `RecepcionistaDashboard.jsx`.
+  - Extraídos los componentes `VeterinarioAgenda.jsx` (agenda diaria y KPIs) y `ConsultaActiva.jsx` (ficha clínica, recetas y carga de análisis) del Veterinario, simplificando `VeterinarioDashboard.jsx` de forma limpia y organizada.
 
 ## 📌 Estado Actual de los Componentes
 - **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF, Subida de Archivos Clínicos, Modelado e Inventario, Catálogo y Pedidos de Tienda Online, y el módulo de Tareas Programadas y Campañas de Marketing (Fase 11B finalizada) completamente implementados y validados.
