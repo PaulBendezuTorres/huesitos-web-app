@@ -9,6 +9,7 @@ import VetResetPassword from './pages/ResetPassword';
 import ClienteDashboard from './pages/ClienteDashboard';
 import MascotaFichaHistorial from './pages/MascotaFichaHistorial';
 import VeterinarioDashboard from './pages/VeterinarioDashboard';
+import RecepcionistaDashboard from './pages/RecepcionistaDashboard';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/cliente" element={<ClienteDashboard />} />
         <Route path="/cliente/mascota/:mascotaId" element={<MascotaFichaHistorial />} />
         <Route path="/veterinario" element={<VeterinarioDashboard />} />
+        <Route path="/recepcion" element={<RecepcionistaDashboard />} />
       </Routes>
     </Router>
   );

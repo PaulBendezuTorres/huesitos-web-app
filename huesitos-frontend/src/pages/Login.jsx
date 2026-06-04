@@ -46,6 +46,8 @@ if (response.ok) {
     navigate('/cliente');
   } else if (data.rol === 'VETERINARIO') {
     navigate('/veterinario');
+  } else if (data.rol === 'RECEPCIONISTA') {
+    navigate('/recepcion');
   } else {
     navigate('/');
   }
