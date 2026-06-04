@@ -1,6 +1,6 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-04 (Implementación de Agenda Semanal de Citas y Reprogramación)
+Última actualización: 2026-06-04 (Configuración de Horarios del Personal e Integración de Agenda)
 
 ## 🚀 Logros Recientes
 - [x] Rama `develop` creada y publicada en GitHub.
@@ -121,7 +121,11 @@
 - [x] **Frontend - Agenda Semanal de Citas y Reprogramación**:
   - Creada la vista interactiva `RecepcionistaAgenda.jsx` con visualización semanal (lunes a domingo), navegación interactiva de semanas, y filtros avanzados.
   - Diseñado un modal interactivo para reprogramar citas en tiempo real (`PUT /api/citas/{id}/reprogramar`) que verifica disponibilidad y horarios del veterinario.
-  - Integrada la agenda semanal como una sección activa en `RecepcionistaDashboard.jsx` y `AdminDashboard.jsx` para roles de Recepcionista y Administrador.
+  - Integrada la agenda semanal como una sección activa en `RecepcionistaDashboard.jsx` and `AdminDashboard.jsx` para roles de Recepcionista y Administrador.
+- [x] **Frontend - Configuración de Horarios del Personal**:
+  - Corregido el endpoint de horarios del personal en `citaAPI.js` para usar `/api/usuarios/{usuarioId}/horarios` y agregada la función `guardarHorarioPersonal`.
+  - Diseñada e implementada la vista `ConfiguracionHorarios.jsx` con selector de personal, switches por día de la semana y horas de entrada/salida.
+  - Añadido bloqueo de excepciones (vacaciones/licencias) almacenado localmente y enlazado a los filtros de agendamiento y reprogramación.
 
 ## 📌 Estado Actual de los Componentes
 - **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF, Subida de Archivos Clínicos, Modelado e Inventario, Catálogo y Pedidos de Tienda Online, y el módulo de Tareas Programadas y Campañas de Marketing (Fase 11B finalizada) completamente implementados y validados.
@@ -257,7 +261,7 @@
       3. Acciones rápidas: Un interruptor toggle para bloquear o desbloquear de forma inmediata el acceso de un usuario al sistema y un botón para editar sus datos de perfil o configuración.
       ```
       </details>
-    - [ ] **Configuración de Horarios**: Grilla semanal de trabajo por empleado y calendario de excepciones/vacaciones.
+    - [x] **Configuración de Horarios**: Grilla semanal de trabajo por empleado y calendario de excepciones/vacaciones.
       <details>
       <summary>Prompt Figma / Stitch</summary>
 
