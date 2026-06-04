@@ -12,7 +12,8 @@ import {
   Calendar,
   Clock,
   Package,
-  Percent
+  Percent,
+  ShoppingBag
 } from 'lucide-react';
 
 import ServiciosPage from './ServicioPage';
@@ -25,6 +26,7 @@ import AgendaSemanal from './AgendaSemanal';
 import ConfiguracionHorarios from '../Modules/admin/pages/ConfiguracionHorarios';
 import InventarioPage from '../Modules/admin/pages/InventarioPage';
 import CampanasPage from '../Modules/admin/pages/CampanasPage';
+import GestionPedidos from './GestionPedidos';
 import logo from '../assets/Logo Huesitos.png';
 
 
@@ -57,6 +59,7 @@ const AdminDashboard = () => {
       case 'finanzas': return <FinanzasPage />;
       case 'campanas': return <CampanasPage />;
       case 'configuracion': return <ConfiguracionDinamica />;
+      case 'pedidos': return <GestionPedidos />;
       default: return <DashboardAnalytics />;
     }
   };
@@ -130,6 +133,11 @@ const AdminDashboard = () => {
           <button onClick={() => setVistaActual('finanzas')} className={vistaActual === 'finanzas' ? activeBtnClass : inactiveBtnClass}>
             <Wallet size={20} className={vistaActual === 'finanzas' ? "text-white" : "text-slate-500 group-hover:text-sky-400 transition-colors"} /> 
             Caja y Finanzas
+          </button>
+
+          <button onClick={() => setVistaActual('pedidos')} className={vistaActual === 'pedidos' ? activeBtnClass : inactiveBtnClass}>
+            <ShoppingBag size={20} className={vistaActual === 'pedidos' ? "text-white" : "text-slate-500 group-hover:text-sky-400 transition-colors"} /> 
+            Gestión de Pedidos
           </button>
 
           <button onClick={() => setVistaActual('usuarios')} className={vistaActual === 'usuarios' ? activeBtnClass : inactiveBtnClass}>
