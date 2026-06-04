@@ -11,7 +11,8 @@ import {
   User,
   Calendar,
   Clock,
-  Package
+  Package,
+  Percent
 } from 'lucide-react';
 
 import ServiciosPage from './ServicioPage';
@@ -23,6 +24,7 @@ import DuenosPage from '../Modules/admin/pages/DuenosPage';
 import RecepcionistaAgenda from './RecepcionistaAgenda';
 import ConfiguracionHorarios from '../Modules/admin/pages/ConfiguracionHorarios';
 import InventarioPage from '../Modules/admin/pages/InventarioPage';
+import CampanasPage from '../Modules/admin/pages/CampanasPage';
 import logo from '../assets/Logo Huesitos.png';
 
 
@@ -53,6 +55,7 @@ const AdminDashboard = () => {
       case 'horarios': return <ConfiguracionHorarios />;
       case 'inventario': return <InventarioPage />;
       case 'finanzas': return <FinanzasPage />;
+      case 'campanas': return <CampanasPage />;
       case 'configuracion': return <ConfiguracionDinamica />;
       default: return <DashboardAnalytics />;
     }
@@ -132,6 +135,11 @@ const AdminDashboard = () => {
           <button onClick={() => setVistaActual('usuarios')} className={vistaActual === 'usuarios' ? activeBtnClass : inactiveBtnClass}>
             <ShieldCheck size={20} className={vistaActual === 'usuarios' ? "text-white" : "text-slate-500 group-hover:text-sky-400 transition-colors"} /> 
             Usuarios y Roles
+          </button>
+
+          <button onClick={() => setVistaActual('campanas')} className={vistaActual === 'campanas' ? activeBtnClass : inactiveBtnClass}>
+            <Percent size={20} className={vistaActual === 'campanas' ? "text-white" : "text-slate-500 group-hover:text-sky-400 transition-colors"} /> 
+            Campañas y Ofertas
           </button>
 
           <button onClick={() => setVistaActual('horarios')} className={vistaActual === 'horarios' ? activeBtnClass : inactiveBtnClass}>

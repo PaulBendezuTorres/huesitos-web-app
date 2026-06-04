@@ -1,6 +1,6 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-04 (Gestión de Inventario FEFO, Horarios y Citas)
+Última actualización: 2026-06-04 (Campañas y Ofertas, Gestión de Inventario FEFO)
 
 ## 🚀 Logros Recientes
 - [x] Rama `develop` creada y publicada en GitHub.
@@ -130,6 +130,10 @@
   - Añadidas las funciones CRUD en `tiendaAPI.js` para categorías, productos y lotes.
   - Creada la vista `InventarioPage.jsx` con grilla de productos con lotes expandibles, alertas de stock mínimo y vencimientos, y modales para registrar productos, lotes y ajustar cantidades de stock.
   - Integrada la vista de inventario en `AdminDashboard.jsx` con botón de acceso directo en el panel lateral.
+- [x] **Frontend - Campañas y Ofertas de Marketing**:
+  - Creado `marketingAPI.js` para consumir los endpoints de campañas (`/api/campanas`) y ofertas (`/api/ofertas`).
+  - Desarrollada la vista responsiva `CampanasPage.jsx` con interfaz de doble pestaña, visualización de tarjetas, indicadores de expiración con cuenta regresiva, controles rápidos de activación de estado y cálculo automático de descuentos.
+  - Integrada la vista de Campañas y Ofertas en `AdminDashboard.jsx` con el botón de la barra lateral con icono `Percent`.
 
 ## 📌 Estado Actual de los Componentes
 - **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF, Subida de Archivos Clínicos, Modelado e Inventario, Catálogo y Pedidos de Tienda Online, y el módulo de Tareas Programadas y Campañas de Marketing (Fase 11B finalizada) completamente implementados y validados.
@@ -307,7 +311,7 @@
       3. Panel modal simple para editar nombre, precio regular, descripción y cambiar la categoría del servicio.
       ```
       </details>
-    - [ ] **Campañas y Ofertas**: Creación de campañas de marketing e indicadores de expiración.
+    - [x] **Campañas y Ofertas**: Creación de campañas de marketing e indicadores de expiración.
       <details>
       <summary>Prompt Figma / Stitch</summary>
 
