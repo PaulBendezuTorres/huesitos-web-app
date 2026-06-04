@@ -113,10 +113,15 @@
   - Integrado el modal de cobro táctil con cálculo de vuelto por efectivo, códigos de referencia y descarga/impresión inmediata de la boleta de venta en formato PDF A5.
   - Expuesto el endpoint `GET /api/pagos/{id}/boleta` en `TransaccionControlador.java` del backend para vincular `BoletaPdfServicio`.
   - Registradas las rutas y redirecciones en `App.jsx` y `Login.jsx` respectivamente.
+- [x] **Frontend - Vista de Recepcionista (Despacho de Pedidos)**:
+  - Integrado el control de compras en línea en `RecepcionistaDashboard.jsx` con alternador lateral y filtros rápidos (TODOS, PENDIENTE, PAGADO, ENTREGADO, CANCELADO).
+  - Agregadas las llamadas `obtenerTodosLosPedidos` y `cambiarEstadoPedido` en `tiendaAPI.js`.
+  - Diseñado el desglose detallado de productos comprados, cantidades, subtotal e identificador de lote FEFO asociado.
+  - Habilitados botones interactivos de cambio de estado para flujo de entrega y cancelación.
 
 ## 📌 Estado Actual de los Componentes
 - **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF, Subida de Archivos Clínicos, Modelado e Inventario, Catálogo y Pedidos de Tienda Online, y el módulo de Tareas Programadas y Campañas de Marketing (Fase 11B finalizada) completamente implementados y validados.
-- **Frontend (React)**: Inicializado con React 18, Vite y Tailwind CSS 3.4. Vistas implementadas: Landing Page, Cliente (Inicio, Mascotas, Historial/Timeline, Agendar Cita, Tienda y Carrito), Veterinario (Agenda, Sala de Espera y Ficha Clínica Activa) y Recepcionista (POS, Caja y alertas FEFO). Compilación validada con éxito.
+- **Frontend (React)**: Inicializado con React 18, Vite y Tailwind CSS 3.4. Vistas implementadas: Landing Page, Cliente (Inicio, Mascotas, Historial/Timeline, Agendar Cita, Tienda y Carrito), Veterinario (Agenda, Sala de Espera y Ficha Clínica Activa) y Recepcionista (POS, Caja, alertas FEFO y Despacho de Pedidos). Compilación validada con éxito.
 - **Base de Datos (MySQL)**: Base de datos `huesitos` inicializada. Hibernate crea/actualiza las tablas `usuarios`, `duenos`, `mascotas`, `citas`, `consultas_medicas`, `servicios`, `transacciones`, `horarios_personal`, `vacunas`, `historial_vacunas`, `recetas`, `archivos_clinicos`, `categorias`, `productos` y `inventarios` al levantar la aplicación.
 
 ## 🛠️ Próximos Pasos (Pendientes)
@@ -203,22 +208,7 @@
 
   - **Vistas de Recepcionista**:
     - [x] **Punto de Venta (POS) y Caja**: Cobros de citas y tienda con múltiples métodos de pago, vuelto e impresión de Boleta A5 PDF.
-    - [ ] **Despacho de Pedidos**: Control y entrega de las compras realizadas en la tienda online.
-      <details>
-      <summary>Prompt Figma / Stitch</summary>
-
-      ```text
-      Diseña un panel de control en español para que la recepcionista gestione y despache las compras en línea realizadas por los clientes de la tienda online de Huesitos en Perú. Orientación Tablet horizontal o Desktop, colores claros y alta legibilidad.
-      La interfaz debe incluir:
-      1. Pestañas de Estado de Pedidos: Filtros rápidos para alternar entre: Todos, Pendientes, Pagados, Entregados, Cancelados.
-      2. Grid de Pedidos Entrantes: Cards de pedidos ordenadas de la más reciente a la más antigua. Cada card debe tener: Código de pedido, Nombre del cliente, Fecha y hora de compra, Total del pedido en Soles ("S/ 120.00") y un badge de estado (e.g., "PAGADO" en azul, "PENDIENTE" en amarillo).
-      3. Panel de Detalle del Pedido Seleccionado:
-         - Listado de productos comprados con sus cantidades, precios unitarios y subtotal.
-         - Indicador del lote FEFO del cual se descontará el inventario.
-         - Información de contacto del cliente (DNI, teléfono y dirección de entrega/recojo).
-      4. Botones de acción principales: Botón verde grande "Marcar como Entregado" (para pedidos listos para recojo/envío) y un botón rojo "Cancelar Pedido" (que revierte el stock descontado al inventario).
-      ```
-      </details>
+    - [x] **Despacho de Pedidos**: Control y entrega de las compras realizadas en la tienda online.
     - [ ] **Agenda Semanal de Citas**: Gestión de turnos y arrastre para reprogramación.
       <details>
       <summary>Prompt Figma / Stitch</summary>
