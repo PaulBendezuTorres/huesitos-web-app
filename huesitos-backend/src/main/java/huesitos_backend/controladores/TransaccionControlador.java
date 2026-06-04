@@ -19,6 +19,7 @@ import java.util.List;
 public class TransaccionControlador {
 
     private final TransaccionServicio transaccionServicio;
+    private final huesitos_backend.servicios.BoletaPdfServicio boletaPdfServicio;
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'RECEPCIONISTA')")
@@ -45,6 +46,21 @@ public class TransaccionControlador {
         try {
             Transaccion actualizada = transaccionServicio.procesarPagoCaja(id, medioPago, referencia);
             return ResponseEntity.ok(actualizada);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}/boleta")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'RECEPCIONISTA', 'CLIENTE')")
+    public ResponseEntity<?> descargarBoleta(@PathVariable Long id) {
+        try {
+            byte[] pdfBytes = boletaPdfServicio.generarPdfBoleta(id);
+            org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+            headers.setContentType(org.springframework.http.MediaType.APPLICATION_PDF);
+            headers.set(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION, "inline; filename=boleta_" + id + ".pdf");
+            headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+            return new ResponseEntity<>(pdfBytes, headers, org.springframework.http.HttpStatus.OK);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

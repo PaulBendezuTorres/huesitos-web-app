@@ -1,8 +1,12 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-05-24 (Fase 10B de backend - Alertas de Insumos y Control de Vencimientos implementada con éxito)
+Última actualización: 2026-06-04 (Rediseño Responsivo de Vistas Operativas y Flujo de Autenticación)
 
 ## 🚀 Logros Recientes
+- [x] **Rediseño Responsivo Global y Unificación Estética del Flujo de Autenticación**: Rediseñados `Login.jsx`, `Register.jsx`, `ForgotPassword.jsx` y `ResetPassword.jsx` utilizando Tailwind CSS responsivo (`flex-col md:flex-row w-full max-w-4xl`), íconos premium de `lucide-react` (`Lock`, `Mail`, `User`, `Phone`, `MapPin`, `Eye`, `EyeOff` y `ArrowLeft`), unificación tipográfica a `font-bold` / `font-semibold` y consistencia en el uso de mayúsculas/minúsculas (Sentence case). Se eliminaron por completo todos los estilos inline y anchos porcentuales fijos. Compilación de producción del frontend verificada con éxito.
+- [x] **Fase C: Rediseño Responsivo y Estético de Vista Recepcionista**: Rediseñados `RecepcionistaDashboard.jsx` (sidebar responsivo / drawer, botón de hamburguesa y overlay), `CajaPOS.jsx` e `InventarioCriticoWidget.jsx` (diseño responsivo flex-col/lg:flex-row, unificación tipográfica a `font-bold` y Sentence case en etiquetas y modal de cobro táctil), `GestionPedidos.jsx` (adaptabilidad móvil para lista y detalles, unificación de ChevronLeft y Sentence case), y `AgendaSemanal.jsx` (scroll horizontal de la grilla semanal, helpers de Sentence case y unificación de pesos de fuentes). Compilación de frontend validada con éxito.
+- [x] **Fase B: Rediseño Responsivo y Estético de Vista Veterinario**: Rediseñados `VeterinarioDashboard.jsx` (sidebar responsivo / drawer, botón de hamburguesa y overlay), `VeterinarioAgenda.jsx` (KPI cards, remoción de uppercase en etiquetas y Sentence case en estados) y `ConsultaActiva.jsx` (barra de pestañas horizontal fluida, remoción de uppercase en formularios de diagnóstico, recetas y archivos).
+- [x] **Fase A: Rediseño Responsivo y Estético de Vista Cliente**: Rediseñados `ClienteDashboard.jsx` (sidebar colapsable / drawer, botón de hamburguesa y overlay), `ClienteInicio.jsx` (cards de mascotas, timeline de citas, Sentence Case en estados y cabeceras de tabla), `ClienteMascotas.jsx` (acciones y tipografía), `ClienteAgendarCita.jsx` (stepper y formularios responsivos), y `ClienteTienda.jsx` (grilla adaptativa de productos, drawer de carrito y Sentence Case en checkout).
 - [x] Rama `develop` creada y publicada en GitHub.
 - [x] Nueva rama de características `feature/configuracion-base-backend` creada.
 - [x] Base de datos MySQL `huesitos` creada localmente.
@@ -90,294 +94,86 @@
   - Implementados `DesparasitacionServicio` y `CampanaOfertaServicio` con CRUDs completos, auto-cálculos de porcentaje/precio de ofertas e inactivación de expirados.
   - Implementado `TareaProgramadaServicio` con métodos programados `@Scheduled` para:
     - Escaneo diario de próximas dosis de vacunas y desparasitaciones a 7 días y generación automática de `Recordatorio` en base de datos.
-    - Inactivación automática de campañas y ofertas expiradas en base a la fecha de fin.
   - Creados controladores para desparasitaciones, recordatorios (incluyendo endpoints manuales de control `/procesar-manual` y `/inactivar-campanas-manual` para pruebas de QA) y campañas/ofertas.
   - Configurado `SeguridadConfig` permitiendo visualización pública de campañas y ofertas, y restringiendo mutaciones a Veterinario/Administrador.
+- [x] **Frontend - Historial Clínico del Cliente**:
+  - Creado `mascotaAPI.js` para consumir endpoints de mascotas, consultas, vacunas, recetas PDF y archivos.
+  - Creado hook personalizado `useHistorialClinico.js` para carga paralela unificada y cronológica.
+  - Reescrito `MascotaFichaHistorial.jsx` con buscador, filtros y un timeline premium adaptativo.
+  - Creado `ClienteMascotas.jsx` y enlazado desde el panel y el inicio.
+- [x] **Frontend - Agendamiento de Citas e Integración de Tienda**:
+  - Creado `citaAPI.js` y `tiendaAPI.js` para conectar con la API de citas y tienda.
+  - Desarrollada vista `ClienteAgendarCita.jsx` interactiva en 4 pasos (Mascota, Servicio, Profesional, Horario/Fecha).
+  - Desarrollada vista `ClienteTienda.jsx` con catálogo, buscador de productos, carrito lateral (drawer) y checkout FEFO.
+  - Integradas todas las vistas en el ruteo de `App.jsx` y la botonera de `ClienteDashboard.jsx`.
+- [x] **Frontend - Vista de Veterinario (Tablet)**:
+  - Creado `veterinarioAPI.js` para los servicios de consultas, recetas, vacunas, historial y subida de archivos clínicos.
+  - Diseñada e implementada la interfaz `VeterinarioDashboard.jsx` optimizada para tablets en formato Split View 30/70.
+  - Integrada la sala de espera del día y el inicio de consultas con diagnóstico, prescripción de recetas y carga multipart de análisis de laboratorio.
+  - Configuradas las rutas correspondientes y redirección dinámica en login por rol.
+- [x] **Frontend - Vista de Recepcionista (POS y Caja)**:
+  - Agregadas las llamadas al POS de caja, alertas de stock mínimo, vencimientos (FEFO) y boleta PDF en `finanzasService.js`.
+  - Diseñada e implementada la interfaz táctil `RecepcionistaDashboard.jsx` en formato Split View 40/60 para tablets.
+  - Integrado el modal de cobro táctil con cálculo de vuelto por efectivo, códigos de referencia y descarga/impresión inmediata de la boleta de venta en formato PDF A5.
+  - Expuesto el endpoint `GET /api/pagos/{id}/boleta` en `TransaccionControlador.java` del backend para vincular `BoletaPdfServicio`.
+  - Registradas las rutas y redirecciones en `App.jsx` y `Login.jsx` respectivamente.
+- [x] **Frontend - Vista de Recepcionista (Despacho de Pedidos)**:
+  - Integrado el control de compras en línea en `RecepcionistaDashboard.jsx` con alternador lateral y filtros rápidos (TODOS, PENDIENTE, PAGADO, ENTREGADO, CANCELADO).
+  - Agregadas las llamadas `obtenerTodosLosPedidos` y `cambiarEstadoPedido` en `tiendaAPI.js`.
+  - Diseñado el desglose detallado de productos comprados, cantidades, subtotal e identificador de lote FEFO asociado.
+  - Habilitados botones interactivos de cambio de estado para flujo de entrega y cancelación.
+- [x] **Frontend - Agenda Semanal de Citas y Reprogramación**:
+  - Creada la vista interactiva `RecepcionistaAgenda.jsx` con visualización semanal (lunes a domingo), navegación interactiva de semanas, y filtros avanzados.
+  - Diseñado un modal interactivo para reprogramar citas en tiempo real (`PUT /api/citas/{id}/reprogramar`) que verifica disponibilidad y horarios del veterinario.
+  - Integrada la agenda semanal como una sección activa en `RecepcionistaDashboard.jsx` and `AdminDashboard.jsx` para roles de Recepcionista y Administrador.
+- [x] **Frontend - Configuración de Horarios del Personal**:
+  - Corregido el endpoint de horarios del personal en `citaAPI.js` para usar `/api/usuarios/{usuarioId}/horarios` y agregada la función `guardarHorarioPersonal`.
+  - Diseñada e implementada la vista `ConfiguracionHorarios.jsx` con selector de personal, switches por día de la semana y horas de entrada/salida.
+  - Añadido bloqueo de excepciones (vacaciones/licencias) almacenado localmente y enlazado a los filtros de agendamiento y reprogramación.
+- [x] **Frontend - Gestión de Inventario FEFO**:
+  - Añadidas las funciones CRUD en `tiendaAPI.js` para categorías, productos y lotes.
+  - Creada la vista `InventarioPage.jsx` con grilla de productos con lotes expandibles, alertas de stock mínimo y vencimientos, y modales para registrar productos, lotes y ajustar cantidades de stock.
+  - Integrada la vista de inventario en `AdminDashboard.jsx` con botón de acceso directo en el panel lateral.
+- [x] **Frontend - Campañas y Ofertas de Marketing**:
+  - Creado `marketingAPI.js` para consumir los endpoints de campañas (`/api/campanas`) y ofertas (`/api/ofertas`).
+  - Desarrollada la vista responsiva `CampanasPage.jsx` con interfaz de doble pestaña, visualización de tarjetas, indicadores de expiración con cuenta regresiva, controles rápidos de activación de estado y cálculo automático de descuentos.
+  - Integrada la vista de Campañas y Ofertas en `AdminDashboard.jsx` con el botón de la barra lateral con icono `Percent`.
+- [x] **Frontend - Historial Clínico / Ficha de Mascota Compartida**:
+  - Creado el componente reutilizable `MascotaHistorialTimeline.jsx` que centraliza la carga y visualización unificada del historial clínico (consultas, vacunas y archivos médicos), ofreciendo buscador de texto, filtros avanzados y descargas de recetas en PDF.
+  - Refactorizado `MascotaFichaHistorial.jsx` para delegar la interfaz al componente compartido en modo completo.
+  - Modificado `VeterinarioDashboard.jsx` para integrar el componente en la pestaña de consulta activa, eliminando estados y llamadas API duplicadas.
+- [x] **Frontend - Agenda Semanal de Citas Compartida**:
+  - Renombrado y refactorizado el componente `RecepcionistaAgenda.jsx` a `AgendaSemanal.jsx` (y su componente interno a `AgendaSemanal`) para desvincular el prefijo específico del rol y hacerlo genérico.
+  - Actualizadas las referencias e importaciones en `AdminDashboard.jsx` y `RecepcionistaDashboard.jsx`.
+- [x] **Frontend - Inventario Crítico / Alertas Compartidas**:
+  - Creado el componente reutilizable `InventarioCriticoWidget.jsx` que encapsula la consulta y el listado de productos con bajo stock y lotes próximos a vencer (FEFO), con carga independiente y refresco manual.
+  - Modificado `RecepcionistaDashboard.jsx` para integrar el widget en el panel POS de caja, eliminando estados duplicados.
+  - Modificado `DashboardAnaliticas.jsx` para insertar el widget y permitir al administrador monitorear la salud operativa de la tienda en tiempo real.
+- [x] **Frontend - Gestión de Pedidos Compartida**:
+  - Extraída y modularizada la lógica de despacho y filtros de pedidos desde `RecepcionistaDashboard.jsx` hacia el componente reutilizable `GestionPedidos.jsx` utilizando sintaxis de función flecha.
+  - Integrada la nueva vista en los paneles de Recepcionista y Administrador, agregando la opción de menú en este último.
+- [x] **Frontend - Reestructuración del Tablero de Veterinario**:
+  - Rediseñado completamente `VeterinarioDashboard.jsx` utilizando sintaxis de función flecha y Tailwind CSS para eliminar el diseño Split-View.
+  - Implementada una estructura clásica con Sidebar oscuro, cabecera superior y área de contenido dinámico para las vistas de Agenda del Día (con KPIs y tarjetas de pacientes), Consulta Médica Activa (con sub-pestañas y placeholder animado) y Buscador General de Expedientes.
+- [x] **Frontend - Modularización de Módulos Clínicos y POS**:
+  - Creadas las carpetas `Modules/recepcionista/pages` y `Modules/veterinario/pages` para estructurar sus sub-páginas de forma simétrica con `admin` y `cliente`.
+  - Extraído el componente `CajaPOS.jsx` que maneja todo el Punto de Venta (POS) y cobros presenciales de la Recepcionista, simplificando `RecepcionistaDashboard.jsx`.
+  - Extraídos los componentes `VeterinarioAgenda.jsx` (agenda diaria y KPIs) y `ConsultaActiva.jsx` (ficha clínica, recetas y carga de análisis) del Veterinario, simplificando `VeterinarioDashboard.jsx` de forma limpia y organizada.
+- [x] **Frontend - Rediseño del Panel de Administración (Responsividad, Tipografía y Simetría)**:
+  - Rediseñada la barra lateral (Sidebar) en `AdminDashboard.jsx` (ancho w-60, tipografía compacta text-xs, color slate-900).
+  - Implementado Sidebar responsivo colapsable / drawer para móviles y tablets mediante botón hamburguesa y overlay difuminado.
+  - Rediseñada la pantalla de Gestión de Pedidos (`GestionPedidos.jsx`) incorporando timeline de progreso, visualización premium de lotes FEFO e información de cliente modularizada.
+  - Uniformizada la tipografía de encabezados (de font-black a font-bold) y los paddings responsivos en el contenedor principal de vistas del administrador.
+  - Refactorizada la responsividad y alineación simétrica en `DashboardAnaliticas.jsx` (cards responsivos y auditoría limpia), `UsuariosPage.jsx` y `InventarioPage.jsx` (tablas adaptativas).
+  - Validada la compilación de producción del frontend sin errores.
 
 ## 📌 Estado Actual de los Componentes
 - **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF, Subida de Archivos Clínicos, Modelado e Inventario, Catálogo y Pedidos de Tienda Online, y el módulo de Tareas Programadas y Campañas de Marketing (Fase 11B finalizada) completamente implementados y validados.
-- **Frontend (React)**: Inicializado con React 18, Vite y Tailwind CSS 3.4 con página de bienvenida premium en español.
+- **Frontend (React)**: Inicializado con React 18, Vite y Tailwind.
 - **Base de Datos (MySQL)**: Base de datos `huesitos` inicializada. Hibernate crea/actualiza las tablas `usuarios`, `duenos`, `mascotas`, `citas`, `consultas_medicas`, `servicios`, `transacciones`, `horarios_personal`, `vacunas`, `historial_vacunas`, `recetas`, `archivos_clinicos`, `categorias`, `productos` y `inventarios` al levantar la aplicación.
 
 ## 🛠️ Próximos Pasos (Pendientes)
-- [ ] **Desarrollo del Frontend (React + Tailwind CSS)**:
-  - **Vistas de Cliente / Público (Visitantes)**:
-    - [x] **Landing Page**: Página de inicio, servicios destacados, contacto (Marcona, Ica) y emergencias.
-      <details>
-      <summary>Prompt Figma / Stitch</summary>
-
-      ```text
-      Diseña una página de inicio (Landing Page) interactiva y premium para la veterinaria "Huesitos" en Perú (sede Marcona, Ica). Usa Tailwind CSS con un fondo slate-50, textos en slate-800, y botones/detalles en gradientes de azul-600 a sky-400.
-      Debe incluir:
-      1. Navegación superior (Navbar): Logo circular con diseño de huesito, nombre "Huesitos", links de navegación (Inicio, Nosotros, Servicios, Ubicación) y un botón de "Iniciar Sesión" en la esquina derecha.
-      2. Sección Hero: Título grande "Excelencia médica para quienes más amas", un subtítulo amigable, y una imagen destacada a la derecha de un veterinario examinando un perro. Incluye dos botones: uno para agendar cita y otro para llamar a emergencias 24/7 en rojo suave con el número de contacto de Ica, Perú.
-      3. Grid de Servicios Destacados: 4 cards de servicios (Consultas, Vacunas, Laboratorio, Internamiento) con iconos lineales.
-      4. Sección Nosotros: Texto descriptivo de la veterinaria Huesitos con un banner a la derecha que resalte "10+ Años de Experiencia".
-      5. Pie de página (Footer) en tono azul oscuro (slate-950) con datos de contacto (Teléfono, Correo, Dirección en Santo Domingo De Marcona C-22, Ica, Perú) y redes sociales.
-      ```
-      </details>
-    - [/] **Registro, Login y Recuperación**: Registro de propietario, inicio de sesión JWT y flujos de recuperación.
-      <details>
-      <summary>Prompts Figma / Stitch (Registro, Recuperación y Verificación)</summary>
-
-      * **[x] Inicio de Sesión (Login)**: Implementado.
-      * **[ ] Registro**: Pendiente.
-      * **[ ] Recuperación y Verificación**: Pendiente.
-
-      **Registro**:
-      ```text
-      Diseña una pantalla de registro (Crear Cuenta) en español peruano para la veterinaria "Huesitos" en Perú. Formato de pantalla dividida (split-screen 50/50).
-      - Columna izquierda: Formulario de registro limpio con fondo blanco.
-        1. Título "Crea tu cuenta" y descripción para clientes.
-        2. Input de Nombre Completo del Propietario.
-        3. Input de Teléfono celular peruano (9 dígitos) e Input de Dirección (Marcona, Ica, Perú).
-        4. Input de Correo electrónico.
-        5. Input de Contraseña y confirmación.
-        6. Checkbox de términos y condiciones de privacidad y protección de datos personales.
-        7. Botón azul de ancho completo para "Crear Cuenta".
-      - Columna derecha: Foto de un cliente feliz cargando a su mascota en un entorno moderno y luminoso.
-      ```
-
-      **Recuperación de Contraseña**:
-      ```text
-      Diseña una pantalla de "Recuperar Contraseña" en español para la veterinaria "Huesitos" en Perú. Formato de pantalla dividida (split-screen 50/50).
-      - Columna izquierda: Formulario para ingresar el correo registrado.
-        1. Título "Recuperar Contraseña" e instrucciones que indiquen que se enviará un enlace de restablecimiento con un token temporal de seguridad.
-        2. Input de Correo electrónico con icono de correo.
-        3. Botón azul ancho completo "Enviar Enlace de Recuperación".
-        4. Enlace para volver a la pantalla de Login: "Regresar al inicio de sesión".
-      - Columna derecha: Foto del mostrador de recepción moderno y minimalista de la clínica veterinaria Huesitos.
-      ```
-
-      **Verificación de Seguridad / Código**:
-      ```text
-      Diseña una pantalla de "Verificación de Seguridad" (validación de token de contraseña) en español para la veterinaria "Huesitos" en Perú. Formato split-screen 50/50.
-      - Columna izquierda: Formulario de verificación de identidad.
-        1. Título "Verifica tu cuenta" con descripción: "Ingresa el código de seguridad de 6 dígitos que enviamos a tu correo".
-        2. Fila horizontal con 6 casilleros cuadrados individuales para ingresar los dígitos del código.
-        3. Enlace para reenviar código: "¿No recibiste el código? Reenviar en 59s".
-        4. Botón azul de ancho completo "Verificar y Continuar".
-      - Columna derecha: Foto de un veterinario y una dueña conversando alegremente en una sala de consulta de la clínica.
-      ```
-      </details>
-    - [ ] **Dashboard de Cliente**: Grid de mascotas, próximas citas agendadas y accesos rápidos.
-      <details>
-      <summary>Prompt Figma / Stitch</summary>
-
-      ```text
-      Genera un dashboard de cliente para una clínica veterinaria llamada "Huesitos" en Perú. Usa Tailwind CSS con un estilo de diseño limpio y premium. Paleta de colores: fondo slate-50, texto slate-900, botones y acentos en azul-600 y sky-500, bordes finos slate-200/50 y cristalografía (backdrop-blur).
-      La vista debe incluir:
-      1. Una barra lateral de navegación con links: Dashboard, Mis Mascotas, Reservar Cita, Tienda Online, Mis Recetas y Facturación.
-      2. Un banner superior estilo gradiente de azul a cian que diga "Campaña del Mes en Huesitos Perú: Protégelo contra la Rabia y Parásitos. 20% de descuento en vacunas quíntuples".
-      3. Sección "Mis Mascotas": Un grid con cards de mascotas. Cada card debe tener foto de perfil circular de la mascota, nombre ("Max"), especie/raza ("Perro - Golden Retriever"), edad ("2 años"), un badge verde de "Saludable" o amarillo de "Próxima Vacuna", un botón azul para "Ver Historial" y un botón blanco con borde gris para "Descargar Recetas".
-      4. Sección "Próximas Citas": Una tabla o lista horizontal con citas agendadas que muestre: Fecha/Hora, Servicio ("Consulta General"), Veterinario asignado, y Estado con badges de color (Pendiente en amarillo, Confirmada en verde).
-      Diseño responsivo para móviles y escritorio con fuentes modernas (Inter o Outfit).
-      ```
-      </details>
-    - [ ] **Ficha de Mascota e Historial Clínico**: Línea de tiempo de consultas, vacunas aplicadas y descarga de recetas.
-      <details>
-      <summary>Prompt Figma / Stitch</summary>
-
-      ```text
-      Diseña una página de Historial Clínico interactiva en español peruano para que un cliente vea la salud de su mascota en la veterinaria Huesitos. Estilo de diseño limpio, fondo slate-50, contenedor principal blanco y bordes rounded-3xl.
-      Componentes de la interfaz:
-      1. Resumen superior de la mascota: Card horizontal con la foto de perfil de la mascota ("Toby"), nombre, especie ("Perro - Boxer"), edad ("4 años"), peso ("28 kg"), y badges de estado de vacunas y desparasitaciones al día.
-      2. Buscador y Filtros: Campo de entrada para buscar por tipo de atención y botones de filtro rápido (Todos, Consultas, Vacunas, Exámenes, Recetas).
-      3. Línea de Tiempo (Timeline): Una línea de tiempo vertical con las atenciones:
-         - Evento 1 (Consulta Médica): Badge de fecha ("15 May 2026"). Título "Consulta por Otitis". Veterinario asignado, diagnóstico corto, y un botón blanco para "Ver Receta PDF (A5)".
-         - Evento 2 (Vacunación): Badge de fecha ("10 Abr 2026"). Título "Vacuna Antirrábica aplicada". Nombre de la vacuna, lote, y fecha recomendada del próximo refuerzo.
-         - Evento 3 (Examen de Laboratorio): Badge de fecha ("05 Mar 2026"). Título "Hemograma Completo". Descripción del resultado y un botón con icono de descarga para "Descargar Resultados Clínicos".
-      4. Estética premium con tipografía de alto contraste (Slate-900) e iconos limpios de Lucide (Stethoscope, Syringe, FileText).
-      ```
-      </details>
-    - [ ] **Agendamiento de Citas**: Formulario interactivo en 4 pasos (Mascota, Servicio, Profesional, Horario/Fecha).
-      <details>
-      <summary>Prompt Figma / Stitch</summary>
-
-      ```text
-      Diseña una interfaz de formulario interactivo para agendar una cita veterinaria en español para Huesitos Perú. Estilo de diseño ultra-limpio, minimalista y con bordes suaves (rounded-2xl). Fondo slate-50, contenedor principal en blanco con sombra suave.
-      El formulario debe dividirse en 4 pasos claros (Steppers superiores: 1. Mascota, 2. Servicio, 3. Profesional, 4. Horario):
-      1. Selector de Mascota: Cards pequeñas interactivas con foto y nombre de las mascotas del usuario ("Luna", "Toby").
-      2. Selector de Servicio: Lista desplegable o grid de tarjetas con iconos de servicios con precios en Soles peruanos ("Consulta General - S/ 80.00", "Vacuna Quíntuple - S/ 100.00", "Perfil Bioquímico - S/ 200.00").
-      3. Selector de Veterinario: Perfiles circulares rápidos con nombre y especialidad ("Dra. Ana Martínez - Pediatría", "Dr. Luis Gómez - General").
-      4. Selector de Fecha y Hora: Un mini-calendario visual interactivo para seleccionar el día del mes, seguido de un grid de horarios disponibles en formato de chips de texto ("09:00 AM", "10:30 AM", "03:00 PM").
-      Al final, un resumen de la cita con el precio total en Soles (S/), un botón azul grande para "Proceder al Pago / Confirmar Cita" y una advertencia en rojo suave sobre la política de cancelación de 24 horas.
-      ```
-      </details>
-    - [ ] **Tienda Online**: Catálogo de productos, buscador por categorías, carrito de compras lateral y checkout.
-      <details>
-      <summary>Prompt Figma / Stitch</summary>
-
-      ```text
-      Diseña una página de tienda online (E-commerce) integrada en el portal de la veterinaria Huesitos en Perú. El catálogo debe vender alimentos y accesorios. Diseño moderno, limpio y amigable.
-      Componentes requeridos:
-      1. Cabecera con barra de búsqueda destacada que diga "Buscar comida, juguetes, medicinas...", un selector de categorías (Alimentos, Juguetes, Farmacia, Higiene) y un botón de Carrito con badge flotante indicador del número de ítems.
-      2. Grid de productos: Cards de productos con foto del producto, nombre ("Alimento Premium Perro Adulto 15kg"), categoría, precio destacado en Soles ("S/ 185.00"), stock disponible ("12 unidades"), y un botón con icono de carrito para "Añadir". Si el stock es menor a 3, mostrar una alerta discreta en naranja de "¡Últimas unidades!".
-      3. Carrito de Compras Lateral (Drawer/Sidebar): Se desliza desde la derecha y muestra los productos seleccionados, cantidad modificable (+ / -), subtotal, un descuento por campaña aplicado ("Descuento - S/ 15.00"), total general en Soles (S/), y un botón azul de "Finalizar Compra (Checkout FEFO)".
-      ```
-      </details>
-
-  - **Vistas de Veterinario**:
-    - [ ] **Agenda y Sala de Espera, y Ficha Clínica Activa (Tablet)**: Gestión completa de citas del día y edición del historial.
-      <details>
-      <summary>Prompt Figma / Stitch</summary>
-
-      ```text
-      Diseña una aplicación web optimizada para Tablet en orientación horizontal, orientada al rol de Veterinario de la clínica "Huesitos" en Perú. Diseño oscuro premium (slate-900 y slate-950) o claro clínico de alto contraste.
-      Layout de dos paneles (Split View):
-      - Panel Izquierdo (30% de ancho): Sala de Espera. Lista vertical de mascotas en estado "En Espera" (con check-in realizado en la clínica). Muestra la foto de la mascota, nombre, dueño, hora de llegada y un botón de "Iniciar Consulta" en verde.
-      - Panel Derecho (70% de ancho): Ficha Clínica Activa. Se activa cuando se atiende a una mascota y contiene:
-        1. Cabecera: Nombre de la mascota ("Toby"), especie, edad, peso, temperatura, nombre del dueño y botón para ver Historial Completo.
-        2. Pestañas: Diagnóstico, Vacunas, Prescripción/Receta, Archivos Médicos.
-        3. En la pestaña Diagnóstico: Textarea grande para "Síntomas y Motivo", "Diagnóstico" y "Tratamiento".
-        4. En la pestaña Prescripción: Formulario para añadir medicamentos (Nombre, Dosis, Frecuencia, Duración) con botón para generar la receta en PDF en formato A5.
-        5. En la pestaña Archivos: Zona drag-and-drop para subir análisis de laboratorio, ecografías o radiografías en formato PDF o JPG.
-        6. Botón de pie de página: "Finalizar Atención y Guardar Ficha" (esto cambia el estado de la cita a COMPLETADA).
-      ```
-      </details>
-
-  - **Vistas de Recepcionista**:
-    - [ ] **Punto de Venta (POS) y Caja**: Cobros de citas y tienda con múltiples métodos de pago, vuelto e impresión de Boleta A5 PDF.
-      <details>
-      <summary>Prompt Figma / Stitch</summary>
-
-      ```text
-      Diseña una interfaz de punto de venta (POS) y caja de la clínica veterinaria Huesitos Perú orientada a una Recepcionista. Formato tablet/pantalla táctil, muy intuitiva y de acceso rápido.
-      Debe tener:
-      1. Panel de Transacciones Pendientes: Grid o lista de facturas pendientes de pago. Cada fila muestra: Número de orden, Cliente (Nombre y DNI peruano), Detalle ("Consulta Médica + Vacuna Triple"), Total ("S/ 170.00"), y un botón "Cobrar".
-      2. Ventana Modal de Procesamiento de Pago:
-         - Resumen de ítems y precios en Soles (S/).
-         - Selector de Medio de Pago con botones táctiles grandes típicos de Perú: Efectivo, Tarjeta de Crédito/Débito, Transferencia Bancaria, Pago Digital (Yape / Plin).
-         - Campo para ingresar "Monto Recibido" y cálculo automático de "Vuelto".
-         - Switch interactivo para: "Generar Boleta de Venta" o "Generar Factura".
-         - Botón verde grande "Confirmar Pago e Imprimir Comprobante (Boleta A5 PDF)".
-      3. Módulo de Inventario Crítico (Bajo Stock & Vencimiento):
-         - Alerta en rojo en la esquina superior si hay productos con stock menor al mínimo o lotes próximos a vencer.
-         - Tabla de inventarios que resalte productos próximos a vencer según orden FEFO (fecha de vencimiento más cercana).
-      ```
-      </details>
-    - [ ] **Despacho de Pedidos**: Control y entrega de las compras realizadas en la tienda online.
-      <details>
-      <summary>Prompt Figma / Stitch</summary>
-
-      ```text
-      Diseña un panel de control en español para que la recepcionista gestione y despache las compras en línea realizadas por los clientes de la tienda online de Huesitos en Perú. Orientación Tablet horizontal o Desktop, colores claros y alta legibilidad.
-      La interfaz debe incluir:
-      1. Pestañas de Estado de Pedidos: Filtros rápidos para alternar entre: Todos, Pendientes, Pagados, Entregados, Cancelados.
-      2. Grid de Pedidos Entrantes: Cards de pedidos ordenadas de la más reciente a la más antigua. Cada card debe tener: Código de pedido, Nombre del cliente, Fecha y hora de compra, Total del pedido en Soles ("S/ 120.00") y un badge de estado (e.g., "PAGADO" en azul, "PENDIENTE" en amarillo).
-      3. Panel de Detalle del Pedido Seleccionado:
-         - Listado de productos comprados con sus cantidades, precios unitarios y subtotal.
-         - Indicador del lote FEFO del cual se descontará el inventario.
-         - Información de contacto del cliente (DNI, teléfono y dirección de entrega/recojo).
-      4. Botones de acción principales: Botón verde grande "Marcar como Entregado" (para pedidos listos para recojo/envío) y un botón rojo "Cancelar Pedido" (que revierte el stock descontado al inventario).
-      ```
-      </details>
-    - [ ] **Agenda Semanal de Citas**: Gestión de turnos y arrastre para reprogramación.
-      <details>
-      <summary>Prompt Figma / Stitch</summary>
-
-      ```text
-      Diseña una interfaz en español de "Agenda Semanal de Citas" para la recepcionista o administrador de la clínica Huesitos Perú. Formato de alto rendimiento optimizado para Tablet/Desktop.
-      Debe tener:
-      1. Filtros avanzados superiores: Rango de fechas, Veterinario asignado, y Estado de la cita (Pendiente, Confirmada, En Espera, Completada, Cancelada).
-      2. Vista de Calendario semanal con columnas por cada día de la semana. Cada columna contiene tarjetas de citas posicionadas por hora.
-      3. Tarjeta de Cita individual: Muestra la hora de la cita, nombre del paciente, nombre del veterinario asignado, tipo de servicio, y un badge del estado de la cita.
-      4. Botón rápido de reprogramación: Permite arrastrar la cita o hacer clic para cambiar la fecha y hora validando colisiones en tiempo real.
-      ```
-      </details>
-
-  - **Vistas de Administrador**:
-    - [x] **Dashboard Financiero**: Métricas clave en soles (S/), gráficos de ingresos y servicios más solicitados.
-      <details>
-      <summary>Prompt Figma / Stitch</summary>
-
-      ```text
-      Diseña un dashboard de analíticas financieras y de operaciones en español para el rol Administrador de Huesitos en Perú. Estilo moderno, profesional, fondo slate-950 (modo oscuro premium) o slate-50, con tarjetas tipo vidrio (glassmorphism) y bordes redondeados.
-      Componentes:
-      1. Indicadores clave (KPIs) en la fila superior con precios en Soles (S/):
-         - Card 1: "Ingresos Totales" (Monto S/ 15,240.00 con un indicador de +12.5% en verde).
-         - Card 2: "Citas Completadas" (Número 342 con un mini gráfico de línea de tendencia).
-         - Card 3: "Pedidos de Tienda" (Monto S/ 4,890.00 con indicador mensual).
-         - Card 4: "Productos con Bajo Stock" (Badge de alerta en rojo con número 5).
-      2. Gráfico Principal (Cuerpo Central): Un área para un gráfico de barras de ingresos mensuales y flujo de caja diario con selectores de fechas (Hoy, Últimos 7 días, Este mes, Año).
-      3. Tabla de "Servicios Más Solicitados": Lista ordenada por volumen de ventas (e.g., Consulta General, Vacuna Triple Felina, Ecografía Abdominal) con su respectiva ganancia en Soles y porcentaje de participación.
-      4. Diseño con colores armoniosos (azul-600 para marcas, esmeralda-500 para tendencias positivas, y rojo para alertas de inventario).
-      ```
-      </details>
-    - [x] **Gestión de Personal**: Registro de veterinarios y recepcionistas, y control de bloqueo lógico de cuentas.
-      <details>
-      <summary>Prompt Figma / Stitch</summary>
-
-      ```text
-      Diseña la vista de administración en español para gestionar los usuarios y el personal de la clínica Huesitos en Perú. Estilo de diseño limpio con Tailwind CSS.
-      Debe contener:
-      1. Cabecera: Buscador de personal por DNI, correo o nombre, y botón azul "+ Registrar Personal" para dar de alta veterinarios y recepcionistas.
-      2. Tabla de Usuarios: Columnas para Nombre, Correo, Rol (con badges de color verde para Veterinario, azul para Recepcionista, morado para Cliente), y Estado (Activo o Bloqueado).
-      3. Acciones rápidas: Un interruptor toggle para bloquear o desbloquear de forma inmediata el acceso de un usuario al sistema y un botón para editar sus datos de perfil o configuración.
-      ```
-      </details>
-    - [ ] **Configuración de Horarios**: Grilla semanal de trabajo por empleado y calendario de excepciones/vacaciones.
-      <details>
-      <summary>Prompt Figma / Stitch</summary>
-
-      ```text
-      Genera una vista de administración en español para configurar y gestionar el horario laboral semanal de los veterinarios y recepcionistas de la clínica Huesitos Perú. Diseño limpio con Tailwind CSS.
-      Componentes requeridos:
-      1. Selector de Empleado: Barra lateral o menú desplegable con tarjetas de perfil de los miembros del equipo ("Dr. Luis Gómez - Veterinario", "Dra. Ana Martínez - Pediatra", "Clara Vega - Recepcionista").
-      2. Grilla Semanal de Horarios (Lunes a Domingo):
-         - Cada día de la semana debe tener controles para configurar: Estado (Laboral / Libre), Hora de Entrada (selector de tiempo), Hora de Salida, y Hora de Refrigerio/Descanso.
-         - Switch toggle deslizable para marcar rápidamente "Día Libre" (que deshabilita los campos de hora para ese día).
-      3. Sección de "Excepciones y Vacaciones": Un mini-calendario que permita bloquear fechas específicas (por ejemplo, vacaciones o feriados en Perú) para que la API no permita agendar citas en esos días.
-      4. Botón de acción principal inferior: "Guardar Jornada Semanal" en azul brillante y un botón de cancelación en gris.
-      ```
-      </details>
-    - [ ] **Gestión de Inventario FEFO**: Control de stock general, alerta de bajo stock y detalle de lotes con fechas de vencimiento.
-      <details>
-      <summary>Prompt Figma / Stitch</summary>
-
-      ```text
-      Genera una interfaz de gestión de inventarios y control de caducidad en español orientada a la clínica veterinaria Huesitos en Perú con control estricto FEFO (First Expired, First Out). Fondo slate-50, diseño limpio.
-      La vista debe incluir:
-      1. Panel superior de Alertas Críticas:
-         - Alerta 1 (Bajo Stock): Caja roja con el listado de 3 insumos médicos que bajaron del "Stock Mínimo" de seguridad con botón "Generar Orden de Compra".
-         - Alerta 2 (Próximos a Vencer): Caja naranja con productos y lotes que vencen en menos de 30 días, mostrando el número de lote y fecha de vencimiento exacta.
-      2. Buscador y Filtro por Categorías: Buscador general con filtros tipo chip (Todos, Medicamentos, Alimentos, Juguetes, Accesorios).
-      3. Tabla Principal de Productos y Lotes: Columnas para: Código de barras, Nombre del producto, Categoría, Stock General, y sub-filas desplegables que muestren los Lotes con sus respectivas fechas de vencimiento y cantidades en stock para visualización de descuento FEFO.
-      4. Botón flotante o superior azul: "+ Registrar Nuevo Lote / Producto" con un formulario modal limpio de fondo.
-      ```
-      </details>
-    - [x] **Catálogo de Servicios y Tarifas**: CRUD y activación lógica de servicios médicos.
-      <details>
-      <summary>Prompt Figma / Stitch</summary>
-
-      ```text
-      Diseña una página de administración de "Catálogo de Servicios y Precios" en español para la veterinaria "Huesitos" en Perú. Estilo de diseño moderno con Tailwind CSS.
-      Debe incluir:
-      1. Botón superior "+ Nuevo Servicio" y barra de búsqueda.
-      2. Grid de tarjetas de servicios activos: Cada tarjeta muestra el nombre del servicio (e.g., "Consulta de Cardiología"), categoría, precio regular en Soles ("S/ 250.00"), icono representativo y un interruptor toggle para marcar como "Activo / Inactivo" (desactivación lógica).
-      3. Panel modal simple para editar nombre, precio regular, descripción y cambiar la categoría del servicio.
-      ```
-      </details>
-    - [ ] **Campañas y Ofertas**: Creación de campañas de marketing e indicadores de expiración.
-      <details>
-      <summary>Prompt Figma / Stitch</summary>
-
-      ```text
-      Diseña un panel de administración en español para crear y visualizar campañas de marketing y ofertas de la tienda veterinaria Huesitos en Perú. Fondo slate-50 y tarjetas rounded-2xl.
-      Componentes de la interfaz:
-      1. Listado de Campañas Activas: Cards que muestren el nombre de la campaña ("Descuento de Vacunas de Otoño"), porcentaje de descuento (e.g., 15%), fecha de inicio, fecha de término, y un toggle para activar/desactivar la campaña de forma lógica e inmediata.
-      2. Formulario para Crear Campaña: Panel lateral con campos para: Título de campaña, Descripción, Descuento (%), Fecha Inicio, Fecha Fin, y Selector múltiple de productos o servicios aplicables.
-      3. Indicador de Expiración Automática: Un badge en cada card de campaña que muestre los días restantes antes de que se inactive automáticamente por la tarea programada del backend de Spring Boot.
-      4. Diseño premium y limpio con iconos intuitivos para diferenciar ofertas de servicios y productos.
-      ```
-      </details>
-
-  - **Componentes y Vistas Reutilizables**:
-    - [ ] **Historial Clínico / Ficha de Mascota**: Reutilizable entre el *Cliente* (lectura) y el *Veterinario* (consulta durante la atención).
-    - [ ] **Agenda Semanal de Citas**: Compartido y reutilizable entre la *Recepcionista* (gestión operativa) y el *Administrador* (vista de supervisión).
-    - [ ] **Inventario Crítico / Alertas**: La alerta de bajo stock y próximos a vencer se reutiliza en el dashboard del *Administrador* y en el panel POS de la *Recepcionista*.
-    - [ ] **Gestión de Pedidos**: Compartido entre la *Recepcionista* (despacho físico) y el *Administrador* (auditoría).
-
+- *No hay tareas pendientes en este momento.*
 
 ## 🧠 Decisiones Clave y Notas
 - Se decidió reemplazar la inyección implícita de Lombok con constructores estándar Java en los componentes de seguridad para asegurar la máxima compatibilidad de compilación directa con Maven Compiler.
