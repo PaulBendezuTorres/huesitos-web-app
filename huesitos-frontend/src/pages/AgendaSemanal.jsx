@@ -289,66 +289,66 @@ const AgendaSemanal = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
+    <div className="space-y-6 animate-in fade-in duration-300 font-sans text-slate-700">
       
       {/* SECCIÓN SUPERIOR: CABECERA Y FILTROS */}
-      <div className="bg-white rounded-2xl border border-slate-200/60 p-6 shadow-sm space-y-4">
+      <div className="bg-white rounded-xl border border-slate-200/50 p-4 md:p-5 shadow-sm space-y-4">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h2 className="text-xl font-black text-slate-800 tracking-tight flex items-center gap-2">
-              <Calendar className="text-sky-500" size={24} />
+            <h2 className="text-lg md:text-xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
+              <Calendar className="text-sky-500" size={20} />
               Agenda Semanal de Citas
             </h2>
-            <p className="text-xs text-slate-500 font-medium">
+            <p className="text-xs text-slate-400 mt-0.5">
               Consulta, filtra y gestiona la programación semanal de atención veterinaria.
             </p>
           </div>
           
           {/* Navegador de Semanas */}
-          <div className="flex items-center gap-1.5 self-start md:self-auto bg-slate-50 border border-slate-200/80 p-1 rounded-xl">
+          <div className="flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-lg p-1 self-start md:self-auto shrink-0">
             <button
               onClick={() => setOffsetSemanas(o => o - 1)}
-              className="p-2 rounded-lg hover:bg-white hover:shadow-sm text-slate-600 transition-all"
+              className="p-1.5 rounded hover:bg-white hover:shadow-sm text-slate-650 transition-all"
               title="Semana anterior"
             >
-              <ChevronLeft size={16} />
+              <ChevronLeft size={14} />
             </button>
             <button
               onClick={() => setOffsetSemanas(0)}
-              className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all ${
+              className={`px-3 py-1 text-xs font-bold rounded transition-all ${
                 offsetSemanas === 0
-                  ? 'bg-sky-500 text-white shadow-md shadow-sky-500/10'
-                  : 'text-slate-600 hover:bg-white hover:shadow-sm'
+                  ? 'bg-sky-500 text-white shadow-sm'
+                  : 'text-slate-650 hover:bg-white'
               }`}
             >
               Semana Actual
             </button>
             <button
               onClick={() => setOffsetSemanas(o => o + 1)}
-              className="p-2 rounded-lg hover:bg-white hover:shadow-sm text-slate-600 transition-all"
+              className="p-1.5 rounded hover:bg-white hover:shadow-sm text-slate-650 transition-all"
               title="Semana siguiente"
             >
-              <ChevronRight size={16} />
+              <ChevronRight size={14} />
             </button>
           </div>
         </div>
-
+ 
         {/* Rango de Fechas e Indicador */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 border-t border-slate-100">
-          <div className="text-sm font-black text-slate-700">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-100">
+          <div className="text-xs md:text-sm font-bold text-slate-700">
             {lunes.toLocaleDateString('es-PE', { day: '2-digit', month: 'long' })}
-            <span className="font-medium text-slate-400 mx-2">al</span>
+            <span className="font-medium text-slate-400 mx-1.5">al</span>
             {domingo.toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric' })}
           </div>
-
+ 
           {/* Filtros de Veterinario y Estado */}
-          <div className="flex flex-wrap items-center gap-2.5">
-            <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 min-w-[200px]">
-              <User size={14} className="text-slate-400" />
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+            <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 flex-1 sm:flex-initial sm:min-w-[180px]">
+              <User size={13} className="text-slate-400" />
               <select
                 value={filtroVeterinario}
                 onChange={(e) => setFiltroVeterinario(e.target.value)}
-                className="bg-transparent text-xs font-bold text-slate-600 outline-none w-full cursor-pointer"
+                className="bg-transparent text-xs font-semibold text-slate-650 outline-none w-full cursor-pointer"
               >
                 <option value="">Todos los veterinarios</option>
                 {veterinarios.map((vet) => (
@@ -358,13 +358,13 @@ const AgendaSemanal = () => {
                 ))}
               </select>
             </div>
-
-            <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 min-w-[170px]">
-              <Filter size={14} className="text-slate-400" />
+ 
+            <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 flex-1 sm:flex-initial sm:min-w-[150px]">
+              <Filter size={13} className="text-slate-400" />
               <select
                 value={filtroEstado}
                 onChange={(e) => setFiltroEstado(e.target.value)}
-                className="bg-transparent text-xs font-bold text-slate-600 outline-none w-full cursor-pointer"
+                className="bg-transparent text-xs font-semibold text-slate-650 outline-none w-full cursor-pointer"
               >
                 {ESTADOS.map((est) => (
                   <option key={est.value} value={est.value}>
@@ -373,13 +373,13 @@ const AgendaSemanal = () => {
                 ))}
               </select>
             </div>
-
+ 
             <button
               onClick={fetchCitas}
-              className="p-2 bg-sky-50 text-sky-600 hover:bg-sky-500 hover:text-white rounded-xl transition-all border border-sky-100 hover:border-sky-400 flex items-center justify-center shadow-sm"
+              className="p-1.5 bg-white hover:bg-slate-50 text-slate-650 hover:text-sky-500 rounded-lg border border-slate-250 transition-all flex items-center justify-center shadow-sm shrink-0"
               title="Refrescar agenda"
             >
-              <RefreshCw size={14} />
+              <RefreshCw size={13} />
             </button>
           </div>
         </div>
@@ -404,36 +404,35 @@ const AgendaSemanal = () => {
           {diasSemana.map((dia) => {
             const citasDia = citasPorDia[dia.fechaStr] || [];
             const esHoy = formatarFechaYMD(new Date()) === dia.fechaStr;
-            
             return (
               <div
                 key={dia.fechaStr}
-                className={`bg-white rounded-2xl border ${
+                className={`bg-white rounded-lg border ${
                   esHoy ? 'border-sky-400 ring-2 ring-sky-100' : 'border-slate-200/60'
                 } shadow-sm flex flex-col min-h-[300px] overflow-hidden`}
               >
                 {/* Cabecera del día */}
-                <div className={`p-3 border-b text-center ${
-                  esHoy ? 'bg-sky-50/55' : 'bg-slate-50/50'
+                <div className={`p-2.5 border-b text-center ${
+                  esHoy ? 'bg-sky-50/50' : 'bg-slate-50/50'
                 }`}>
-                  <p className={`text-xs font-black uppercase tracking-wider ${
+                  <p className={`text-[10px] font-bold uppercase tracking-wider ${
                     esHoy ? 'text-sky-600' : 'text-slate-500'
                   }`}>
                     {dia.nombre}
                   </p>
-                  <p className={`text-sm font-bold mt-0.5 ${
-                    esHoy ? 'text-sky-700 font-black' : 'text-slate-700'
+                  <p className={`text-xs font-bold mt-0.5 ${
+                    esHoy ? 'text-sky-700' : 'text-slate-700'
                   }`}>
                     {dia.fechaLabel}
                   </p>
                 </div>
 
                 {/* Lista de citas */}
-                <div className="p-2.5 flex-1 space-y-2.5 overflow-y-auto max-h-[450px]">
+                <div className="p-2 flex-1 space-y-2 overflow-y-auto max-h-[450px]">
                   {citasDia.length === 0 ? (
-                    <div className="h-full flex flex-col items-center justify-center py-10 text-center text-slate-300">
-                      <PawPrint size={20} className="stroke-[1.5] mb-1.5 opacity-60" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Sin citas</span>
+                    <div className="h-full flex flex-col items-center justify-center py-10 text-center text-slate-350">
+                      <PawPrint size={18} className="stroke-[1.5] mb-1.5 opacity-60" />
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">Sin citas</span>
                     </div>
                   ) : (
                     citasDia.map((cita) => {
@@ -442,41 +441,41 @@ const AgendaSemanal = () => {
                         <div
                           key={cita.id}
                           onClick={() => abrirModalReprogramar(cita)}
-                          className="group border border-slate-100 hover:border-sky-300 bg-white rounded-xl p-3 shadow-sm hover:shadow-md hover:shadow-sky-500/5 transition-all duration-300 cursor-pointer text-left relative"
+                          className="group border border-slate-100 hover:border-sky-200 bg-white rounded-lg p-2.5 shadow-sm hover:shadow-md hover:shadow-sky-500/5 transition-all duration-200 cursor-pointer text-left relative"
                         >
-                          <div className="flex items-center justify-between gap-1.5 mb-1.5">
-                            <span className="text-xs font-black text-slate-800 flex items-center gap-1">
-                              <Clock size={11} className="text-slate-400" />
+                          <div className="flex items-center justify-between gap-1 mb-1">
+                            <span className="text-[10px] font-bold text-slate-800 flex items-center gap-1">
+                              <Clock size={10} className="text-slate-400" />
                               {hora}
                             </span>
-                            <span className={`text-[9px] font-extrabold px-2 py-0.5 rounded-full border ${obtenerEstiloEstado(cita.estado)}`}>
+                            <span className={`text-[8.5px] font-bold px-1.5 py-0.5 rounded border ${obtenerEstiloEstado(cita.estado)}`}>
                               {cita.estado}
                             </span>
                           </div>
 
-                          <h4 className="text-xs font-black text-slate-800 tracking-tight group-hover:text-sky-600 transition-colors">
+                          <h4 className="text-xs font-bold text-slate-800 tracking-tight group-hover:text-sky-500 transition-colors">
                             {cita.mascota?.nombre}
                           </h4>
                           
-                          <p className="text-[9px] font-semibold text-slate-400 uppercase mt-0.5 truncate">
+                          <p className="text-[9px] font-medium text-slate-455 uppercase mt-0.5 truncate">
                             {cita.mascota?.especie} {cita.mascota?.raza ? `· ${cita.mascota.raza}` : ''}
                           </p>
 
-                          <div className="mt-2 pt-2 border-t border-slate-50 space-y-1 text-[10px]">
+                          <div className="mt-1.5 pt-1.5 border-t border-slate-50 space-y-0.5 text-[9px]">
                             <p className="text-slate-500 truncate">
-                              <span className="font-bold text-slate-600">Serv:</span> {cita.servicio?.nombre}
+                              <span className="font-semibold text-slate-605">Serv:</span> {cita.servicio?.nombre}
                             </p>
                             <p className="text-slate-500 truncate">
-                              <span className="font-bold text-slate-600">Vet:</span> {cita.veterinario ? (cita.veterinario.nombre || cita.veterinario.correo) : 'Sin asignar'}
+                              <span className="font-semibold text-slate-605">Vet:</span> {cita.veterinario ? (cita.veterinario.nombre || cita.veterinario.correo) : 'Sin asignar'}
                             </p>
                             <p className="text-slate-400 truncate">
-                              <span className="font-bold text-slate-500">Prop:</span> {cita.mascota?.dueño?.nombreCompleto || 'Cliente'}
+                              <span className="font-semibold text-slate-500">Prop:</span> {cita.mascota?.dueño?.nombreCompleto || 'Cliente'}
                             </p>
                           </div>
 
                           {/* Hover Overlay indicator */}
-                          <div className="absolute right-2 bottom-2 opacity-0 group-hover:opacity-100 transition-opacity bg-sky-50 p-1 rounded-lg border border-sky-100">
-                            <RefreshCw size={10} className="text-sky-500 animate-spin-slow" />
+                          <div className="absolute right-1.5 bottom-1.5 opacity-0 group-hover:opacity-100 transition-opacity bg-sky-50 p-1 rounded border border-sky-100">
+                            <RefreshCw size={9} className="text-sky-500 animate-spin-slow" />
                           </div>
                         </div>
                       );

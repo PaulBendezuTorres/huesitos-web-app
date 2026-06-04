@@ -8,20 +8,31 @@ const ClienteInicio = () => {
 
   const campanaActiva = campanas.length > 0 ? campanas[0] : null;
 
-  // Filtrar citas pendientes/confirmadas (próximas)
+  // Filtrar citas pendientes/confirmadas/en espera (próximas)
   const citasProximas = citas.filter(
     (c) => c.estado === 'PENDIENTE' || c.estado === 'CONFIRMADA' || c.estado === 'EN_ESPERA'
   );
 
   const badgeEstado = (estado) => {
     const estilos = {
-      PENDIENTE: 'bg-amber-100 text-amber-700 border-amber-200',
-      CONFIRMADA: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-      EN_ESPERA: 'bg-sky-100 text-sky-700 border-sky-200',
-      COMPLETADA: 'bg-slate-100 text-slate-500 border-slate-200',
-      CANCELADA: 'bg-red-100 text-red-600 border-red-200',
+      PENDIENTE: 'bg-amber-50 text-amber-700 border-amber-100',
+      CONFIRMADA: 'bg-emerald-50 text-emerald-700 border-emerald-100',
+      EN_ESPERA: 'bg-sky-50 text-sky-700 border-sky-100',
+      COMPLETADA: 'bg-slate-50 text-slate-500 border-slate-100',
+      CANCELADA: 'bg-red-50 text-red-600 border-red-100',
     };
-    return estilos[estado] || 'bg-slate-100 text-slate-500 border-slate-200';
+    return estilos[estado] || 'bg-slate-50 text-slate-500 border-slate-100';
+  };
+
+  const formatearEstado = (estado) => {
+    const nombres = {
+      PENDIENTE: 'Pendiente',
+      CONFIRMADA: 'Confirmada',
+      EN_ESPERA: 'En espera',
+      COMPLETADA: 'Completada',
+      CANCELADA: 'Cancelada',
+    };
+    return nombres[estado] || estado;
   };
 
   if (cargando) {
@@ -47,8 +58,8 @@ const ClienteInicio = () => {
               <Megaphone size={24} className="text-white" />
             </div>
             <div>
-              <p className="text-[11px] font-bold text-white/70 uppercase tracking-widest mb-0.5">Campaña del Mes</p>
-              <h3 className="text-lg font-black text-white leading-tight">{campanaActiva.titulo || campanaActiva.nombre}</h3>
+              <p className="text-[10px] font-bold text-white/80 tracking-wider mb-0.5">Campaña del mes</p>
+              <h3 className="text-lg font-bold text-white leading-tight">{campanaActiva.titulo || campanaActiva.nombre}</h3>
               {campanaActiva.descripcion && (
                 <p className="text-sm text-white/80 mt-1 max-w-xl">{campanaActiva.descripcion}</p>
               )}
@@ -58,14 +69,14 @@ const ClienteInicio = () => {
       )}
 
       {/* HEADER CON REFRESH */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-black text-slate-800 tracking-tight">Mis Mascotas</h2>
+          <h2 className="text-2xl font-bold text-slate-800 tracking-tight">Mis mascotas</h2>
           <p className="text-sm text-slate-400 mt-0.5">Gestiona la salud de tus compañeros</p>
         </div>
         <button
           onClick={recargar}
-          className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-500 hover:text-sky-600 hover:border-sky-300 hover:shadow-md hover:shadow-sky-500/10 transition-all duration-300"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-500 hover:text-sky-600 hover:border-sky-300 hover:shadow-md hover:shadow-sky-500/10 transition-all duration-300 self-start sm:self-auto"
         >
           <RefreshCw size={16} />
           Actualizar
@@ -90,7 +101,7 @@ const ClienteInicio = () => {
             >
               <div className="flex items-start gap-4">
                 {/* Avatar de mascota */}
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-500 to-cyan-400 flex items-center justify-center text-white text-xl font-black shadow-lg shadow-sky-500/20 shrink-0 group-hover:scale-105 transition-transform duration-300">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-500 to-cyan-400 flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-sky-500/20 shrink-0 group-hover:scale-105 transition-transform duration-300">
                   {mascota.nombre ? mascota.nombre.charAt(0).toUpperCase() : '🐾'}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -125,7 +136,7 @@ const ClienteInicio = () => {
                   className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-sky-50 text-sky-600 text-xs font-bold hover:bg-sky-100 transition-colors duration-200"
                 >
                   <Eye size={14} />
-                  Ver Historial
+                  Ver historial
                 </button>
                 <button
                   onClick={() => navigate(`/cliente/mascota/${mascota.id}`)}
@@ -142,7 +153,7 @@ const ClienteInicio = () => {
 
       {/* PRÓXIMAS CITAS */}
       <div>
-        <h2 className="text-2xl font-black text-slate-800 tracking-tight mb-1">Próximas Citas</h2>
+        <h2 className="text-2xl font-bold text-slate-800 tracking-tight mb-1">Próximas citas</h2>
         <p className="text-sm text-slate-400 mb-5">Tus citas agendadas y confirmadas</p>
 
         {citasProximas.length === 0 ? (
@@ -158,11 +169,11 @@ const ClienteInicio = () => {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-slate-100">
-                    <th className="text-left px-6 py-3.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Fecha / Hora</th>
-                    <th className="text-left px-6 py-3.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Servicio</th>
-                    <th className="text-left px-6 py-3.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Mascota</th>
-                    <th className="text-left px-6 py-3.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Estado</th>
+                  <tr className="border-b border-slate-100 bg-slate-50/50">
+                    <th className="text-left px-6 py-3.5 text-xs font-semibold text-slate-500 tracking-wider">Fecha / hora</th>
+                    <th className="text-left px-6 py-3.5 text-xs font-semibold text-slate-500 tracking-wider">Servicio</th>
+                    <th className="text-left px-6 py-3.5 text-xs font-semibold text-slate-500 tracking-wider">Mascota</th>
+                    <th className="text-left px-6 py-3.5 text-xs font-semibold text-slate-500 tracking-wider">Estado</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -190,8 +201,8 @@ const ClienteInicio = () => {
                           <span className="text-sm text-slate-600">{cita.mascota?.nombre || '—'}</span>
                         </td>
                         <td className="px-6 py-4">
-                          <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[11px] font-bold border ${badgeEstado(cita.estado)}`}>
-                            {cita.estado}
+                          <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[11px] font-semibold border ${badgeEstado(cita.estado)}`}>
+                            {formatearEstado(cita.estado)}
                           </span>
                         </td>
                       </tr>

@@ -1,8 +1,9 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-04 (Modularización de Módulos Clínicos y POS, Tablero de Veterinario Reestructurado)
+Última actualización: 2026-06-04 (Rediseño Responsivo Global y Unificación Estética del Panel de Administración y Pedidos)
 
 ## 🚀 Logros Recientes
+- [x] **Fase A: Rediseño Responsivo y Estético de Vista Cliente**: Rediseñados `ClienteDashboard.jsx` (sidebar colapsable / drawer, botón de hamburguesa y overlay), `ClienteInicio.jsx` (cards de mascotas, timeline de citas, Sentence Case en estados y cabeceras de tabla), `ClienteMascotas.jsx` (acciones y tipografía), `ClienteAgendarCita.jsx` (stepper y formularios responsivos), y `ClienteTienda.jsx` (grilla adaptativa de productos, drawer de carrito y Sentence Case en checkout).
 - [x] Rama `develop` creada y publicada en GitHub.
 - [x] Nueva rama de características `feature/configuracion-base-backend` creada.
 - [x] Base de datos MySQL `huesitos` creada localmente.
@@ -155,6 +156,13 @@
   - Creadas las carpetas `Modules/recepcionista/pages` y `Modules/veterinario/pages` para estructurar sus sub-páginas de forma simétrica con `admin` y `cliente`.
   - Extraído el componente `CajaPOS.jsx` que maneja todo el Punto de Venta (POS) y cobros presenciales de la Recepcionista, simplificando `RecepcionistaDashboard.jsx`.
   - Extraídos los componentes `VeterinarioAgenda.jsx` (agenda diaria y KPIs) y `ConsultaActiva.jsx` (ficha clínica, recetas y carga de análisis) del Veterinario, simplificando `VeterinarioDashboard.jsx` de forma limpia y organizada.
+- [x] **Frontend - Rediseño del Panel de Administración (Responsividad, Tipografía y Simetría)**:
+  - Rediseñada la barra lateral (Sidebar) en `AdminDashboard.jsx` (ancho w-60, tipografía compacta text-xs, color slate-900).
+  - Implementado Sidebar responsivo colapsable / drawer para móviles y tablets mediante botón hamburguesa y overlay difuminado.
+  - Rediseñada la pantalla de Gestión de Pedidos (`GestionPedidos.jsx`) incorporando timeline de progreso, visualización premium de lotes FEFO e información de cliente modularizada.
+  - Uniformizada la tipografía de encabezados (de font-black a font-bold) y los paddings responsivos en el contenedor principal de vistas del administrador.
+  - Refactorizada la responsividad y alineación simétrica en `DashboardAnaliticas.jsx` (cards responsivos y auditoría limpia), `UsuariosPage.jsx` y `InventarioPage.jsx` (tablas adaptativas).
+  - Validada la compilación de producción del frontend sin errores.
 
 ## 📌 Estado Actual de los Componentes
 - **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF, Subida de Archivos Clínicos, Modelado e Inventario, Catálogo y Pedidos de Tienda Online, y el módulo de Tareas Programadas y Campañas de Marketing (Fase 11B finalizada) completamente implementados y validados.
@@ -351,6 +359,23 @@
     - [x] **Agenda Semanal de Citas**: Compartido y reutilizable entre la *Recepcionista* (gestión operativa) y el *Administrador* (vista de supervisión).
     - [x] **Inventario Crítico / Alertas**: La alerta de bajo stock y próximos a vencer se reutiliza en el dashboard del *Administrador* y en el panel POS de la *Recepcionista*.
     - [x] **Gestión de Pedidos**: Compartido entre la *Recepcionista* (despacho físico) y el *Administrador* (auditoría).
+
+  - **Responsividad, Tipografía, Simetría y Capitalización (Guía /interface-design)**:
+    - [x] **Fase A: Rediseño Responsivo y Estético de Vista Cliente**:
+      - [x] Rediseñar `ClienteDashboard.jsx` (Sidebar colapsable/drawer responsivo, tipografía homogénea y contenedor adaptativo).
+      - [x] Rediseñar `ClienteInicio.jsx` (cards de campañas, alertas y resúmenes de mascotas).
+      - [x] Rediseñar `ClienteMascotas.jsx` y `ClienteAgendarCita.jsx` (pasos interactivos simétricos de agendamiento y visualización de fichas).
+      - [x] Rediseñar `ClienteTienda.jsx` (grilla responsiva de productos, selector de categorías y carrito Drawer lateral premium).
+      - [x] Garantizar el uso correcto y coherente de mayúsculas y minúsculas (Casing) en títulos, etiquetas, placeholders y alertas.
+    - [ ] **Fase B: Rediseño Responsivo y Estético de Vista Veterinario**:
+      - [ ] Rediseñar `VeterinarioDashboard.jsx` (Sidebar responsivo y adaptabilidad de layout en tablet/móvil).
+      - [ ] Rediseñar `VeterinarioAgenda.jsx` (sala de espera interactiva responsiva con KPIs médicos).
+      - [ ] Rediseñar `ConsultaActiva.jsx` (pestañas clínicas, recetas y descarga de PDFs responsivos).
+      - [ ] Garantizar el uso correcto y coherente de mayúsculas y minúsculas (Casing) en diagnósticos, prescripciones y listados.
+    - [ ] **Fase C: Rediseño Responsivo y Estético de Vista Recepcionista**:
+      - [ ] Rediseñar `RecepcionistaDashboard.jsx` (Layout adaptativo para tablets/móviles).
+      - [ ] Rediseñar `CajaPOS.jsx` (caja registradora táctil responsiva y flujo simétrico de cobros y vuelto).
+      - [ ] Garantizar el uso correcto y coherente de mayúsculas y minúsculas (Casing) en la botonera táctil, reportes e importes.
 
 
 ## 🧠 Decisiones Clave y Notas

@@ -20,14 +20,14 @@ const ClienteMascotas = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-black text-slate-800 tracking-tight">Mis Mascotas</h2>
+          <h2 className="text-2xl font-bold text-slate-800 tracking-tight">Mis mascotas</h2>
           <p className="text-sm text-slate-400 mt-0.5">Gestiona la salud y el historial de tus compañeros</p>
         </div>
         <button
           onClick={recargar}
-          className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-500 hover:text-sky-600 hover:border-sky-300 hover:shadow-md hover:shadow-sky-500/10 transition-all duration-300"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-500 hover:text-sky-600 hover:border-sky-300 hover:shadow-md hover:shadow-sky-500/10 transition-all duration-300 self-start sm:self-auto"
         >
           <RefreshCw size={16} />
           Actualizar
@@ -52,7 +52,7 @@ const ClienteMascotas = () => {
             >
               <div className="flex items-start gap-4">
                 {/* Avatar */}
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-500 to-cyan-400 flex items-center justify-center text-white text-xl font-black shadow-lg shadow-sky-500/20 shrink-0 group-hover:scale-105 transition-transform duration-300">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-500 to-cyan-400 flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-sky-500/20 shrink-0 group-hover:scale-105 transition-transform duration-300">
                   {mascota.nombre ? mascota.nombre.charAt(0).toUpperCase() : '🐾'}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -87,7 +87,7 @@ const ClienteMascotas = () => {
                   className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-sky-50 text-sky-600 text-xs font-bold hover:bg-sky-100 transition-colors duration-200"
                 >
                   <Eye size={14} />
-                  Ver Historial
+                  Ver historial
                 </button>
                 <button
                   onClick={() => navigate(`/cliente/mascota/${mascota.id}`)}

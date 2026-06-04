@@ -260,26 +260,26 @@ const InventarioPage = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
+    <div className="space-y-6 animate-in fade-in duration-300 font-sans text-slate-700">
       
       {/* ─── TARJETAS DE ALERTAS CRÍTICAS (FEFO) ─── */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {/* Total Productos */}
         <div 
           onClick={() => setFiltroAlerta('TODOS')}
-          className={`p-5 rounded-2xl border transition-all duration-300 cursor-pointer ${
+          className={`p-4 rounded-xl border transition-all duration-200 cursor-pointer ${
             filtroAlerta === 'TODOS'
-              ? 'bg-sky-50 border-sky-300 shadow-md shadow-sky-500/5'
-              : 'bg-white border-slate-200 hover:border-sky-200 hover:shadow-sm'
+              ? 'bg-sky-50/50 border-sky-200 shadow-sm'
+              : 'bg-white border-slate-200 hover:border-sky-200'
           }`}
         >
           <div className="flex justify-between items-center">
             <div>
               <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Productos Activos</span>
-              <span className="text-2xl font-black text-slate-800 mt-1 block">{productos.length}</span>
+              <span className="text-xl md:text-2xl font-bold text-slate-800 mt-0.5 block">{productos.length}</span>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-sky-100 flex items-center justify-center text-sky-600">
-              <Package size={20} />
+            <div className="w-9 h-9 rounded-lg bg-sky-50 text-sky-500 flex items-center justify-center shrink-0">
+              <Package size={18} />
             </div>
           </div>
         </div>
@@ -287,19 +287,19 @@ const InventarioPage = () => {
         {/* Bajo Stock */}
         <div 
           onClick={() => setFiltroAlerta('BAJO_STOCK')}
-          className={`p-5 rounded-2xl border transition-all duration-300 cursor-pointer ${
+          className={`p-4 rounded-xl border transition-all duration-200 cursor-pointer ${
             filtroAlerta === 'BAJO_STOCK'
-              ? 'bg-amber-50 border-amber-300 shadow-md shadow-amber-500/5'
-              : 'bg-white border-slate-200 hover:border-amber-200 hover:shadow-sm'
+              ? 'bg-amber-50/50 border-amber-250 shadow-sm'
+              : 'bg-white border-slate-200 hover:border-amber-200'
           }`}
         >
           <div className="flex justify-between items-center">
             <div>
               <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Bajo Stock</span>
-              <span className="text-2xl font-black text-amber-600 mt-1 block">{alertasBajoStock.length}</span>
+              <span className="text-xl md:text-2xl font-bold text-amber-600 mt-0.5 block">{alertasBajoStock.length}</span>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600">
-              <AlertTriangle size={20} />
+            <div className="w-9 h-9 rounded-lg bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
+              <AlertTriangle size={18} />
             </div>
           </div>
         </div>
@@ -307,45 +307,45 @@ const InventarioPage = () => {
         {/* Lotes próximos a vencer */}
         <div 
           onClick={() => setFiltroAlerta('VENCIMIENTOS')}
-          className={`p-5 rounded-2xl border transition-all duration-300 cursor-pointer ${
+          className={`p-4 rounded-xl border transition-all duration-200 cursor-pointer ${
             filtroAlerta === 'VENCIMIENTOS'
-              ? 'bg-rose-50 border-rose-300 shadow-md shadow-rose-500/5'
-              : 'bg-white border-slate-200 hover:border-rose-200 hover:shadow-sm'
+              ? 'bg-rose-50/55 border-rose-250 shadow-sm'
+              : 'bg-white border-slate-200 hover:border-rose-250'
           }`}
         >
           <div className="flex justify-between items-center">
             <div>
               <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Próximos a Vencer</span>
-              <span className="text-2xl font-black text-rose-600 mt-1 block">{alertasVencimiento.length}</span>
+              <span className="text-xl md:text-2xl font-bold text-rose-600 mt-0.5 block">{alertasVencimiento.length}</span>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-rose-100 flex items-center justify-center text-rose-600">
-              <Calendar size={20} />
+            <div className="w-9 h-9 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center shrink-0">
+              <Calendar size={18} />
             </div>
           </div>
         </div>
       </div>
 
       {/* ─── FILTROS Y ACCIONES ─── */}
-      <div className="bg-white rounded-2xl border border-slate-200/60 p-5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white rounded-2xl border border-slate-200/60 p-4 md:p-5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Buscador y categoría */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1 max-w-2xl">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-3.5 text-slate-400" size={16} />
+            <Search className="absolute left-3 top-3 text-slate-400" size={14} />
             <input
               type="text"
               placeholder="Buscar producto por nombre..."
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100 transition-all"
+              className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-xs outline-none focus:border-sky-450 focus:ring-2 focus:ring-sky-500/10 transition-all bg-slate-50 focus:bg-white"
             />
           </div>
 
-          <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
-            <Filter size={14} className="text-slate-400" />
+          <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 shrink-0">
+            <Filter size={13} className="text-slate-400" />
             <select
               value={filtroCategoria}
               onChange={(e) => setFiltroCategoria(e.target.value)}
-              className="bg-transparent text-xs font-bold text-slate-600 outline-none cursor-pointer w-full"
+              className="bg-transparent text-xs font-semibold text-slate-650 outline-none cursor-pointer w-full"
             >
               <option value="">Todas las categorías</option>
               {categorias.map((cat) => (
@@ -358,16 +358,16 @@ const InventarioPage = () => {
         </div>
 
         {/* Botones de creación */}
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
           <button
             onClick={() => setModalProducto(true)}
-            className="px-4 py-2.5 bg-sky-50 text-sky-600 hover:bg-sky-500 hover:text-white rounded-xl border border-sky-100 hover:border-sky-300 text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm"
+            className="w-full sm:w-auto px-4 py-2 bg-white hover:bg-slate-50 text-slate-600 rounded-lg border border-slate-250/65 text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm"
           >
             <Plus size={14} /> Registrar Producto
           </button>
           <button
             onClick={() => setModalLote(true)}
-            className="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-lg shadow-emerald-500/20"
+            className="w-full sm:w-auto px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm"
           >
             <Plus size={14} /> Ingresar Lote (FEFO)
           </button>
@@ -381,26 +381,26 @@ const InventarioPage = () => {
           <span className="text-sm font-bold text-slate-400">Consultando stock e inventarios...</span>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden">
+        <div className="bg-white rounded-xl border border-slate-200/50 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs">
+            <table className="w-full text-left border-collapse text-xs md:text-sm">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-100 text-slate-400 font-bold uppercase tracking-wider">
-                  <th className="p-4 w-12"></th>
-                  <th className="p-4">ID</th>
-                  <th className="p-4">Producto</th>
-                  <th className="p-4">Categoría</th>
-                  <th className="p-4 text-right">Precio Regular</th>
-                  <th className="p-4 text-center">Stock Mínimo</th>
-                  <th className="p-4 text-center">Stock Disponible</th>
-                  <th className="p-4 text-center">Estado</th>
-                  <th className="p-4 text-center">Acciones</th>
+                <tr className="bg-slate-50/50 border-b border-slate-100 text-slate-400 font-bold uppercase tracking-wider text-[10px]">
+                  <th className="p-3.5 w-12"></th>
+                  <th className="p-3.5">ID</th>
+                  <th className="p-3.5">Producto</th>
+                  <th className="p-3.5">Categoría</th>
+                  <th className="p-3.5 text-right">Precio</th>
+                  <th className="p-3.5 text-center">Mínimo</th>
+                  <th className="p-3.5 text-center">Disponible</th>
+                  <th className="p-3.5 text-center">Estado</th>
+                  <th className="p-3.5 text-center">Acciones</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {productosFiltrados.length === 0 ? (
                   <tr>
-                    <td colSpan="9" className="text-center py-10 text-slate-400 font-bold">
+                    <td colSpan="9" className="text-center py-10 text-slate-450 font-bold">
                       No se encontraron productos registrados.
                     </td>
                   </tr>
@@ -415,46 +415,46 @@ const InventarioPage = () => {
                       <>
                         <tr 
                           key={p.id} 
-                          className={`hover:bg-slate-50/50 transition-colors ${
-                            expandido ? 'bg-sky-50/10' : ''
+                          className={`hover:bg-slate-50/20 transition-colors ${
+                            expandido ? 'bg-sky-50/5' : ''
                           }`}
                         >
-                          <td className="p-4 text-center">
+                          <td className="p-3.5 text-center">
                             <button
                               onClick={() => setProductoExpandido(expandido ? null : p.id)}
                               className="p-1 rounded hover:bg-slate-100 text-slate-500 transition-colors"
                             >
-                              {expandido ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                              {expandido ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                             </button>
                           </td>
-                          <td className="p-4 font-bold text-slate-400">#{p.id}</td>
-                          <td className="p-4">
-                            <div className="font-bold text-slate-800">{p.nombre}</div>
-                            {p.descripcion && <div className="text-[10px] text-slate-400 truncate max-w-xs">{p.descripcion}</div>}
+                          <td className="p-3.5 font-bold text-slate-400">#{p.id}</td>
+                          <td className="p-3.5">
+                            <div className="font-bold text-slate-800 text-xs md:text-sm">{p.nombre}</div>
+                            {p.descripcion && <div className="text-[10px] text-slate-400 truncate max-w-xs mt-0.5">{p.descripcion}</div>}
                           </td>
-                          <td className="p-4">
-                            <span className="bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full border border-slate-200 font-semibold">
+                          <td className="p-3.5">
+                            <span className="bg-slate-100 text-slate-650 px-2 py-0.5 rounded text-[10px] border border-slate-200/50 font-semibold">
                               {p.categoria?.nombre || 'General'}
                             </span>
                           </td>
-                          <td className="p-4 text-right font-black text-slate-700">S/ {p.precio?.toFixed(2)}</td>
-                          <td className="p-4 text-center font-bold text-slate-500">{p.stockMinimo} unds.</td>
-                          <td className="p-4 text-center font-black text-slate-800">{stockTotal} unds.</td>
-                          <td className="p-4 text-center">
+                          <td className="p-3.5 text-right font-bold text-slate-700">S/ {p.precio?.toFixed(2)}</td>
+                          <td className="p-3.5 text-center font-semibold text-slate-500">{p.stockMinimo} unds.</td>
+                          <td className="p-3.5 text-center font-bold text-slate-800">{stockTotal} unds.</td>
+                          <td className="p-3.5 text-center">
                             {esBajoStock ? (
-                              <span className="bg-red-50 text-red-700 border-red-200 text-[9px] font-black px-2 py-0.5 rounded-full border">
+                              <span className="bg-red-50 text-red-650 border-red-200/50 text-[9px] font-bold px-2 py-0.5 rounded border">
                                 Stock Crítico
                               </span>
                             ) : (
-                              <span className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[9px] font-black px-2 py-0.5 rounded-full border">
+                              <span className="bg-emerald-50 text-emerald-650 border-emerald-200/50 text-[9px] font-bold px-2 py-0.5 rounded border">
                                 Abastecido
                               </span>
                             )}
                           </td>
-                          <td className="p-4 text-center">
+                          <td className="p-3.5 text-center">
                             <button
                               onClick={() => handleDesactivarProducto(p.id)}
-                              className="p-1.5 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white rounded-lg border border-red-100 transition-all"
+                              className="p-1.5 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white rounded-lg border border-red-100/50 transition-all"
                               title="Desactivar producto"
                             >
                               <Trash2 size={13} />
@@ -464,65 +464,65 @@ const InventarioPage = () => {
 
                         {/* Fila expandida de lotes FEFO */}
                         {expandido && (
-                          <tr className="bg-slate-50/50">
-                            <td colSpan="9" className="p-4">
-                              <div className="pl-12 pr-4 py-2 space-y-3">
+                          <tr className="bg-slate-50/30">
+                            <td colSpan="9" className="p-3.5">
+                              <div className="pl-6 md:pl-12 pr-2 py-1.5 space-y-2.5">
                                 <div className="flex justify-between items-center">
-                                  <h4 className="font-black text-slate-700 text-xs flex items-center gap-1.5">
-                                    <FolderOpen size={14} className="text-sky-500" />
-                                    Lotes Activos (Regla FEFO: Descuento por orden de caducidad)
+                                  <h4 className="font-bold text-slate-750 text-xs flex items-center gap-1.5">
+                                    <FolderOpen size={13} className="text-sky-500" />
+                                    Lotes Activos (FEFO: Lotes con fecha crítica de caducidad)
                                   </h4>
                                 </div>
 
                                 {lotesDelProducto.length === 0 ? (
-                                  <div className="p-4 text-center text-slate-400 font-semibold border border-dashed border-slate-200 rounded-xl bg-white">
+                                  <div className="p-4 text-center text-slate-400 font-semibold border border-dashed border-slate-200 rounded-xl bg-white text-xs">
                                     No hay lotes de stock registrados para este producto. Registra uno nuevo.
                                   </div>
                                 ) : (
-                                  <div className="bg-white border border-slate-200/60 rounded-xl overflow-hidden shadow-sm">
+                                  <div className="bg-white border border-slate-200/50 rounded-lg overflow-hidden shadow-sm">
                                     <table className="w-full text-left text-xs border-collapse">
                                       <thead>
-                                        <tr className="bg-slate-50/55 border-b border-slate-100 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
-                                          <th className="p-3">Código de Lote</th>
-                                          <th className="p-3">Stock en Lote</th>
-                                          <th className="p-3">Fecha de Ingreso</th>
-                                          <th className="p-3">Fecha de Vencimiento</th>
-                                          <th className="p-3 text-center">Estado FEFO</th>
-                                          <th className="p-3 text-center">Acciones</th>
+                                        <tr className="bg-slate-50/50 border-b border-slate-100 text-slate-500 font-bold uppercase tracking-wider text-[9px]">
+                                          <th className="p-2.5">Código de Lote</th>
+                                          <th className="p-2.5">Stock</th>
+                                          <th className="p-2.5">Ingreso</th>
+                                          <th className="p-2.5">Vencimiento</th>
+                                          <th className="p-2.5 text-center">Estado FEFO</th>
+                                          <th className="p-2.5 text-center">Acciones</th>
                                         </tr>
                                       </thead>
                                       <tbody className="divide-y divide-slate-100">
                                         {lotesDelProducto.map((lote) => {
                                           return (
-                                            <tr key={lote.id} className="hover:bg-slate-50/40 transition-colors">
-                                              <td className="p-3 font-mono font-bold text-slate-700">{lote.codigoLote}</td>
-                                              <td className="p-3 font-bold text-slate-800">{lote.stock} unds.</td>
-                                              <td className="p-3 text-slate-400">{formatarFecha(lote.fechaIngreso)}</td>
-                                              <td className="p-3 text-slate-600 font-bold">{formatarFecha(lote.fechaVencimiento)}</td>
-                                              <td className="p-3 text-center">
-                                                <span className={`text-[9px] font-extrabold px-2 py-0.5 rounded-full border ${obtenerBadgeVencimiento(lote)}`}>
+                                            <tr key={lote.id} className="hover:bg-slate-50/30 transition-colors">
+                                              <td className="p-2.5 font-mono font-bold text-slate-750">{lote.codigoLote}</td>
+                                              <td className="p-2.5 font-semibold text-slate-800">{lote.stock} unds.</td>
+                                              <td className="p-2.5 text-slate-400">{formatarFecha(lote.fechaIngreso)}</td>
+                                              <td className="p-2.5 text-slate-600 font-bold">{formatarFecha(lote.fechaVencimiento)}</td>
+                                              <td className="p-2.5 text-center">
+                                                <span className={`text-[8.5px] font-bold px-2 py-0.5 rounded border ${obtenerBadgeVencimiento(lote)}`}>
                                                   {lote.fechaVencimiento ? (
                                                     alertasVencimiento.some((v) => v.id === lote.id) ? 'PRÓXIMO A VENCER' : 'VIGENTE'
                                                   ) : 'SIN VENCIMIENTO'}
                                                 </span>
                                               </td>
-                                              <td className="p-3 text-center flex items-center justify-center gap-1.5">
+                                              <td className="p-2.5 text-center flex items-center justify-center gap-1">
                                                 <button
                                                   onClick={() => {
                                                     setModalAjuste(lote);
                                                     setNuevoStockAjuste(lote.stock);
                                                   }}
-                                                  className="p-1 hover:bg-sky-50 border border-transparent hover:border-sky-200 text-sky-600 rounded-md transition-colors"
+                                                  className="p-1 hover:bg-sky-50 border border-transparent hover:border-sky-200 text-sky-600 rounded transition-colors"
                                                   title="Ajustar stock"
                                                 >
-                                                  <Edit2 size={12} />
+                                                  <Edit2 size={11} />
                                                 </button>
                                                 <button
                                                   onClick={() => handleDesactivarLote(lote.id)}
-                                                  className="p-1 hover:bg-red-50 border border-transparent hover:border-red-200 text-red-500 rounded-md transition-colors"
+                                                  className="p-1 hover:bg-red-50 border border-transparent hover:border-red-200 text-red-500 rounded transition-colors"
                                                   title="Desactivar lote"
                                                 >
-                                                  <Trash2 size={12} />
+                                                  <Trash2 size={11} />
                                                 </button>
                                               </td>
                                             </tr>

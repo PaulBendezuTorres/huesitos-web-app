@@ -207,23 +207,23 @@ const ClienteAgendarCita = () => {
           <div className="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <Check size={32} className="text-emerald-500" />
           </div>
-          <h2 className="text-2xl font-black text-slate-800 mb-2">¡Cita Agendada!</h2>
+          <h2 className="text-2xl font-bold text-slate-800 mb-2">¡Cita agendada!</h2>
           <p className="text-sm text-slate-500 mb-1">Tu cita ha sido registrada exitosamente.</p>
           <p className="text-sm text-slate-400 mb-6">Recibirás una confirmación una vez procesado el pago.</p>
           <div className="bg-slate-50 rounded-xl p-4 mb-6 text-left space-y-1.5">
-            <p className="text-xs text-slate-500"><span className="font-bold">Mascota:</span> {mascotaSeleccionada?.nombre}</p>
-            <p className="text-xs text-slate-500"><span className="font-bold">Servicio:</span> {servicioSeleccionado?.nombre}</p>
+            <p className="text-xs text-slate-500"><span className="font-semibold">Mascota:</span> {mascotaSeleccionada?.nombre}</p>
+            <p className="text-xs text-slate-500"><span className="font-semibold">Servicio:</span> {servicioSeleccionado?.nombre}</p>
             {veterinarioSeleccionado && (
-              <p className="text-xs text-slate-500"><span className="font-bold">Veterinario:</span> {veterinarioSeleccionado.correo}</p>
+              <p className="text-xs text-slate-500"><span className="font-semibold">Veterinario:</span> {veterinarioSeleccionado.correo}</p>
             )}
-            <p className="text-xs text-slate-500"><span className="font-bold">Fecha:</span> {new Date(fechaSeleccionada + 'T12:00:00').toLocaleDateString('es-PE', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}</p>
-            <p className="text-xs text-slate-500"><span className="font-bold">Hora:</span> {horaSeleccionada}</p>
+            <p className="text-xs text-slate-500"><span className="font-semibold">Fecha:</span> {new Date(fechaSeleccionada + 'T12:00:00').toLocaleDateString('es-PE', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}</p>
+            <p className="text-xs text-slate-500"><span className="font-semibold">Hora:</span> {horaSeleccionada}</p>
           </div>
           <button
             onClick={() => navigate('/cliente')}
-            className="w-full px-6 py-3 bg-sky-500 text-white font-bold rounded-xl hover:bg-sky-600 transition-colors shadow-lg shadow-sky-500/20"
+            className="w-full px-6 py-3 bg-sky-500 text-white font-semibold rounded-xl hover:bg-sky-600 transition-colors shadow-lg shadow-sky-500/20"
           >
-            Volver al Dashboard
+            Volver al panel
           </button>
         </div>
       </div>
@@ -260,7 +260,7 @@ const ClienteAgendarCita = () => {
                   }`}>
                     {esCompletado ? <Check size={18} /> : <Icono size={18} />}
                   </div>
-                  <span className={`text-[11px] font-bold mt-1.5 transition-colors ${
+                  <span className={`text-[10px] sm:text-xs font-semibold mt-1.5 transition-colors ${
                     esActivo ? 'text-sky-600' : esCompletado ? 'text-emerald-600' : 'text-slate-400'
                   }`}>
                     {paso.label}
@@ -283,7 +283,7 @@ const ClienteAgendarCita = () => {
         {/* PASO 1: Mascota */}
         {pasoActual === 1 && (
           <div className="animate-fadeIn">
-            <h3 className="text-lg font-black text-slate-800 mb-1">Selecciona tu mascota</h3>
+            <h3 className="text-lg font-bold text-slate-800 mb-1">Selecciona tu mascota</h3>
             <p className="text-sm text-slate-400 mb-5">¿Para quién es la cita?</p>
             {mascotas.length === 0 ? (
               <div className="text-center py-10">
@@ -302,7 +302,7 @@ const ClienteAgendarCita = () => {
                         : 'border-slate-200 hover:border-sky-300 hover:bg-slate-50'
                     }`}
                   >
-                    <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-sky-500 to-cyan-400 flex items-center justify-center text-white font-black shadow-sm shrink-0">
+                    <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-sky-500 to-cyan-400 flex items-center justify-center text-white font-bold shadow-sm shrink-0">
                       {m.nombre?.charAt(0).toUpperCase() || '🐾'}
                     </div>
                     <div>
@@ -322,7 +322,7 @@ const ClienteAgendarCita = () => {
         {/* PASO 2: Servicio */}
         {pasoActual === 2 && (
           <div className="animate-fadeIn">
-            <h3 className="text-lg font-black text-slate-800 mb-1">Elige el servicio</h3>
+            <h3 className="text-lg font-bold text-slate-800 mb-1">Elige el servicio</h3>
             <p className="text-sm text-slate-400 mb-5">¿Qué tipo de atención necesita {mascotaSeleccionada?.nombre}?</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[350px] overflow-y-auto pr-1">
               {servicios.map((s) => (
@@ -343,7 +343,7 @@ const ClienteAgendarCita = () => {
                     {s.descripcion && <p className="text-[11px] text-slate-400 truncate">{s.descripcion}</p>}
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="text-sm font-black text-emerald-600">S/ {Number(s.precioRegular || s.precio || 0).toFixed(2)}</p>
+                    <p className="text-sm font-bold text-emerald-600">S/ {Number(s.precioRegular || s.precio || 0).toFixed(2)}</p>
                   </div>
                 </button>
               ))}
@@ -354,7 +354,7 @@ const ClienteAgendarCita = () => {
         {/* PASO 3: Veterinario (Opcional) */}
         {pasoActual === 3 && (
           <div className="animate-fadeIn">
-            <h3 className="text-lg font-black text-slate-800 mb-1">Selecciona un profesional</h3>
+            <h3 className="text-lg font-bold text-slate-800 mb-1">Selecciona un profesional</h3>
             <p className="text-sm text-slate-400 mb-5">Opcional — puedes dejar que la recepcionista asigne uno</p>
 
             <button
@@ -387,7 +387,7 @@ const ClienteAgendarCita = () => {
                         : 'border-slate-200 hover:border-sky-300 hover:bg-slate-50'
                     }`}
                   >
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-500 to-purple-400 flex items-center justify-center text-white font-black text-sm shadow-sm shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-500 to-purple-400 flex items-center justify-center text-white font-bold text-sm shadow-sm shrink-0">
                       {v.correo?.charAt(0).toUpperCase() || 'V'}
                     </div>
                     <div className="min-w-0">
@@ -409,12 +409,12 @@ const ClienteAgendarCita = () => {
         {/* PASO 4: Fecha y Hora */}
         {pasoActual === 4 && (
           <div className="animate-fadeIn">
-            <h3 className="text-lg font-black text-slate-800 mb-1">Elige fecha y hora</h3>
+            <h3 className="text-lg font-bold text-slate-800 mb-1">Elige fecha y hora</h3>
             <p className="text-sm text-slate-400 mb-5">Selecciona el día y horario de tu cita</p>
 
             {/* Selector de fecha */}
             <div className="mb-5">
-              <label className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2 block">Fecha</label>
+              <label className="text-xs font-semibold text-slate-600 tracking-wide mb-2 block">Fecha</label>
               <input
                 type="date"
                 value={fechaSeleccionada}
@@ -427,7 +427,7 @@ const ClienteAgendarCita = () => {
             {/* Grid de horarios */}
             {fechaSeleccionada && (
               <div>
-                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2 block">
+                <label className="text-xs font-semibold text-slate-600 tracking-wide mb-2 block">
                   Horarios disponibles
                 </label>
                 {horariosDisponibles.length === 0 ? (
@@ -462,26 +462,26 @@ const ClienteAgendarCita = () => {
       {/* ─── RESUMEN + CONTROLES ─── */}
       {pasoActual === 4 && fechaSeleccionada && horaSeleccionada && (
         <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/60 animate-fadeIn">
-          <h4 className="text-sm font-black text-slate-700 mb-3 uppercase tracking-wider">Resumen de tu Cita</h4>
+          <h4 className="text-sm font-semibold text-slate-700 mb-3 tracking-wide">Resumen de tu cita</h4>
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div className="bg-slate-50 rounded-xl p-3">
-              <p className="text-[10px] font-bold text-slate-400 uppercase">Mascota</p>
+              <p className="text-[10px] font-semibold text-slate-500">Mascota</p>
               <p className="font-bold text-slate-700">{mascotaSeleccionada?.nombre}</p>
             </div>
             <div className="bg-slate-50 rounded-xl p-3">
-              <p className="text-[10px] font-bold text-slate-400 uppercase">Servicio</p>
+              <p className="text-[10px] font-semibold text-slate-500">Servicio</p>
               <p className="font-bold text-slate-700">{servicioSeleccionado?.nombre}</p>
             </div>
             <div className="bg-slate-50 rounded-xl p-3">
-              <p className="text-[10px] font-bold text-slate-400 uppercase">Fecha y Hora</p>
+              <p className="text-[10px] font-semibold text-slate-500">Fecha y hora</p>
               <p className="font-bold text-slate-700">
                 {new Date(fechaSeleccionada + 'T12:00:00').toLocaleDateString('es-PE', { day: '2-digit', month: 'short' })} — {horaSeleccionada}
               </p>
             </div>
             <div className="bg-emerald-50 rounded-xl p-3 border border-emerald-100">
-              <p className="text-[10px] font-bold text-emerald-500 uppercase">Total</p>
-              <p className="font-black text-emerald-700 flex items-center gap-1">
-                <CircleDollarSign size={14} /> S/ {Number(servicioSeleccionado?.precioRegular || servicioSeleccionado?.precio || 0).toFixed(2)}
+              <p className="text-[10px] font-semibold text-emerald-600">Total</p>
+              <p className="font-bold text-emerald-700 flex items-center gap-1">
+                <CircleDollarSign size={14} className="text-emerald-500" /> S/ {Number(servicioSeleccionado?.precioRegular || servicioSeleccionado?.precio || 0).toFixed(2)}
               </p>
             </div>
           </div>
@@ -489,7 +489,7 @@ const ClienteAgendarCita = () => {
           <div className="mt-4 flex items-start gap-2 bg-amber-50 rounded-xl p-3 border border-amber-100">
             <AlertTriangle size={16} className="text-amber-500 shrink-0 mt-0.5" />
             <p className="text-xs text-amber-700">
-              <span className="font-bold">Política de cancelación:</span> Las citas deben cancelarse con al menos 24 horas de anticipación.
+              <span className="font-semibold">Política de cancelación:</span> Las citas deben cancelarse con al menos 24 horas de anticipación.
             </p>
           </div>
         </div>
