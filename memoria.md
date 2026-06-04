@@ -1,6 +1,6 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-04 (Gestión de Pedidos Compartida, Inventario Crítico Compartido, Agenda Semanal Compartida)
+Última actualización: 2026-06-04 (Tablero de Veterinario Reestructurado, Gestión de Pedidos Compartida)
 
 ## 🚀 Logros Recientes
 - [x] Rama `develop` creada y publicada en GitHub.
@@ -148,6 +148,9 @@
 - [x] **Frontend - Gestión de Pedidos Compartida**:
   - Extraída y modularizada la lógica de despacho y filtros de pedidos desde `RecepcionistaDashboard.jsx` hacia el componente reutilizable `GestionPedidos.jsx` utilizando sintaxis de función flecha.
   - Integrada la nueva vista en los paneles de Recepcionista y Administrador, agregando la opción de menú en este último.
+- [x] **Frontend - Reestructuración del Tablero de Veterinario**:
+  - Rediseñado completamente `VeterinarioDashboard.jsx` utilizando sintaxis de función flecha y Tailwind CSS para eliminar el diseño Split-View.
+  - Implementada una estructura clásica con Sidebar oscuro, cabecera superior y área de contenido dinámico para las vistas de Agenda del Día (con KPIs y tarjetas de pacientes), Consulta Médica Activa (con sub-pestañas y placeholder animado) y Buscador General de Expedientes.
 
 ## 📌 Estado Actual de los Componentes
 - **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF, Subida de Archivos Clínicos, Modelado e Inventario, Catálogo y Pedidos de Tienda Online, y el módulo de Tareas Programadas y Campañas de Marketing (Fase 11B finalizada) completamente implementados y validados.

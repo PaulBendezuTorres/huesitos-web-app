@@ -13,7 +13,6 @@ import {
   CheckCircle,
   LogOut,
   Upload,
-  Syringe,
   Download,
   AlertTriangle
 } from 'lucide-react';
@@ -22,8 +21,7 @@ import {
   obtenerCitasAgenda,
   registrarConsultaMedica,
   registrarRecetaMedica,
-  subirArchivoClinico,
-  obtenerRecetasPorConsulta
+  subirArchivoClinico
 } from '../api/veterinarioAPI';
 import MascotaHistorialTimeline from '../components/MascotaHistorialTimeline';
 
@@ -32,6 +30,9 @@ const VeterinarioDashboard = () => {
   const [correo] = useState(localStorage.getItem('usuarioCorreo') || 'Veterinario');
   const [usuarioId] = useState(localStorage.getItem('usuarioId') || '');
   
+  // Vista activa del panel principal
+  const [vistaActual, setVistaActual] = useState('agenda'); // 'agenda', 'consulta', 'mascotas'
+
   // Lista de citas de la agenda
   const [citas, setCitas] = useState([]);
   const [loadingCitas, setLoadingCitas] = useState(true);
@@ -39,7 +40,7 @@ const VeterinarioDashboard = () => {
   // Cita y mascota cargada actualmente en la Ficha Activa
   const [citaActiva, setCitaActiva] = useState(null);
   
-  // Pestaña activa del panel derecho
+  // Pestaña activa del panel de consulta
   const [pestanaActiva, setPestanaActiva] = useState('diagnostico');
   
   // Estados de Formularios
@@ -121,6 +122,8 @@ const VeterinarioDashboard = () => {
       descripcion: '',
       tipoExamen: 'LABORATORIO'
     });
+    setArchivosMascota([]);
+    setVistaActual('consulta'); // Redirigir a pestaña de consulta
   };
 
   const handleLogout = () => {
@@ -128,34 +131,18 @@ const VeterinarioDashboard = () => {
     navigate('/');
   };
 
-  // Guardar receta en base de datos
+  // Guardar receta temporalmente
   const handleGuardarReceta = async (e) => {
     e.preventDefault();
     if (!recetaForm.medicamentos.trim() || !recetaForm.indicaciones.trim()) {
       alert("Por favor completa los medicamentos y las indicaciones.");
       return;
     }
-    try {
-      // Necesita una consulta o un ID de consulta. Como la consulta médica no está guardada aún
-      // (se guarda al Finalizar Atención), podemos simular o, según el backend de Huesitos,
-      // la receta requiere estar asociada a una ConsultaMedica.
-      // Solución: De acuerdo al endpoint de recetas (`POST /api/recetas`), se necesita una consulta médica guardada primero.
-      // Por ende, la receta se registra AUTOMÁTICAMENTE o se asocia tras guardar la consulta,
-      // o guardamos la consulta primero.
-      // Vamos a indicarle al usuario que guarde la consulta médica o podemos hacer un guardado temporal.
-      // En el backend, registrarConsultaMedica guarda la consulta y completa la cita.
-      // Por ende, el flujo ideal es: el veterinario escribe la consulta y la receta, y al hacer click en "Finalizar Atención"
-      // guardamos primero la consulta y con el ID de esa consulta guardamos la receta.
-      // Para dar feedback inmediato, permitimos redactarla en la pestaña y la guardamos al final.
-      alert("Receta redactada correctamente. Se registrará al Finalizar la Consulta.");
-      setRecetaGuardada({
-        medicamentos: recetaForm.medicamentos,
-        indicaciones: recetaForm.indicaciones
-      });
-    } catch (error) {
-      console.error(error);
-      alert("Error al validar la receta.");
-    }
+    setRecetaGuardada({
+      medicamentos: recetaForm.medicamentos,
+      indicaciones: recetaForm.indicaciones
+    });
+    alert("Receta redactada correctamente. Se registrará al Finalizar la Consulta.");
   };
 
   // Subir archivo clínico
@@ -227,464 +214,579 @@ const VeterinarioDashboard = () => {
       setCitaActiva(null);
       setRecetaGuardada(null);
       
-      // Actualizar listado de citas de la sala de espera
+      // Actualizar listado de citas
       fetchCitas();
+      setVistaActual('agenda'); // Volver a la agenda
     } catch (error) {
       console.error(error);
       alert("Error al finalizar la atención médica: " + (error.response?.data || error.message));
     }
   };
 
-  return (
-    <div className="flex h-screen bg-slate-100 font-sans overflow-hidden">
-      
-      {/* SIDEBAR VETERINARIO */}
-      <aside className="w-64 bg-slate-950 flex flex-col justify-between border-r border-slate-800 shrink-0">
-        <div>
-          <div className="h-20 flex items-center px-6 border-b border-slate-800/50">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-tr from-emerald-500 to-teal-300 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
-                <img src={logo} alt="Logo Huesitos" className="w-8 h-8 object-contain" />
+  // Clases CSS para la navegación lateral
+  const baseBtnClass = "w-full text-left px-4 py-3.5 rounded-xl font-semibold transition-all duration-300 flex items-center gap-4 text-sm tracking-wide group";
+  const activeBtnClass = `${baseBtnClass} bg-gradient-to-r from-emerald-500 to-teal-400 text-white shadow-lg shadow-emerald-500/20 translate-x-1`;
+  const inactiveBtnClass = `${baseBtnClass} text-slate-400 hover:bg-slate-800/50 hover:text-slate-100`;
+
+  // Renderizador de Vistas Principales
+  const renderizarVista = () => {
+    switch (vistaActual) {
+      case 'agenda':
+        return (
+          <div className="space-y-6">
+            {/* KPI Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center font-bold">
+                  <Calendar size={20} />
+                </div>
+                <div>
+                  <span className="block text-[10px] text-slate-400 font-bold uppercase">Citas Hoy</span>
+                  <span className="text-xl font-black text-slate-800">{citas.length}</span>
+                </div>
               </div>
-              <div className="flex flex-col">
-                <span className="text-md font-black text-white tracking-tight leading-tight">Vet.Huesitos</span>
-                <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-widest">Módulo Clínico</span>
+              <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center font-bold">
+                  <Clock size={20} />
+                </div>
+                <div>
+                  <span className="block text-[10px] text-slate-400 font-bold uppercase">En Espera (Check-in)</span>
+                  <span className="text-xl font-black text-slate-800">
+                    {citas.filter(c => c.estado === 'EN_ESPERA').length}
+                  </span>
+                </div>
+              </div>
+              <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center font-bold">
+                  <CheckCircle size={20} />
+                </div>
+                <div>
+                  <span className="block text-[10px] text-slate-400 font-bold uppercase">Confirmadas</span>
+                  <span className="text-xl font-black text-slate-800">
+                    {citas.filter(c => c.estado === 'CONFIRMADA').length}
+                  </span>
+                </div>
               </div>
             </div>
+
+            {/* Listado de Pacientes */}
+            <div className="bg-white p-6 rounded-3xl border border-slate-200/60 shadow-sm">
+              <h3 className="font-black text-slate-800 text-sm tracking-wide uppercase mb-4">Pacientes Agendados</h3>
+              {loadingCitas ? (
+                <div className="text-center py-10 text-xs font-bold text-slate-400 animate-pulse">
+                  Sincronizando agenda médica...
+                </div>
+              ) : citas.length === 0 ? (
+                <div className="text-center py-12 space-y-3">
+                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-400">
+                    <Calendar size={28} />
+                  </div>
+                  <h4 className="text-sm font-bold text-slate-700">No hay pacientes programados para hoy</h4>
+                  <p className="text-xs text-slate-400 max-w-xs mx-auto">
+                    Las citas aparecerán aquí a medida que los clientes reserven o cuando se registre su ingreso en caja (Check-In).
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                  {citas.map((cita) => {
+                    const esEnEspera = cita.estado === 'EN_ESPERA';
+                    return (
+                      <div 
+                        key={cita.id} 
+                        className={`p-5 rounded-2xl border transition-all duration-300 flex flex-col justify-between ${
+                          citaActiva?.id === cita.id
+                            ? 'border-emerald-500 bg-emerald-50/10 shadow-md shadow-emerald-500/5'
+                            : esEnEspera 
+                              ? 'border-amber-200 bg-amber-50/20 hover:border-amber-300' 
+                              : 'border-slate-250 hover:border-slate-300 hover:shadow-md hover:shadow-slate-500/5'
+                        }`}
+                      >
+                        <div>
+                          <div className="flex justify-between items-start mb-3">
+                            <h4 className="font-bold text-slate-800 text-sm tracking-tight">
+                              {cita.mascota ? cita.mascota.nombre : 'Paciente'}
+                            </h4>
+                            <span className={`text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider ${
+                              esEnEspera 
+                                ? 'bg-amber-100 text-amber-700' 
+                                : 'bg-blue-100 text-blue-700'
+                            }`}>
+                              {esEnEspera ? 'En Espera' : 'Confirmada'}
+                            </span>
+                          </div>
+
+                          <div className="space-y-1.5 text-xs text-slate-500 font-medium mb-4">
+                            <p className="flex items-center gap-2">
+                              <span className="text-[10px] text-slate-400 font-bold uppercase w-16">Especie:</span>
+                              <span className="text-slate-700">{cita.mascota?.especie} {cita.mascota?.raza ? `(${cita.mascota.raza})` : ''}</span>
+                            </p>
+                            <p className="flex items-center gap-2">
+                              <span className="text-[10px] text-slate-400 font-bold uppercase w-16">Servicio:</span>
+                              <span className="text-slate-700">{cita.servicio ? cita.servicio.nombre : 'Consulta'}</span>
+                            </p>
+                            <p className="flex items-center gap-2">
+                              <span className="text-[10px] text-slate-400 font-bold uppercase w-16">Hora:</span>
+                              <span className="text-slate-700">
+                                {new Date(cita.fechaHora).toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' })}
+                              </span>
+                            </p>
+                            <p className="flex items-center gap-2">
+                              <span className="text-[10px] text-slate-400 font-bold uppercase w-16">Dueño:</span>
+                              <span className="text-slate-700 truncate max-w-[140px]">{cita.mascota?.dueno ? cita.mascota.dueno.nombreCompleto : 'Cliente'}</span>
+                            </p>
+                          </div>
+                        </div>
+
+                        <button 
+                          onClick={() => iniciarConsulta(cita)}
+                          className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all ${
+                            citaActiva?.id === cita.id
+                              ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'
+                              : esEnEspera 
+                                ? 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/20'
+                                : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                          }`}
+                        >
+                          {citaActiva?.id === cita.id ? 'Atendiendo...' : 'Iniciar Consulta'}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
-          <div className="p-4">
-            <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white">
-                <User size={16} />
+        );
+      
+      case 'consulta':
+        if (!citaActiva) {
+          return (
+            <div className="bg-white p-12 rounded-3xl border border-slate-200/60 shadow-sm text-center max-w-2xl mx-auto space-y-4">
+              <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-450">
+                <Stethoscope size={30} />
               </div>
-              <div className="overflow-hidden">
-                <p className="text-xs text-slate-400 font-bold">Veterinario</p>
-                <p className="text-white text-xs font-bold truncate">{correo}</p>
+              <h3 className="text-lg font-black text-slate-800 tracking-tight">Ficha Clínica Inactiva</h3>
+              <p className="text-xs text-slate-400 max-w-md mx-auto">
+                No hay ninguna atención médica activa en este momento. Por favor ve a la pestaña **Agenda del Día** y selecciona un paciente para iniciar su diagnóstico.
+              </p>
+              <button 
+                onClick={() => setVistaActual('agenda')}
+                className="bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow-md transition-all inline-block"
+              >
+                Ver Agenda del Día
+              </button>
+            </div>
+          );
+        }
+        return (
+          <div className="space-y-6">
+            {/* Cabecera del Paciente Activo */}
+            <div className="bg-white p-6 rounded-3xl border border-slate-200/60 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white text-xl font-black shadow-md shadow-emerald-500/20">
+                  {citaActiva.mascota.nombre.charAt(0)}
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-xl font-black text-slate-800 tracking-tight">
+                      {citaActiva.mascota.nombre}
+                    </h3>
+                    <span className="text-[10px] bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-md font-bold text-slate-600">
+                      {citaActiva.mascota.especie} {citaActiva.mascota.raza ? `- ${citaActiva.mascota.raza}` : ''}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 font-medium mt-1">
+                    Propietario: <span className="font-bold text-slate-700">{citaActiva.mascota.dueno ? citaActiva.mascota.dueno.nombreCompleto : 'Cliente registrado'}</span>
+                  </p>
+                </div>
               </div>
+
+              <div className="flex gap-2">
+                <button 
+                  onClick={finalizarAtencion}
+                  className="bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 shadow-lg shadow-emerald-500/20 transition-all"
+                >
+                  <CheckCircle size={16} /> Finalizar Atención
+                </button>
+              </div>
+            </div>
+
+            {/* Sub-Navegación de Ficha */}
+            <div className="bg-white px-6 rounded-t-3xl border-t border-x border-slate-250/60 flex gap-6 overflow-x-auto scrollbar-none">
+              {[
+                { id: 'diagnostico', label: 'Diagnóstico & Consulta', icon: ClipboardList },
+                { id: 'historial', label: 'Expediente Histórico', icon: History },
+                { id: 'receta', label: 'Prescribir Receta', icon: FileText },
+                { id: 'archivos', label: 'Subir Archivos', icon: Paperclip }
+              ].map(pestana => {
+                const Icon = pestana.icon;
+                const activa = pestanaActiva === pestana.id;
+                return (
+                  <button
+                    key={pestana.id}
+                    onClick={() => setPestanaActiva(pestana.id)}
+                    className={`py-4 border-b-2 font-bold text-xs flex items-center gap-2 transition-all shrink-0 ${
+                      activa 
+                        ? 'border-emerald-500 text-emerald-600' 
+                        : 'border-transparent text-slate-400 hover:text-slate-650'
+                    }`}
+                  >
+                    <Icon size={16} />
+                    {pestana.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Contenedor de Vistas de Pestaña */}
+            <div className="bg-white p-6 rounded-b-3xl border-b border-x border-slate-250/60 shadow-sm min-h-[400px]">
+              {/* PESTAÑA: DIAGNÓSTICO */}
+              {pestanaActiva === 'diagnostico' && (
+                <div className="space-y-5 max-w-4xl">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200/60">
+                    <div>
+                      <span className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Motivo de Cita</span>
+                      <p className="font-bold text-slate-800 text-xs">{consultaForm.motivoConsulta}</p>
+                    </div>
+                    <div>
+                      <span className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Fisiológico</span>
+                      <p className="font-bold text-slate-800 text-xs">Mascota: {citaActiva.mascota.nombre}</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">
+                        Síntomas Presentados <span className="text-red-500">*</span>
+                      </label>
+                      <textarea
+                        rows="2"
+                        value={consultaForm.sintomas}
+                        onChange={e => setConsultaForm({...consultaForm, sintomas: e.target.value})}
+                        placeholder="Describe los síntomas observados..."
+                        required
+                        className="w-full border border-slate-355 p-3 rounded-xl text-slate-800 text-xs focus:ring-2 focus:ring-emerald-500 outline-none transition-all bg-slate-50 focus:bg-white"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">
+                          Diagnóstico Médico <span className="text-red-500">*</span>
+                        </label>
+                        <textarea
+                          rows="4"
+                          value={consultaForm.diagnostico}
+                          onChange={e => setConsultaForm({...consultaForm, diagnostico: e.target.value})}
+                          placeholder="Especifica el diagnóstico..."
+                          required
+                          className="w-full border border-slate-355 p-3 rounded-xl text-slate-800 text-xs focus:ring-2 focus:ring-emerald-500 outline-none transition-all bg-slate-50 focus:bg-white"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">
+                          Tratamiento Recomendado <span className="text-red-500">*</span>
+                        </label>
+                        <textarea
+                          rows="4"
+                          value={consultaForm.tratamiento}
+                          onChange={e => setConsultaForm({...consultaForm, tratamiento: e.target.value})}
+                          placeholder="Medicinas, dosis y cuidados..."
+                          required
+                          className="w-full border border-slate-355 p-3 rounded-xl text-slate-800 text-xs focus:ring-2 focus:ring-emerald-500 outline-none transition-all bg-slate-50 focus:bg-white"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">
+                        Observaciones Adicionales
+                      </label>
+                      <textarea
+                        rows="2"
+                        value={consultaForm.observaciones}
+                        onChange={e => setConsultaForm({...consultaForm, observaciones: e.target.value})}
+                        placeholder="Notas internas..."
+                        className="w-full border border-slate-355 p-3 rounded-xl text-slate-800 text-xs focus:ring-2 focus:ring-emerald-500 outline-none transition-all bg-slate-50 focus:bg-white"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* PESTAÑA: HISTORIAL ANTERIOR */}
+              {pestanaActiva === 'historial' && (
+                <div className="max-w-4xl">
+                  <MascotaHistorialTimeline mascotaId={citaActiva.mascota.id} mostrarCabecera={false} />
+                </div>
+              )}
+
+              {/* PESTAÑA: RECETA */}
+              {pestanaActiva === 'receta' && (
+                <div className="max-w-3xl space-y-5">
+                  <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+                    <div>
+                      <h4 className="font-bold text-slate-800 text-sm">
+                        Redacción de Receta Médica
+                      </h4>
+                      <p className="text-xs text-slate-400 mt-0.5">La receta se compilará en formato PDF para el cliente al finalizar.</p>
+                    </div>
+                    {recetaGuardada && (
+                      <span className="bg-emerald-50 text-emerald-600 border border-emerald-200 text-[10px] font-black px-2.5 py-1 rounded-lg flex items-center gap-1.5">
+                        <CheckCircle size={12} /> Redactada y Lista
+                      </span>
+                    )}
+                  </div>
+
+                  <form onSubmit={handleGuardarReceta} className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">
+                        Medicamentos y Dosis <span className="text-red-500">*</span>
+                      </label>
+                      <textarea
+                        rows="4"
+                        value={recetaForm.medicamentos}
+                        onChange={e => setRecetaForm({...recetaForm, medicamentos: e.target.value})}
+                        placeholder="Ej: Amoxicilina 250mg - 1 tableta cada 12 horas."
+                        required
+                        className="w-full border border-slate-300 p-3 rounded-xl text-slate-800 text-xs focus:ring-2 focus:ring-emerald-500 outline-none transition-all bg-slate-50 focus:bg-white"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">
+                        Indicaciones y Duración <span className="text-red-500">*</span>
+                      </label>
+                      <textarea
+                        rows="3"
+                        value={recetaForm.indicaciones}
+                        onChange={e => setRecetaForm({...recetaForm, indicaciones: e.target.value})}
+                        placeholder="Ej: Vía oral con comida por 7 días. Control en una semana."
+                        required
+                        className="w-full border border-slate-300 p-3 rounded-xl text-slate-800 text-xs focus:ring-2 focus:ring-emerald-500 outline-none transition-all bg-slate-50 focus:bg-white"
+                      />
+                    </div>
+
+                    <div className="flex justify-end pt-2">
+                      <button
+                        type="submit"
+                        className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow-md transition-colors"
+                      >
+                        Guardar Receta
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              )}
+
+              {/* PESTAÑA: SUBIR ARCHIVOS */}
+              {pestanaActiva === 'archivos' && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-5xl">
+                  {/* Formulario de carga */}
+                  <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200/60 space-y-4 h-fit">
+                    <h4 className="font-black text-slate-800 text-xs uppercase tracking-wider mb-2 border-b border-slate-150 pb-2">
+                      Nuevo Archivo Clínico
+                    </h4>
+
+                    <form onSubmit={handleSubirArchivo} className="space-y-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Tipo de Examen</label>
+                        <select
+                          value={archivoForm.tipoExamen}
+                          onChange={e => setArchivoForm({...archivoForm, tipoExamen: e.target.value})}
+                          className="w-full border border-slate-300 p-2.5 rounded-xl text-slate-800 text-xs font-bold bg-white cursor-pointer"
+                        >
+                          <option value="LABORATORIO">LABORATORIO</option>
+                          <option value="ECOGRAFIA">ECOGRAFIA</option>
+                          <option value="RAYOS_X">RAYOS_X</option>
+                          <option value="OTROS">OTROS</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Descripción del Reporte</label>
+                        <input
+                          type="text"
+                          value={archivoForm.descripcion}
+                          onChange={e => setArchivoForm({...archivoForm, descripcion: e.target.value})}
+                          placeholder="Ej: Hemograma completo 15/05/2026"
+                          className="w-full border border-slate-300 p-2.5 rounded-xl text-slate-800 text-xs focus:ring-2 focus:ring-emerald-500 outline-none transition-all bg-white"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Seleccionar Archivo (PDF, JPG, PNG)</label>
+                        <div className="border-2 border-dashed border-slate-300 rounded-2xl p-6 flex flex-col items-center justify-center bg-white hover:bg-slate-50 transition-all cursor-pointer relative">
+                          <input
+                            type="file"
+                            required
+                            onChange={e => setSelectedFile(e.target.files[0])}
+                            className="absolute inset-0 opacity-0 cursor-pointer"
+                          />
+                          <Upload className="text-slate-400 mb-2" size={24} />
+                          <p className="text-xs text-slate-600 font-bold">
+                            {selectedFile ? selectedFile.name : 'Haz clic para subir o arrastra'}
+                          </p>
+                          <p className="text-[10px] text-slate-400 mt-1">Soporta PDF o Imágenes (Máx. 5MB)</p>
+                        </div>
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={subiendoArchivo}
+                        className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md transition-colors disabled:opacity-50"
+                      >
+                        {subiendoArchivo ? 'Subiendo...' : 'Subir Archivo Clínico'}
+                      </button>
+                    </form>
+                  </div>
+
+                  {/* Lista de archivos subidos */}
+                  <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200/60 flex flex-col min-h-[300px]">
+                    <h4 className="font-black text-slate-800 text-xs uppercase tracking-wider mb-3 border-b border-slate-150 pb-2">
+                      Archivos Clínicos de esta Sesión
+                    </h4>
+                    
+                    <div className="flex-1 overflow-y-auto space-y-3">
+                      {archivosMascota.length === 0 ? (
+                        <div className="text-center py-10 text-xs font-bold text-slate-400">
+                          No hay archivos subidos en esta consulta aún.
+                        </div>
+                      ) : (
+                        archivosMascota.map((archivo) => (
+                          <div key={archivo.id} className="flex justify-between items-center p-3 rounded-xl border border-slate-200/60 bg-white">
+                            <div className="flex items-center gap-3">
+                              <div className="p-2 bg-blue-50 text-blue-500 rounded-lg">
+                                <FileText size={16} />
+                              </div>
+                              <div className="text-left">
+                                <p className="text-xs font-bold text-slate-800 truncate max-w-[180px]">{archivo.nombreOriginal}</p>
+                                <p className="text-[9px] text-slate-400 font-medium">Examen: {archivo.tipoExamen}</p>
+                              </div>
+                            </div>
+                            <a
+                              href={`http://localhost:8080${archivo.rutaArchivo}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="bg-white border border-slate-200 hover:bg-slate-50 p-2 rounded-lg text-slate-500 transition-colors"
+                            >
+                              <Download size={14} />
+                            </a>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+
+      case 'mascotas':
+        return (
+          <div className="bg-white p-6 rounded-3xl border border-slate-200/60 shadow-sm">
+            <MascotaHistorialTimeline mostrarCabecera={true} />
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="flex h-screen bg-slate-50 font-sans overflow-hidden selection:bg-emerald-500 selection:text-white">
+      
+      {/* BARRA LATERAL (Estilo Moderno Oscuro) */}
+      <aside className="w-72 bg-slate-950 flex flex-col border-r border-slate-800 relative z-20 shadow-2xl">
+        {/* Logo de la Clínica */}
+        <div className="h-24 flex items-center px-8 border-b border-slate-800/50">
+          <div className="flex items-center gap-3 cursor-pointer">
+            <div className="w-11 h-11 bg-gradient-to-tr from-emerald-500 to-teal-350 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
+              <img src={logo} alt="Logo" className="w-8 h-8 object-contain" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-black text-white tracking-tight leading-tight">Vet.Huesitos</span>
+              <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Módulo Clínico</span>
             </div>
           </div>
         </div>
-        
-        <div className="p-4 border-t border-slate-800/50">
+
+        {/* Menú de Navegación */}
+        <nav className="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto custom-scrollbar">
           <button 
-            onClick={handleLogout}
-            className="w-full bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white px-4 py-3 rounded-xl font-bold text-sm transition-all duration-300 flex items-center justify-center gap-3 border border-red-500/20 shadow-sm"
+            onClick={() => setVistaActual('agenda')} 
+            className={vistaActual === 'agenda' ? activeBtnClass : inactiveBtnClass}
           >
-            <LogOut size={16} />
+            <Calendar size={20} className={vistaActual === 'agenda' ? "text-white" : "text-slate-500 group-hover:text-emerald-450 transition-colors"} /> 
+            Agenda del Día
+          </button>
+
+          <button 
+            onClick={() => setVistaActual('consulta')} 
+            className={vistaActual === 'consulta' ? activeBtnClass : inactiveBtnClass}
+          >
+            <Stethoscope size={20} className={vistaActual === 'consulta' ? "text-white" : "text-slate-500 group-hover:text-emerald-450 transition-colors"} /> 
+            Consulta Activa
+            {citaActiva && (
+              <span className="ml-auto w-2.5 h-2.5 bg-rose-500 rounded-full animate-ping" />
+            )}
+          </button>
+
+          <button 
+            onClick={() => setVistaActual('mascotas')} 
+            className={vistaActual === 'mascotas' ? activeBtnClass : inactiveBtnClass}
+          >
+            <History size={20} className={vistaActual === 'mascotas' ? "text-white" : "text-slate-500 group-hover:text-emerald-450 transition-colors"} /> 
+            Buscar Expedientes
+          </button>
+        </nav>
+
+        {/* Info del Usuario y Cerrar Sesión */}
+        <div className="p-4 border-t border-slate-800/50 bg-slate-950/50">
+          <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl flex items-center gap-3 mb-4">
+            <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white font-bold shrink-0">
+              <User size={14} />
+            </div>
+            <div className="overflow-hidden">
+              <p className="text-[9px] text-slate-500 font-bold uppercase">Veterinario</p>
+              <p className="text-white text-xs font-bold truncate">{correo}</p>
+            </div>
+          </div>
+          <button 
+            onClick={handleLogout} 
+            className="w-full bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white px-4 py-3 rounded-xl font-bold text-sm transition-all duration-300 flex items-center justify-center gap-3 border border-red-500/20 hover:shadow-lg hover:shadow-red-500/20"
+          >
+            <LogOut size={18} />
             Cerrar Sesión
           </button>
         </div>
       </aside>
 
-      {/* CONTENEDOR PRINCIPAL SPLIT-VIEW (Tablet) */}
-      <main className="flex-1 flex overflow-hidden">
+      {/* ÁREA DE CONTENIDO PRINCIPAL */}
+      <main className="flex-1 flex flex-col h-screen overflow-hidden relative">
         
-        {/* PANEL IZQUIERDO: Sala de Espera / Citas (30% de ancho) */}
-        <section className="w-[30%] bg-white border-r border-slate-200 flex flex-col overflow-hidden">
-          <div className="p-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center shrink-0">
-            <div className="flex items-center gap-2">
-              <Users size={18} className="text-emerald-500" />
-              <h2 className="font-black text-slate-800 text-sm tracking-wide uppercase">Sala de Espera</h2>
+        {/* HEADER SUPERIOR (Glassmorphism sutil) */}
+        <header className="bg-white/80 backdrop-blur-md h-20 px-8 flex justify-between items-center shadow-sm z-10 border-b border-slate-200/60 sticky top-0">
+          <h1 className="text-xl font-black text-slate-800 tracking-tight">Módulo Clínico Veterinario</h1>
+          
+          <div className="flex items-center gap-4 bg-slate-50 border border-slate-200 px-2 py-1.5 rounded-full pr-5">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 shadow-sm flex items-center justify-center text-white">
+              <User size={16} strokeWidth={2.5} />
             </div>
-            <span className="bg-emerald-100 text-emerald-700 text-[10px] font-black px-2 py-0.5 rounded-full">
-              {citas.length} Activas
-            </span>
+            <span className="text-sm font-bold text-slate-600">{correo}</span>
           </div>
+        </header>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            {loadingCitas ? (
-              <div className="text-center py-10 text-xs font-bold text-slate-400 animate-pulse">
-                Sincronizando agenda médica...
-              </div>
-            ) : citas.length === 0 ? (
-              <div className="text-center py-10 space-y-2">
-                <p className="text-slate-400 text-xs font-bold">No hay pacientes hoy</p>
-                <p className="text-[10px] text-slate-400">Las citas aparecerán aquí al hacer Check-In.</p>
-              </div>
-            ) : (
-              citas.map((cita) => {
-                const esEnEspera = cita.estado === 'EN_ESPERA';
-                return (
-                  <div 
-                    key={cita.id} 
-                    className={`p-3.5 rounded-2xl border transition-all duration-300 ${
-                      citaActiva?.id === cita.id
-                        ? 'border-emerald-500 bg-emerald-50/50 shadow-md shadow-emerald-500/5'
-                        : esEnEspera 
-                          ? 'border-amber-200 bg-amber-50/30 hover:border-amber-300' 
-                          : 'border-slate-200 hover:bg-slate-50/50'
-                    }`}
-                  >
-                    <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-bold text-slate-800 text-sm tracking-tight">
-                        {cita.mascota ? cita.mascota.nombre : 'Paciente'}
-                      </h4>
-                      <span className={`text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider ${
-                        esEnEspera 
-                          ? 'bg-amber-100 text-amber-700' 
-                          : 'bg-blue-100 text-blue-700'
-                      }`}>
-                        {esEnEspera ? 'En Espera' : 'Confirmada'}
-                      </span>
-                    </div>
-
-                    <div className="space-y-1.5 text-xs text-slate-500 font-medium">
-                      <p className="flex items-center gap-1.5">
-                        <Stethoscope size={13} className="text-slate-400" />
-                        {cita.servicio ? cita.servicio.nombre : 'Consulta'}
-                      </p>
-                      <p className="flex items-center gap-1.5">
-                        <Clock size={13} className="text-slate-400" />
-                        {new Date(cita.fechaHora).toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' })}
-                      </p>
-                    </div>
-
-                    <button 
-                      onClick={() => iniciarConsulta(cita)}
-                      className={`w-full mt-3 py-2 rounded-xl text-xs font-bold transition-all ${
-                        citaActiva?.id === cita.id
-                          ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'
-                          : esEnEspera 
-                            ? 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-md shadow-emerald-500/10'
-                            : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                      }`}
-                    >
-                      {citaActiva?.id === cita.id ? 'Atendiendo...' : 'Iniciar Consulta'}
-                    </button>
-                  </div>
-                );
-              })
-            )}
+        {/* CONTENEDOR DINÁMICO DE PÁGINAS */}
+        <div className="flex-1 p-8 overflow-y-auto bg-slate-50">
+          <div className="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {renderizarVista()}
           </div>
-        </section>
-
-        {/* PANEL DERECHO: Ficha Clínica Activa (70% de ancho) */}
-        <section className="flex-1 bg-slate-50 flex flex-col overflow-hidden relative">
-          {citaActiva ? (
-            <>
-              {/* Cabecera del Paciente Activo */}
-              <div className="bg-white p-5 border-b border-slate-200 flex justify-between items-center shrink-0">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white text-lg font-black shadow-md shadow-emerald-500/10">
-                    {citaActiva.mascota.nombre.charAt(0)}
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-black text-slate-800 tracking-tight">
-                        {citaActiva.mascota.nombre}
-                      </h3>
-                      <span className="text-[10px] bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-md font-bold text-slate-600">
-                        {citaActiva.mascota.especie} {citaActiva.mascota.raza ? `- ${citaActiva.mascota.raza}` : ''}
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-500 font-medium mt-0.5">
-                      Propietario: <span className="font-bold text-slate-700">{citaActiva.mascota.dueno ? citaActiva.mascota.dueno.nombreCompleto : 'Cliente registrado'}</span>
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-2">
-                  <button 
-                    onClick={finalizarAtencion}
-                    className="bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 shadow-lg shadow-emerald-500/20 transition-all"
-                  >
-                    <CheckCircle size={16} /> Finalizar Atención
-                  </button>
-                </div>
-              </div>
-
-              {/* Barra de Navegación de Pestañas */}
-              <div className="bg-white px-6 border-b border-slate-200 flex gap-6 shrink-0">
-                {[
-                  { id: 'diagnostico', label: 'Diagnóstico & Consulta', icon: ClipboardList },
-                  { id: 'historial', label: 'Historial Clínico', icon: History },
-                  { id: 'receta', label: 'Prescribir Receta', icon: FileText },
-                  { id: 'archivos', label: 'Subir Archivos', icon: Paperclip }
-                ].map(pestana => {
-                  const Icon = pestana.icon;
-                  const activa = pestanaActiva === pestana.id;
-                  return (
-                    <button
-                      key={pestana.id}
-                      onClick={() => setPestanaActiva(pestana.id)}
-                      className={`py-4 border-b-2 font-bold text-xs flex items-center gap-2 transition-all ${
-                        activa 
-                          ? 'border-emerald-500 text-emerald-600' 
-                          : 'border-transparent text-slate-400 hover:text-slate-600'
-                      }`}
-                    >
-                      <Icon size={16} />
-                      {pestana.label}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Contenedor de Vistas de Pestaña */}
-              <div className="flex-1 overflow-y-auto p-6">
-                
-                {/* 1. DIAGNÓSTICO & CONSULTA */}
-                {pestanaActiva === 'diagnostico' && (
-                  <div className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm space-y-5 max-w-4xl">
-                    <h4 className="font-black text-slate-800 text-xs uppercase tracking-wider mb-2 border-b border-slate-100 pb-2">
-                      Ficha de Atención Clínica
-                    </h4>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-150">
-                      <div>
-                        <span className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Motivo de Cita</span>
-                        <p className="font-bold text-slate-800 text-xs">{consultaForm.motivoConsulta}</p>
-                      </div>
-                      <div>
-                        <span className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Edad de Mascota</span>
-                        <p className="font-bold text-slate-800 text-xs">{citaActiva.mascota.edad || 'No especificada'}</p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4 pt-2">
-                      <div>
-                        <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">
-                          Síntomas Presentados <span className="text-red-500">*</span>
-                        </label>
-                        <textarea
-                          rows="2"
-                          value={consultaForm.sintomas}
-                          onChange={e => setConsultaForm({...consultaForm, sintomas: e.target.value})}
-                          placeholder="Describe los síntomas observados..."
-                          required
-                          className="w-full border border-slate-300 p-3 rounded-xl text-slate-800 text-xs focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div>
-                          <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">
-                            Diagnóstico Médico <span className="text-red-500">*</span>
-                          </label>
-                          <textarea
-                            rows="4"
-                            value={consultaForm.diagnostico}
-                            onChange={e => setConsultaForm({...consultaForm, diagnostico: e.target.value})}
-                            placeholder="Especifica el diagnóstico..."
-                            required
-                            className="w-full border border-slate-300 p-3 rounded-xl text-slate-800 text-xs focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">
-                            Tratamiento Recomendado <span className="text-red-500">*</span>
-                          </label>
-                          <textarea
-                            rows="4"
-                            value={consultaForm.tratamiento}
-                            onChange={e => setConsultaForm({...consultaForm, tratamiento: e.target.value})}
-                            placeholder="Medicinas, dosis y cuidados..."
-                            required
-                            className="w-full border border-slate-300 p-3 rounded-xl text-slate-800 text-xs focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">
-                          Observaciones Adicionales
-                        </label>
-                        <textarea
-                          rows="2"
-                          value={consultaForm.observaciones}
-                          onChange={e => setConsultaForm({...consultaForm, observaciones: e.target.value})}
-                          placeholder="Notas internas..."
-                          className="w-full border border-slate-300 p-3 rounded-xl text-slate-800 text-xs focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* 2. HISTORIAL CLÍNICO (Timeline) */}
-                {pestanaActiva === 'historial' && (
-                  <div className="max-w-4xl">
-                    <MascotaHistorialTimeline mascotaId={citaActiva.mascota.id} mostrarCabecera={false} />
-                  </div>
-                )}
-
-                {/* 3. PRESCRIBIR RECETA */}
-                {pestanaActiva === 'receta' && (
-                  <div className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm max-w-4xl space-y-5">
-                    <div className="flex justify-between items-center border-b border-slate-100 pb-3">
-                      <div>
-                        <h4 className="font-black text-slate-800 text-xs uppercase tracking-wider">
-                          Redacción de Receta Médica A5
-                        </h4>
-                        <p className="text-xs text-slate-400 mt-0.5">La receta se compilará en formato PDF para el cliente.</p>
-                      </div>
-                      {recetaGuardada && (
-                        <span className="bg-emerald-100 text-emerald-700 text-[10px] font-black px-2.5 py-1 rounded-lg flex items-center gap-1.5">
-                          <CheckCircle size={12} /> Redactada y Lista
-                        </span>
-                      )}
-                    </div>
-
-                    <form onSubmit={handleGuardarReceta} className="space-y-4">
-                      <div>
-                        <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">
-                          Medicamentos y Dosis <span className="text-red-500">*</span>
-                        </label>
-                        <textarea
-                          rows="4"
-                          value={recetaForm.medicamentos}
-                          onChange={e => setRecetaForm({...recetaForm, medicamentos: e.target.value})}
-                          placeholder="Ej: Amoxicilina 250mg - 1 tableta cada 12 horas."
-                          required
-                          className="w-full border border-slate-300 p-3 rounded-xl text-slate-800 text-xs focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">
-                          Indicaciones y Duración <span className="text-red-500">*</span>
-                        </label>
-                        <textarea
-                          rows="3"
-                          value={recetaForm.indicaciones}
-                          onChange={e => setRecetaForm({...recetaForm, indicaciones: e.target.value})}
-                          placeholder="Ej: Vía oral con comida por 7 días. Control en una semana."
-                          required
-                          className="w-full border border-slate-300 p-3 rounded-xl text-slate-800 text-xs focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
-                        />
-                      </div>
-
-                      <div className="flex justify-end pt-2">
-                        <button
-                          type="submit"
-                          className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow-md transition-colors"
-                        >
-                          Guardar Receta
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                )}
-
-                {/* 4. SUBIR ARCHIVOS */}
-                {pestanaActiva === 'archivos' && (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-5xl">
-                    {/* Formulario de carga */}
-                    <div className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm space-y-4 h-fit">
-                      <h4 className="font-black text-slate-800 text-xs uppercase tracking-wider mb-2 border-b border-slate-100 pb-2">
-                        Nuevo Archivo Clínico
-                      </h4>
-
-                      <form onSubmit={handleSubirArchivo} className="space-y-4">
-                        <div>
-                          <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Tipo de Examen</label>
-                          <select
-                            value={archivoForm.tipoExamen}
-                            onChange={e => setArchivoForm({...archivoForm, tipoExamen: e.target.value})}
-                            className="w-full border border-slate-350 p-2.5 rounded-xl text-slate-800 text-xs font-bold bg-slate-50 cursor-pointer"
-                          >
-                            <option value="LABORATORIO">LABORATORIO</option>
-                            <option value="ECOGRAFIA">ECOGRAFIA</option>
-                            <option value="RAYOS_X">RAYOS_X</option>
-                            <option value="OTROS">OTROS</option>
-                          </select>
-                        </div>
-
-                        <div>
-                          <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Descripción del Reporte</label>
-                          <input
-                            type="text"
-                            value={archivoForm.descripcion}
-                            onChange={e => setArchivoForm({...archivoForm, descripcion: e.target.value})}
-                            placeholder="Ej: Hemograma completo 15/05/2026"
-                            className="w-full border border-slate-300 p-2.5 rounded-xl text-slate-800 text-xs focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Seleccionar Archivo (PDF, JPG, PNG)</label>
-                          <div className="border-2 border-dashed border-slate-300 rounded-2xl p-6 flex flex-col items-center justify-center bg-slate-50/50 hover:bg-slate-50 transition-all cursor-pointer relative">
-                            <input
-                              type="file"
-                              required
-                              onChange={e => setSelectedFile(e.target.files[0])}
-                              className="absolute inset-0 opacity-0 cursor-pointer"
-                            />
-                            <Upload className="text-slate-400 mb-2" size={24} />
-                            <p className="text-xs text-slate-600 font-bold">
-                              {selectedFile ? selectedFile.name : 'Haz clic para subir o arrastra'}
-                            </p>
-                            <p className="text-[10px] text-slate-400 mt-1">Soporta PDF o Imágenes (Máx. 5MB)</p>
-                          </div>
-                        </div>
-
-                        <button
-                          type="submit"
-                          disabled={subiendoArchivo}
-                          className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md transition-colors disabled:opacity-50"
-                        >
-                          {subiendoArchivo ? 'Subiendo...' : 'Subir Archivo Clínico'}
-                        </button>
-                      </form>
-                    </div>
-
-                    {/* Lista de archivos de la mascota */}
-                    <div className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm flex flex-col min-h-[300px]">
-                      <h4 className="font-black text-slate-800 text-xs uppercase tracking-wider mb-3 border-b border-slate-100 pb-2">
-                        Archivos Clínicos Asociados
-                      </h4>
-                      
-                      <div className="flex-1 overflow-y-auto space-y-3">
-                        {archivosMascota.length === 0 ? (
-                          <div className="text-center py-10 text-xs font-bold text-slate-400">
-                            No hay archivos subidos en esta consulta.
-                          </div>
-                        ) : (
-                          archivosMascota.map((archivo) => (
-                            <div key={archivo.id} className="flex justify-between items-center p-3 rounded-xl border border-slate-100 bg-slate-50/50">
-                              <div className="flex items-center gap-3">
-                                <div className="p-2 bg-blue-50 text-blue-500 rounded-lg">
-                                  <FileText size={16} />
-                                </div>
-                                <div className="text-left">
-                                  <p className="text-xs font-bold text-slate-800 truncate max-w-[180px]">{archivo.nombreOriginal}</p>
-                                  <p className="text-[9px] text-slate-400 font-medium">Examen: {archivo.tipoExamen}</p>
-                                </div>
-                              </div>
-                              <a
-                                href={`http://localhost:8080${archivo.rutaArchivo}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-white border border-slate-200 hover:bg-slate-50 p-2 rounded-lg text-slate-500 transition-colors"
-                              >
-                                <Download size={14} />
-                              </a>
-                            </div>
-                          ))
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-              </div>
-            </>
-          ) : (
-            // Pantalla de bienvenida / sin paciente seleccionado
-            <div className="flex-1 flex flex-col justify-center items-center p-8 text-center text-slate-500 select-none">
-              <div className="w-16 h-16 bg-slate-200/50 rounded-full flex items-center justify-center text-slate-400 mb-4 animate-pulse">
-                <Stethoscope size={32} />
-              </div>
-              <h3 className="text-lg font-black text-slate-800 tracking-tight">Ficha Clínica Activa</h3>
-              <p className="text-xs text-slate-400 max-w-sm mt-1">
-                Selecciona un paciente de la sala de espera para iniciar la consulta, diagnosticar, prescribir recetas y adjuntar archivos clínicos.
-              </p>
-            </div>
-          )}
-        </section>
-
+        </div>
       </main>
-
+      
     </div>
   );
 };
