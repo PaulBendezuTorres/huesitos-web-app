@@ -1,6 +1,6 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-04 (Campañas y Ofertas, Gestión de Inventario FEFO)
+Última actualización: 2026-06-04 (Historial Clínico Compartido, Campañas y Ofertas)
 
 ## 🚀 Logros Recientes
 - [x] Rama `develop` creada y publicada en GitHub.
@@ -134,6 +134,10 @@
   - Creado `marketingAPI.js` para consumir los endpoints de campañas (`/api/campanas`) y ofertas (`/api/ofertas`).
   - Desarrollada la vista responsiva `CampanasPage.jsx` con interfaz de doble pestaña, visualización de tarjetas, indicadores de expiración con cuenta regresiva, controles rápidos de activación de estado y cálculo automático de descuentos.
   - Integrada la vista de Campañas y Ofertas en `AdminDashboard.jsx` con el botón de la barra lateral con icono `Percent`.
+- [x] **Frontend - Historial Clínico / Ficha de Mascota Compartida**:
+  - Creado el componente reutilizable `MascotaHistorialTimeline.jsx` que centraliza la carga y visualización unificada del historial clínico (consultas, vacunas y archivos médicos), ofreciendo buscador de texto, filtros avanzados y descargas de recetas en PDF.
+  - Refactorizado `MascotaFichaHistorial.jsx` para delegar la interfaz al componente compartido en modo completo.
+  - Modificado `VeterinarioDashboard.jsx` para integrar el componente en la pestaña de consulta activa, eliminando estados y llamadas API duplicadas.
 
 ## 📌 Estado Actual de los Componentes
 - **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF, Subida de Archivos Clínicos, Modelado e Inventario, Catálogo y Pedidos de Tienda Online, y el módulo de Tareas Programadas y Campañas de Marketing (Fase 11B finalizada) completamente implementados y validados.
@@ -326,7 +330,7 @@
       </details>
 
   - **Componentes y Vistas Reutilizables**:
-    - [ ] **Historial Clínico / Ficha de Mascota**: Reutilizable entre el *Cliente* (lectura) y el *Veterinario* (consulta durante la atención).
+    - [x] **Historial Clínico / Ficha de Mascota**: Reutilizable entre el *Cliente* (lectura) y el *Veterinario* (consulta durante la atención).
     - [ ] **Agenda Semanal de Citas**: Compartido y reutilizable entre la *Recepcionista* (gestión operativa) y el *Administrador* (vista de supervisión).
     - [ ] **Inventario Crítico / Alertas**: La alerta de bajo stock y próximos a vencer se reutiliza en el dashboard del *Administrador* y en el panel POS de la *Recepcionista*.
     - [ ] **Gestión de Pedidos**: Compartido entre la *Recepcionista* (despacho físico) y el *Administrador* (auditoría).

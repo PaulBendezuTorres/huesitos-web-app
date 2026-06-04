@@ -23,10 +23,9 @@ import {
   registrarConsultaMedica,
   registrarRecetaMedica,
   subirArchivoClinico,
-  obtenerHistorialMascota,
-  obtenerVacunasMascota,
   obtenerRecetasPorConsulta
 } from '../api/veterinarioAPI';
+import MascotaHistorialTimeline from '../components/MascotaHistorialTimeline';
 
 const VeterinarioDashboard = () => {
   const navigate = useNavigate();
@@ -68,11 +67,6 @@ const VeterinarioDashboard = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [subiendoArchivo, setSubiendoArchivo] = useState(false);
   const [archivosMascota, setArchivosMascota] = useState([]);
-  
-  // Historial clínico de la mascota activa
-  const [historialMascota, setHistorialMascota] = useState([]);
-  const [vacunasMascota, setVacunasMascota] = useState([]);
-  const [loadingHistorial, setLoadingHistorial] = useState(false);
   
   // Carga de citas diarias al iniciar o actualizar
   const fetchCitas = async () => {
@@ -127,23 +121,6 @@ const VeterinarioDashboard = () => {
       descripcion: '',
       tipoExamen: 'LABORATORIO'
     });
-    
-    // Cargar historial de la mascota en paralelo
-    if (cita.mascota && cita.mascota.id) {
-      setLoadingHistorial(true);
-      try {
-        const [hist, vacs] = await Promise.all([
-          obtenerHistorialMascota(cita.mascota.id),
-          obtenerVacunasMascota(cita.mascota.id)
-        ]);
-        setHistorialMascota(hist);
-        setVacunasMascota(vacs);
-      } catch (error) {
-        console.error("Error al cargar historial clínico:", error);
-      } finally {
-        setLoadingHistorial(false);
-      }
-    }
   };
 
   const handleLogout = () => {
@@ -526,85 +503,8 @@ const VeterinarioDashboard = () => {
 
                 {/* 2. HISTORIAL CLÍNICO (Timeline) */}
                 {pestanaActiva === 'historial' && (
-                  <div className="space-y-6 max-w-4xl">
-                    <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm flex items-center gap-4 shrink-0">
-                      <div className="flex items-center gap-2">
-                        <History className="text-emerald-500" size={18} />
-                        <h4 className="font-bold text-slate-800 text-sm">Historial Médico Registrado</h4>
-                      </div>
-                    </div>
-
-                    {loadingHistorial ? (
-                      <div className="text-center py-10 text-xs font-bold text-slate-400 animate-pulse">
-                        Cargando historial médico...
-                      </div>
-                    ) : historialMascota.length === 0 && vacunasMascota.length === 0 ? (
-                      <div className="bg-white p-8 rounded-2xl border border-slate-200/60 shadow-sm text-center">
-                        <p className="text-slate-400 text-xs font-bold">No hay consultas previas registradas</p>
-                      </div>
-                    ) : (
-                      <div className="relative border-l-2 border-slate-200 pl-6 ml-4 space-y-6">
-                        {/* Vacunas Aplicadas */}
-                        {vacunasMascota.map((v) => (
-                          <div key={v.id} className="relative">
-                            <span className="absolute -left-10 top-0.5 bg-emerald-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-slate-100 shadow-sm">
-                              <Syringe size={12} />
-                            </span>
-                            <div className="bg-white p-4 rounded-xl border border-slate-200/60 shadow-sm">
-                              <div className="flex justify-between items-start mb-2">
-                                <h5 className="font-bold text-slate-800 text-xs uppercase tracking-wide">
-                                  Vacuna Aplicada: {v.vacuna ? v.vacuna.nombre : 'Vacuna'}
-                                </h5>
-                                <span className="bg-emerald-50 text-emerald-600 text-[10px] font-black px-2 py-0.5 rounded-full border border-emerald-100">
-                                  {new Date(v.fechaAplicacion).toLocaleDateString('es-PE')}
-                                </span>
-                              </div>
-                              <p className="text-xs text-slate-500 font-medium">Lote: <span className="font-bold text-slate-700">{v.lote || 'N/A'}</span></p>
-                              {v.fechaProximaDosis && (
-                                <p className="text-[10px] text-amber-600 font-bold mt-1">Próxima dosis: {new Date(v.fechaProximaDosis).toLocaleDateString('es-PE')}</p>
-                              )}
-                            </div>
-                          </div>
-                        ))}
-
-                        {/* Consultas Médicas */}
-                        {historialMascota.map((c) => (
-                          <div key={c.id} className="relative">
-                            <span className="absolute -left-10 top-0.5 bg-blue-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-slate-100 shadow-sm">
-                              <Stethoscope size={12} />
-                            </span>
-                            <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm">
-                              <div className="flex justify-between items-start mb-3 border-b border-slate-100 pb-2">
-                                <div>
-                                  <h5 className="font-bold text-slate-800 text-xs uppercase tracking-wide">
-                                    Consulta Médica - {c.motivoConsulta}
-                                  </h5>
-                                  <p className="text-[10px] text-slate-400 font-medium mt-0.5">Atendido por: {c.veterinario ? c.veterinario.correo : 'Veterinario'}</p>
-                                </div>
-                                <span className="bg-blue-50 text-blue-600 text-[10px] font-black px-2 py-0.5 rounded-full border border-blue-100">
-                                  {new Date(c.fecha).toLocaleDateString('es-PE')}
-                                </span>
-                              </div>
-
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                                <div>
-                                  <span className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Síntomas</span>
-                                  <p className="text-slate-700 leading-relaxed font-medium">{c.sintomas}</p>
-                                </div>
-                                <div>
-                                  <span className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Diagnóstico</span>
-                                  <p className="text-slate-700 leading-relaxed font-medium">{c.diagnostico}</p>
-                                </div>
-                                <div className="md:col-span-2">
-                                  <span className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Tratamiento</span>
-                                  <p className="text-slate-700 leading-relaxed font-medium bg-slate-50 p-2.5 rounded-lg border border-slate-100">{c.tratamiento}</p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                  <div className="max-w-4xl">
+                    <MascotaHistorialTimeline mascotaId={citaActiva.mascota.id} mostrarCabecera={false} />
                   </div>
                 )}
 
