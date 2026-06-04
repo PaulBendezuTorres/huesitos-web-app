@@ -1,7 +1,9 @@
 import { Megaphone, PawPrint, Calendar, Stethoscope, Syringe, Eye, RefreshCw } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import useClienteDashboard from '../../../hooks/useClienteDashboard';
 
 const ClienteInicio = () => {
+  const navigate = useNavigate();
   const { mascotas, citas, campanas, cargando, recargar } = useClienteDashboard();
 
   const campanaActiva = campanas.length > 0 ? campanas[0] : null;
@@ -118,11 +120,17 @@ const ClienteInicio = () => {
 
               {/* Acciones */}
               <div className="flex gap-2 mt-4 pt-4 border-t border-slate-100">
-                <button className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-sky-50 text-sky-600 text-xs font-bold hover:bg-sky-100 transition-colors duration-200">
+                <button
+                  onClick={() => navigate(`/cliente/mascota/${mascota.id}`)}
+                  className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-sky-50 text-sky-600 text-xs font-bold hover:bg-sky-100 transition-colors duration-200"
+                >
                   <Eye size={14} />
                   Ver Historial
                 </button>
-                <button className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-50 text-slate-500 text-xs font-bold hover:bg-slate-100 transition-colors duration-200 border border-slate-200/60">
+                <button
+                  onClick={() => navigate(`/cliente/mascota/${mascota.id}`)}
+                  className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-50 text-slate-500 text-xs font-bold hover:bg-slate-100 transition-colors duration-200 border border-slate-200/60"
+                >
                   <Syringe size={14} />
                   Vacunas
                 </button>

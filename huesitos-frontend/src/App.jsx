@@ -7,6 +7,7 @@ import VetRegister from './pages/Register';
 import VetForgotPassword from './pages/ForgotPassword';
 import VetResetPassword from './pages/ResetPassword';
 import ClienteDashboard from './pages/ClienteDashboard';
+import MascotaFichaHistorial from './pages/MascotaFichaHistorial';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/restablecer-contrasena" element={<VetResetPassword />} />
         <Route path="/admin" element={<AdminDashboard />} /> 
         <Route path="/cliente" element={<ClienteDashboard />} />
+        <Route path="/cliente/mascota/:mascotaId" element={<MascotaFichaHistorial />} />
       </Routes>
     </Router>
   );

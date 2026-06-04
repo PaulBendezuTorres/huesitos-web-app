@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 
 import ClienteInicio from '../Modules/cliente/pages/ClienteInicio';
+import ClienteMascotas from '../Modules/cliente/pages/ClienteMascotas';
 import logo from '../assets/Logo Huesitos.png';
 
 const ClienteDashboard = () => {
@@ -34,7 +35,7 @@ const ClienteDashboard = () => {
   const renderizarVista = () => {
     switch (vistaActual) {
       case 'dashboard': return <ClienteInicio />;
-      case 'mascotas': return <PlaceholderVista titulo="Mis Mascotas" descripcion="Próximamente: gestión completa de tus mascotas." />;
+      case 'mascotas': return <ClienteMascotas />;
       case 'citas': return <PlaceholderVista titulo="Reservar Cita" descripcion="Próximamente: agendamiento en 4 pasos." />;
       case 'tienda': return <PlaceholderVista titulo="Tienda Online" descripcion="Próximamente: catálogo de productos." />;
       case 'recetas': return <PlaceholderVista titulo="Mis Recetas" descripcion="Próximamente: descarga de recetas PDF." />;
