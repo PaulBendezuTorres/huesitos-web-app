@@ -8,7 +8,8 @@ import {
   Wallet, 
   Settings, 
   LogOut, 
-  User
+  User,
+  Calendar
 } from 'lucide-react';
 
 import ServiciosPage from './ServicioPage';
@@ -17,6 +18,7 @@ import ConfiguracionDinamica from '../Modules/admin/pages/ConfiguracionDinamica'
 import UsuariosPage from '../Modules/admin/pages/UsuariosPage';
 import FinanzasPage from '../Modules/admin/pages/FinanzasPage';
 import DuenosPage from '../Modules/admin/pages/DuenosPage';
+import RecepcionistaAgenda from './RecepcionistaAgenda';
 import logo from '../assets/Logo Huesitos.png';
 
 
@@ -43,6 +45,7 @@ const AdminDashboard = () => {
       case 'servicios': return <ServiciosPage />;
       case 'usuarios': return <UsuariosPage />;
       case 'duenos': return <DuenosPage />;
+      case 'agenda': return <RecepcionistaAgenda />;
       case 'finanzas': return <FinanzasPage />;
       case 'configuracion': return <ConfiguracionDinamica />;
       default: return <DashboardAnalytics />;
@@ -99,6 +102,11 @@ const AdminDashboard = () => {
           <button onClick={() => setVistaActual('duenos')} className={vistaActual === 'duenos' ? activeBtnClass : inactiveBtnClass}>
             <Users size={20} className={vistaActual === 'duenos' ? "text-white" : "text-slate-500 group-hover:text-sky-400 transition-colors"} /> 
             Directorio Clientes
+          </button>
+
+          <button onClick={() => setVistaActual('agenda')} className={vistaActual === 'agenda' ? activeBtnClass : inactiveBtnClass}>
+            <Calendar size={20} className={vistaActual === 'agenda' ? "text-white" : "text-slate-500 group-hover:text-sky-400 transition-colors"} /> 
+            Agenda Semanal
           </button>
 
           <div className="pt-4 pb-2">

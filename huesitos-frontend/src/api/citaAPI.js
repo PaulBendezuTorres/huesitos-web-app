@@ -41,3 +41,29 @@ export const obtenerHorariosVeterinario = async (usuarioId) => {
   const respuesta = await axios.get(`${API_BASE}/horarios-personal/usuario/${usuarioId}`, obtenerHeaders());
   return respuesta.data;
 };
+
+/** Obtener citas de la agenda global con filtros avanzados */
+export const obtenerCitasAgenda = async (inicio, fin, veterinarioId, estado) => {
+  const params = {};
+  if (inicio) params.inicio = inicio;
+  if (fin) params.fin = fin;
+  if (veterinarioId) params.veterinarioId = veterinarioId;
+  if (estado) params.estado = estado;
+
+  const respuesta = await axios.get(`${API_BASE}/citas/agenda`, {
+    ...obtenerHeaders(),
+    params,
+  });
+  return respuesta.data;
+};
+
+/** Reprogramar una cita */
+export const reprogramarCita = async (id, nuevaFechaHora) => {
+  const respuesta = await axios.put(
+    `${API_BASE}/citas/${id}/reprogramar`,
+    { nuevaFechaHora },
+    obtenerHeaders()
+  );
+  return respuesta.data;
+};
+

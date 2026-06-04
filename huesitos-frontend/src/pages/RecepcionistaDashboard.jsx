@@ -32,13 +32,14 @@ import {
   obtenerTodosLosPedidos,
   cambiarEstadoPedido
 } from '../api/tiendaAPI';
+import RecepcionistaAgenda from './RecepcionistaAgenda';
 
 const RecepcionistaDashboard = () => {
   const navigate = useNavigate();
   const [correo] = useState(localStorage.getItem('usuarioCorreo') || 'Recepcionista');
   
   // Pestaña o Vista Principal del Panel
-  const [seccionActiva, setSeccionActiva] = useState('caja'); // 'caja' o 'pedidos'
+  const [seccionActiva, setSeccionActiva] = useState('caja'); // 'caja', 'pedidos' o 'agenda'
 
   // --- ESTADOS CAJA & POS ---
   const [transacciones, setTransacciones] = useState([]);
@@ -101,7 +102,7 @@ const RecepcionistaDashboard = () => {
     }
     if (seccionActiva === 'caja') {
       fetchDatosCaja();
-    } else {
+    } else if (seccionActiva === 'pedidos') {
       fetchPedidos();
     }
   }, [seccionActiva, navigate]);
@@ -225,6 +226,17 @@ const RecepcionistaDashboard = () => {
             >
               <Truck size={16} />
               Despacho Pedidos
+            </button>
+            <button
+              onClick={() => setSeccionActiva('agenda')}
+              className={`w-full text-left px-4 py-3 rounded-xl font-bold transition-all duration-300 flex items-center gap-3 text-xs tracking-wider uppercase ${
+                seccionActiva === 'agenda'
+                  ? 'bg-gradient-to-r from-sky-500 to-cyan-400 text-white shadow-md'
+                  : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
+              }`}
+            >
+              <Calendar size={16} />
+              Agenda Semanal
             </button>
           </nav>
         </div>
@@ -609,6 +621,13 @@ const RecepcionistaDashboard = () => {
               )}
             </section>
           </>
+        )}
+
+        {/* 3. SECCIÓN: AGENDA SEMANAL */}
+        {seccionActiva === 'agenda' && (
+          <section className="flex-1 bg-slate-50 p-6 overflow-y-auto h-full animate-in fade-in duration-200">
+            <RecepcionistaAgenda />
+          </section>
         )}
 
       </main>
