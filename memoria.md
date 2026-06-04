@@ -102,10 +102,15 @@
   - Desarrollada vista `ClienteAgendarCita.jsx` interactiva en 4 pasos (Mascota, Servicio, Profesional, Horario/Fecha).
   - Desarrollada vista `ClienteTienda.jsx` con catálogo, buscador de productos, carrito lateral (drawer) y checkout FEFO.
   - Integradas todas las vistas en el ruteo de `App.jsx` y la botonera de `ClienteDashboard.jsx`.
+- [x] **Frontend - Vista de Veterinario (Tablet)**:
+  - Creado `veterinarioAPI.js` para los servicios de consultas, recetas, vacunas, historial y subida de archivos clínicos.
+  - Diseñada e implementada la interfaz `VeterinarioDashboard.jsx` optimizada para tablets en formato Split View 30/70.
+  - Integrada la sala de espera del día y el inicio de consultas con diagnóstico, prescripción de recetas y carga multipart de análisis de laboratorio.
+  - Configuradas las rutas correspondientes y redirección dinámica en login por rol.
 
 ## 📌 Estado Actual de los Componentes
 - **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF, Subida de Archivos Clínicos, Modelado e Inventario, Catálogo y Pedidos de Tienda Online, y el módulo de Tareas Programadas y Campañas de Marketing (Fase 11B finalizada) completamente implementados y validados.
-- **Frontend (React)**: Inicializado con React 18, Vite y Tailwind CSS 3.4. Vistas del cliente implementadas por completo: Inicio, Mis Mascotas, Historial Clínico (Timeline), Agendamiento de Citas (4 pasos) y Tienda Online con carrito y checkout FEFO. Compilación validada.
+- **Frontend (React)**: Inicializado con React 18, Vite y Tailwind CSS 3.4. Vistas implementadas: Landing Page, Cliente (Inicio, Mascotas, Historial/Timeline, Agendar Cita, Tienda y Carrito), y Veterinario (Agenda, Sala de Espera y Ficha Clínica Activa para Tablet). Compilación validada con éxito.
 - **Base de Datos (MySQL)**: Base de datos `huesitos` inicializada. Hibernate crea/actualiza las tablas `usuarios`, `duenos`, `mascotas`, `citas`, `consultas_medicas`, `servicios`, `transacciones`, `horarios_personal`, `vacunas`, `historial_vacunas`, `recetas`, `archivos_clinicos`, `categorias`, `productos` y `inventarios` al levantar la aplicación.
 
 ## 🛠️ Próximos Pasos (Pendientes)
@@ -188,23 +193,7 @@
     - [x] **Tienda Online**: Catálogo de productos, buscador por categorías, carrito de compras lateral y checkout.
 
   - **Vistas de Veterinario**:
-    - [ ] **Agenda y Sala de Espera, y Ficha Clínica Activa (Tablet)**: Gestión completa de citas del día y edición del historial.
-      <details>
-      <summary>Prompt Figma / Stitch</summary>
-
-      ```text
-      Diseña una aplicación web optimizada para Tablet en orientación horizontal, orientada al rol de Veterinario de la clínica "Huesitos" en Perú. Diseño oscuro premium (slate-900 y slate-950) o claro clínico de alto contraste.
-      Layout de dos paneles (Split View):
-      - Panel Izquierdo (30% de ancho): Sala de Espera. Lista vertical de mascotas en estado "En Espera" (con check-in realizado en la clínica). Muestra la foto de la mascota, nombre, dueño, hora de llegada y un botón de "Iniciar Consulta" en verde.
-      - Panel Derecho (70% de ancho): Ficha Clínica Activa. Se activa cuando se atiende a una mascota y contiene:
-        1. Cabecera: Nombre de la mascota ("Toby"), especie, edad, peso, temperatura, nombre del dueño y botón para ver Historial Completo.
-        2. Pestañas: Diagnóstico, Vacunas, Prescripción/Receta, Archivos Médicos.
-        3. En la pestaña Diagnóstico: Textarea grande para "Síntomas y Motivo", "Diagnóstico" y "Tratamiento".
-        4. En la pestaña Prescripción: Formulario para añadir medicamentos (Nombre, Dosis, Frecuencia, Duración) con botón para generar la receta en PDF en formato A5.
-        5. En la pestaña Archivos: Zona drag-and-drop para subir análisis de laboratorio, ecografías o radiografías en formato PDF o JPG.
-        6. Botón de pie de página: "Finalizar Atención y Guardar Ficha" (esto cambia el estado de la cita a COMPLETADA).
-      ```
-      </details>
+    - [x] **Agenda y Sala de Espera, y Ficha Clínica Activa (Tablet)**: Gestión completa de citas del día y edición del historial.
 
   - **Vistas de Recepcionista**:
     - [ ] **Punto de Venta (POS) y Caja**: Cobros de citas y tienda con múltiples métodos de pago, vuelto e impresión de Boleta A5 PDF.
