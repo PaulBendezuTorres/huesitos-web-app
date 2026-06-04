@@ -189,6 +189,17 @@ const RecepcionistaAgenda = () => {
       if (ocupado) return false;
     }
 
+    // Filtrar por fechas bloqueadas (excepciones/vacaciones)
+    if (citaSeleccionada?.veterinario?.id && fechaReprogramar) {
+      const blockedData = localStorage.getItem(`excepciones_horario_${citaSeleccionada.veterinario.id}`);
+      if (blockedData) {
+        const list = JSON.parse(blockedData);
+        if (list.some((ex) => ex.fecha === fechaReprogramar)) {
+          return false;
+        }
+      }
+    }
+
     if (horariosVet.length > 0 && fechaReprogramar) {
       const diaSemana = new Date(fechaReprogramar + 'T12:00:00').getDay();
       const diaMap = { 0: 7, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6 };

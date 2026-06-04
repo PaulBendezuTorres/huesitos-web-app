@@ -38,7 +38,13 @@ export const obtenerUsuarios = async () => {
 
 /** Obtener horarios de un veterinario */
 export const obtenerHorariosVeterinario = async (usuarioId) => {
-  const respuesta = await axios.get(`${API_BASE}/horarios-personal/usuario/${usuarioId}`, obtenerHeaders());
+  const respuesta = await axios.get(`${API_BASE}/usuarios/${usuarioId}/horarios`, obtenerHeaders());
+  return respuesta.data;
+};
+
+/** Guardar o actualizar la configuración de horario para un día específico */
+export const guardarHorarioPersonal = async (usuarioId, datosHorario) => {
+  const respuesta = await axios.post(`${API_BASE}/usuarios/${usuarioId}/horarios`, datosHorario, obtenerHeaders());
   return respuesta.data;
 };
 

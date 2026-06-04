@@ -19,6 +19,7 @@ import UsuariosPage from '../Modules/admin/pages/UsuariosPage';
 import FinanzasPage from '../Modules/admin/pages/FinanzasPage';
 import DuenosPage from '../Modules/admin/pages/DuenosPage';
 import RecepcionistaAgenda from './RecepcionistaAgenda';
+import ConfiguracionHorarios from '../Modules/admin/pages/ConfiguracionHorarios';
 import logo from '../assets/Logo Huesitos.png';
 
 
@@ -46,6 +47,7 @@ const AdminDashboard = () => {
       case 'usuarios': return <UsuariosPage />;
       case 'duenos': return <DuenosPage />;
       case 'agenda': return <RecepcionistaAgenda />;
+      case 'horarios': return <ConfiguracionHorarios />;
       case 'finanzas': return <FinanzasPage />;
       case 'configuracion': return <ConfiguracionDinamica />;
       default: return <DashboardAnalytics />;
@@ -121,6 +123,11 @@ const AdminDashboard = () => {
           <button onClick={() => setVistaActual('usuarios')} className={vistaActual === 'usuarios' ? activeBtnClass : inactiveBtnClass}>
             <ShieldCheck size={20} className={vistaActual === 'usuarios' ? "text-white" : "text-slate-500 group-hover:text-sky-400 transition-colors"} /> 
             Usuarios y Roles
+          </button>
+
+          <button onClick={() => setVistaActual('horarios')} className={vistaActual === 'horarios' ? activeBtnClass : inactiveBtnClass}>
+            <Clock size={20} className={vistaActual === 'horarios' ? "text-white" : "text-slate-500 group-hover:text-sky-400 transition-colors"} /> 
+            Horarios del Personal
           </button>
           
           <button onClick={() => setVistaActual('configuracion')} className={vistaActual === 'configuracion' ? activeBtnClass : inactiveBtnClass}>

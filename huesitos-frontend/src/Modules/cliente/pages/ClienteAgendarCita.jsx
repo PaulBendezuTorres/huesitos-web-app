@@ -136,6 +136,17 @@ const ClienteAgendarCita = () => {
       if (ocupado) return false;
     }
 
+    // Filtrar por fechas bloqueadas (excepciones/vacaciones)
+    if (veterinarioSeleccionado && fechaSeleccionada) {
+      const blockedData = localStorage.getItem(`excepciones_horario_${veterinarioSeleccionado.id}`);
+      if (blockedData) {
+        const list = JSON.parse(blockedData);
+        if (list.some((ex) => ex.fecha === fechaSeleccionada)) {
+          return false;
+        }
+      }
+    }
+
     // Filtrar por horario laboral del veterinario
     if (horariosVet.length > 0 && fechaSeleccionada) {
       const diaSemana = new Date(fechaSeleccionada + 'T12:00:00').getDay();
