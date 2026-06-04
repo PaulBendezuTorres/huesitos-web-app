@@ -68,3 +68,15 @@ export const obtenerMisPedidos = async (usuarioId) => {
   const respuesta = await axios.get(`${API_BASE}/pedidos/cliente/${usuarioId}`, obtenerHeaders());
   return respuesta.data;
 };
+
+/** Listar todos los pedidos de la tienda (Recepcionista/Administrador) */
+export const obtenerTodosLosPedidos = async () => {
+  const respuesta = await axios.get(`${API_BASE}/pedidos`, obtenerHeaders());
+  return respuesta.data;
+};
+
+/** Cambiar el estado de un pedido (Recepcionista/Administrador) */
+export const cambiarEstadoPedido = async (id, estado) => {
+  const respuesta = await axios.put(`${API_BASE}/pedidos/${id}/estado?estado=${estado}`, {}, obtenerHeaders());
+  return respuesta.data;
+};
