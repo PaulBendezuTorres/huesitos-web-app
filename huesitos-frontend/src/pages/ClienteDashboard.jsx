@@ -13,6 +13,8 @@ import {
 
 import ClienteInicio from '../Modules/cliente/pages/ClienteInicio';
 import ClienteMascotas from '../Modules/cliente/pages/ClienteMascotas';
+import ClienteAgendarCita from '../Modules/cliente/pages/ClienteAgendarCita';
+import ClienteTienda from '../Modules/cliente/pages/ClienteTienda';
 import logo from '../assets/Logo Huesitos.png';
 
 const ClienteDashboard = () => {
@@ -36,8 +38,8 @@ const ClienteDashboard = () => {
     switch (vistaActual) {
       case 'dashboard': return <ClienteInicio />;
       case 'mascotas': return <ClienteMascotas />;
-      case 'citas': return <PlaceholderVista titulo="Reservar Cita" descripcion="Próximamente: agendamiento en 4 pasos." />;
-      case 'tienda': return <PlaceholderVista titulo="Tienda Online" descripcion="Próximamente: catálogo de productos." />;
+      case 'citas': return <ClienteAgendarCita />;
+      case 'tienda': return <ClienteTienda />;
       case 'recetas': return <PlaceholderVista titulo="Mis Recetas" descripcion="Próximamente: descarga de recetas PDF." />;
       case 'facturacion': return <PlaceholderVista titulo="Facturación" descripcion="Próximamente: historial de pagos." />;
       default: return <ClienteInicio />;
