@@ -1,5 +1,6 @@
 import { useDashboard } from "../../../hooks/useDashboard";
 import { Activity, Users, Stethoscope, Wallet, RefreshCw, Clock } from 'lucide-react';
+import InventarioCriticoWidget from "../../../components/InventarioCriticoWidget";
 
 const DashboardAnaliticas = () => {
   const { stats, loading, refetch } = useDashboard();
@@ -78,6 +79,11 @@ const DashboardAnaliticas = () => {
             S/ {stats.ingresosTotales ? stats.ingresosTotales.toFixed(2) : "0.00"}
           </p>
         </div>
+      </div>
+
+      {/* INVENTARIO CRÍTICO */}
+      <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden flex flex-col h-[380px]">
+        <InventarioCriticoWidget />
       </div>
 
       {/* ACTIVIDAD RECIENTE */}

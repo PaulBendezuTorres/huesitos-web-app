@@ -24,8 +24,6 @@ import logo from '../assets/Logo Huesitos.png';
 import {
   obtenerTransacciones,
   procesarPago,
-  obtenerAlertasBajoStock,
-  obtenerAlertasVencimientos,
   descargarBoletaPdf
 } from '../services/finanzasService';
 import {
@@ -33,6 +31,7 @@ import {
   cambiarEstadoPedido
 } from '../api/tiendaAPI';
 import AgendaSemanal from './AgendaSemanal';
+import InventarioCriticoWidget from '../components/InventarioCriticoWidget';
 
 const RecepcionistaDashboard = () => {
   const navigate = useNavigate();
@@ -44,9 +43,6 @@ const RecepcionistaDashboard = () => {
   // --- ESTADOS CAJA & POS ---
   const [transacciones, setTransacciones] = useState([]);
   const [loadingTransacciones, setLoadingTransacciones] = useState(true);
-  const [bajoStock, setBajoStock] = useState([]);
-  const [vencimientos, setVencimientos] = useState([]);
-  const [loadingInventario, setLoadingInventario] = useState(true);
   const [cobroSeleccionado, setCobroSeleccionado] = useState(null);
   const [medioPago, setMedioPago] = useState('EFECTIVO');
   const [referencia, setReferencia] = useState('');
@@ -63,22 +59,14 @@ const RecepcionistaDashboard = () => {
 
   const fetchDatosCaja = async () => {
     setLoadingTransacciones(true);
-    setLoadingInventario(true);
     try {
-      const [txs, stock, vencs] = await Promise.all([
-        obtenerTransacciones(),
-        obtenerAlertasBajoStock(),
-        obtenerAlertasVencimientos(30)
-      ]);
+      const txs = await obtenerTransacciones();
       const pendientes = txs.filter(t => t.estadoPago === 'PENDIENTE');
       setTransacciones(pendientes);
-      setBajoStock(stock);
-      setVencimientos(vencs);
     } catch (error) {
-      console.error("Error al sincronizar datos de caja e inventario:", error);
+      console.error("Error al sincronizar datos de caja:", error);
     } finally {
       setLoadingTransacciones(false);
-      setLoadingInventario(false);
     }
   };
 
@@ -327,77 +315,9 @@ const RecepcionistaDashboard = () => {
 
             {/* PANEL DERECHO (60%) */}
             <section className="flex-1 bg-slate-50 flex flex-col overflow-hidden animate-in fade-in duration-200">
-              <div className="p-4 border-b border-slate-200 bg-white flex justify-between items-center shrink-0">
-                <div className="flex items-center gap-2">
-                  <Package size={18} className="text-slate-700" />
-                  <h2 className="font-black text-slate-800 text-sm tracking-wide uppercase">Inventario Crítico (FEFO)</h2>
-                </div>
-              </div>
+              <InventarioCriticoWidget />
 
-              <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  
-                  {/* Stock Mínimo */}
-                  <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm flex flex-col">
-                    <div className="flex items-center gap-2 mb-4 border-b border-slate-100 pb-2">
-                      <AlertTriangle className="text-red-500" size={18} />
-                      <h3 className="font-bold text-slate-800 text-xs uppercase tracking-wide">Stock Crítico</h3>
-                    </div>
-                    <div className="flex-1 space-y-3 overflow-y-auto max-h-[220px]">
-                      {loadingInventario ? (
-                        <p className="text-xs text-slate-400 animate-pulse font-bold text-center">Consultando stock...</p>
-                      ) : bajoStock.length === 0 ? (
-                        <p className="text-xs text-emerald-600 font-bold text-center py-4">Insumos y productos al día.</p>
-                      ) : (
-                        bajoStock.map((prod) => (
-                          <div key={prod.id} className="flex justify-between items-center p-2.5 rounded-xl bg-red-50/50 border border-red-100 text-xs">
-                            <div>
-                              <p className="font-bold text-slate-800">{prod.nombre}</p>
-                              <p className="text-[10px] text-slate-400">Mínimo: {prod.stockMinimo} unds.</p>
-                            </div>
-                            <span className="bg-red-100 text-red-700 font-black px-2 py-0.5 rounded-md text-[10px]">
-                              Sin Stock
-                            </span>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </div>
-
-                  {/* FEFO Caducidad */}
-                  <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm flex flex-col">
-                    <div className="flex items-center gap-2 mb-4 border-b border-slate-100 pb-2">
-                      <Calendar className="text-amber-500" size={18} />
-                      <h3 className="font-bold text-slate-800 text-xs uppercase tracking-wide">Próximos a Vencer</h3>
-                    </div>
-                    <div className="flex-1 space-y-3 overflow-y-auto max-h-[220px]">
-                      {loadingInventario ? (
-                        <p className="text-xs text-slate-400 animate-pulse font-bold text-center">Analizando lotes...</p>
-                      ) : vencimientos.length === 0 ? (
-                        <p className="text-xs text-emerald-600 font-bold text-center py-4">Lotes en buen estado.</p>
-                      ) : (
-                        vencimientos.map((lote) => (
-                          <div key={lote.id} className="flex justify-between items-center p-2.5 rounded-xl bg-amber-50/50 border border-amber-150 text-xs">
-                            <div>
-                              <p className="font-bold text-slate-800">{lote.producto ? lote.producto.nombre : 'Producto'}</p>
-                              <p className="text-[10px] text-slate-400">Lote: {lote.numeroLote || 'N/A'}</p>
-                            </div>
-                            <div className="text-right">
-                              <span className="bg-amber-100 text-amber-700 font-black px-2 py-0.5 rounded-md text-[9px] uppercase tracking-wider block">
-                                Vence
-                              </span>
-                              <span className="text-[9px] text-slate-500 font-bold mt-1 block">
-                                {new Date(lote.fechaVencimiento).toLocaleDateString('es-PE')}
-                              </span>
-                            </div>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </div>
-
-                </div>
-
+              <div className="p-6 pt-0 shrink-0">
                 <div className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm space-y-3">
                   <div className="flex items-center gap-2 text-slate-800">
                     <HelpCircle size={18} className="text-sky-500" />
