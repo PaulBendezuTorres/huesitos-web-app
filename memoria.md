@@ -1,6 +1,6 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-04 (Implementación de Vistas del Cliente en Frontend: Historial Clínico, Agendamiento y Tienda)
+Última actualización: 2026-06-04 (Implementación de Agenda Semanal de Citas y Reprogramación)
 
 ## 🚀 Logros Recientes
 - [x] Rama `develop` creada y publicada en GitHub.
@@ -118,6 +118,10 @@
   - Agregadas las llamadas `obtenerTodosLosPedidos` y `cambiarEstadoPedido` en `tiendaAPI.js`.
   - Diseñado el desglose detallado de productos comprados, cantidades, subtotal e identificador de lote FEFO asociado.
   - Habilitados botones interactivos de cambio de estado para flujo de entrega y cancelación.
+- [x] **Frontend - Agenda Semanal de Citas y Reprogramación**:
+  - Creada la vista interactiva `RecepcionistaAgenda.jsx` con visualización semanal (lunes a domingo), navegación interactiva de semanas, y filtros avanzados.
+  - Diseñado un modal interactivo para reprogramar citas en tiempo real (`PUT /api/citas/{id}/reprogramar`) que verifica disponibilidad y horarios del veterinario.
+  - Integrada la agenda semanal como una sección activa en `RecepcionistaDashboard.jsx` y `AdminDashboard.jsx` para roles de Recepcionista y Administrador.
 
 ## 📌 Estado Actual de los Componentes
 - **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF, Subida de Archivos Clínicos, Modelado e Inventario, Catálogo y Pedidos de Tienda Online, y el módulo de Tareas Programadas y Campañas de Marketing (Fase 11B finalizada) completamente implementados y validados.
@@ -209,7 +213,7 @@
   - **Vistas de Recepcionista**:
     - [x] **Punto de Venta (POS) y Caja**: Cobros de citas y tienda con múltiples métodos de pago, vuelto e impresión de Boleta A5 PDF.
     - [x] **Despacho de Pedidos**: Control y entrega de las compras realizadas en la tienda online.
-    - [ ] **Agenda Semanal de Citas**: Gestión de turnos y arrastre para reprogramación.
+    - [x] **Agenda Semanal de Citas**: Gestión de turnos y reprogramación interactiva con modal de disponibilidad.
       <details>
       <summary>Prompt Figma / Stitch</summary>
 
