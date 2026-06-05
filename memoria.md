@@ -1,0 +1,196 @@
+# Memoria de Desarrollo - Huesitos
+
+Última actualización: 2026-06-05 (Refactorización y Abstracción de Estilos de Autenticación)
+
+## 🚀 Logros Recientes
+- [x] **Refactorización y Abstracción del Flujo de Autenticación**: Modificados `Login.jsx`, `Register.jsx`, `ForgotPassword.jsx` y `ResetPassword.jsx` aplicando las nuevas directrices del frontend. Creamos el componente reutilizable `AuthLeftPanel.jsx` en `src/components` para eliminar la duplicación de código en el panel izquierdo (azul), y definimos clases de CSS semánticas (`.auth-card`, `.auth-left-panel`, `.auth-right-panel`) con la directiva `@apply` en `index.css` para limpiar las clases inline del JSX. Compilación de producción del frontend verificada con éxito.
+- [x] **Alineación, Simetría y Unificación Visual del Flujo de Autenticación con Soporte para Tablets**: Rediseñadas las dimensiones y proporciones de `Login.jsx`, `Register.jsx`, `ForgotPassword.jsx` y `ResetPassword.jsx` unificando la división del contenedor (exactamente 50/50 en desktop) y su altura a `md:h-[640px] max-h-[90vh]`. Se optimizó la adaptabilidad en tablets y pantallas de baja altura mediante padding responsivo (`p-6 md:p-8 lg:p-12`) y desplazamiento vertical interno en los formularios (`overflow-y-auto`). El panel izquierdo fue reestructurado y centrado verticalmente (`flex-1 justify-center space-y-6 my-auto`) agregando chips/badges temáticos consistentes en todas las vistas. Compilación de producción del frontend verificada con éxito.
+- [x] **Rediseño Responsivo Global y Unificación Estética del Flujo de Autenticación**: Rediseñados `Login.jsx`, `Register.jsx`, `ForgotPassword.jsx` y `ResetPassword.jsx` utilizando Tailwind CSS responsivo (`flex-col md:flex-row w-full max-w-4xl`), íconos premium de `lucide-react` (`Lock`, `Mail`, `User`, `Phone`, `MapPin`, `Eye`, `EyeOff` y `ArrowLeft`), unificación tipográfica a `font-bold` / `font-semibold` y consistencia en el uso de mayúsculas/minúsculas (Sentence case). Se eliminaron por completo todos los estilos inline y anchos porcentuales fijos. Compilación de producción del frontend verificada con éxito.
+- [x] **Fase C: Rediseño Responsivo y Estético de Vista Recepcionista**: Rediseñados `RecepcionistaDashboard.jsx` (sidebar responsivo / drawer, botón de hamburguesa y overlay), `CajaPOS.jsx` e `InventarioCriticoWidget.jsx` (diseño responsivo flex-col/lg:flex-row, unificación tipográfica a `font-bold` y Sentence case en etiquetas y modal de cobro táctil), `GestionPedidos.jsx` (adaptabilidad móvil para lista y detalles, unificación de ChevronLeft y Sentence case), y `AgendaSemanal.jsx` (scroll horizontal de la grilla semanal, helpers de Sentence case y unificación de pesos de fuentes). Compilación de frontend validada con éxito.
+- [x] **Fase B: Rediseño Responsivo y Estético de Vista Veterinario**: Rediseñados `VeterinarioDashboard.jsx` (sidebar responsivo / drawer, botón de hamburguesa y overlay), `VeterinarioAgenda.jsx` (KPI cards, remoción de uppercase en etiquetas y Sentence case en estados) y `ConsultaActiva.jsx` (barra de pestañas horizontal fluida, remoción de uppercase en formularios de diagnóstico, recetas y archivos).
+- [x] **Fase A: Rediseño Responsivo y Estético de Vista Cliente**: Rediseñados `ClienteDashboard.jsx` (sidebar colapsable / drawer, botón de hamburguesa y overlay), `ClienteInicio.jsx` (cards de mascotas, timeline de citas, Sentence Case en estados y cabeceras de tabla), `ClienteMascotas.jsx` (acciones y tipografía), `ClienteAgendarCita.jsx` (stepper y formularios responsivos), y `ClienteTienda.jsx` (grilla adaptativa de productos, drawer de carrito y Sentence Case en checkout).
+- [x] Rama `develop` creada y publicada en GitHub.
+- [x] Nueva rama de características `feature/configuracion-base-backend` creada.
+- [x] Base de datos MySQL `huesitos` creada localmente.
+- [x] Configurada la conexión MySQL local y dialecto Hibernate en el backend.
+- [x] Implementada la arquitectura de seguridad basada en Spring Security, CORS y tokens JWT.
+- [x] Compilación y construcción del backend verificada con éxito (`BUILD SUCCESS`).
+- [x] Creados el enumerador `Rol` y la entidad JPA `Usuario` en `huesitos_backend.entidades`.
+- [x] Creados la entidad `Dueño` y los repositorios `UsuarioRepositorio` y `DueñoRepositorio`.
+- [x] Creada la clase `AutenticacionServicio` con la lógica de registro de clientes.
+- [x] Creada la clase `AutenticacionControlador` con el endpoint de registro de clientes.
+- [x] Creado el DTO `RespuestaLogin` e implementado el endpoint de inicio de sesión (`POST /login`) con generación de token JWT y retorno de rol del usuario.
+- [x] Creado el DTO `SolicitudCambioRol`, modificado `AutenticacionServicio` y creado `UsuarioControlador` para el endpoint de cambio de rol (`PUT /api/usuarios/{id}/rol`).
+- [x] Creado `FiltroAutenticacionJwt` y configurada la protección de rutas basada en roles en `SeguridadConfig.java`.
+- [x] Rama de características `feature/configuracion-base-backend` fusionada en `develop` y subida a GitHub (`origin/develop`).
+- [x] Creada la clase entidad JPA `Mascota` bajo el paquete `huesitos_backend.entidades` y su mapeo de relación con `Dueño`.
+- [x] Agregada anotación `@JsonAlias({"dueño", "dueno"})` en `Mascota` para compatibilidad de codificación UTF-8/ASCII.
+- [x] Creados la interfaz `MascotaRepositorio` y el servicio `MascotaServicio` con validaciones y lógica de negocio.
+- [x] Creada la clase `MascotaControlador` exponiendo los endpoints REST de registro, búsqueda y listado.
+- [x] Sesión de pruebas QA Fase 2 completada exitosamente (login JWT, registro de mascota, validación de dueño inexistente, listado por dueño).
+- [x] Creado el enum `EstadoCita` con valores: `PENDIENTE`, `CONFIRMADA`, `COMPLETADA`, `CANCELADA`.
+- [x] Creada la entidad JPA `Cita` mapeada a la tabla `citas` con relaciones `@ManyToOne` a `Mascota` (obligatoria) y `Usuario` como veterinario (opcional).
+- [x] Creada la interfaz `CitaRepositorio` con métodos para verificar cruces de horario y listar citas por rango de fechas.
+- [x] Creado `CitaServicio` con lógica de agendamiento (validación de mascota, veterinario, disponibilidad horaria), cambio de estado y listado diario.
+- [x] Creado `CitaControlador` con endpoints `POST /api/citas`, `PUT /api/citas/{id}/estado` y `GET /api/citas/calendario?fecha=`.
+- [x] Creada la entidad JPA `ConsultaMedica` en `huesitos_backend.entidades` mapeada a la tabla `consultas_medicas`.
+- [x] Creada la entidad JPA `Servicio` en `huesitos_backend.entidades` mapeada a la tabla `servicios` con atributos de catálogo.
+- [x] Creados los enums `MedioPago` y `EstadoPago`, y la entidad JPA `Transaccion` en `huesitos_backend.entidades` mapeada a la tabla `transacciones` con relación OneToOne a Cita.
+- [x] Integrado el catálogo de Servicios en Citas: creado `ServicioRepositorio`, reemplazado el campo `motivo` en la entidad `Cita` por una relación obligatoria `@ManyToOne` hacia `Servicio`, y actualizada la validación en `CitaServicio` al agendar citas.
+- [x] Creados `TransaccionRepositorio` y `TransaccionServicio` con métodos para crear órdenes de pago automáticas y registrar pagos presenciales cambiando estados de citas a `CONFIRMADA`.
+- [x] Creado `TransaccionControlador` con endpoints para procesar compras web (webhook simulado) y pagos presenciales en caja, y configurada la creación automática de órdenes de pago al agendar citas en `CitaServicio`.
+- [x] Creados `ServicioServicio.java` y `ServicioControlador.java` para la gestión (registro, listado de activos y desactivación lógica) del catálogo de servicios veterinarios, y configurada la ruta GET como pública en `SeguridadConfig.java`.
+- [x] Creados `ConsultaMedicaRepositorio.java`, `ConsultaMedicaServicio.java` y `ConsultaMedicaControlador.java` para completar el ciclo del módulo clínico (registro de consultas con actualización automática a COMPLETADA de la cita asociada, y consulta de historial por mascota).
+- [x] Corregida la restricción de base de datos en `Transaccion.java` estableciendo `medio_pago` como `nullable = true` para permitir registrar transacciones en estado `PENDIENTE`.
+- [x] Sesión de pruebas de integración y QA manual completada con éxito vía Postman para todo el flujo clínico-financiero (registro, login JWT, servicios, mascotas, agendamiento de cita, orden de pago en caja, registro de consulta y consulta de historial clínico).
+- [x] Creado `PerfilControlador.java` exponiendo endpoints para subir y comprimir fotos de perfil de usuarios (`POST /api/perfiles/usuario/{id}/foto`) y de mascotas (`POST /api/perfiles/mascota/{id}/foto`).
+- [x] Modificado `AutenticacionControlador.java` para inyectar `AutenticacionAvanzadaServicio` y añadir endpoints públicos de restablecimiento de contraseña (`/olvide-contrasena` y `/restablecer-contrasena`).
+- [x] Creado `ConfiguracionRolControlador.java` exponiendo endpoints para consultar configuraciones por rol (`GET /api/configuraciones/rol/{rol}`) y para registrar/actualizar configuraciones de forma segura (`POST /api/configuraciones`).
+- [x] Configurado `SeguridadConfig.java` permitiendo acceso público a los endpoints de restablecimiento de contraseña en Spring Security.
+- [x] Creados endpoints y métodos para la activación, desactivación y listado de usuarios por Rol (Fase 6).
+- [x] Implementado endpoint de creación segura de Veterinarios y Recepcionistas por parte del Administrador (Fase 6).
+- [x] Creada la entidad JPA `HorarioPersonal`, repositorio y servicios de gestión y configuración de horarios (Fase 6).
+- [x] Agregada inicialización automática de horarios semanales por defecto (jornada estándar y domingos libres) al registrar nuevo personal (Fase 6).
+- [x] Refinadas reglas de acceso en `SeguridadConfig.java` permitiendo que el personal autenticado consulte su propio horario y restringiendo la edición al Administrador (Fase 6).
+- [x] Agregada la dependencia `openpdf` para permitir la generación y descarga de recetas en formato PDF (Fase 7).
+- [x] Creadas las entidades `Vacuna` e `HistorialVacunacion` con repositorios, servicios y controladores para gestionar el catálogo e historial de vacunación de mascotas (Fase 7).
+- [x] Creada la entidad `Receta` con el servicio `RecetaServicio` implementando la generación de PDF (con formato A5 premium, datos del veterinario, mascota y propietario) y endpoints de consulta y descarga (Fase 7).
+- [x] Modificado `StorageService` para admitir subidas genéricas de archivos médicos en la subcarpeta `uploads/clinicos/` (Fase 7).
+- [x] Creada la entidad `ArchivoClinico` y enum `TipoArchivoClinico` con endpoints para la subida y consulta de archivos asociados a mascotas y consultas (Fase 7).
+- [x] Refinadas reglas de seguridad en `SeguridadConfig` permitiendo la consulta clínica a usuarios autenticados y restringiendo la subida y edición de recetas, vacunas y archivos a los roles `VETERINARIO` y `ADMINISTRADOR` (Fase 7).
+- [x] Agregado el estado `EN_ESPERA` al enumerador `EstadoCita` para soportar la sala de espera de la clínica (Fase 8A).
+- [x] Creado record DTO `SolicitudReprogramacion` para transferir nueva fecha/hora al reprogramar citas (Fase 8A).
+- [x] Modificado `CitaRepositorio` agregando verificación de cruces de horario dinámico excluyendo la cita actual (Fase 8A).
+- [x] Implementados servicios de cancelación, check-in y reprogramación de citas en `CitaServicio` (Fase 8A).
+- [x] Expuestos endpoints PUT en `CitaControlador` para cancelación (`/{id}/cancelar`), check-in (`/{id}/check-in`) y reprogramación (`/{id}/reprogramar`) de citas (Fase 8A).
+- [x] Inyectado `HorarioPersonalRepositorio` en `CitaServicio` e implementada la validación dinámica de horarios de atención (Fase 8B).
+- [x] Agregados métodos de control `validarHorarioAtencion` y el auxiliar `traducirDiaSemana` para el formato amigable de excepciones en español (Fase 8B).
+- [x] Agregada la consulta dinámica `buscarCitasConFiltros` en `CitaRepositorio` para filtrar por rango de fechas, veterinario y estado (Fase 8C).
+- [x] Implementado el método `listarCitasConFiltros` en `CitaServicio` manejando la conversión opcional de fechas (Fase 8C).
+- [x] Expuesto el endpoint de consulta estructurada `GET /api/citas/agenda` en `CitaControlador` (Fase 8C).
+- [x] Implementada la búsqueda de transacciones por usuario y estado de pago en `TransaccionRepositorio` (Fase 9A).
+- [x] Desarrollados los endpoints `GET` en `TransaccionControlador` para que clientes e inspectores/administradores verifiquen el historial de cobros y pagos (Fase 9A).
+- [x] Asegurados los endpoints de caja presencial y listados de transacciones en `SeguridadConfig` bajo los roles `RECEPCIONISTA` y `ADMINISTRADOR` (Fase 9A).
+- [x] Creado record DTO `ReporteFinanciero` para encapsular las estadísticas diarias, mensuales y globales (Fase 9B).
+- [x] Agregadas las consultas de suma de ingresos `sumarMontoPorFechaPagoBetween` y `sumarMontoTotalAprobado` en `TransaccionRepositorio` (Fase 9B).
+- [x] Creado el servicio `BoletaPdfServicio` implementando la maquetación en PDF de boletas tamaño A5 utilizando OpenPDF (Fase 9B).
+- [x] Expuestos los endpoints GET `/reporte` (restringido al administrador) y `/{id}/boleta` (descarga general) en `TransaccionControlador` (Fase 9B).
+- [x] Creadas las entidades JPA para `Categoria`, `Producto` e `Inventario` (lotes de stock y vencimiento) (Fase 10A).
+- [x] Desarrollados repositorios, servicios y controladores para el CRUD y gestión lógica de lotes de inventario (Fase 10A).
+- [x] Protegida la mutación de stock en `SeguridadConfig` bajo el rol `ADMINISTRADOR` y habilitado el listado público para el catálogo (Fase 10A).
+- [x] Agregada la propiedad `stockMinimo` en la entidad `Producto` (Fase 10B).
+- [x] Implementadas las consultas JPQL de bajo stock en `ProductoRepositorio` y de vencimientos en `InventarioRepositorio` (Fase 10B).
+- [x] Expuestos los endpoints GET `/bajo-stock` y `/vencimientos` en `InventarioControlador` bajo seguridad restringida a los roles `VETERINARIO` y `ADMINISTRADOR` (Fase 10B).
+- [x] **Fase 11A: Backend - Catálogo y Pedidos de Tienda Online**:
+  - Creado el enum `EstadoPedido` con estados `PENDIENTE`, `PAGADO`, `ENTREGADO`, `CANCELADO`.
+  - Creadas las entidades `CarritoItem` (asociado a cliente y producto), `Pedido` (cabecera con cliente, fecha, total, estado) y `DetallePedido` (líneas de pedido con precio unitario e inventario).
+  - Creados los repositorios `CarritoItemRepositorio`, `PedidoRepositorio` y `DetallePedidoRepositorio`.
+  - Modificado `InventarioRepositorio` con la consulta FEFO (`buscarLotesDisponiblesParaDescuento`) y `ProductoRepositorio` con búsqueda por coincidencia de nombre.
+  - Modificado `ProductoServicio` y `ProductoControlador` para soportar la búsqueda de catálogo `/api/productos/buscar` de forma pública.
+  - Creado `TiendaOnlineServicio` con el CRUD del carrito y checkout atómico (deducción FEFO lote por lote, guardado de cabecera y detalle de pedido y vaciado del carrito).
+  - Creado `TiendaOnlineControlador` exponiendo `/api/carrito` (CRUD) y `/api/pedidos` (checkout, consultar historial, cambiar estado).
+  - Actualizado `SeguridadConfig` protegiendo las rutas de carrito/checkout para clientes autenticados y cambio de estado de pedidos para Recepcionista y Administrador.
+- [x] **Fase 11B: Backend - Tareas Programadas y Campañas de Marketing**:
+  - Habilitado el planificador de Spring (`@EnableScheduling`) en `HuesitosBackendApplication`.
+  - Creadas las entidades `Desparasitacion`, `Recordatorio`, `Campana` y `Oferta` con sus respectivos repositorios.
+  - Implementados `DesparasitacionServicio` y `CampanaOfertaServicio` con CRUDs completos, auto-cálculos de porcentaje/precio de ofertas e inactivación de expirados.
+  - Implementado `TareaProgramadaServicio` con métodos programados `@Scheduled` para:
+    - Escaneo diario de próximas dosis de vacunas y desparasitaciones a 7 días y generación automática de `Recordatorio` en base de datos.
+  - Creados controladores para desparasitaciones, recordatorios (incluyendo endpoints manuales de control `/procesar-manual` y `/inactivar-campanas-manual` para pruebas de QA) y campañas/ofertas.
+  - Configurado `SeguridadConfig` permitiendo visualización pública de campañas y ofertas, y restringiendo mutaciones a Veterinario/Administrador.
+- [x] **Frontend - Historial Clínico del Cliente**:
+  - Creado `mascotaAPI.js` para consumir endpoints de mascotas, consultas, vacunas, recetas PDF y archivos.
+  - Creado hook personalizado `useHistorialClinico.js` para carga paralela unificada y cronológica.
+  - Reescrito `MascotaFichaHistorial.jsx` con buscador, filtros y un timeline premium adaptativo.
+  - Creado `ClienteMascotas.jsx` y enlazado desde el panel y el inicio.
+- [x] **Frontend - Agendamiento de Citas e Integración de Tienda**:
+  - Creado `citaAPI.js` y `tiendaAPI.js` para conectar con la API de citas y tienda.
+  - Desarrollada vista `ClienteAgendarCita.jsx` interactiva en 4 pasos (Mascota, Servicio, Profesional, Horario/Fecha).
+  - Desarrollada vista `ClienteTienda.jsx` con catálogo, buscador de productos, carrito lateral (drawer) y checkout FEFO.
+  - Integradas todas las vistas en el ruteo de `App.jsx` y la botonera de `ClienteDashboard.jsx`.
+- [x] **Frontend - Vista de Veterinario (Tablet)**:
+  - Creado `veterinarioAPI.js` para los servicios de consultas, recetas, vacunas, historial y subida de archivos clínicos.
+  - Diseñada e implementada la interfaz `VeterinarioDashboard.jsx` optimizada para tablets en formato Split View 30/70.
+  - Integrada la sala de espera del día y el inicio de consultas con diagnóstico, prescripción de recetas y carga multipart de análisis de laboratorio.
+  - Configuradas las rutas correspondientes y redirección dinámica en login por rol.
+- [x] **Frontend - Vista de Recepcionista (POS y Caja)**:
+  - Agregadas las llamadas al POS de caja, alertas de stock mínimo, vencimientos (FEFO) y boleta PDF en `finanzasService.js`.
+  - Diseñada e implementada la interfaz táctil `RecepcionistaDashboard.jsx` en formato Split View 40/60 para tablets.
+  - Integrado el modal de cobro táctil con cálculo de vuelto por efectivo, códigos de referencia y descarga/impresión inmediata de la boleta de venta en formato PDF A5.
+  - Expuesto el endpoint `GET /api/pagos/{id}/boleta` en `TransaccionControlador.java` del backend para vincular `BoletaPdfServicio`.
+  - Registradas las rutas y redirecciones en `App.jsx` y `Login.jsx` respectivamente.
+- [x] **Frontend - Vista de Recepcionista (Despacho de Pedidos)**:
+  - Integrado el control de compras en línea en `RecepcionistaDashboard.jsx` con alternador lateral y filtros rápidos (TODOS, PENDIENTE, PAGADO, ENTREGADO, CANCELADO).
+  - Agregadas las llamadas `obtenerTodosLosPedidos` y `cambiarEstadoPedido` en `tiendaAPI.js`.
+  - Diseñado el desglose detallado de productos comprados, cantidades, subtotal e identificador de lote FEFO asociado.
+  - Habilitados botones interactivos de cambio de estado para flujo de entrega y cancelación.
+- [x] **Frontend - Agenda Semanal de Citas y Reprogramación**:
+  - Creada la vista interactiva `RecepcionistaAgenda.jsx` con visualización semanal (lunes a domingo), navegación interactiva de semanas, y filtros avanzados.
+  - Diseñado un modal interactivo para reprogramar citas en tiempo real (`PUT /api/citas/{id}/reprogramar`) que verifica disponibilidad y horarios del veterinario.
+  - Integrada la agenda semanal como una sección activa en `RecepcionistaDashboard.jsx` and `AdminDashboard.jsx` para roles de Recepcionista y Administrador.
+- [x] **Frontend - Configuración de Horarios del Personal**:
+  - Corregido el endpoint de horarios del personal en `citaAPI.js` para usar `/api/usuarios/{usuarioId}/horarios` y agregada la función `guardarHorarioPersonal`.
+  - Diseñada e implementada la vista `ConfiguracionHorarios.jsx` con selector de personal, switches por día de la semana y horas de entrada/salida.
+  - Añadido bloqueo de excepciones (vacaciones/licencias) almacenado localmente y enlazado a los filtros de agendamiento y reprogramación.
+- [x] **Frontend - Gestión de Inventario FEFO**:
+  - Añadidas las funciones CRUD en `tiendaAPI.js` para categorías, productos y lotes.
+  - Creada la vista `InventarioPage.jsx` con grilla de productos con lotes expandibles, alertas de stock mínimo y vencimientos, y modales para registrar productos, lotes y ajustar cantidades de stock.
+  - Integrada la vista de inventario en `AdminDashboard.jsx` con botón de acceso directo en el panel lateral.
+- [x] **Frontend - Campañas y Ofertas de Marketing**:
+  - Creado `marketingAPI.js` para consumir los endpoints de campañas (`/api/campanas`) y ofertas (`/api/ofertas`).
+  - Desarrollada la vista responsiva `CampanasPage.jsx` con interfaz de doble pestaña, visualización de tarjetas, indicadores de expiración con cuenta regresiva, controles rápidos de activación de estado y cálculo automático de descuentos.
+  - Integrada la vista de Campañas y Ofertas en `AdminDashboard.jsx` con el botón de la barra lateral con icono `Percent`.
+- [x] **Frontend - Historial Clínico / Ficha de Mascota Compartida**:
+  - Creado el componente reutilizable `MascotaHistorialTimeline.jsx` que centraliza la carga y visualización unificada del historial clínico (consultas, vacunas y archivos médicos), ofreciendo buscador de texto, filtros avanzados y descargas de recetas en PDF.
+  - Refactorizado `MascotaFichaHistorial.jsx` para delegar la interfaz al componente compartido en modo completo.
+  - Modificado `VeterinarioDashboard.jsx` para integrar el componente en la pestaña de consulta activa, eliminando estados y llamadas API duplicadas.
+- [x] **Frontend - Agenda Semanal de Citas Compartida**:
+  - Renombrado y refactorizado el componente `RecepcionistaAgenda.jsx` a `AgendaSemanal.jsx` (y su componente interno a `AgendaSemanal`) para desvincular el prefijo específico del rol y hacerlo genérico.
+  - Actualizadas las referencias e importaciones en `AdminDashboard.jsx` y `RecepcionistaDashboard.jsx`.
+- [x] **Frontend - Inventario Crítico / Alertas Compartidas**:
+  - Creado el componente reutilizable `InventarioCriticoWidget.jsx` que encapsula la consulta y el listado de productos con bajo stock y lotes próximos a vencer (FEFO), con carga independiente y refresco manual.
+  - Modificado `RecepcionistaDashboard.jsx` para integrar el widget en el panel POS de caja, eliminando estados duplicados.
+  - Modificado `DashboardAnaliticas.jsx` para insertar el widget y permitir al administrador monitorear la salud operativa de la tienda en tiempo real.
+- [x] **Frontend - Gestión de Pedidos Compartida**:
+  - Extraída y modularizada la lógica de despacho y filtros de pedidos desde `RecepcionistaDashboard.jsx` hacia el componente reutilizable `GestionPedidos.jsx` utilizando sintaxis de función flecha.
+  - Integrada la nueva vista en los paneles de Recepcionista y Administrador, agregando la opción de menú en este último.
+- [x] **Frontend - Reestructuración del Tablero de Veterinario**:
+  - Rediseñado completamente `VeterinarioDashboard.jsx` utilizando sintaxis de función flecha y Tailwind CSS para eliminar el diseño Split-View.
+  - Implementada una estructura clásica con Sidebar oscuro, cabecera superior y área de contenido dinámico para las vistas de Agenda del Día (con KPIs y tarjetas de pacientes), Consulta Médica Activa (con sub-pestañas y placeholder animado) y Buscador General de Expedientes.
+- [x] **Frontend - Modularización de Módulos Clínicos y POS**:
+  - Creadas las carpetas `Modules/recepcionista/pages` y `Modules/veterinario/pages` para estructurar sus sub-páginas de forma simétrica con `admin` y `cliente`.
+  - Extraído el componente `CajaPOS.jsx` que maneja todo el Punto de Venta (POS) y cobros presenciales de la Recepcionista, simplificando `RecepcionistaDashboard.jsx`.
+  - Extraídos los componentes `VeterinarioAgenda.jsx` (agenda diaria y KPIs) y `ConsultaActiva.jsx` (ficha clínica, recetas y carga de análisis) del Veterinario, simplificando `VeterinarioDashboard.jsx` de forma limpia y organizada.
+- [x] **Frontend - Rediseño del Panel de Administración (Responsividad, Tipografía y Simetría)**:
+  - Rediseñada la barra lateral (Sidebar) en `AdminDashboard.jsx` (ancho w-60, tipografía compacta text-xs, color slate-900).
+  - Implementado Sidebar responsivo colapsable / drawer para móviles y tablets mediante botón hamburguesa y overlay difuminado.
+  - Rediseñada la pantalla de Gestión de Pedidos (`GestionPedidos.jsx`) incorporando timeline de progreso, visualización premium de lotes FEFO e información de cliente modularizada.
+  - Uniformizada la tipografía de encabezados (de font-black a font-bold) y los paddings responsivos en el contenedor principal de vistas del administrador.
+  - Refactorizada la responsividad y alineación simétrica en `DashboardAnaliticas.jsx` (cards responsivos y auditoría limpia), `UsuariosPage.jsx` y `InventarioPage.jsx` (tablas adaptativas).
+  - Validada la compilación de producción del frontend sin errores.
+
+## 📌 Estado Actual de los Componentes
+- **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF, Subida de Archivos Clínicos, Modelado e Inventario, Catálogo y Pedidos de Tienda Online, y el módulo de Tareas Programadas y Campañas de Marketing (Fase 11B finalizada) completamente implementados y validados.
+- **Frontend (React)**: Inicializado con React 18, Vite y Tailwind.
+- **Base de Datos (MySQL)**: Base de datos `huesitos` inicializada. Hibernate crea/actualiza las tablas `usuarios`, `duenos`, `mascotas`, `citas`, `consultas_medicas`, `servicios`, `transacciones`, `horarios_personal`, `vacunas`, `historial_vacunas`, `recetas`, `archivos_clinicos`, `categorias`, `productos` y `inventarios` al levantar la aplicación.
+
+## 🛠️ Próximos Pasos (Pendientes)
+- *No hay tareas pendientes en este momento.*
+
+## 🧠 Decisiones Clave y Notas
+- Se decidió reemplazar la inyección implícita de Lombok con constructores estándar Java en los componentes de seguridad para asegurar la máxima compatibilidad de compilación directa con Maven Compiler.
+- Se simplificó temporalmente `SeguridadConfig` para desactivar la autenticación estricta JWT en los endpoints, permitiendo pruebas del servicio de registro sin requerir cabeceras de autorización de forma temporal.
+- Se agregó `@JsonAlias` al campo `dueño` en `Mascota` para resolver problemas de deserialización JSON con caracteres Unicode (ñ) desde clientes con distintas codificaciones.
+- El campo `veterinario` en `Cita` es `nullable = true` para permitir que clientes agenden citas generales desde la web y la recepcionista asigne veterinario posteriormente.
+- Se configuró el campo `medioPago` en `Transaccion` como `nullable = true` en base de datos debido a que las transacciones se crean originalmente como órdenes de pago en estado `PENDIENTE` sin medio de pago definido (el cual se asigna una vez efectuado el cobro).
+- **Emergencia 24h**: Dado que una emergencia requiere atención médica inmediata, el módulo de emergencias se resolverá a nivel de frontend únicamente como un botón de marcación directa por llamada telefónica y enlace directo a WhatsApp (sin soporte de agendamiento web transaccional por su naturaleza crítica).
+- **Adherencia a Patrones y Principios**: Todo el backend nuevo de las siguientes fases se desarrollará estrictamente bajo el patrón MVC (desacoplado) y los principios SOLID (especialmente SRP para la separación de lógica de negocio y DIP en la inyección de dependencias).
+- **Diseño e Integración para Tablets**: Toda la API y estructura de datos del backend se optimizará para un consumo ágil, intuitivo y responsivo. Aunque la lógica se implementa en backend, se considera el uso táctil y flujo rápido en Tablets (especialmente para Recepcionistas y Veterinarios en clínica) mediante endpoints de respuesta rápida, paginados y eficientes.
+- **Validación Flexible de Horarios**: En el agendamiento de citas (Fase 8), la validación contra el horario del veterinario será dinámica. Si un veterinario no tiene horarios registrados en la base de datos, el sistema no impondrá restricciones, permitiendo flexibilidad. Si el Administrador configura un horario para el veterinario, este se validará estrictamente.
+- **Cruce de Horario en Reprogramación**: Para la reprogramación de citas se verifica que no existan colisiones de horario para el veterinario en la nueva fecha y hora propuesta, excluyendo la propia cita actual del cálculo para evitar falsos positivos de cruces de agenda cuando no se cambia la hora.
+- **División de Fases y Commits**: A partir de la Fase 11A, se decide realizar una división más granular de las fases y sus correspondientes commits. Esto asegura que cada commit al final de una fase contenga de manera explícita y pormenorizada los puntos y archivos específicos modificados, mejorando enormemente la claridad y control de los cambios realizados.
+- **Planificación de Vistas Frontend (Figma / Stitch)**: Estructuración y diseño inicial del frontend mapeados a las APIs del backend de Huesitos para facilitar la maquetación rápida en Figma y generación con Stitch.
+
+
+
+
