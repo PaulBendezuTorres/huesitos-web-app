@@ -60,16 +60,16 @@ const App = () => {
       <header className="bg-white/80 backdrop-blur-xl sticky top-0 z-50 border-b border-slate-200/50 shadow-sm transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-between">
           
-          {/* Espacio para Logo y Nombre Dinámico */}
-          <div className="flex items-center gap-4 cursor-pointer group">
-            <div className="w-14 h-14 bg-gradient-to-tr from-sky-500 to-cyan-300 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-sky-400/30 group-hover:scale-105 group-hover:rotate-3 transition-all duration-300">
-             <img src={logo} alt="Logo de la clínica" />
+          {/* Logo y Nombre */}
+          <a href="#inicio" className="flex items-center gap-3 cursor-pointer group">
+            <div className="w-10 h-10 sm:w-14 sm:h-14 bg-gradient-to-tr from-sky-500 to-cyan-300 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-sky-400/30 group-hover:scale-105 group-hover:rotate-3 transition-all duration-300 shrink-0">
+              <img src={logo} alt="Logo de la clínica" />
             </div>
             <div className="flex flex-col">
-              <span className="font-extrabold text-3xl text-slate-900 tracking-tight">{config.nombreNegocio}</span>
-              <span className="text-xs font-semibold text-blue-600 tracking-widest uppercase">Clínica Veterinaria</span>
+              <span className="font-extrabold text-xl sm:text-3xl text-slate-900 tracking-tight leading-tight">{config.nombreNegocio}</span>
+              <span className="text-[10px] sm:text-xs font-semibold text-blue-600 tracking-widest uppercase">Clínica Veterinaria</span>
             </div>
-          </div>
+          </a>
 
           {/* Menú Desktop */}
           <nav className="hidden md:flex items-center gap-8 font-medium text-slate-600 text-sm tracking-wide">
@@ -80,11 +80,17 @@ const App = () => {
             <a href="#emergencias" className="text-red-500 font-bold hover:text-red-600 transition-colors">Emergencias 24/7</a>
           </nav>
 
-          {/* Botón Iniciar Sesión */}
-          <div className="hidden md:flex items-center">
+          {/* Botones Desktop */}
+          <div className="hidden md:flex items-center gap-3">
+            <button
+              onClick={() => window.location.href = '/registro'}
+              className="flex items-center gap-2 border border-slate-200 hover:border-sky-400 text-slate-600 hover:text-sky-600 px-5 py-2.5 rounded-xl font-semibold transition-all duration-300 hover:-translate-y-0.5"
+            >
+              Crear cuenta
+            </button>
             <button 
               onClick={() => window.location.href = '/login'}
-              className="flex items-center gap-2 bg-gradient-to-tr from-sky-500 to-cyan-300 hover:from-sky-700 hover:to-cyan-500 text-white px-7 py-3 rounded-xl font-semibold shadow-xl shadow-sky-400/30 hover:shadow-sky-600/40 transition-all duration-500 ease-in-out hover:-translate-y-0.5"
+              className="flex items-center gap-2 bg-gradient-to-tr from-sky-500 to-cyan-400 hover:from-sky-600 hover:to-cyan-500 text-white px-6 py-2.5 rounded-xl font-semibold shadow-lg shadow-sky-400/30 transition-all duration-300 hover:-translate-y-0.5"
             >
               Iniciar Sesión
             </button>
@@ -103,71 +109,94 @@ const App = () => {
 
       {/* MENÚ MÓVIL DESPLEGABLE */}
       {menuAbierto && (
-        <div className="md:hidden fixed inset-0 z-40 flex flex-col">
-          {/* Overlay oscuro para cerrar al hacer clic fuera */}
+        <div className="md:hidden fixed inset-0 z-40 flex items-start justify-center pt-20 px-4">
+          {/* Overlay oscuro */}
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setMenuAbierto(false)} />
-          {/* Panel del menú */}
-          <div className="relative z-10 bg-white mt-24 mx-4 rounded-2xl shadow-2xl p-6 flex flex-col gap-4 border border-slate-100 animate-in fade-in slide-in-from-top-4 duration-200">
-            <a href="#inicio"      onClick={() => setMenuAbierto(false)} className="text-slate-700 font-semibold text-base py-2 border-b border-slate-100 hover:text-blue-600 transition-colors">Inicio</a>
-            <a href="#nosotros"    onClick={() => setMenuAbierto(false)} className="text-slate-700 font-semibold text-base py-2 border-b border-slate-100 hover:text-blue-600 transition-colors">Nosotros</a>
-            <a href="#servicios"   onClick={() => setMenuAbierto(false)} className="text-slate-700 font-semibold text-base py-2 border-b border-slate-100 hover:text-blue-600 transition-colors">Servicios</a>
-            <a href="#ubicacion"   onClick={() => setMenuAbierto(false)} className="text-slate-700 font-semibold text-base py-2 border-b border-slate-100 hover:text-blue-600 transition-colors">Ubicación</a>
-            <a href="#emergencias" onClick={() => setMenuAbierto(false)} className="text-red-500 font-bold text-base py-2 border-b border-slate-100 hover:text-red-600 transition-colors">Emergencias 24/7</a>
-            <button
-              onClick={() => { setMenuAbierto(false); window.location.href = '/login'; }}
-              className="mt-2 w-full py-3 bg-gradient-to-tr from-sky-500 to-cyan-400 text-white font-bold rounded-xl shadow-lg shadow-sky-400/30 hover:from-sky-600 hover:to-cyan-500 transition-all"
-            >
-              Iniciar Sesión
-            </button>
+          {/* Panel centrado */}
+          <div className="relative z-10 w-full max-w-sm bg-white rounded-2xl shadow-2xl p-6 flex flex-col gap-1 border border-slate-100 animate-in fade-in slide-in-from-top-4 duration-200">
+            <a href="#inicio"      onClick={() => setMenuAbierto(false)} className="text-slate-700 font-semibold text-sm py-3 px-3 rounded-xl hover:bg-slate-50 hover:text-blue-600 transition-colors">🏠 Inicio</a>
+            <a href="#nosotros"    onClick={() => setMenuAbierto(false)} className="text-slate-700 font-semibold text-sm py-3 px-3 rounded-xl hover:bg-slate-50 hover:text-blue-600 transition-colors">ℹ️ Nosotros</a>
+            <a href="#servicios"   onClick={() => setMenuAbierto(false)} className="text-slate-700 font-semibold text-sm py-3 px-3 rounded-xl hover:bg-slate-50 hover:text-blue-600 transition-colors">🩺 Servicios</a>
+            <a href="#ubicacion"   onClick={() => setMenuAbierto(false)} className="text-slate-700 font-semibold text-sm py-3 px-3 rounded-xl hover:bg-slate-50 hover:text-blue-600 transition-colors">📍 Ubicación</a>
+            <a href="#emergencias" onClick={() => setMenuAbierto(false)} className="text-red-500 font-bold text-sm py-3 px-3 rounded-xl hover:bg-red-50 transition-colors">🚨 Emergencias 24/7</a>
+            <div className="flex flex-col gap-2 pt-3 mt-2 border-t border-slate-100">
+              <button
+                onClick={() => { setMenuAbierto(false); window.location.href = '/login'; }}
+                className="w-full py-2.5 bg-gradient-to-tr from-sky-500 to-cyan-400 text-white font-bold rounded-xl shadow-lg shadow-sky-400/30 hover:from-sky-600 hover:to-cyan-500 transition-all text-sm"
+              >
+                Iniciar Sesión
+              </button>
+              <button
+                onClick={() => { setMenuAbierto(false); window.location.href = '/registro'; }}
+                className="w-full py-2.5 border border-slate-200 text-slate-600 font-semibold rounded-xl hover:border-sky-400 hover:text-sky-600 transition-all text-sm"
+              >
+                Crear cuenta
+              </button>
+            </div>
           </div>
         </div>
       )}
 
       <motion.section
-        id="inicio" 
-        className="relative pt-36 pb-48 flex items-center justify-center overflow-hidden bg-cover bg-center"
-        variants={fadeUp} 
+        id="inicio"
+        className="relative pt-28 sm:pt-36 pb-32 sm:pb-48 flex items-center justify-center overflow-hidden bg-cover bg-center min-h-[70vh]"
+        variants={fadeUp}
         style={{ backgroundImage: `url(${portada})` }}
       >
         <div className="absolute inset-0 bg-slate-950/70 z-0"></div>
 
-        <div className="max-w-5xl mx-auto px-4 text-center space-y-10 relative z-10 text-white animate-in fade-in zoom-in-95 duration-700">
-          <div className="inline-flex items-center gap-2 py-2 px-4 rounded-full bg-blue-500/20 text-blue-300 text-sm font-bold tracking-wide border border-blue-500/30 backdrop-blur-md shadow-sm">
-            <ShieldPlus size={16} />
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-6 sm:space-y-10 relative z-10 text-white animate-in fade-in zoom-in-95 duration-700">
+          <div className="inline-flex items-center gap-2 py-1.5 px-3 sm:py-2 sm:px-4 rounded-full bg-blue-500/20 text-blue-300 text-xs sm:text-sm font-bold tracking-wide border border-blue-500/30 backdrop-blur-md shadow-sm">
+            <ShieldPlus size={14} />
             <span>Medicina veterinaria de vanguardia</span>
           </div>
-          <h1 className="text-5xl md:text-7xl font-black leading-[1.1] tracking-tight text-white drop-shadow-sm">
-            Excelencia médica para <br className="hidden md:block"/>
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black leading-[1.1] tracking-tight text-white drop-shadow-sm">
+            Excelencia médica para{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-sky-300">
               quienes más amas
             </span>
           </h1>
-          <p className="text-lg md:text-xl text-slate-200 max-w-3xl mx-auto leading-relaxed drop-shadow">
-            Las consultas médicas nos ayudan a monitorear el estado de salud de tu mascota y detectar cualquier malestar. Contamos con tecnología de vanguardia y un equipo de especialistas dedicados a facilitar su pronta recuperación.
+          <p className="text-sm sm:text-lg md:text-xl text-slate-200 max-w-3xl mx-auto leading-relaxed drop-shadow px-2">
+            Las consultas médicas nos ayudan a monitorear el estado de salud de tu mascota. Contamos con tecnología de vanguardia y especialistas dedicados.
           </p>
-          <div className="pt-4 flex flex-col sm:flex-row justify-center gap-6">
-             <div className="flex items-center justify-center gap-3 text-white font-medium bg-white/10 backdrop-blur-md px-6 py-4 rounded-2xl shadow-sm border border-white/10">
-               <Activity className="text-sky-300" />
-               Laboratorio Propio 24h
-             </div>
-             <div className="flex items-center justify-center gap-3 text-white font-medium bg-white/10 backdrop-blur-md px-6 py-4 rounded-2xl shadow-sm border border-white/10">
-               <Stethoscope className="text-sky-300" />
-               Especialistas Certificados
-             </div>
+          <div className="pt-2 flex flex-col sm:flex-row justify-center gap-3 sm:gap-6">
+            <div className="flex items-center justify-center gap-3 text-white font-medium bg-white/10 backdrop-blur-md px-5 py-3 sm:px-6 sm:py-4 rounded-2xl shadow-sm border border-white/10 text-sm sm:text-base">
+              <Activity className="text-sky-300 shrink-0" size={18} />
+              Laboratorio Propio 24h
+            </div>
+            <div className="flex items-center justify-center gap-3 text-white font-medium bg-white/10 backdrop-blur-md px-5 py-3 sm:px-6 sm:py-4 rounded-2xl shadow-sm border border-white/10 text-sm sm:text-base">
+              <Stethoscope className="text-sky-300 shrink-0" size={18} />
+              Especialistas Certificados
+            </div>
+          </div>
+          {/* Botones CTA en hero */}
+          <div className="flex flex-col sm:flex-row justify-center gap-3 pt-2">
+            <button
+              onClick={() => window.location.href = '/registro'}
+              className="px-7 py-3 bg-white text-sky-700 font-bold rounded-xl shadow-lg hover:bg-sky-50 transition-all text-sm sm:text-base"
+            >
+              Crear cuenta gratis
+            </button>
+            <button
+              onClick={() => window.location.href = '/login'}
+              className="px-7 py-3 bg-sky-600/80 hover:bg-sky-600 text-white font-bold rounded-xl border border-sky-400/40 backdrop-blur-sm transition-all text-sm sm:text-base"
+            >
+              Iniciar Sesión
+            </button>
           </div>
         </div>
       </motion.section>
 
       {/* SECCIÓN: NOSOTROS (Texto Dinámico) */}
-      <motion.section id="nosotros" className="py-32 bg-white relative" variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
+      <motion.section id="nosotros" className="py-16 sm:py-24 lg:py-32 bg-white relative" variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
+          <div className="grid md:grid-cols-2 gap-10 lg:gap-20 items-center">
             <div className="relative group">
               <div className="absolute -inset-4 bg-gradient-to-tr from-blue-100 to-sky-100 rounded-[3rem] transform -rotate-3 group-hover:rotate-0 transition-all duration-500 -z-10"></div>
               <img 
                 src={imagenNosotros} 
                 alt="Equipo médico de la clínica" 
-                className="rounded-3xl shadow-2xl object-cover w-full h-[550px] transform group-hover:scale-[1.01] transition-all duration-500 grayscale-[15%] group-hover:grayscale-0"
+                className="rounded-3xl shadow-2xl object-cover w-full h-64 sm:h-80 md:h-[450px] lg:h-[550px] transform group-hover:scale-[1.01] transition-all duration-500 grayscale-[15%] group-hover:grayscale-0"
               />
               <div className="absolute -bottom-8 -right-8 bg-blue-900 text-white p-8 rounded-3xl shadow-xl hidden md:block">
                 <p className="text-5xl font-black">10+</p>
@@ -178,7 +207,7 @@ const App = () => {
             <div className="space-y-10">
               <div className="space-y-4">
                 <h2 className="text-sm font-bold text-blue-600 tracking-widest uppercase">Sobre Nosotros</h2>
-                <h3 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight">Comprometidos con la salud y el bienestar animal.</h3>
+                <h3 className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 leading-tight">Comprometidos con la salud y el bienestar animal.</h3>
               </div>
               
               <div className="space-y-6 text-lg text-slate-600 leading-relaxed">

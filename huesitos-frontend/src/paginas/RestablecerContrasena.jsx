@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { Lock, Eye, EyeOff } from 'lucide-react';
 import PanelIzquierdoAutenticacion from '../componentes/PanelIzquierdoAutenticacion';
+import BotonVolver from '../componentes/BotonVolver';
 
 const RestablecerContrasena = () => {
   const [codigo, setCodigo] = useState(['', '', '', '', '', '']);
@@ -183,13 +184,7 @@ const RestablecerContrasena = () => {
               <h2 className="text-2xl font-bold text-slate-800">Verifica tu cuenta</h2>
               <p className="text-xs text-slate-400 mt-1 font-semibold">Ingresa el código de seguridad de 6 dígitos</p>
             </div>
-            <button
-              onClick={() => navigate('/login')}
-              className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-sky-600 border border-slate-200 hover:border-sky-300 rounded-lg px-2.5 py-1.5 transition-all shrink-0 ml-3"
-            >
-              <ArrowLeft size={13} />
-              Volver
-            </button>
+            <BotonVolver />
           </div>
 
           {/* Temporizador visual */}

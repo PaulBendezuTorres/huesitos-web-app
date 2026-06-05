@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import PanelIzquierdoAutenticacion from '../componentes/PanelIzquierdoAutenticacion';
+import BotonVolver from '../componentes/BotonVolver';
 
 const IniciarSesion = () => {
   const [email, setEmail] = useState('');
@@ -85,13 +86,7 @@ const IniciarSesion = () => {
               <h2 className="text-2xl font-bold text-slate-800">Iniciar sesión</h2>
               <p className="text-xs text-slate-400 mt-1 font-semibold">Bienvenido de nuevo a Huesitos</p>
             </div>
-            <button
-              onClick={() => navigate('/')}
-              className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-sky-600 border border-slate-200 hover:border-sky-300 rounded-lg px-2.5 py-1.5 transition-all shrink-0 ml-3"
-            >
-              <ArrowLeft size={13} />
-              Volver
-            </button>
+            <BotonVolver />
           </div>
 
           {/* Mensaje de error si falla el login */}
