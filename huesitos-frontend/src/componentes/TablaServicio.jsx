@@ -36,21 +36,23 @@ const TablaServicio = ({ servicios, onEditar, onEstado }) => {
                     {servicio.activo ? "Activo" : "Inactivo"}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap flex gap-2 justify-center">
-                  <button 
-                    onClick={() => onEditar(servicio)} 
-                    className="bg-white hover:bg-sky-50 text-sky-600 p-2 rounded-lg transition-all border border-slate-200 hover:border-sky-200 shadow-sm"
-                    title="Editar"
-                  >
-                    <Edit2 size={16} />
-                  </button>
-                  <button 
-                    onClick={() => onEstado(servicio.id, !servicio.activo)} 
-                    className={`p-2 rounded-lg transition-all border shadow-sm ${servicio.activo ? "bg-white hover:bg-red-50 text-slate-400 hover:text-red-500 border-slate-200 hover:border-red-200" : "bg-white hover:bg-emerald-50 text-slate-400 hover:text-emerald-500 border-slate-200 hover:border-emerald-200"}`}
-                    title={servicio.activo ? "Desactivar" : "Activar"}
-                  >
-                    {servicio.activo ? <ShieldAlert size={16} /> : <ShieldCheck size={16} />}
-                  </button>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex gap-2 justify-center">
+                    <button 
+                      onClick={() => onEditar(servicio)} 
+                      className="bg-white hover:bg-sky-50 text-sky-600 p-2 rounded-lg transition-all border border-slate-200 hover:border-sky-200 shadow-sm"
+                      title="Editar"
+                    >
+                      <Edit2 size={16} />
+                    </button>
+                    <button 
+                      onClick={() => onEstado(servicio.id, !servicio.activo)} 
+                      className={`p-2 rounded-lg transition-all border shadow-sm ${servicio.activo ? "bg-white hover:bg-red-50 text-slate-400 hover:text-red-500 border-slate-200 hover:border-red-200" : "bg-white hover:bg-emerald-50 text-slate-400 hover:text-emerald-500 border-slate-200 hover:border-emerald-200"}`}
+                      title={servicio.activo ? "Desactivar" : "Activar"}
+                    >
+                      {servicio.activo ? <ShieldAlert size={16} /> : <ShieldCheck size={16} />}
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

@@ -506,24 +506,26 @@ const PaginaInventario = () => {
                                                   ) : 'SIN VENCIMIENTO'}
                                                 </span>
                                               </td>
-                                              <td className="p-2.5 text-center flex items-center justify-center gap-1">
-                                                <button
-                                                  onClick={() => {
-                                                    setModalAjuste(lote);
-                                                    setNuevoStockAjuste(lote.stock);
-                                                  }}
-                                                  className="p-1 hover:bg-sky-50 border border-transparent hover:border-sky-200 text-sky-600 rounded transition-colors"
-                                                  title="Ajustar stock"
-                                                >
-                                                  <Edit2 size={11} />
-                                                </button>
-                                                <button
-                                                  onClick={() => handleDesactivarLote(lote.id)}
-                                                  className="p-1 hover:bg-red-50 border border-transparent hover:border-red-200 text-red-500 rounded transition-colors"
-                                                  title="Desactivar lote"
-                                                >
-                                                  <Trash2 size={11} />
-                                                </button>
+                                              <td className="p-2.5 text-center">
+                                                <div className="flex items-center justify-center gap-1">
+                                                  <button
+                                                    onClick={() => {
+                                                      setModalAjuste(lote);
+                                                      setNuevoStockAjuste(lote.stock);
+                                                    }}
+                                                    className="p-1 hover:bg-sky-50 border border-transparent hover:border-sky-200 text-sky-600 rounded transition-colors"
+                                                    title="Ajustar stock"
+                                                  >
+                                                    <Edit2 size={11} />
+                                                  </button>
+                                                  <button
+                                                    onClick={() => handleDesactivarLote(lote.id)}
+                                                    className="p-1 hover:bg-red-50 border border-transparent hover:border-red-200 text-red-500 rounded transition-colors"
+                                                    title="Desactivar lote"
+                                                  >
+                                                    <Trash2 size={11} />
+                                                  </button>
+                                                </div>
                                               </td>
                                             </tr>
                                           );

@@ -162,11 +162,13 @@ const PaginaUsuarios = () => {
             <tbody className="divide-y divide-slate-100 text-sm">
               {usuarios.map((usuario) => (
                 <tr key={usuario.id} className="hover:bg-sky-50/30 transition-colors">
-                  <td className="px-6 py-4 font-bold text-slate-800 flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-                       <UserCircle size={18} />
+                  <td className="px-6 py-4 font-bold text-slate-800">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+                         <UserCircle size={18} />
+                      </div>
+                      {usuario.correo}
                     </div>
-                    {usuario.correo}
                   </td>
                   <td className="px-6 py-4">
                     <select
@@ -185,21 +187,23 @@ const PaginaUsuarios = () => {
                       {usuario.activo ? "Permitido" : "Suspendido"}
                     </span>
                   </td>
-                  <td className="px-6 py-4 flex gap-2 justify-center">
-                    <button 
-                      onClick={() => abrirDetallesModal(usuario)} 
-                      className="bg-white hover:bg-sky-50 text-sky-600 p-2 rounded-lg transition-all border border-slate-200 hover:border-sky-200 shadow-sm" 
-                      title="Ver / Editar"
-                    >
-                      <Edit size={16} />
-                    </button>
-                    <button 
-                      onClick={() => handleEstadoToggle(usuario.id, usuario.activo)} 
-                      className={`p-2 rounded-lg transition-all border shadow-sm ${usuario.activo ? "bg-white hover:bg-red-50 text-slate-400 hover:text-red-500 border-slate-200 hover:border-red-200" : "bg-white hover:bg-emerald-50 text-slate-400 hover:text-emerald-500 border-slate-200 hover:border-emerald-200"}`} 
-                      title={usuario.activo ? "Suspender" : "Habilitar"}
-                    >
-                      {usuario.activo ? <ShieldAlert size={16} /> : <ShieldCheck size={16} />}
-                    </button>
+                  <td className="px-6 py-4">
+                    <div className="flex gap-2 justify-center">
+                      <button 
+                        onClick={() => abrirDetallesModal(usuario)} 
+                        className="bg-white hover:bg-sky-50 text-sky-600 p-2 rounded-lg transition-all border border-slate-200 hover:border-sky-200 shadow-sm" 
+                        title="Ver / Editar"
+                      >
+                        <Edit size={16} />
+                      </button>
+                      <button 
+                        onClick={() => handleEstadoToggle(usuario.id, usuario.activo)} 
+                        className={`p-2 rounded-lg transition-all border shadow-sm ${usuario.activo ? "bg-white hover:bg-red-50 text-slate-400 hover:text-red-500 border-slate-200 hover:border-red-200" : "bg-white hover:bg-emerald-50 text-slate-400 hover:text-emerald-500 border-slate-200 hover:border-emerald-200"}`} 
+                        title={usuario.activo ? "Suspender" : "Habilitar"}
+                      >
+                        {usuario.activo ? <ShieldAlert size={16} /> : <ShieldCheck size={16} />}
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

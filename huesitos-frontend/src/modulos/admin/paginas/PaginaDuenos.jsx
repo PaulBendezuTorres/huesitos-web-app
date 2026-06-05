@@ -140,7 +140,11 @@ const PaginaDuenos = () => {
                     </div>
                     <div className="text-xs text-sky-600 font-semibold mt-1 flex items-center gap-1"><Mail size={12}/> {dueno.correo || "Sin correo"}</div>
                   </td>
-                  <td className="px-6 py-4 font-medium text-slate-600 flex items-center gap-1.5"><Phone size={14}/> {dueno.telefono}</td>
+                  <td className="px-6 py-4 font-medium text-slate-600">
+                    <div className="flex items-center gap-1.5">
+                      <Phone size={14}/> {dueno.telefono}
+                    </div>
+                  </td>
                   <td className="px-6 py-4 text-slate-500 max-w-xs truncate"><div className="flex items-center gap-1.5"><MapPin size={14}/> {dueno.direccion}</div></td>
                   <td className="px-6 py-4 text-center">
                     <button
