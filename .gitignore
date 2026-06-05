@@ -6,8 +6,8 @@
 !/README.md
 
 # Permitir las carpetas de los subproyectos
-!/huesitos-backend/
-!/huesitos-frontend/
+!/huesitos-backend/**
+!/huesitos-frontend/**
 
 # Exclusiones de Git para huesitos-backend (Java/Spring Boot)
 huesitos-backend/target/

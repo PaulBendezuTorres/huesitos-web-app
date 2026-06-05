@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +19,8 @@ public class AutenticacionAvanzadaServicio {
 
     /**
      * Inicia el proceso de restablecimiento de contraseña para un usuario.
-     * Genera un código de 6 dígitos temporal válido por 15 minutos y lo envía por correo real.
+     * Genera un código de 6 dígitos temporal válido por 15 minutos y lo envía por
+     * correo real.
      */
     @Transactional
     public void solicitarRestablecimiento(String correo) {
@@ -40,7 +40,8 @@ public class AutenticacionAvanzadaServicio {
     }
 
     /**
-     * Completa el proceso de restablecimiento de contraseña actualizando la contraseña del usuario.
+     * Completa el proceso de restablecimiento de contraseña actualizando la
+     * contraseña del usuario.
      * El token se limpia para que sea de un solo uso.
      */
     @Transactional

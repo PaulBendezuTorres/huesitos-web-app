@@ -4,7 +4,7 @@ import {
   obtenerConsultasPorMascota,
   obtenerVacunasPorMascota,
   obtenerArchivosPorMascota,
-} from '../api/mascotaAPI';
+} from '../api/mascotaApi';
 
 /**
  * Hook que carga y unifica el historial clínico de una mascota
