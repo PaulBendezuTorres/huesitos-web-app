@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
-import logo from '../assets/Logo Huesitos.png';
+import AuthLeftPanel from '../components/AuthLeftPanel';
 
 const VetLogin = () => {
   const [email, setEmail] = useState('');
@@ -56,48 +56,28 @@ const VetLogin = () => {
       console.error('Error de red:', error);
       setErrorMsg('Error de conexión con el servidor.');
     }
-  };  return (
+  };
+
+  return (
     <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4 selection:bg-sky-500 selection:text-white font-sans">
-      <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-hidden md:h-[640px] max-h-[90vh] md:max-h-[640px] relative">
+      <div className="auth-card">
         
         {/* ======================== PANEL IZQUIERDO ======================== */}
-        <div className="w-full md:w-1/2 bg-gradient-to-tr from-sky-600 to-slate-900 text-white p-6 md:p-8 lg:p-12 flex flex-col relative min-h-[320px] md:min-h-0 shrink-0">
-          <div className="absolute inset-0 bg-slate-950/60 z-0" />
-
-          <div className="relative z-10 flex items-center gap-2.5">
-            <div className="w-10 h-10 bg-gradient-to-tr from-sky-500 to-cyan-300 rounded-xl flex items-center justify-center text-white shadow-md shadow-sky-500/15">
-              <img src={logo} alt="Logo" className="w-8 h-8 object-contain" />
-            </div>
-            <span className="text-lg font-bold text-white tracking-tight">Vet. Huesitos</span>
-          </div>
-
-          <div className="relative z-10 flex-1 flex flex-col justify-center space-y-6 my-auto py-8">
-            <div className="inline-flex items-center gap-2 bg-sky-500/15 border border-sky-400/20 rounded-full px-3.5 py-1 text-sky-300 self-start">
-              <span className="text-sm">🛡️</span>
-              <span className="text-[10px] font-semibold tracking-wider uppercase">Medicina veterinaria de vanguardia</span>
-            </div>
-            <h2 className="text-2xl md:text-3xl font-bold leading-tight">
-              Excelencia médica para <span className="text-sky-300">quienes más amas</span>
-            </h2>
-            <p className="text-xs leading-relaxed max-w-xs text-slate-300">
-              Las consultas médicas nos ayudan a monitorear la salud de tu mascota con tecnología de vanguardia y especialistas certificados.
-            </p>
-            <div className="flex flex-wrap gap-2 pt-2">
-              {[
-                { icon: '🔬', label: 'Laboratorio 24h' },
-                { icon: '🩺', label: 'Especialistas' },
-                { icon: '📞', label: 'Emergencias 24/7' },
-              ].map(({ icon, label }) => (
-                <div key={label} className="flex items-center gap-1.5 bg-white/5 border border-white/10 rounded-full px-3 py-1 text-[11px] text-slate-200 font-medium">
-                  <span>{icon}</span> {label}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <AuthLeftPanel
+          badgeIcon="🛡️"
+          badgeText="Medicina veterinaria de vanguardia"
+          titleMain="Excelencia médica para"
+          titleHighlight="quienes más amas"
+          description="Las consultas médicas nos ayudan a monitorear la salud de tu mascota con tecnología de vanguardia y especialistas certificados."
+          chips={[
+            { icon: '🔬', label: 'Laboratorio 24h' },
+            { icon: '🩺', label: 'Especialistas' },
+            { icon: '📞', label: 'Emergencias 24/7' },
+          ]}
+        />
 
         {/* ======================== PANEL DERECHO ======================== */}
-        <div className="w-full md:w-1/2 bg-white p-6 md:p-8 lg:p-12 flex flex-col justify-center relative md:h-full overflow-y-auto">
+        <div className="auth-right-panel">
           
           {/* BOTÓN VOLVER */}
           <button 
