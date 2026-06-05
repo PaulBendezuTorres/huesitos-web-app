@@ -56,14 +56,12 @@ const VetLogin = () => {
       console.error('Error de red:', error);
       setErrorMsg('Error de conexión con el servidor.');
     }
-  };
-
-  return (
+  };  return (
     <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4 selection:bg-sky-500 selection:text-white font-sans">
-      <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-hidden min-h-[580px] relative">
+      <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-hidden md:h-[640px] relative">
         
         {/* ======================== PANEL IZQUIERDO ======================== */}
-        <div className="w-full md:w-[52%] bg-gradient-to-tr from-sky-650 to-slate-900 bg-gradient-to-tr from-sky-600 to-slate-900 text-white p-8 md:p-12 flex flex-col justify-between relative min-h-[320px] md:min-h-0 shrink-0">
+        <div className="w-full md:w-1/2 bg-gradient-to-tr from-sky-600 to-slate-900 text-white p-8 md:p-12 flex flex-col relative min-h-[320px] md:min-h-0 shrink-0">
           <div className="absolute inset-0 bg-slate-950/60 z-0" />
 
           <div className="relative z-10 flex items-center gap-2.5">
@@ -73,15 +71,15 @@ const VetLogin = () => {
             <span className="text-lg font-bold text-white tracking-tight">Vet. Huesitos</span>
           </div>
 
-          <div className="relative z-10 space-y-4 mt-auto">
-            <div className="inline-flex items-center gap-2 bg-sky-500/15 border border-sky-400/20 rounded-full px-3.5 py-1 text-sky-300">
+          <div className="relative z-10 flex-1 flex flex-col justify-center space-y-6 my-auto py-8">
+            <div className="inline-flex items-center gap-2 bg-sky-500/15 border border-sky-400/20 rounded-full px-3.5 py-1 text-sky-300 self-start">
               <span className="text-sm">🛡️</span>
               <span className="text-[10px] font-semibold tracking-wider uppercase">Medicina veterinaria de vanguardia</span>
             </div>
             <h2 className="text-2xl md:text-3xl font-bold leading-tight">
               Excelencia médica para <span className="text-sky-300">quienes más amas</span>
             </h2>
-            <p className="text-xs text-slate-350 leading-relaxed max-w-xs text-slate-300">
+            <p className="text-xs leading-relaxed max-w-xs text-slate-300">
               Las consultas médicas nos ayudan a monitorear la salud de tu mascota con tecnología de vanguardia y especialistas certificados.
             </p>
             <div className="flex flex-wrap gap-2 pt-2">
@@ -99,7 +97,7 @@ const VetLogin = () => {
         </div>
 
         {/* ======================== PANEL DERECHO ======================== */}
-        <div className="w-full md:w-[48%] bg-white p-8 md:p-12 flex flex-col justify-center relative">
+        <div className="w-full md:w-1/2 bg-white p-8 md:p-12 flex flex-col justify-center relative">
           
           {/* BOTÓN VOLVER */}
           <button 
