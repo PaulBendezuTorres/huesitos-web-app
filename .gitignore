@@ -1,9 +1,9 @@
 # Ignorar todo por defecto en el monorepo
 *
 
-# Permitir explícitamente el archivo .gitignore, README.md y memoria.md
-memoria.md
-.agents/
+# Permitir explícitamente el archivo .gitignore y README.md
+!/.gitignore
+!/README.md
 
 # Permitir las carpetas de los subproyectos
 !/huesitos-backend/
