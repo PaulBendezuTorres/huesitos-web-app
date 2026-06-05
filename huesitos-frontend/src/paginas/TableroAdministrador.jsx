@@ -13,7 +13,9 @@ import {
   Clock,
   Package,
   Percent,
-  ShoppingBag
+  ShoppingBag,
+  Menu,
+  X
 } from 'lucide-react';
 
 import PaginaServicios from './PaginaServicios';
@@ -34,6 +36,7 @@ const TableroAdministrador = () => {
   const navigate = useNavigate();
   const [correo] = useState(localStorage.getItem('usuarioCorreo') || 'Admin');
   const [vistaActual, setVistaActual] = useState('dashboard');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const rol = localStorage.getItem('usuarioRol');
@@ -76,10 +79,20 @@ const TableroAdministrador = () => {
   return (
     <div className="flex h-screen bg-slate-50 font-sans overflow-hidden selection:bg-sky-500 selection:text-white">
       
+      {/* Overlay para móviles */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-30 lg:hidden transition-opacity duration-300"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* SIDEBAR LATERAL (Estilo Moderno Clínico Compacto) */}
-      <aside className="w-60 bg-slate-900 flex flex-col border-r border-slate-800/40 relative z-20 shadow-xl">
+      <aside className={`fixed inset-y-0 left-0 w-60 bg-slate-900 flex flex-col border-r border-slate-800/40 z-40 shadow-xl transition-transform duration-300 lg:static lg:translate-x-0 ${
+        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
         {/* Logo de la Clínica */}
-        <div className="h-20 flex items-center px-5 border-b border-slate-800/30">
+        <div className="h-20 flex items-center justify-between px-5 border-b border-slate-800/30">
           <div className="flex items-center gap-2.5 cursor-pointer">
             <div className="w-9 h-9 bg-gradient-to-tr from-sky-500 to-cyan-300 rounded-lg flex items-center justify-center text-white shadow-md shadow-sky-500/15">
               <img 
@@ -93,11 +106,18 @@ const TableroAdministrador = () => {
               <span className="text-[9px] font-bold text-sky-400 uppercase tracking-widest">Panel Admin</span>
             </div>
           </div>
+          {/* Botón de cierre para móvil */}
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors"
+          >
+            <X size={18} />
+          </button>
         </div>
 
         {/* Menú de Navegación */}
         <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto custom-scrollbar">
-          <button onClick={() => setVistaActual('dashboard')} className={vistaActual === 'dashboard' ? activeBtnClass : inactiveBtnClass}>
+          <button onClick={() => { setVistaActual('dashboard'); setSidebarOpen(false); }} className={vistaActual === 'dashboard' ? activeBtnClass : inactiveBtnClass}>
             <LayoutDashboard size={16} className={vistaActual === 'dashboard' ? "text-white" : "text-slate-500 group-hover:text-sky-400 transition-colors"} /> 
             Panel de Control
           </button>
@@ -106,22 +126,22 @@ const TableroAdministrador = () => {
             <p className="px-3.5 text-[9px] font-black text-slate-600 uppercase tracking-widest">Gestión Clínica</p>
           </div>
           
-          <button onClick={() => setVistaActual('servicios')} className={vistaActual === 'servicios' ? activeBtnClass : inactiveBtnClass}>
+          <button onClick={() => { setVistaActual('servicios'); setSidebarOpen(false); }} className={vistaActual === 'servicios' ? activeBtnClass : inactiveBtnClass}>
             <Stethoscope size={16} className={vistaActual === 'servicios' ? "text-white" : "text-slate-500 group-hover:text-sky-400 transition-colors"} /> 
             Servicios Médicos
           </button>
           
-          <button onClick={() => setVistaActual('duenos')} className={vistaActual === 'duenos' ? activeBtnClass : inactiveBtnClass}>
+          <button onClick={() => { setVistaActual('duenos'); setSidebarOpen(false); }} className={vistaActual === 'duenos' ? activeBtnClass : inactiveBtnClass}>
             <Users size={16} className={vistaActual === 'duenos' ? "text-white" : "text-slate-500 group-hover:text-sky-400 transition-colors"} /> 
             Directorio Clientes
           </button>
 
-          <button onClick={() => setVistaActual('agenda')} className={vistaActual === 'agenda' ? activeBtnClass : inactiveBtnClass}>
+          <button onClick={() => { setVistaActual('agenda'); setSidebarOpen(false); }} className={vistaActual === 'agenda' ? activeBtnClass : inactiveBtnClass}>
             <Calendar size={16} className={vistaActual === 'agenda' ? "text-white" : "text-slate-500 group-hover:text-sky-400 transition-colors"} /> 
             Agenda Semanal
           </button>
 
-          <button onClick={() => setVistaActual('inventario')} className={vistaActual === 'inventario' ? activeBtnClass : inactiveBtnClass}>
+          <button onClick={() => { setVistaActual('inventario'); setSidebarOpen(false); }} className={vistaActual === 'inventario' ? activeBtnClass : inactiveBtnClass}>
             <Package size={16} className={vistaActual === 'inventario' ? "text-white" : "text-slate-500 group-hover:text-sky-400 transition-colors"} /> 
             Inventario FEFO
           </button>
@@ -130,32 +150,32 @@ const TableroAdministrador = () => {
             <p className="px-3.5 text-[9px] font-black text-slate-600 uppercase tracking-widest">Administración</p>
           </div>
 
-          <button onClick={() => setVistaActual('finanzas')} className={vistaActual === 'finanzas' ? activeBtnClass : inactiveBtnClass}>
+          <button onClick={() => { setVistaActual('finanzas'); setSidebarOpen(false); }} className={vistaActual === 'finanzas' ? activeBtnClass : inactiveBtnClass}>
             <Wallet size={16} className={vistaActual === 'finanzas' ? "text-white" : "text-slate-500 group-hover:text-sky-400 transition-colors"} /> 
             Caja y Finanzas
           </button>
 
-          <button onClick={() => setVistaActual('pedidos')} className={vistaActual === 'pedidos' ? activeBtnClass : inactiveBtnClass}>
+          <button onClick={() => { setVistaActual('pedidos'); setSidebarOpen(false); }} className={vistaActual === 'pedidos' ? activeBtnClass : inactiveBtnClass}>
             <ShoppingBag size={16} className={vistaActual === 'pedidos' ? "text-white" : "text-slate-500 group-hover:text-sky-400 transition-colors"} /> 
             Gestión de Pedidos
           </button>
 
-          <button onClick={() => setVistaActual('usuarios')} className={vistaActual === 'usuarios' ? activeBtnClass : inactiveBtnClass}>
+          <button onClick={() => { setVistaActual('usuarios'); setSidebarOpen(false); }} className={vistaActual === 'usuarios' ? activeBtnClass : inactiveBtnClass}>
             <ShieldCheck size={16} className={vistaActual === 'usuarios' ? "text-white" : "text-slate-500 group-hover:text-sky-400 transition-colors"} /> 
             Usuarios y Roles
           </button>
 
-          <button onClick={() => setVistaActual('campanas')} className={vistaActual === 'campanas' ? activeBtnClass : inactiveBtnClass}>
+          <button onClick={() => { setVistaActual('campanas'); setSidebarOpen(false); }} className={vistaActual === 'campanas' ? activeBtnClass : inactiveBtnClass}>
             <Percent size={16} className={vistaActual === 'campanas' ? "text-white" : "text-slate-500 group-hover:text-sky-400 transition-colors"} /> 
             Campañas y Ofertas
           </button>
 
-          <button onClick={() => setVistaActual('horarios')} className={vistaActual === 'horarios' ? activeBtnClass : inactiveBtnClass}>
+          <button onClick={() => { setVistaActual('horarios'); setSidebarOpen(false); }} className={vistaActual === 'horarios' ? activeBtnClass : inactiveBtnClass}>
             <Clock size={16} className={vistaActual === 'horarios' ? "text-white" : "text-slate-500 group-hover:text-sky-400 transition-colors"} /> 
             Horarios del Personal
           </button>
           
-          <button onClick={() => setVistaActual('configuracion')} className={vistaActual === 'configuracion' ? activeBtnClass : inactiveBtnClass}>
+          <button onClick={() => { setVistaActual('configuracion'); setSidebarOpen(false); }} className={vistaActual === 'configuracion' ? activeBtnClass : inactiveBtnClass}>
             <Settings size={16} className={vistaActual === 'configuracion' ? "text-white" : "text-slate-500 group-hover:text-sky-400 transition-colors"} /> 
             Configuración Global
           </button>
@@ -174,8 +194,17 @@ const TableroAdministrador = () => {
       <main className="flex-1 flex flex-col h-screen overflow-hidden relative">
         
         {/* HEADER SUPERIOR (Glassmorphism sutil) */}
-        <header className="bg-white/80 backdrop-blur-md h-20 px-8 flex justify-between items-center shadow-sm z-10 border-b border-slate-200/60 sticky top-0">
-          <h1 className="text-xl font-black text-slate-800 tracking-tight">Centro de Administración</h1>
+        <header className="bg-white/80 backdrop-blur-md h-20 px-6 lg:px-8 flex justify-between items-center shadow-sm z-10 border-b border-slate-200/60 sticky top-0">
+          <div className="flex items-center gap-3">
+            {/* Botón hamburguesa */}
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
+            >
+              <Menu size={20} />
+            </button>
+            <h1 className="text-xl font-black text-slate-800 tracking-tight">Centro de Administración</h1>
+          </div>
           
           <div className="flex items-center gap-4 bg-slate-50 border border-slate-200 px-2 py-1.5 rounded-full pr-5">
             <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-sky-500 to-cyan-300 shadow-sm flex items-center justify-center text-white">
@@ -186,7 +215,7 @@ const TableroAdministrador = () => {
         </header>
 
         {/* CONTENEDOR DINÁMICO DE PÁGINAS */}
-        <div className="flex-1 p-8 overflow-y-auto bg-slate-50">
+        <div className="flex-1 p-4 lg:p-8 overflow-y-auto bg-slate-50">
           <div className="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
             {renderizarVista()}
           </div>
