@@ -94,19 +94,20 @@ const Registro = () => {
 
         {/* ======================== PANEL DERECHO ======================== */}
         <div className="auth-right-panel">
-          
-          {/* BOTÓN VOLVER */}
-          <button 
-            onClick={() => navigate('/login')} 
-            className="absolute top-6 right-6 text-slate-400 hover:text-slate-650 transition-colors flex items-center gap-1.5 text-xs font-semibold"
-          >
-            <ArrowLeft size={14} />
-            Volver al login
-          </button>
 
-          <div className="mb-6 mt-4">
-            <h2 className="text-2xl font-bold text-slate-800">Crea tu cuenta</h2>
-            <p className="text-xs text-slate-400 mt-1 font-semibold">Registra tus datos como dueño de mascota</p>
+          {/* CABECERA: título + botón volver */}
+          <div className="flex items-start justify-between mb-6">
+            <div>
+              <h2 className="text-2xl font-bold text-slate-800">Crea tu cuenta</h2>
+              <p className="text-xs text-slate-400 mt-1 font-semibold">Registra tus datos como dueño de mascota</p>
+            </div>
+            <button
+              onClick={() => navigate('/login')}
+              className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-sky-600 border border-slate-200 hover:border-sky-300 rounded-lg px-2.5 py-1.5 transition-all shrink-0 ml-3"
+            >
+              <ArrowLeft size={13} />
+              Volver
+            </button>
           </div>
 
           {/* Mensajes de error/éxito */}

@@ -101,7 +101,28 @@ const App = () => {
         </div>
       </header>
 
-      {/* HERO SECTION */}
+      {/* MENÚ MÓVIL DESPLEGABLE */}
+      {menuAbierto && (
+        <div className="md:hidden fixed inset-0 z-40 flex flex-col">
+          {/* Overlay oscuro para cerrar al hacer clic fuera */}
+          <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setMenuAbierto(false)} />
+          {/* Panel del menú */}
+          <div className="relative z-10 bg-white mt-24 mx-4 rounded-2xl shadow-2xl p-6 flex flex-col gap-4 border border-slate-100 animate-in fade-in slide-in-from-top-4 duration-200">
+            <a href="#inicio"      onClick={() => setMenuAbierto(false)} className="text-slate-700 font-semibold text-base py-2 border-b border-slate-100 hover:text-blue-600 transition-colors">Inicio</a>
+            <a href="#nosotros"    onClick={() => setMenuAbierto(false)} className="text-slate-700 font-semibold text-base py-2 border-b border-slate-100 hover:text-blue-600 transition-colors">Nosotros</a>
+            <a href="#servicios"   onClick={() => setMenuAbierto(false)} className="text-slate-700 font-semibold text-base py-2 border-b border-slate-100 hover:text-blue-600 transition-colors">Servicios</a>
+            <a href="#ubicacion"   onClick={() => setMenuAbierto(false)} className="text-slate-700 font-semibold text-base py-2 border-b border-slate-100 hover:text-blue-600 transition-colors">Ubicación</a>
+            <a href="#emergencias" onClick={() => setMenuAbierto(false)} className="text-red-500 font-bold text-base py-2 border-b border-slate-100 hover:text-red-600 transition-colors">Emergencias 24/7</a>
+            <button
+              onClick={() => { setMenuAbierto(false); window.location.href = '/login'; }}
+              className="mt-2 w-full py-3 bg-gradient-to-tr from-sky-500 to-cyan-400 text-white font-bold rounded-xl shadow-lg shadow-sky-400/30 hover:from-sky-600 hover:to-cyan-500 transition-all"
+            >
+              Iniciar Sesión
+            </button>
+          </div>
+        </div>
+      )}
+
       <motion.section
         id="inicio" 
         className="relative pt-36 pb-48 flex items-center justify-center overflow-hidden bg-cover bg-center"
