@@ -12,16 +12,16 @@ const PanelIzquierdoAutenticacion = ({
     <div className="auth-left-panel">
       <div className="absolute inset-0 bg-slate-950/60 z-0" />
 
-      {/* Marca / Logo */}
+      {/* Marca / Logo — siempre visible */}
       <div className="relative z-10 flex items-center gap-2.5">
-        <div className="w-10 h-10 bg-gradient-to-tr from-sky-500 to-cyan-300 rounded-xl flex items-center justify-center text-white shadow-md shadow-sky-500/15">
-          <img src={logo} alt="Logo" className="w-8 h-8 object-contain" />
+        <div className="w-9 h-9 bg-gradient-to-tr from-sky-500 to-cyan-300 rounded-xl flex items-center justify-center text-white shadow-md shadow-sky-500/15">
+          <img src={logo} alt="Logo" className="w-7 h-7 object-contain" />
         </div>
-        <span className="text-lg font-bold text-white tracking-tight">Vet. Huesitos</span>
+        <span className="text-base font-bold text-white tracking-tight">Vet. Huesitos</span>
       </div>
 
-      {/* Contenido centrado */}
-      <div className="relative z-10 flex-1 flex flex-col justify-center space-y-6 my-auto py-8">
+      {/* Contenido decorativo — SOLO visible en tablet/desktop (md+) */}
+      <div className="hidden md:flex relative z-10 flex-1 flex-col justify-center space-y-6 my-auto py-8">
         <div className="inline-flex items-center gap-2 bg-sky-500/15 border border-sky-400/20 rounded-full px-3.5 py-1 text-sky-300 self-start">
           <span className="text-sm">{badgeIcon}</span>
           <span className="text-[10px] font-semibold tracking-wider uppercase">{badgeText}</span>
@@ -32,7 +32,7 @@ const PanelIzquierdoAutenticacion = ({
         <p className="text-xs leading-relaxed max-w-xs text-slate-300">
           {description}
         </p>
-        
+
         {chips.length > 0 && (
           <div className="flex flex-wrap gap-2 pt-2">
             {chips.map(({ icon, label }) => (

@@ -3,15 +3,42 @@
 @tailwind utilities;
 
 @layer utilities {
+  /* Tarjeta: misma altura fija en todas las vistas (tablet y desktop) para mantener armonía */
   .auth-card {
-    @apply flex flex-col md:flex-row w-full max-w-4xl bg-white rounded-3xl border border-slate-200 shadow-2xl md:overflow-hidden md:h-[640px] md:max-h-[640px] relative;
+    @apply flex flex-col md:flex-row w-full max-w-4xl bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-hidden relative;
+  }
+
+  /* Panel azul: barra compacta (solo logo) en móvil, panel lateral completo en md+ */
+  .auth-left-panel {
+    @apply flex order-2 md:order-1 w-full md:w-5/12 lg:w-1/2
+           bg-gradient-to-tr from-sky-600 to-slate-900 text-white
+           p-4 md:p-8 lg:p-12 flex-col relative shrink-0;
+  }
+
+  /* Panel formulario: sin scroll en móvil; scroll interno en md+ para formularios largos */
+  .auth-right-panel {
+    @apply w-full order-1 md:order-2 md:w-7/12 lg:w-1/2
+           bg-white p-5 md:p-8 lg:p-10
+           flex flex-col justify-center relative;
+  }
+}
+
+/* Tablet y desktop: altura fija igual en TODAS las vistas = armonía visual */
+@media (min-width: 768px) {
+  .auth-card {
+    height: 600px;
+    max-height: calc(100vh - 3rem);
   }
 
   .auth-left-panel {
-    @apply order-2 md:order-1 w-full md:w-1/2 bg-gradient-to-tr from-sky-600 to-slate-900 text-white p-6 md:p-8 lg:p-12 flex flex-col relative min-h-[320px] md:min-h-0 shrink-0;
+    min-height: unset;
+    height: 100%;
+    overflow-y: auto;
   }
 
   .auth-right-panel {
-    @apply order-1 md:order-2 w-full md:w-1/2 bg-white p-6 md:p-8 lg:p-12 flex flex-col justify-center relative md:h-full overflow-y-auto;
+    height: 100%;
+    overflow-y: auto;
+    justify-content: center;
   }
 }

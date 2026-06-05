@@ -60,7 +60,7 @@ const IniciarSesion = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4 selection:bg-sky-500 selection:text-white font-sans">
+    <div className="min-h-screen bg-slate-100 flex items-start md:items-center justify-center py-6 px-4 selection:bg-sky-500 selection:text-white font-sans">
       <div className="auth-card">
         
         {/* ======================== PANEL IZQUIERDO ======================== */}
@@ -81,9 +81,9 @@ const IniciarSesion = () => {
         <div className="auth-right-panel">
 
           {/* CABECERA: título + botón volver */}
-          <div className="flex items-start justify-between mb-6">
-            <div>
-              <h2 className="text-2xl font-bold text-slate-800">Iniciar sesión</h2>
+          <div className="flex flex-wrap items-start justify-between gap-2 mb-5">
+            <div className="min-w-0">
+              <h2 className="text-xl md:text-2xl font-bold text-slate-800">Iniciar sesión</h2>
               <p className="text-xs text-slate-400 mt-1 font-semibold">Bienvenido de nuevo a Huesitos</p>
             </div>
             <BotonVolver />
