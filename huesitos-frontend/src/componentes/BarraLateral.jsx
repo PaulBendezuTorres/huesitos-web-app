@@ -145,7 +145,7 @@ const BarraLateral = ({
   };
 
   return (
-    <aside className={`fixed inset-y-0 left-0 w-60 bg-slate-900 flex flex-col border-r border-slate-800/40 z-40 shadow-xl transition-transform duration-300 lg:static lg:translate-x-0 ${
+    <aside className={`fixed inset-y-0 left-0 w-60 bg-slate-900 flex flex-col border-r border-slate-800/40 z-40 shadow-xl transition-transform duration-300 lg:static lg:h-full lg:translate-x-0 ${
       sidebarOpen ? 'translate-x-0' : '-translate-x-full'
     }`}>
       {/* Logo de la Clínica */}

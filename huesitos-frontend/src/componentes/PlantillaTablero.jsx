@@ -39,7 +39,7 @@ const PlantillaTablero = ({
       />
 
       {/* ÁREA DE CONTENIDO PRINCIPAL */}
-      <main className="flex-1 flex flex-col h-screen overflow-hidden relative bg-slate-50">
+      <main className="flex-1 flex flex-col h-full overflow-hidden relative bg-slate-50">
         {/* Header Superior Responsivo */}
         <header className="bg-white/80 backdrop-blur-md h-20 px-4 md:px-6 lg:px-8 flex justify-between items-center shadow-sm z-10 border-b border-slate-200/60 sticky top-0 shrink-0">
           <div className="flex items-center gap-3 min-w-0">
