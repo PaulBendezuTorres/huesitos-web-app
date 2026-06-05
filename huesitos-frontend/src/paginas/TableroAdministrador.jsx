@@ -13,7 +13,7 @@ import ConfiguracionHorarios from '../modulos/admin/paginas/ConfiguracionHorario
 import PaginaInventario from '../modulos/admin/paginas/PaginaInventario';
 import PaginaCampanas from '../modulos/admin/paginas/PaginaCampanas';
 import GestionPedidos from './GestionPedidos';
-import BarraLateralAdmin from '../componentes/BarraLateralAdmin';
+import BarraLateral from '../componentes/BarraLateral';
 
 
 const TableroAdministrador = () => {
@@ -63,7 +63,9 @@ const TableroAdministrador = () => {
       )}
 
       {/* SIDEBAR LATERAL MODULARIZADO */}
-      <BarraLateralAdmin 
+      <BarraLateral 
+        rol="ADMINISTRADOR"
+        correo={correo}
         vistaActual={vistaActual}
         setVistaActual={setVistaActual}
         sidebarOpen={sidebarOpen}

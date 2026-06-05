@@ -1,15 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Calendar,
-  User,
-  History,
-  Stethoscope,
-  LogOut,
-  Menu,
-  X
-} from 'lucide-react';
-import logo from '../assets/Logo Huesitos.png';
+import { User, Menu } from 'lucide-react';
+import BarraLateral from '../componentes/BarraLateral';
 import {
   obtenerCitasAgenda,
   registrarConsultaMedica,
@@ -213,10 +205,7 @@ const TableroVeterinario = () => {
     }
   };
 
-  // Clases CSS para la navegación lateral
-  const baseBtnClass = "w-full text-left px-3.5 py-2.5 rounded-lg font-semibold transition-all duration-200 flex items-center gap-3 text-xs tracking-wide group";
-  const activeBtnClass = `${baseBtnClass} bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-md shadow-emerald-500/10 translate-x-0.5`;
-  const inactiveBtnClass = `${baseBtnClass} text-slate-400 hover:bg-slate-800/40 hover:text-slate-200`;
+
 
   // Renderizador de Vistas Principales
   const renderizarVista = () => {
@@ -279,111 +268,43 @@ const TableroVeterinario = () => {
         />
       )}
 
-      {/* BARRA LATERAL */}
-      <aside className={`fixed inset-y-0 left-0 w-60 bg-slate-900 flex flex-col border-r border-slate-800/40 z-40 shadow-xl transition-transform duration-300 lg:static lg:translate-x-0 ${
-        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      }`}>
-        {/* Logo de la Clínica */}
-        <div className="h-20 flex items-center justify-between px-5 border-b border-slate-800/30">
-          <div className="flex items-center gap-2.5 cursor-pointer">
-            <div className="w-9 h-9 bg-gradient-to-tr from-emerald-500 to-teal-350 rounded-lg flex items-center justify-center text-white shadow-md shadow-emerald-500/15">
-              <img src={logo} alt="Logo" className="w-7 h-7 object-contain" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-base font-bold text-white tracking-tight leading-tight">Vet.Huesitos</span>
-              <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-widest">Módulo clínico</span>
-            </div>
-          </div>
-          {/* Botón de cierre para móvil */}
-          <button
-            onClick={() => setSidebarOpen(false)}
-            className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors"
-          >
-            <X size={18} />
-          </button>
-        </div>
-
-        {/* Menú de Navegación */}
-        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-          <button 
-            onClick={() => {
-              setVistaActual('agenda');
-              setSidebarOpen(false);
-            }} 
-            className={vistaActual === 'agenda' ? activeBtnClass : inactiveBtnClass}
-          >
-            <Calendar size={16} className={vistaActual === 'agenda' ? "text-white" : "text-slate-500 group-hover:text-emerald-450 transition-colors"} /> 
-            Agenda del día
-          </button>
-
-          <button 
-            onClick={() => {
-              setVistaActual('consulta');
-              setSidebarOpen(false);
-            }} 
-            className={vistaActual === 'consulta' ? activeBtnClass : inactiveBtnClass}
-          >
-            <Stethoscope size={16} className={vistaActual === 'consulta' ? "text-white" : "text-slate-500 group-hover:text-emerald-450 transition-colors"} /> 
-            Consulta activa
-            {citaActiva && (
-              <span className="ml-auto w-2 h-2 bg-rose-500 rounded-full animate-ping" />
-            )}
-          </button>
-
-          <button 
-            onClick={() => {
-              setVistaActual('mascotas');
-              setSidebarOpen(false);
-            }} 
-            className={vistaActual === 'mascotas' ? activeBtnClass : inactiveBtnClass}
-          >
-            <History size={16} className={vistaActual === 'mascotas' ? "text-white" : "text-slate-500 group-hover:text-emerald-450 transition-colors"} /> 
-            Buscar expedientes
-          </button>
-        </nav>
-
-        {/* Info del Usuario y Cerrar Sesión */}
-        <div className="p-3 border-t border-slate-800/30 bg-slate-900/50">
-          <div className="bg-slate-950/40 border border-slate-800/40 p-2.5 rounded-lg flex items-center gap-2.5 mb-3">
-            <div className="w-7 h-7 rounded-lg bg-emerald-500 flex items-center justify-center text-white font-bold shrink-0">
-              <User size={12} />
-            </div>
-            <div className="overflow-hidden">
-              <p className="text-[8px] text-slate-500 font-bold uppercase">Veterinario</p>
-              <p className="text-white text-xs font-bold truncate">{correo}</p>
-            </div>
-          </div>
-          <button 
-            onClick={handleLogout} 
-            className="w-full bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white px-3 py-2.5 rounded-lg font-bold text-xs transition-all duration-200 flex items-center justify-center gap-2 border border-red-500/10 hover:shadow-md hover:shadow-red-500/10"
-          >
-            <LogOut size={14} />
-            Cerrar sesión
-          </button>
-        </div>
-      </aside>
+      {/* SIDEBAR LATERAL MODULARIZADO */}
+      <BarraLateral 
+        rol="VETERINARIO"
+        correo={correo}
+        vistaActual={vistaActual}
+        setVistaActual={setVistaActual}
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+        handleLogout={handleLogout}
+        tieneCitaActiva={!!citaActiva}
+      />
 
       {/* ÁREA DE CONTENIDO PRINCIPAL */}
       <main className="flex-1 flex flex-col h-screen overflow-hidden relative">
         
-        {/* HEADER SUPERIOR */}
-        <header className="bg-white/80 backdrop-blur-md h-20 px-6 lg:px-8 flex justify-between items-center shadow-sm z-10 border-b border-slate-200/60 sticky top-0">
-          <div className="flex items-center gap-3">
+        {/* HEADER SUPERIOR responsivo */}
+        <header className="bg-white/80 backdrop-blur-md h-20 px-4 md:px-6 lg:px-8 flex justify-between items-center shadow-sm z-10 border-b border-slate-200/60 sticky top-0 shrink-0">
+          <div className="flex items-center gap-3 min-w-0">
             {/* Botón hamburguesa */}
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
+              className="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors shrink-0"
             >
               <Menu size={20} />
             </button>
-            <h1 className="text-xl font-bold text-slate-800 tracking-tight">Módulo clínico veterinario</h1>
+            <h1 className="text-base sm:text-lg md:text-xl font-bold text-slate-800 tracking-tight truncate max-w-[140px] sm:max-w-xs md:max-w-none">
+              Módulo clínico veterinario
+            </h1>
           </div>
           
-          <div className="flex items-center gap-4 bg-slate-50 border border-slate-200 px-2 py-1.5 rounded-full pr-5">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 shadow-sm flex items-center justify-center text-white">
+          <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 p-1 rounded-full md:pr-4 md:gap-3 shrink-0">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 shadow-sm flex items-center justify-center text-white shrink-0">
               <User size={16} strokeWidth={2.5} />
             </div>
-            <span className="text-sm font-semibold text-slate-600 truncate max-w-[120px] md:max-w-[200px]">{correo}</span>
+            <span className="text-xs md:text-sm font-semibold text-slate-600 truncate max-w-[80px] sm:max-w-[120px] md:max-w-[200px]" title={correo}>
+              {correo}
+            </span>
           </div>
         </header>
 
