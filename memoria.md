@@ -1,8 +1,10 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-05 (Unificación de BarraLateral dinámica para todos los roles del sistema)
+Última actualización: 2026-06-05 (Unificación de Portales de Roles con PlantillaTablero)
 
 ## 🚀 Logros Recientes
+- [x] **Estructura Unificada de Tableros con `PlantillaTablero.jsx`**: Creado el componente contenedor `PlantillaTablero.jsx` que encapsula la estructura responsiva común de todos los tableros (sidebar responsivo, overlay de fondo, header de navegación con botón hamburguesa y badge del perfil de usuario).
+- [x] **Refactorización de los Portales de Roles**: Migrados los portales `TableroAdministrador.jsx`, `TableroCliente.jsx`, `TableroRecepcionista.jsx` y `TableroVeterinario.jsx` para utilizar `PlantillaTablero`, garantizando consistencia visual del 100%, idéntica responsividad adaptativa en móviles/tablets y eliminando código duplicado y estados locales.
 - [x] **Unificación de BarraLateral Dinámica**: Diseñado y desarrollado el componente dinámico `BarraLateral.jsx` que unifica las barras laterales de todos los roles (Administrador, Veterinario, Recepcionista y Cliente). El componente adapta de forma automática el listado de navegación, colores (emerald para veterinario, sky para el resto), subtítulo superior, y credenciales/rol del usuario en la parte inferior, eliminando código duplicado en los 4 tableros principales.
 - [x] **Modularización del Menú Lateral de Administración**: Extraído el menú lateral del administrador al componente modular `BarraLateralAdmin.jsx` (luego integrado y mejorado en la BarraLateral global). Esto limpia los tableros delegando la lógica de navegación y responsividad al nuevo componente.
 - [x] **Corrección de Desbordamiento en Encabezados y Celdas de Tablas**: 
