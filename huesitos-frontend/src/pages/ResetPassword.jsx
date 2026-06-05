@@ -158,10 +158,10 @@ const VetResetPassword = () => {
 
   return (
     <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4 selection:bg-sky-500 selection:text-white font-sans">
-      <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-hidden md:h-[640px] relative animate-in fade-in duration-200">
+      <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-hidden md:h-[640px] max-h-[90vh] md:max-h-[640px] relative animate-in fade-in duration-200">
         
         {/* ======================== PANEL IZQUIERDO ======================== */}
-        <div className="w-full md:w-1/2 bg-gradient-to-tr from-sky-600 to-slate-900 text-white p-8 md:p-12 flex flex-col relative min-h-[320px] md:min-h-0 shrink-0">
+        <div className="w-full md:w-1/2 bg-gradient-to-tr from-sky-600 to-slate-900 text-white p-6 md:p-8 lg:p-12 flex flex-col relative min-h-[320px] md:min-h-0 shrink-0">
           <div className="absolute inset-0 bg-slate-950/60 z-0" />
 
           <div className="relative z-10 flex items-center gap-2.5">
@@ -197,7 +197,7 @@ const VetResetPassword = () => {
         </div>
 
         {/* ======================== PANEL DERECHO ======================== */}
-        <div className="w-full md:w-1/2 bg-white p-8 md:p-12 flex flex-col justify-center relative">
+        <div className="w-full md:w-1/2 bg-white p-6 md:p-8 lg:p-12 flex flex-col justify-center relative md:h-full overflow-y-auto">
           
           {/* BOTÓN VOLVER */}
           <button 
