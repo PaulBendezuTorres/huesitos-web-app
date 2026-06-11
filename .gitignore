@@ -1,4 +1,5 @@
 # Exclusiones de Git 
+.agents/
 memoria.md
 .vscode/
 
