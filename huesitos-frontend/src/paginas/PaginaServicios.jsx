@@ -131,9 +131,9 @@ const PaginaServicios = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 gap-3 bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm">
+      <div className="flex flex-col items-center justify-center h-64 gap-3 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
         <CargadorSpinner size="lg" />
-        <span className="text-slate-500 text-sm font-semibold animate-pulse">Sincronizando catálogo...</span>
+        <span className="text-slate-500 dark:text-slate-400 text-sm font-semibold animate-pulse">Sincronizando catálogo...</span>
       </div>
     );
   }
@@ -141,15 +141,15 @@ const PaginaServicios = () => {
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       {/* CABECERA DINÁMICA */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 group">
+      <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 group">
         <div>
-          <h1 className="text-2xl font-black text-slate-800 tracking-tight flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center text-sky-500 shadow-sm shrink-0 group-hover:scale-105 group-hover:rotate-6 transition-all duration-300">
+          <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-sky-50 dark:bg-sky-900/40 border border-sky-100 dark:border-sky-800 flex items-center justify-center text-sky-500 shadow-sm shrink-0 group-hover:scale-105 group-hover:rotate-6 transition-all duration-300">
               <Stethoscope size={20} />
             </div>
             {!esRegistro ? "Catálogo de Servicios" : "Registrar Servicio Médico"}
           </h1>
-          <p className="text-slate-505 text-sm mt-1.5 md:ml-13">
+          <p className="text-slate-505 dark:text-slate-400 text-sm mt-1.5 md:ml-13">
             {!esRegistro 
               ? "Lista completa de la oferta médica y los servicios disponibles en la clínica." 
               : "Crea un nuevo servicio médico y configúralo en tiempo real."}
@@ -192,14 +192,14 @@ const PaginaServicios = () => {
       {/* MODAL DE EDICIÓN PREMIUM */}
       {modalOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 z-[100] p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl shadow-2xl border border-slate-200 max-w-lg w-full max-h-[90vh] overflow-hidden">
-            <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center shrink-0 bg-slate-50/50">
-              <h3 className="text-lg font-black text-slate-800 flex items-center gap-2">
+          <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 max-w-lg w-full max-h-[90vh] overflow-hidden">
+            <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center shrink-0 bg-slate-50/50 dark:bg-slate-900/40">
+              <h3 className="text-lg font-black text-slate-800 dark:text-slate-100 flex items-center gap-2">
                 <Stethoscope className="text-sky-500" size={20} /> Editar Servicio
               </h3>
               <button 
                 onClick={() => setModalOpen(false)}
-                className="text-slate-400 hover:text-slate-700 transition-colors"
+                className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
               >
                 <X size={20}/>
               </button>
@@ -207,8 +207,8 @@ const PaginaServicios = () => {
             
             <form onSubmit={ejecutarEdicion} className="p-6 space-y-5">
               {/* Sección de Foto del Servicio */}
-              <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                <div className="w-16 h-16 rounded-xl bg-white border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center text-slate-400 shadow-inner relative">
+              <div className="flex items-center gap-4 bg-slate-50 dark:bg-slate-900/40 p-4 rounded-2xl border border-slate-100 dark:border-slate-700">
+                <div className="w-16 h-16 rounded-xl bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 overflow-hidden shrink-0 flex items-center justify-center text-slate-400 shadow-inner relative">
                   {servicioAEditar?.fotoUrl && servicioAEditar.fotoUrl !== '/uploads/defecto-servicio.png' ? (
                     <img src={`http://localhost:8080${servicioAEditar.fotoUrl}`} alt="Servicio" className={`w-full h-full object-cover ${subiendoFoto ? 'opacity-40' : ''}`} />
                   ) : (
@@ -221,8 +221,8 @@ const PaginaServicios = () => {
                   )}
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wide">Imagen del Servicio</label>
-                  <label className={`inline-flex items-center gap-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm ${subiendoFoto ? 'opacity-55 cursor-not-allowed' : 'cursor-pointer'}`}>
+                  <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 uppercase tracking-wide">Imagen del Servicio</label>
+                  <label className={`inline-flex items-center gap-1.5 bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-600 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm ${subiendoFoto ? 'opacity-55 cursor-not-allowed' : 'cursor-pointer'}`}>
                     <Camera size={14} />
                     {subiendoFoto ? "Cargando..." : "Subir foto"}
                     <input type="file" accept="image/*" onChange={handleSubirFoto} className="hidden" disabled={subiendoFoto} />
@@ -231,42 +231,42 @@ const PaginaServicios = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Nombre del Servicio</label>
+                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Nombre del Servicio</label>
                 <input 
                   type="text" 
                   name="nombre" 
                   value={formEdit.nombre} 
                   onChange={handleEditChange} 
                   required 
-                  className="w-full border border-slate-300 p-2.5 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all bg-slate-50 focus:bg-white"
+                  className="w-full border border-slate-300 dark:border-slate-600 p-2.5 rounded-xl text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all bg-slate-50 dark:bg-slate-700 focus:bg-white dark:focus:bg-slate-600"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Precio (S/.)</label>
+                  <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Precio (S/.)</label>
                   <div className="relative">
                     <Tag className="absolute left-3 top-3 text-slate-400" size={18} />
                     <input 
                       type="number" step="0.01" name="precio" value={formEdit.precio} onChange={handleEditChange} required 
-                      className="w-full pl-10 border border-slate-300 p-2.5 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all bg-slate-50 focus:bg-white"
+                      className="w-full pl-10 border border-slate-300 dark:border-slate-600 p-2.5 rounded-xl text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all bg-slate-50 dark:bg-slate-700 focus:bg-white dark:focus:bg-slate-600"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Duración (Min)</label>
+                  <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Duración (Min)</label>
                   <div className="relative">
                     <Clock className="absolute left-3 top-3 text-slate-400" size={18} />
                     <input 
                       type="number" name="duracionMinutos" value={formEdit.duracionMinutos} onChange={handleEditChange} required 
-                      className="w-full pl-10 border border-slate-300 p-2.5 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all bg-slate-50 focus:bg-white"
+                      className="w-full pl-10 border border-slate-300 dark:border-slate-600 p-2.5 rounded-xl text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all bg-slate-50 dark:bg-slate-700 focus:bg-white dark:focus:bg-slate-600"
                     />
                   </div>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Descripción</label>
+                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Descripción</label>
                 <AreaTexto 
                   value={formEdit.descripcion} 
                   onChange={(val) => setFormEdit(prev => ({ ...prev, descripcion: val }))} 
@@ -276,11 +276,11 @@ const PaginaServicios = () => {
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-700">
                 <button 
                   type="button" 
                   onClick={() => setModalOpen(false)}
-                  className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-100 transition-colors"
+                  className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
                 >
                   Cancelar
                 </button>

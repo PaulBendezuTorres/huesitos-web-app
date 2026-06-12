@@ -62,7 +62,7 @@ const Combobox = ({
           onFocus={() => setIsOpen(true)}
           required={required}
           placeholder={placeholder}
-          className="w-full pl-10 pr-10 py-3 rounded-xl border border-slate-200 text-slate-800 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 focus:bg-white"
+          className="w-full pl-10 pr-10 py-3 rounded-xl border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 dark:bg-slate-700 focus:bg-white dark:focus:bg-slate-600 placeholder:text-slate-400 dark:placeholder:text-slate-500"
         />
         <button
           type="button"
@@ -74,9 +74,9 @@ const Combobox = ({
       </div>
 
       {isOpen && (
-        <div className="absolute left-0 right-0 mt-2 bg-white border border-slate-150 rounded-2xl shadow-xl z-50 max-h-60 overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-150">
+        <div className="absolute left-0 right-0 mt-2 bg-white dark:bg-slate-800 border border-slate-150 dark:border-slate-700 rounded-2xl shadow-xl z-50 max-h-60 overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-150">
           {opcionesFiltradas.length === 0 ? (
-            <div className="px-4 py-3 text-xs text-slate-400 font-semibold italic">
+            <div className="px-4 py-3 text-xs text-slate-400 dark:text-slate-500 font-semibold italic">
               Presiona Enter o fuera para guardar "{filtro}"
             </div>
           ) : (
@@ -87,19 +87,19 @@ const Combobox = ({
                   key={index}
                   type="button"
                   onClick={() => handleSeleccionar(opc)}
-                  className={`w-full text-left px-4 py-2.5 hover:bg-sky-50/50 flex items-center justify-between text-xs font-semibold border-b border-slate-50 last:border-0 transition-colors ${
-                    esSeleccionado ? 'bg-sky-50 text-sky-650' : 'text-slate-700'
+                  className={`w-full text-left px-4 py-2.5 hover:bg-sky-50/50 dark:hover:bg-slate-700 flex items-center justify-between text-xs font-semibold border-b border-slate-50 dark:border-slate-700 last:border-0 transition-colors ${
+                    esSeleccionado ? 'bg-sky-50 dark:bg-sky-900/30 text-sky-650 dark:text-sky-400' : 'text-slate-700 dark:text-slate-200'
                   }`}
                 >
                   <div className="flex flex-col">
                     <span className="font-bold tracking-tight">{opc.label}</span>
                     {opc.categoria && (
-                      <span className="text-[10px] text-slate-400 font-medium mt-0.5">{opc.categoria}</span>
+                      <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium mt-0.5">{opc.categoria}</span>
                     )}
                   </div>
                   <div className="flex items-center gap-2">
                     {opc.precio && (
-                      <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md font-bold">
+                      <span className="text-[10px] bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-md font-bold">
                         S/. {opc.precio.toFixed(2)}
                       </span>
                     )}

@@ -42,7 +42,7 @@ const AreaTexto = ({
           rows={rows}
           required={required}
           maxLength={limite}
-          className={`w-full pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 focus:bg-white resize-none ${
+          className={`w-full pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 dark:bg-slate-700 focus:bg-white dark:focus:bg-slate-600 placeholder:text-slate-400 dark:placeholder:text-slate-500 resize-none ${
             Icono ? "pl-10" : "px-4"
           }`}
         />
@@ -50,7 +50,7 @@ const AreaTexto = ({
       
       {/* Contador de caracteres con barra de progreso micro-animada */}
       <div className="flex items-center justify-between mt-1 px-1">
-        <div className="flex-1 mr-4 bg-slate-100 h-1 rounded-full overflow-hidden">
+        <div className="flex-1 mr-4 bg-slate-100 dark:bg-slate-700 h-1 rounded-full overflow-hidden">
           <div 
             className={`h-full transition-all duration-150 rounded-full ${
               porcentaje >= 90 ? 'bg-red-500' : porcentaje >= 75 ? 'bg-amber-400' : 'bg-sky-450'
