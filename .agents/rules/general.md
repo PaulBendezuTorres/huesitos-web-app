@@ -38,3 +38,4 @@ description: Reglas generales del proyecto Huesitos, incluyendo flujo de git, do
     ```
 - **Frecuencia**: Realizar obligatoriamente un commit al finalizar cada tarea (sea una tarea pequeña e individual o un paso de un plan de trabajo), antes de proceder con el siguiente cambio.
 - **Archivos Locales Excluidos**: Nunca se deben agregar, hacer commit o subir al repositorio remoto el archivo `memoria.md`. Este archivo es estrictamente de uso local y contexto para los agentes en el entorno de desarrollo.
+- **Archivos Ignorados**: Está estrictamente prohibido forzar la adición (`git add -f`) de archivos o directorios que estén excluidos en el archivo `.gitignore` del proyecto.
