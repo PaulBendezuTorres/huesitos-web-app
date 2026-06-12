@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import {
   PawPrint, Stethoscope, UserRound, CalendarClock,
   ChevronRight, ChevronLeft, Check, AlertTriangle,
-  Clock, CircleDollarSign, Loader2,
+  Clock, CircleDollarSign,
 } from 'lucide-react';
+import CargadorSpinner from '../../../componentes/CargadorSpinner';
 import { obtenerMascotasPorDueno } from '../../../api/clienteApi';
 import {
   agendarCita,
@@ -234,7 +235,7 @@ const ClienteAgendarCita = () => {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 border-4 border-sky-500 border-t-transparent rounded-full animate-spin" />
+          <CargadorSpinner size="lg" />
           <span className="text-sm font-semibold text-slate-400">Cargando formulario...</span>
         </div>
       </div>
@@ -527,7 +528,7 @@ const ClienteAgendarCita = () => {
             disabled={!puedeAvanzar() || enviando}
             className="flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white bg-emerald-500 hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20 disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            {enviando ? <Loader2 size={16} className="animate-spin" /> : <Check size={16} />}
+            {enviando ? <CargadorSpinner size="xs" color="border-white" /> : <Check size={16} />}
             {enviando ? 'Agendando...' : 'Confirmar Cita'}
           </button>
         )}
