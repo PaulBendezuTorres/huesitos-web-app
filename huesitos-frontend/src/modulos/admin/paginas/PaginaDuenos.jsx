@@ -5,6 +5,7 @@ import {
   actualizarDuenoExistente 
 } from "../../../servicios/duenoServicio";
 import { UserPlus, Search, MapPin, Phone, Mail, User, X, Edit2 } from 'lucide-react';
+import CargadorSpinner from "../../../componentes/CargadorSpinner";
 
 const PaginaDuenos = () => {
   const [duenos, setDuenos] = useState([]);
@@ -87,7 +88,12 @@ const PaginaDuenos = () => {
   );
 
   if (loading && duenos.length === 0) {
-    return <div className="text-center p-8 font-semibold text-sky-600 animate-pulse">Sincronizando expedientes de clientes...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center h-64 gap-3 bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm">
+        <CargadorSpinner size="lg" />
+        <span className="text-slate-500 text-sm font-semibold animate-pulse">Sincronizando expedientes de clientes...</span>
+      </div>
+    );
   }
 
   return (

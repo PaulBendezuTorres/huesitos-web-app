@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { obtenerReporteDiario, obtenerTransacciones, procesarPago } from "../../../servicios/finanzasServicio";
 import { Wallet, Banknote, CreditCard, Smartphone, CheckCircle, Clock, Calendar } from 'lucide-react';
+import CargadorSpinner from "../../../componentes/CargadorSpinner";
 
 const PaginaFinanzas = () => {
   const [reporte, setReporte] = useState(null);
@@ -56,7 +57,12 @@ const PaginaFinanzas = () => {
   };
 
   if (loading && !reporte) {
-    return <div className="text-center p-8 font-semibold text-sky-600 animate-pulse">Calculando métricas financieras...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center h-64 gap-3 bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm">
+        <CargadorSpinner size="lg" />
+        <span className="text-slate-500 text-sm font-semibold animate-pulse">Calculando métricas financieras...</span>
+      </div>
+    );
   }
 
   return (

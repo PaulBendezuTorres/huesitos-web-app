@@ -170,7 +170,12 @@ const PaginaUsuarios = () => {
 
 
   if (loading && usuarios.length === 0) {
-    return <div className="text-center p-8 font-semibold text-sky-600 animate-pulse">Sincronizando cuentas de usuario...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center h-64 gap-3 bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm">
+        <CargadorSpinner size="lg" />
+        <span className="text-slate-500 text-sm font-semibold animate-pulse">Sincronizando cuentas de usuario...</span>
+      </div>
+    );
   }
 
   return (

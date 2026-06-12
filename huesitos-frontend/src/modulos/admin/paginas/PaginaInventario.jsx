@@ -10,13 +10,13 @@ import {
   Trash2,
   ChevronDown,
   ChevronUp,
-  Loader2,
   Save,
   X,
   FileText,
   TrendingDown,
   FolderOpen
 } from 'lucide-react';
+import CargadorSpinner from '../../../componentes/CargadorSpinner';
 import {
   obtenerProductos,
   obtenerCategorias,
@@ -376,8 +376,8 @@ const PaginaInventario = () => {
 
       {/* ─── TABLA PRINCIPAL Y LOTES EXPANDIBLES ─── */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-slate-200/60 shadow-sm">
-          <Loader2 className="text-sky-500 animate-spin mb-3" size={32} />
+        <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-slate-200/60 shadow-sm gap-3">
+          <CargadorSpinner size="lg" />
           <span className="text-sm font-bold text-slate-400">Consultando stock e inventarios...</span>
         </div>
       ) : (
@@ -646,7 +646,7 @@ const PaginaInventario = () => {
                   disabled={procesando}
                   className="px-5 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50"
                 >
-                  {procesando ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
+                  {procesando ? <CargadorSpinner size="xs" color="border-white" /> : <Save size={12} />}
                   Registrar Producto
                 </button>
               </div>
@@ -741,7 +741,7 @@ const PaginaInventario = () => {
                   disabled={procesando}
                   className="px-5 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50"
                 >
-                  {procesando ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
+                  {procesando ? <CargadorSpinner size="xs" color="border-white" /> : <Save size={12} />}
                   Ingresar Stock
                 </button>
               </div>
@@ -800,7 +800,7 @@ const PaginaInventario = () => {
                   disabled={procesando}
                   className="px-5 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50"
                 >
-                  {procesando ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
+                  {procesando ? <CargadorSpinner size="xs" color="border-white" /> : <Save size={12} />}
                   Guardar Ajuste
                 </button>
               </div>
