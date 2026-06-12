@@ -121,10 +121,6 @@ const FormularioServicio = ({ onGuardar }) => {
 
   return (
     <form onSubmit={handleSubmit} className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm space-y-5">
-      <h2 className="text-sm font-black text-slate-800 uppercase tracking-widest border-b pb-3 mb-2 flex items-center gap-2">
-        <Stethoscope className="text-sky-500" size={18} /> Registrar Nuevo Servicio
-      </h2>
-      
       {/* Carga de Imagen */}
       <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100/80">
         <div className="w-16 h-16 rounded-xl bg-white border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center text-slate-400 shadow-inner relative">

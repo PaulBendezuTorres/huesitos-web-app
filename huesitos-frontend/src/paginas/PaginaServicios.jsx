@@ -141,12 +141,15 @@ const PaginaServicios = () => {
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       {/* CABECERA DINÁMICA */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 group">
         <div>
-          <h1 className="text-2xl font-black text-slate-800 tracking-tight">
+          <h1 className="text-2xl font-black text-slate-800 tracking-tight flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center text-sky-500 shadow-sm shrink-0 group-hover:scale-105 group-hover:rotate-6 transition-all duration-300">
+              <Stethoscope size={20} />
+            </div>
             {!esRegistro ? "Catálogo de Servicios" : "Registrar Servicio Médico"}
           </h1>
-          <p className="text-slate-500 text-sm mt-1">
+          <p className="text-slate-505 text-sm mt-1.5 md:ml-13">
             {!esRegistro 
               ? "Lista completa de la oferta médica y los servicios disponibles en la clínica." 
               : "Crea un nuevo servicio médico y configúralo en tiempo real."}
