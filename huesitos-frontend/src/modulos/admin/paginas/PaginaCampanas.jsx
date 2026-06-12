@@ -9,12 +9,12 @@ import {
   Clock,
   X,
   Save,
-  Loader2,
   AlertTriangle,
   CheckCircle,
   Tag,
   ShoppingBag
 } from 'lucide-react';
+import CargadorSpinner from '../../../componentes/CargadorSpinner';
 import {
   obtenerTodasCampanas,
   registrarCampana,
@@ -351,9 +351,9 @@ const PaginaCampanas = () => {
 
       {/* GRILLAS PRINCIPALES */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-slate-200/60 shadow-sm">
-          <Loader2 className="text-sky-500 animate-spin mb-3" size={32} />
-          <span className="text-sm font-bold text-slate-400">Consultando datos de marketing...</span>
+        <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-slate-200/60 shadow-sm gap-3">
+          <CargadorSpinner size="lg" />
+          <span className="text-sm font-bold text-slate-400 font-semibold">Consultando datos de marketing...</span>
         </div>
       ) : activeTab === 'campanas' ? (
         /* ─── PESTAÑA: CAMPAÑAS ─── */
@@ -613,7 +613,7 @@ const PaginaCampanas = () => {
                   disabled={procesando}
                   className="px-5 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50"
                 >
-                  {procesando ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
+                  {procesando ? <CargadorSpinner size="xs" color="border-white" /> : <Save size={12} />}
                   Guardar Campaña
                 </button>
               </div>
@@ -762,7 +762,7 @@ const PaginaCampanas = () => {
                   disabled={procesando}
                   className="px-5 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50"
                 >
-                  {procesando ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
+                  {procesando ? <CargadorSpinner size="xs" color="border-white" /> : <Save size={12} />}
                   Guardar Oferta
                 </button>
               </div>
