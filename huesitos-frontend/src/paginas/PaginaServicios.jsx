@@ -3,7 +3,7 @@ import FormularioServicio from "../componentes/FormularioServicio";
 import TablaServicio from "../componentes/TablaServicio";
 import { crearServicio, cambiarEstadoServicio, actualizarServicio, subirFotoServicio, eliminarServicio } from "../servicios/servicioServicio";
 import { useServicios } from "../hooks/useServicios";
-import { X, Stethoscope, Tag, Clock, FileText, Camera } from 'lucide-react';
+import { X, Stethoscope, Tag, Clock, FileText, Camera, List, Plus } from 'lucide-react';
 import CargadorSpinner from "../componentes/CargadorSpinner";
 import AreaTexto from "../componentes/AreaTexto";
 import ModalConfirmacion from "../componentes/ModalConfirmacion";
@@ -16,6 +16,7 @@ const PaginaServicios = () => {
   const [subiendoFoto, setSubiendoFoto] = useState(false);
   const [servicioAEliminar, setServicioAEliminar] = useState(null);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [mostrarTabla, setMostrarTabla] = useState(false);
 
   const handleSubirFoto = async (e) => {
     const file = e.target.files[0];
@@ -50,6 +51,7 @@ const PaginaServicios = () => {
       }
       obtenerServicios();
       alert("Servicio creado con éxito");
+      setMostrarTabla(true); // Redirigir a la lista para ver el servicio creado
     } catch (error) {
       console.error(error);
       alert("Hubo un error al crear el servicio");
@@ -133,20 +135,49 @@ const PaginaServicios = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      {/* CABECERA */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm">
-        <h1 className="text-2xl font-black text-slate-800 tracking-tight">Gestión de Catálogo</h1>
-        <p className="text-slate-500 text-sm mt-1">Administra la oferta médica y los servicios disponibles en la clínica.</p>
+      {/* CABECERA DINÁMICA */}
+      <div className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-black text-slate-800 tracking-tight">
+            {mostrarTabla ? "Catálogo de Servicios" : "Gestión de Catálogo"}
+          </h1>
+          <p className="text-slate-500 text-sm mt-1">
+            {mostrarTabla 
+              ? "Lista completa de la oferta médica y los servicios disponibles en la clínica." 
+              : "Registra nuevos servicios médicos y edita la información en tiempo real."}
+          </p>
+        </div>
+        
+        {mostrarTabla ? (
+          <button
+            onClick={() => setMostrarTabla(false)}
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-sky-500 to-cyan-400 hover:from-sky-600 hover:to-cyan-500 text-white px-4.5 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-sky-500/20 active:scale-95 transition-all select-none shrink-0"
+          >
+            <Plus size={16} />
+            Registrar nuevo servicio
+          </button>
+        ) : (
+          <button
+            onClick={() => setMostrarTabla(true)}
+            className="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 px-4.5 py-2.5 rounded-xl text-sm font-bold shadow-sm active:scale-95 transition-all select-none shrink-0"
+          >
+            <List size={16} className="text-sky-500" />
+            Ver todos mis servicios
+          </button>
+        )}
       </div>
 
-      <div className="grid grid-cols-1 gap-8">
-        <FormularioServicio onGuardar={guardar} />
-        <TablaServicio 
-          servicios={servicios} 
-          onEstado={cambiarEstado} 
-          onEditar={abrirEditarModal} 
-          onEliminar={abrirEliminarModal}
-        />
+      <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
+        {mostrarTabla ? (
+          <TablaServicio 
+            servicios={servicios} 
+            onEstado={cambiarEstado} 
+            onEditar={abrirEditarModal} 
+            onEliminar={abrirEliminarModal}
+          />
+        ) : (
+          <FormularioServicio onGuardar={guardar} />
+        )}
       </div>
 
       {/* MODAL DE EDICIÓN PREMIUM */}
