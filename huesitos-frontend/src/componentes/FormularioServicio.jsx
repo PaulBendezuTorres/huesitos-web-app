@@ -120,10 +120,10 @@ const FormularioServicio = ({ onGuardar }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm space-y-5">
+    <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm space-y-5">
       {/* Carga de Imagen */}
-      <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100/80">
-        <div className="w-16 h-16 rounded-xl bg-white border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center text-slate-400 shadow-inner relative">
+      <div className="flex items-center gap-4 bg-slate-50 dark:bg-slate-900/40 p-4 rounded-2xl border border-slate-100/80 dark:border-slate-700/60">
+        <div className="w-16 h-16 rounded-xl bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 overflow-hidden shrink-0 flex items-center justify-center text-slate-400 shadow-inner relative">
           {vistaPrevia ? (
             <img src={vistaPrevia} alt="Vista previa del servicio" className={`w-full h-full object-cover ${procesando ? 'opacity-40' : ''}`} />
           ) : (
@@ -136,8 +136,8 @@ const FormularioServicio = ({ onGuardar }) => {
           )}
         </div>
         <div>
-          <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wide">Imagen del Servicio</label>
-          <label className={`inline-flex items-center gap-1.5 bg-white hover:bg-slate-150 text-slate-700 border border-slate-300 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm ${procesando ? 'opacity-55 cursor-not-allowed' : 'cursor-pointer'}`}>
+          <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 uppercase tracking-wide">Imagen del Servicio</label>
+          <label className={`inline-flex items-center gap-1.5 bg-white dark:bg-slate-700 hover:bg-slate-150 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-600 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm ${procesando ? 'opacity-55 cursor-not-allowed' : 'cursor-pointer'}`}>
             <Camera size={14} />
             {archivo ? "Cambiar foto" : "Cargar foto"}
             <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" disabled={procesando} />
@@ -171,7 +171,7 @@ const FormularioServicio = ({ onGuardar }) => {
         <div className="relative">
           <Tag className="absolute left-3 top-3 text-slate-400" size={18} />
           <input type="number" step="0.01" name="precio" value={form.precio} placeholder="Precio (S/.)" onChange={handleChange} required 
-            className="w-full pl-10 border border-slate-300 p-2.5 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 outline-none transition-all bg-slate-50 focus:bg-white" />
+            className="w-full pl-10 border border-slate-300 dark:border-slate-600 p-2.5 rounded-xl text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-sky-500 outline-none transition-all bg-slate-50 dark:bg-slate-700 focus:bg-white dark:focus:bg-slate-600 placeholder:text-slate-400 dark:placeholder:text-slate-500" />
         </div>
       </div>
 
@@ -187,7 +187,7 @@ const FormularioServicio = ({ onGuardar }) => {
         <div className="relative w-1/3">
           <Clock className="absolute left-3 top-3 text-slate-400" size={18} />
           <input type="number" name="duracionMinutos" value={form.duracionMinutos} placeholder="Minutos" onChange={handleChange} required 
-            className="w-full pl-10 border border-slate-300 p-2.5 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 outline-none transition-all bg-slate-50 focus:bg-white" />
+            className="w-full pl-10 border border-slate-300 dark:border-slate-600 p-2.5 rounded-xl text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-sky-500 outline-none transition-all bg-slate-50 dark:bg-slate-700 focus:bg-white dark:focus:bg-slate-600 placeholder:text-slate-400 dark:placeholder:text-slate-500" />
         </div>
         
         <Boton 

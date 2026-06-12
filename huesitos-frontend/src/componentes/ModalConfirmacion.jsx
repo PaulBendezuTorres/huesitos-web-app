@@ -34,13 +34,13 @@ const ModalConfirmacion = ({
 
   return (
     <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[150] p-4 animate-in fade-in duration-200">
-      <div className="bg-white rounded-3xl shadow-2xl border border-slate-200 max-w-md w-full overflow-hidden animate-in zoom-in-95 duration-200">
+      <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 max-w-md w-full overflow-hidden animate-in zoom-in-95 duration-200">
         
         {/* Encabezado e Icono */}
         <div className="p-6 pb-4 flex gap-4 items-start relative">
           <button 
             onClick={onClose}
-            className="absolute top-4 right-4 text-slate-400 hover:text-slate-650 p-1 rounded-lg hover:bg-slate-100 transition-all"
+            className="absolute top-4 right-4 text-slate-400 hover:text-slate-650 dark:hover:text-slate-200 p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-all"
             aria-label="Cerrar modal"
           >
             <X size={18} />
@@ -51,21 +51,21 @@ const ModalConfirmacion = ({
           </div>
 
           <div className="space-y-1.5 pr-6">
-            <h3 className="text-lg font-black text-slate-800 tracking-tight leading-none">
+            <h3 className="text-lg font-black text-slate-800 dark:text-slate-100 tracking-tight leading-none">
               {titulo}
             </h3>
-            <p className="text-sm text-slate-500 leading-relaxed font-medium">
+            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
               {mensaje}
             </p>
           </div>
         </div>
 
         {/* Acciones */}
-        <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
+        <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-700 flex justify-end gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="px-4.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-slate-500 hover:text-slate-700 bg-white border border-slate-200 hover:border-slate-350 hover:bg-slate-50 transition-all shadow-sm"
+            className="px-4.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 hover:border-slate-350 hover:bg-slate-50 dark:hover:bg-slate-600 transition-all shadow-sm"
           >
             {textoCancelar}
           </button>

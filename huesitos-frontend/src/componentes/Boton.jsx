@@ -24,7 +24,7 @@ const Boton = ({
 
   const variantes = {
     primary: "bg-gradient-to-r from-sky-500 to-cyan-400 hover:from-sky-600 hover:to-cyan-500 text-white shadow-lg shadow-sky-500/20 border border-sky-400/20 active:scale-95",
-    secondary: "bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-350 shadow-sm active:scale-95",
+    secondary: "bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600 hover:border-slate-350 shadow-sm active:scale-95",
     danger: "bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 text-white shadow-lg shadow-red-500/20 border border-red-400/20 active:scale-95",
     success: "bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg shadow-emerald-500/20 border border-emerald-400/20 active:scale-95",
   };
