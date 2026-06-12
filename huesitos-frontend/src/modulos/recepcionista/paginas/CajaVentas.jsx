@@ -14,6 +14,7 @@ import {
   descargarBoletaPdf
 } from '../../../servicios/finanzasServicio';
 import WidgetInventarioCritico from '../../../componentes/WidgetInventarioCritico';
+import CargadorSpinner from '../../../componentes/CargadorSpinner';
 
 const CajaVentas = () => {
   const [transacciones, setTransacciones] = useState([]);
@@ -107,8 +108,9 @@ const CajaVentas = () => {
 
         <div className="p-4 space-y-3 overflow-visible lg:flex-1 lg:overflow-y-auto">
           {loadingTransacciones ? (
-            <div className="text-center py-10 text-xs font-bold text-slate-400 animate-pulse">
-              Consultando transacciones de caja...
+            <div className="flex flex-col items-center justify-center py-10 gap-2">
+              <CargadorSpinner size="sm" />
+              <span className="text-xs font-semibold text-slate-400">Consultando transacciones de caja...</span>
             </div>
           ) : transacciones.length === 0 ? (
             <div className="text-center py-10 text-slate-450 text-xs font-semibold text-slate-400">
@@ -287,7 +289,7 @@ const CajaVentas = () => {
                   disabled={procesandoPago}
                   className="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-1.5 disabled:opacity-50"
                 >
-                  <Printer size={14} /> {procesandoPago ? 'Procesando...' : 'Confirmar e imprimir boleta'}
+                  {procesandoPago ? <CargadorSpinner size="xs" color="border-white" /> : <Printer size={14} />} {procesandoPago ? 'Procesando...' : 'Confirmar e imprimir boleta'}
                 </button>
               </div>
             </form>
