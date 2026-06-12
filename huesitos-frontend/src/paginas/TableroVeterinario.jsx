@@ -17,7 +17,14 @@ const TableroVeterinario = () => {
   const [usuarioId] = useState(localStorage.getItem('usuarioId') || '');
   
   // Vista activa del panel principal
-  const [vistaActual, setVistaActual] = useState('agenda'); // 'agenda', 'consulta', 'mascotas'
+  const [vistaActual, setVistaActual] = useState(() => {
+    const subvista = localStorage.getItem('subvistaDefecto');
+    if (subvista) {
+      localStorage.removeItem('subvistaDefecto');
+      return subvista;
+    }
+    return 'agenda';
+  });
 
   // Lista de citas de la agenda
   const [citas, setCitas] = useState([]);

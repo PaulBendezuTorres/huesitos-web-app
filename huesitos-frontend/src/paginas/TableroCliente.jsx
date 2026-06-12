@@ -10,7 +10,14 @@ import PlantillaTablero from '../componentes/PlantillaTablero';
 const TableroCliente = () => {
   const navigate = useNavigate();
   const [correo] = useState(localStorage.getItem('usuarioCorreo') || 'Cliente');
-  const [vistaActual, setVistaActual] = useState('dashboard');
+  const [vistaActual, setVistaActual] = useState(() => {
+    const subvista = localStorage.getItem('subvistaDefecto');
+    if (subvista) {
+      localStorage.removeItem('subvistaDefecto');
+      return subvista;
+    }
+    return 'dashboard';
+  });
 
   useEffect(() => {
     const rol = localStorage.getItem('usuarioRol');

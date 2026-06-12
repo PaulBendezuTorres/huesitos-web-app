@@ -21,10 +21,10 @@ public class Dueño {
     @Column(name = "nombre_completo", nullable = false, length = 100)
     private String nombreCompleto;
 
-    @Column(nullable = false, length = 20)
+    @Column(length = 20)
     private String telefono;
 
-    @Column(nullable = false, length = 150)
+    @Column(length = 150)
     private String direccion;
 
     @OneToOne

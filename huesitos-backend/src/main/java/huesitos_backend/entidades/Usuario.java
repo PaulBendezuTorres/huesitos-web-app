@@ -35,6 +35,12 @@ public class Usuario {
     @Column(name = "foto_perfil_url", nullable = false, length = 255)
     private String fotoPerfilUrl = "/uploads/defecto-usuario.png";
 
+    @Column(name = "nombre", length = 50)
+    private String nombre;
+
+    @Column(name = "apellido", length = 50)
+    private String apellido;
+
     @Column(name = "token_recuperacion", length = 255)
     private String tokenRecuperacion;
 

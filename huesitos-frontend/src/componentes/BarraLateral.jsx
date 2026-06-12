@@ -124,7 +124,18 @@ const BarraLateral = ({
         <button 
           key={item.id}
           onClick={() => { 
-            setVistaActual(item.id); 
+            if (setVistaActual) {
+              setVistaActual(item.id);
+            } else {
+              localStorage.setItem('subvistaDefecto', item.id);
+              const rutas = {
+                ADMINISTRADOR: '/admin',
+                CLIENTE: '/cliente',
+                VETERINARIO: '/veterinario',
+                RECEPCIONISTA: '/recepcion'
+              };
+              window.location.href = rutas[rol] || '/';
+            }
             setSidebarOpen(false); 
           }} 
           className={estaActivo ? activeBtnClass : inactiveBtnClass}
@@ -179,7 +190,12 @@ const BarraLateral = ({
 
       {/* Info del Usuario y Cerrar Sesión */}
       <div className="p-3 border-t border-slate-800/30 bg-slate-900/50">
-        <div className="bg-slate-950/40 border border-slate-800/40 p-2.5 rounded-lg flex items-center gap-2.5 mb-3">
+        <div 
+          onClick={() => {
+            window.location.href = '/perfil';
+          }}
+          className="bg-slate-950/40 border border-slate-800/40 p-2.5 rounded-lg flex items-center gap-2.5 mb-3 cursor-pointer hover:bg-slate-850/65 hover:border-slate-750 transition-all"
+        >
           <div className={`w-7 h-7 rounded-lg ${config.badgeBg} flex items-center justify-center text-white font-bold shrink-0 shadow-sm`}>
             <User size={12} />
           </div>

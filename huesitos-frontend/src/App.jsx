@@ -10,6 +10,7 @@ import TableroCliente from './paginas/TableroCliente';
 import MascotaFichaHistorial from './paginas/MascotaFichaHistorial';
 import TableroVeterinario from './paginas/TableroVeterinario';
 import TableroRecepcionista from './paginas/TableroRecepcionista';
+import MiPerfil from './paginas/MiPerfil';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/cliente/mascota/:mascotaId" element={<MascotaFichaHistorial />} />
         <Route path="/veterinario" element={<TableroVeterinario />} />
         <Route path="/recepcion" element={<TableroRecepcionista />} />
+        <Route path="/perfil" element={<MiPerfil />} />
       </Routes>
     </Router>
   );

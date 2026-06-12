@@ -5,9 +5,8 @@ import PanelIzquierdoAutenticacion from '../componentes/PanelIzquierdoAutenticac
 import BotonVolver from '../componentes/BotonVolver';
 
 const Registro = () => {
-  const [nombreCompleto, setNombreCompleto] = useState('');
-  const [telefono, setTelefono] = useState('');
-  const [direccion, setDireccion] = useState('');
+  const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -23,13 +22,8 @@ const Registro = () => {
     setErrorMsg('');
     setSuccessMsg('');
 
-    if (!nombreCompleto || !telefono || !direccion || !email || !password || !confirmPassword) {
+    if (!nombre || !apellido || !email || !password || !confirmPassword) {
       setErrorMsg('Todos los campos son obligatorios');
-      return;
-    }
-
-    if (telefono.length !== 9) {
-      setErrorMsg('El teléfono móvil debe tener exactamente 9 dígitos');
       return;
     }
 
@@ -50,10 +44,12 @@ const Registro = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          nombreCompleto: nombreCompleto,
-          telefono: telefono,
-          direccion: direccion,
+          nombreCompleto: `${nombre} ${apellido}`,
+          telefono: null,
+          direccion: null,
           usuario: {
+            nombre: nombre,
+            apellido: apellido,
             correo: email,
             contrasena: password
           }
@@ -119,55 +115,38 @@ const Registro = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="sm:col-span-2">
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5 tracking-wide">Nombre completo</label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 mb-1.5 tracking-wide">Nombre</label>
                 <div className="relative">
                   <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
                     <User size={16} />
                   </span>
                   <input
                     type="text"
-                    value={nombreCompleto}
-                    onChange={e => setNombreCompleto(e.target.value)}
-                    placeholder="Juan Pérez"
+                    value={nombre}
+                    onChange={e => setNombre(e.target.value)}
+                    placeholder="Juan"
                     required
                     className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 focus:bg-white"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5 tracking-wide">Teléfono móvil</label>
+                <label className="block text-xs font-semibold text-slate-600 mb-1.5 tracking-wide">Apellido</label>
                 <div className="relative">
                   <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
-                    <Phone size={16} />
+                    <User size={16} />
                   </span>
                   <input
-                    type="tel"
-                    value={telefono}
-                    onChange={e => setTelefono(e.target.value.replace(/\D/g, '').slice(0, 9))}
-                    placeholder="999888777"
+                    type="text"
+                    value={apellido}
+                    onChange={e => setApellido(e.target.value)}
+                    placeholder="Pérez"
                     required
                     className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 focus:bg-white"
                   />
                 </div>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1.5 tracking-wide">Dirección</label>
-              <div className="relative">
-                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
-                  <MapPin size={16} />
-                </span>
-                <input
-                  type="text"
-                  value={direccion}
-                  onChange={e => setDireccion(e.target.value)}
-                  placeholder="Av. Bolognesi 123"
-                  required
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 focus:bg-white"
-                />
               </div>
             </div>
 

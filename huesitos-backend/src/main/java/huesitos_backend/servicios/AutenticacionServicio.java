@@ -40,12 +40,20 @@ public class AutenticacionServicio {
             throw new RuntimeException("El correo ya está registrado");
         }
 
-        // 2. Verificar si el teléfono ya está registrado
-        if (dueñoRepositorio.existsByTelefono(dueño.getTelefono())) {
-            throw new RuntimeException("El teléfono ya está registrado");
+        // 2. Verificar si el teléfono ya está registrado (solo si es provisto y no nulo/vacío)
+        if (dueño.getTelefono() != null && !dueño.getTelefono().isBlank()) {
+            if (dueñoRepositorio.existsByTelefono(dueño.getTelefono())) {
+                throw new RuntimeException("El teléfono ya está registrado");
+            }
         }
 
-        // 3. Forzar rol CLIENTE, estado activo = true, encriptar contraseña y poner foto por defecto si es nula
+        // 3. Establecer nombreCompleto del dueño combinando nombre y apellido de Usuario
+        if (usuario.getNombre() != null && !usuario.getNombre().isBlank()) {
+            String ape = usuario.getApellido() != null ? usuario.getApellido() : "";
+            dueño.setNombreCompleto((usuario.getNombre() + " " + ape).trim());
+        }
+
+        // 4. Forzar rol CLIENTE, estado activo = true, encriptar contraseña y poner foto por defecto si es nula
         usuario.setRol(Rol.CLIENTE);
         usuario.setActivo(true);
         usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
@@ -53,11 +61,11 @@ public class AutenticacionServicio {
             usuario.setFotoPerfilUrl("/uploads/defecto-usuario.png");
         }
 
-        // 4. Guardar primero el Usuario en su repositorio
+        // 5. Guardar primero el Usuario en su repositorio
         Usuario usuarioGuardado = usuarioRepositorio.save(usuario);
         dueño.setUsuario(usuarioGuardado);
 
-        // 5. Guardar el Dueño en su repositorio
+        // 6. Guardar el Dueño en su repositorio
         return dueñoRepositorio.save(dueño);
     }
 
