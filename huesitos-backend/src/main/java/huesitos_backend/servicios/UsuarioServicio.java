@@ -7,6 +7,7 @@ import huesitos_backend.entidades.Actividad;
 import huesitos_backend.entidades.HorarioPersonal;
 import huesitos_backend.entidades.Mascota;
 import huesitos_backend.entidades.Cita;
+import huesitos_backend.entidades.EstadoCita;
 import huesitos_backend.repositorios.UsuarioRepositorio;
 import huesitos_backend.repositorios.DueñoRepositorio;
 import huesitos_backend.repositorios.ActividadRepositorio;
