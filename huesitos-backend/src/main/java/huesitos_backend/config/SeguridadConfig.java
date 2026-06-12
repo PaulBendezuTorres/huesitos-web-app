@@ -49,7 +49,8 @@ public class SeguridadConfig {
                     "/api/autenticacion/olvide-contrasena",
                     "/api/autenticacion/restablecer-contrasena",
                     "/api/autenticacion/activar",
-                    "/api/autenticacion/reenviar-codigo"
+                    "/api/autenticacion/reenviar-codigo",
+                    "/uploads/**"
                 ).permitAll()
                 
                 // 3. Matchers de Servicios unificados con hasRole

@@ -54,9 +54,9 @@ public class StorageService {
             BufferedImage imagenFinal = redimensionarSiEsNecesario(imagenOriginal, 800);
 
             // 3. Nombre único del archivo
-            String nombreArchivo = prefijo + "_" + UUID.randomUUID().toString() + ".jpg";
+            String nombreArchivo = prefijo + "_" + UUID.randomUUID().toString() + ".webp";
 
-            // 4. Configurar ImageWriter para compresión JPG (70% de calidad)
+            // 4. Configurar ImageWriter para compresión WebP (75% de calidad)
             File outputFile = new File(UPLOAD_DIR + nombreArchivo);
             guardarConCompresion(imagenFinal, outputFile);
 
@@ -80,7 +80,9 @@ public class StorageService {
         int nuevoAncho = maxAncho;
         int nuevoAlto = (int) (altoOriginal * ratio);
 
-        BufferedImage redimensionada = new BufferedImage(nuevoAncho, nuevoAlto, BufferedImage.TYPE_INT_RGB);
+        // Conservar transparencia si el original la tiene
+        int tipo = original.getColorModel().hasAlpha() ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB;
+        BufferedImage redimensionada = new BufferedImage(nuevoAncho, nuevoAlto, tipo);
         Graphics2D g2d = redimensionada.createGraphics();
         
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
@@ -91,15 +93,15 @@ public class StorageService {
     }
 
     private void guardarConCompresion(BufferedImage imagen, File outputFile) throws IOException {
-        Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
+        Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("webp");
         if (!writers.hasNext()) {
-            throw new RuntimeException("No se encontró un escritor de imágenes para JPG");
+            throw new RuntimeException("No se encontró un escritor de imágenes para WebP. Verifica la dependencia de Maven.");
         }
         
         ImageWriter writer = writers.next();
         ImageWriteParam param = writer.getDefaultWriteParam();
         param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-        param.setCompressionQuality(0.7f); // 70% de calidad
+        param.setCompressionQuality(0.75f); // 75% de calidad para WebP
 
         try (FileImageOutputStream outputStream = new FileImageOutputStream(outputFile)) {
             writer.setOutput(outputStream);
