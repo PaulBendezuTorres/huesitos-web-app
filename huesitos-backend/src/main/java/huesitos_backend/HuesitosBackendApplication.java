@@ -25,8 +25,21 @@ public class HuesitosBackendApplication {
 
     // Este bloque crea los 3 roles automáticamente al iniciar el servidor
     @Bean
-    public CommandLineRunner inicializarDatos(UsuarioRepositorio usuarioRepo, DueñoRepositorio dueñoRepo, PasswordEncoder passwordEncoder) {
+    public CommandLineRunner inicializarDatos(
+            UsuarioRepositorio usuarioRepo, 
+            DueñoRepositorio dueñoRepo, 
+            PasswordEncoder passwordEncoder,
+            org.springframework.jdbc.core.JdbcTemplate jdbcTemplate
+    ) {
         return args -> {
+            // Modificar columnas telefono y direccion de la tabla duenos para que acepten nulos
+            try {
+                jdbcTemplate.execute("ALTER TABLE duenos MODIFY COLUMN telefono VARCHAR(20) NULL");
+                jdbcTemplate.execute("ALTER TABLE duenos MODIFY COLUMN direccion VARCHAR(150) NULL");
+            } catch (Exception e) {
+                // Si la alteración falla o ya se aplicó, continuar
+            }
+
             // Encriptamos la contraseña "123456" con tu propia configuración de seguridad
             String claveEncriptada = passwordEncoder.encode("123456");
 
