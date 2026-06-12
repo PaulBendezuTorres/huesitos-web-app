@@ -5,6 +5,7 @@ import { crearServicio, cambiarEstadoServicio, actualizarServicio, subirFotoServ
 import { useServicios } from "../hooks/useServicios";
 import { X, Stethoscope, Tag, Clock, FileText, Camera } from 'lucide-react';
 import CargadorSpinner from "../componentes/CargadorSpinner";
+import AreaTexto from "../componentes/AreaTexto";
 
 const PaginaServicios = () => {
   const { servicios, loading, obtenerServicios } = useServicios();
@@ -203,13 +204,13 @@ const PaginaServicios = () => {
 
               <div>
                 <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Descripción</label>
-                <div className="relative">
-                  <FileText className="absolute left-3 top-3 text-slate-400" size={18} />
-                  <textarea 
-                    name="descripcion" value={formEdit.descripcion} onChange={handleEditChange} required rows="3"
-                    className="w-full pl-10 border border-slate-300 p-2.5 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all bg-slate-50 focus:bg-white"
-                  />
-                </div>
+                <AreaTexto 
+                  value={formEdit.descripcion} 
+                  onChange={(val) => setFormEdit(prev => ({ ...prev, descripcion: val }))} 
+                  placeholder="Descripción detallada del servicio..." 
+                  limite={250} 
+                  required={true}
+                />
               </div>
 
               <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">

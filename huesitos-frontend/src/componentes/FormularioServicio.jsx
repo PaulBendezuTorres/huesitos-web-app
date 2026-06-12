@@ -2,6 +2,7 @@ import { useState } from "react";
 import { PlusCircle, Stethoscope, Tag, Clock, FileText, Camera } from 'lucide-react';
 import Combobox from "./Combobox";
 import CargadorSpinner from "./CargadorSpinner";
+import AreaTexto from "./AreaTexto";
 
 // Catálogo predefinido
 const CATALOGO_PREDEFINIDO = [
@@ -177,11 +178,13 @@ const FormularioServicio = ({ onGuardar }) => {
         </div>
       </div>
 
-      <div className="relative">
-        <FileText className="absolute left-3 top-3 text-slate-400" size={18} />
-        <textarea name="descripcion" value={form.descripcion} placeholder="Descripción detallada del servicio..." onChange={handleChange} required rows="2"
-          className="w-full pl-10 border border-slate-300 p-2.5 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 outline-none transition-all bg-slate-50 focus:bg-white" />
-      </div>
+      <AreaTexto 
+        value={form.descripcion} 
+        onChange={(val) => setForm(prev => ({ ...prev, descripcion: val }))} 
+        placeholder="Descripción detallada del servicio..." 
+        limite={250} 
+        required={true}
+      />
 
       <div className="flex gap-4 items-center">
         <div className="relative w-1/3">
