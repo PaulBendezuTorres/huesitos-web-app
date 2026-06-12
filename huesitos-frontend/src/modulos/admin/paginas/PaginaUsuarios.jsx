@@ -149,7 +149,10 @@ const PaginaUsuarios = () => {
       alert("Usuario eliminado exitosamente.");
     } catch (error) {
       console.error(error);
-      alert(error.response?.data || "Ocurrió un error al intentar eliminar el usuario.");
+      const mensaje = typeof error.response?.data === "string"
+        ? error.response.data
+        : (error.response?.data?.mensaje || "Ocurrió un error al intentar eliminar el usuario.");
+      alert(mensaje);
     } finally {
       setProcesandoEliminacion(false);
     }
