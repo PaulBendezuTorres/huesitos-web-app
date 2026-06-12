@@ -4,9 +4,10 @@ import {
   crearNuevoDueno, 
   actualizarDuenoExistente 
 } from "../../../servicios/duenoServicio";
-import { UserPlus, MapPin, Phone, Mail, User, X, Edit2 } from 'lucide-react';
+import { UserPlus, MapPin, Phone, Mail, X, Edit2 } from 'lucide-react';
 import CargadorSpinner from "../../../componentes/CargadorSpinner";
 import Buscador from "../../../componentes/Buscador";
+import Avatar from "../../../componentes/Avatar";
 
 const PaginaDuenos = () => {
   const [duenos, setDuenos] = useState([]);
@@ -146,7 +147,7 @@ const PaginaDuenos = () => {
                   <tr key={dueno.id} className="hover:bg-sky-50/30 transition-colors">
                     <td className="px-6 py-4">
                       <div className="font-bold text-slate-800 flex items-center gap-3">
-                         <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400"><User size={16}/></div>
+                         <Avatar url={dueno.fotoPerfilUrl} />
                          {dueno.nombreCompleto}
                       </div>
                       <div className="text-xs text-sky-600 font-semibold mt-1 flex items-center gap-1"><Mail size={12}/> {dueno.correo || "Sin correo"}</div>
