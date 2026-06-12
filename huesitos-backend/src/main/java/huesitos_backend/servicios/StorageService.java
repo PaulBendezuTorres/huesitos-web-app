@@ -141,4 +141,23 @@ public class StorageService {
             throw new RuntimeException("Error al guardar el archivo clínico", e);
         }
     }
+
+    /**
+     * Borra una foto del almacenamiento si no es la de por defecto.
+     */
+    public void borrarFoto(String urlFoto) {
+        if (urlFoto == null || urlFoto.isBlank() || urlFoto.contains("defecto-")) {
+            return;
+        }
+
+        try {
+            String rutaRelativa = urlFoto.startsWith("/") ? urlFoto.substring(1) : urlFoto;
+            java.nio.file.Path rutaArchivo = Paths.get(rutaRelativa);
+            if (Files.exists(rutaArchivo)) {
+                Files.delete(rutaArchivo);
+            }
+        } catch (IOException e) {
+            System.err.println("No se pudo borrar el archivo: " + urlFoto + ". Error: " + e.getMessage());
+        }
+    }
 }

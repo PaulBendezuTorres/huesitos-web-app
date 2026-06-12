@@ -39,9 +39,11 @@ public class PerfilControlador {
             Usuario usuario = usuarioRepositorio.findById(id)
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
 
+            String fotoAnterior = usuario.getFotoPerfilUrl();
             String urlFoto = storageService.comprimirYGuardarFoto(archivo, "usuario");
             usuario.setFotoPerfilUrl(urlFoto);
             usuarioRepositorio.save(usuario);
+            storageService.borrarFoto(fotoAnterior);
 
             Map<String, String> respuesta = new HashMap<>();
             respuesta.put("fotoPerfilUrl", urlFoto);
@@ -60,9 +62,11 @@ public class PerfilControlador {
             Mascota mascota = mascotaRepositorio.findById(id)
                     .orElseThrow(() -> new RuntimeException("Mascota no encontrada con ID: " + id));
 
+            String fotoAnterior = mascota.getFotoUrl();
             String urlFoto = storageService.comprimirYGuardarFoto(archivo, "mascota");
             mascota.setFotoUrl(urlFoto);
             mascotaRepositorio.save(mascota);
+            storageService.borrarFoto(fotoAnterior);
 
             Map<String, String> respuesta = new HashMap<>();
             respuesta.put("fotoUrl", urlFoto);
