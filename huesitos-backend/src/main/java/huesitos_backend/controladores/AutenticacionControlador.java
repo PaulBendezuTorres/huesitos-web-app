@@ -94,5 +94,35 @@ public class AutenticacionControlador {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    /**
+     * Endpoint público para activar una cuenta recién registrada mediante código de 6 dígitos.
+     */
+    @PostMapping("/activar")
+    public ResponseEntity<?> activarCuenta(@RequestParam String correo, @RequestParam String token) {
+        try {
+            autenticacionServicio.activarCuenta(correo, token);
+            Map<String, String> respuesta = new HashMap<>();
+            respuesta.put("mensaje", "Cuenta activada correctamente");
+            return ResponseEntity.ok(respuesta);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    /**
+     * Endpoint público para reenviar el código de activación de cuenta.
+     */
+    @PostMapping("/reenviar-codigo")
+    public ResponseEntity<?> reenviarCodigoActivacion(@RequestParam String correo) {
+        try {
+            autenticacionServicio.reenviarCodigoActivacion(correo);
+            Map<String, String> respuesta = new HashMap<>();
+            respuesta.put("mensaje", "Se ha enviado un nuevo código de activación a tu correo");
+            return ResponseEntity.ok(respuesta);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
 

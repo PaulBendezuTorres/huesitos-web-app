@@ -22,6 +22,7 @@ public class AutenticacionServicio {
     private final PasswordEncoder passwordEncoder;
     private final TokenJwtUtil tokenJwtUtil;
     private final HorarioPersonalServicio horarioPersonalServicio;
+    private final CorreoServicio correoServicio;
 
     /**
      * Registra un nuevo cliente en el sistema.
@@ -53,9 +54,14 @@ public class AutenticacionServicio {
             dueño.setNombreCompleto((usuario.getNombre() + " " + ape).trim());
         }
 
-        // 4. Forzar rol CLIENTE, estado activo = true, encriptar contraseña y poner foto por defecto si es nula
+        // 4. Forzar rol CLIENTE, estado activo = false, generar token de activación, encriptar contraseña y poner foto por defecto si es nula
         usuario.setRol(Rol.CLIENTE);
-        usuario.setActivo(true);
+        usuario.setActivo(false);
+        
+        String token = String.format("%06d", new java.util.Random().nextInt(1000000));
+        usuario.setTokenRecuperacion(token);
+        usuario.setExpiracionToken(java.time.LocalDateTime.now().plusMinutes(15));
+        
         usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
         if (usuario.getFotoPerfilUrl() == null) {
             usuario.setFotoPerfilUrl("/uploads/defecto-usuario.png");
@@ -66,7 +72,12 @@ public class AutenticacionServicio {
         dueño.setUsuario(usuarioGuardado);
 
         // 6. Guardar el Dueño en su repositorio
-        return dueñoRepositorio.save(dueño);
+        Dueño dueñoGuardado = dueñoRepositorio.save(dueño);
+
+        // 7. Enviar código de activación real por correo
+        correoServicio.enviarCodigoActivacion(usuario.getCorreo(), token);
+
+        return dueñoGuardado;
     }
 
     /**
@@ -165,6 +176,52 @@ public class AutenticacionServicio {
             return usuarioRepositorio.findByRol(rol);
         }
         return usuarioRepositorio.findAll();
+    }
+
+    /**
+     * Activa una cuenta utilizando el código de verificación enviado por correo.
+     */
+    @Transactional
+    public void activarCuenta(String correo, String token) {
+        Usuario usuario = usuarioRepositorio.findByCorreo(correo)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        if (usuario.getActivo() != null && usuario.getActivo()) {
+            throw new RuntimeException("La cuenta ya se encuentra activa");
+        }
+
+        if (usuario.getTokenRecuperacion() == null || !usuario.getTokenRecuperacion().equals(token)) {
+            throw new RuntimeException("El código de verificación ingresado es incorrecto");
+        }
+
+        if (usuario.getExpiracionToken() == null || usuario.getExpiracionToken().isBefore(java.time.LocalDateTime.now())) {
+            throw new RuntimeException("El código de verificación ha expirado. Solicita un reenvío.");
+        }
+
+        usuario.setActivo(true);
+        usuario.setTokenRecuperacion(null);
+        usuario.setExpiracionToken(null);
+        usuarioRepositorio.save(usuario);
+    }
+
+    /**
+     * Reenvía el código de activación al correo de una cuenta inactiva.
+     */
+    @Transactional
+    public void reenviarCodigoActivacion(String correo) {
+        Usuario usuario = usuarioRepositorio.findByCorreo(correo)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        if (usuario.getActivo() != null && usuario.getActivo()) {
+            throw new RuntimeException("La cuenta ya se encuentra activa");
+        }
+
+        String token = String.format("%06d", new java.util.Random().nextInt(1000000));
+        usuario.setTokenRecuperacion(token);
+        usuario.setExpiracionToken(java.time.LocalDateTime.now().plusMinutes(15));
+        usuarioRepositorio.save(usuario);
+
+        correoServicio.enviarCodigoActivacion(usuario.getCorreo(), token);
     }
 }
 

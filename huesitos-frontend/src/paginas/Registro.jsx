@@ -57,9 +57,9 @@ const Registro = () => {
       });
 
       if (response.ok) {
-        setSuccessMsg('Cuenta creada correctamente. Redirigiendo al inicio de sesión...');
+        setSuccessMsg('Cuenta creada correctamente. Redirigiendo a la verificación de cuenta...');
         setTimeout(() => {
-          navigate('/login');
+          navigate(`/verificar-cuenta?correo=${encodeURIComponent(email)}`);
         }, 2000);
       } else {
         const errorText = await response.text();

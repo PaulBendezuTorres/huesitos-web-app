@@ -6,6 +6,7 @@ import TableroAdministrador from './paginas/TableroAdministrador';
 import Registro from './paginas/Registro';
 import RecuperarContrasena from './paginas/RecuperarContrasena';
 import RestablecerContrasena from './paginas/RestablecerContrasena';
+import VerificarCuenta from './paginas/VerificarCuenta';
 import TableroCliente from './paginas/TableroCliente';
 import MascotaFichaHistorial from './paginas/MascotaFichaHistorial';
 import TableroVeterinario from './paginas/TableroVeterinario';
@@ -20,6 +21,7 @@ function App() {
         <Route path="/" element={<Portada />} />
         <Route path="/login" element={<IniciarSesion />} />
         <Route path="/registro" element={<Registro />} />
+        <Route path="/verificar-cuenta" element={<VerificarCuenta />} />
         <Route path="/olvide-contrasena" element={<RecuperarContrasena />} />
         <Route path="/restablecer-contrasena" element={<RestablecerContrasena />} />
         <Route path="/admin" element={<TableroAdministrador />} /> 
