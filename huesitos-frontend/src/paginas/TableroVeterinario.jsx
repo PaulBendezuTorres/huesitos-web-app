@@ -23,8 +23,12 @@ const TableroVeterinario = () => {
       localStorage.removeItem('subvistaDefecto');
       return subvista;
     }
-    return 'agenda';
+    return localStorage.getItem('veterinarioVistaActual') || 'agenda';
   });
+
+  useEffect(() => {
+    localStorage.setItem('veterinarioVistaActual', vistaActual);
+  }, [vistaActual]);
 
   // Lista de citas de la agenda
   const [citas, setCitas] = useState([]);

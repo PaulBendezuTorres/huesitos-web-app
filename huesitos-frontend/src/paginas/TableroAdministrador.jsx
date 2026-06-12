@@ -23,8 +23,12 @@ const TableroAdministrador = () => {
       localStorage.removeItem('subvistaDefecto');
       return subvista;
     }
-    return 'dashboard';
+    return localStorage.getItem('adminVistaActual') || 'dashboard';
   });
+
+  useEffect(() => {
+    localStorage.setItem('adminVistaActual', vistaActual);
+  }, [vistaActual]);
 
   useEffect(() => {
     const rol = localStorage.getItem('usuarioRol');

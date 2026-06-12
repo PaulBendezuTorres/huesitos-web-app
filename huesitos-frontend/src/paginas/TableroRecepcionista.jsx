@@ -15,8 +15,12 @@ const TableroRecepcionista = () => {
       localStorage.removeItem('subvistaDefecto');
       return subvista;
     }
-    return 'caja';
+    return localStorage.getItem('recepcionistaVistaActual') || 'caja';
   });
+
+  useEffect(() => {
+    localStorage.setItem('recepcionistaVistaActual', seccionActiva);
+  }, [seccionActiva]);
 
   useEffect(() => {
     const rol = localStorage.getItem('usuarioRol');

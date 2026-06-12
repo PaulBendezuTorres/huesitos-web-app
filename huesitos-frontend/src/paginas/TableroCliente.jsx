@@ -16,8 +16,12 @@ const TableroCliente = () => {
       localStorage.removeItem('subvistaDefecto');
       return subvista;
     }
-    return 'dashboard';
+    return localStorage.getItem('clienteVistaActual') || 'dashboard';
   });
+
+  useEffect(() => {
+    localStorage.setItem('clienteVistaActual', vistaActual);
+  }, [vistaActual]);
 
   useEffect(() => {
     const rol = localStorage.getItem('usuarioRol');
