@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, Routes, Route, Navigate } from 'react-router-dom';
 
 import PaginaServicios from './PaginaServicios';
 import DashboardAnalytics from '../modulos/admin/paginas/TableroAnaliticas';
+import MiPerfil from './MiPerfil';
 import ConfiguracionDinamica from '../modulos/admin/paginas/ConfiguracionDinamica';
 import PaginaUsuarios from '../modulos/admin/paginas/PaginaUsuarios';
 import PaginaFinanzas from '../modulos/admin/paginas/PaginaFinanzas';
@@ -16,19 +17,16 @@ import PlantillaTablero from '../componentes/PlantillaTablero';
 
 const TableroAdministrador = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [correo] = useState(localStorage.getItem('usuarioCorreo') || 'Admin');
-  const [vistaActual, setVistaActual] = useState(() => {
-    const subvista = localStorage.getItem('subvistaDefecto');
-    if (subvista) {
-      localStorage.removeItem('subvistaDefecto');
-      return subvista;
-    }
-    return localStorage.getItem('adminVistaActual') || 'dashboard';
-  });
 
-  useEffect(() => {
-    localStorage.setItem('adminVistaActual', vistaActual);
-  }, [vistaActual]);
+  // Obtener la subvista actual de la URL (si es vacía, asume 'dashboard' para la barra lateral)
+  const subvistaUrl = location.pathname.split('/')[2];
+  const vistaActual = subvistaUrl || 'dashboard';
+
+  const setVistaActual = (nuevaVista) => {
+    navigate(`/admin/${nuevaVista}`);
+  };
 
   useEffect(() => {
     const rol = localStorage.getItem('usuarioRol');
@@ -37,26 +35,17 @@ const TableroAdministrador = () => {
     }
   }, [navigate]);
 
+  useEffect(() => {
+    const subvistaDefecto = localStorage.getItem('subvistaDefecto');
+    if (subvistaDefecto) {
+      localStorage.removeItem('subvistaDefecto');
+      setVistaActual(subvistaDefecto);
+    }
+  }, []);
+
   const handleLogout = () => {
     localStorage.clear();
     navigate('/');
-  };
-
-  const renderizarVista = () => {
-    switch (vistaActual) {
-      case 'dashboard': return <DashboardAnalytics />;
-      case 'servicios': return <PaginaServicios />;
-      case 'usuarios': return <PaginaUsuarios />;
-      case 'duenos': return <PaginaDuenos />;
-      case 'agenda': return <AgendaSemanal />;
-      case 'horarios': return <ConfiguracionHorarios />;
-      case 'inventario': return <PaginaInventario />;
-      case 'finanzas': return <PaginaFinanzas />;
-      case 'campanas': return <PaginaCampanas />;
-      case 'configuracion': return <ConfiguracionDinamica />;
-      case 'pedidos': return <GestionPedidos />;
-      default: return <DashboardAnalytics />;
-    }
   };
 
   return (
@@ -68,7 +57,22 @@ const TableroAdministrador = () => {
       handleLogout={handleLogout}
       tituloHeader="Centro de Administración"
     >
-      {renderizarVista()}
+      <Routes>
+        <Route path="/" element={<Navigate to="dashboard" replace />} />
+        <Route path="dashboard" element={<DashboardAnalytics />} />
+        <Route path="servicios/*" element={<PaginaServicios />} />
+        <Route path="usuarios" element={<PaginaUsuarios />} />
+        <Route path="clientes" element={<PaginaDuenos />} />
+        <Route path="agenda" element={<AgendaSemanal />} />
+        <Route path="horarios" element={<ConfiguracionHorarios />} />
+        <Route path="inventario" element={<PaginaInventario />} />
+        <Route path="finanzas" element={<PaginaFinanzas />} />
+        <Route path="campanas" element={<PaginaCampanas />} />
+        <Route path="configuracion" element={<ConfiguracionDinamica />} />
+        <Route path="pedidos" element={<GestionPedidos />} />
+        <Route path="perfil" element={<MiPerfil sinPlantilla={true} />} />
+        <Route path="*" element={<DashboardAnalytics />} />
+      </Routes>
     </PlantillaTablero>
   );
 };

@@ -24,7 +24,7 @@ function App() {
         <Route path="/verificar-cuenta" element={<VerificarCuenta />} />
         <Route path="/olvide-contrasena" element={<RecuperarContrasena />} />
         <Route path="/restablecer-contrasena" element={<RestablecerContrasena />} />
-        <Route path="/admin" element={<TableroAdministrador />} /> 
+        <Route path="/admin/*" element={<TableroAdministrador />} />
         <Route path="/cliente" element={<TableroCliente />} />
         <Route path="/cliente/mascota/:mascotaId" element={<MascotaFichaHistorial />} />
         <Route path="/veterinario" element={<TableroVeterinario />} />

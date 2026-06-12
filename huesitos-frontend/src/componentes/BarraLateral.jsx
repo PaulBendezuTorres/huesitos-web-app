@@ -34,7 +34,7 @@ const configsRoles = {
     items: [
       { id: 'dashboard', label: 'Panel de Control', icon: LayoutDashboard },
       { id: 'servicios', label: 'Servicios Médicos', icon: Stethoscope, seccion: 'Gestión Clínica' },
-      { id: 'duenos', label: 'Directorio Clientes', icon: Users },
+      { id: 'clientes', label: 'Directorio Clientes', icon: Users },
       { id: 'agenda', label: 'Agenda Semanal', icon: Calendar },
       { id: 'inventario', label: 'Inventario FEFO', icon: Package },
       { id: 'finanzas', label: 'Caja y Finanzas', icon: Wallet, seccion: 'Administración' },
@@ -206,7 +206,7 @@ const BarraLateral = ({
       <div className="p-3 border-t border-slate-800/30 bg-slate-900/50">
         <div 
           onClick={() => {
-            navigate('/perfil');
+            navigate(rol === 'ADMINISTRADOR' ? '/admin/perfil' : '/perfil');
           }}
           className={`p-2.5 rounded-lg flex items-center gap-2.5 mb-3 cursor-pointer transition-all border ${
             vistaActual === 'perfil' 

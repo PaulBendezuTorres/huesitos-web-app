@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { PlusCircle, Stethoscope, Tag, Clock, FileText, ChevronDown } from 'lucide-react';
+import { PlusCircle, Stethoscope, Tag, Clock, FileText, Camera } from 'lucide-react';
+import Combobox from "./Combobox";
+import CargadorSpinner from "./CargadorSpinner";
+import AreaTexto from "./AreaTexto";
+import Boton from "./Boton";
 
 // Catálogo predefinido
 const CATALOGO_PREDEFINIDO = [
@@ -63,74 +67,137 @@ const CATALOGO_PREDEFINIDO = [
   }
 ];
 
+
 const FormularioServicio = ({ onGuardar }) => {
   const estadoInicial = { nombre: "", descripcion: "", duracionMinutos: "", precio: "" };
   const [form, setForm] = useState(estadoInicial);
+  const [archivo, setArchivo] = useState(null);
+  const [vistaPrevia, setVistaPrevia] = useState(null);
+  const [procesando, setProcesando] = useState(false);
 
-  const handleSelectChange = (e) => {
-    const nombreSeleccionado = e.target.value;
-    let precioEncontrado = "";
-    for (const cat of CATALOGO_PREDEFINIDO) {
-      const servicio = cat.servicios.find(s => s.nombre === nombreSeleccionado);
-      if (servicio) {
-        precioEncontrado = servicio.precio;
-        break;
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    let nuevoPrecio = form.precio;
+    if (name === "nombre") {
+      for (const cat of CATALOGO_PREDEFINIDO) {
+        const servicio = cat.servicios.find(s => s.nombre.toLowerCase() === value.toLowerCase());
+        if (servicio) {
+          nuevoPrecio = servicio.precio;
+          break;
+        }
       }
     }
-    setForm({ ...form, nombre: nombreSeleccionado, precio: precioEncontrado });
+    setForm({ ...form, [name]: value, precio: nuevoPrecio });
   };
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-  const handleSubmit = (e) => {
+    if (file.size > 5 * 1024 * 1024) {
+      alert("El tamaño de la imagen no debe superar los 5MB");
+      e.target.value = "";
+      return;
+    }
+
+    setArchivo(file);
+    setVistaPrevia(URL.createObjectURL(file));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onGuardar({ ...form, duracionMinutos: parseInt(form.duracionMinutos), precio: parseFloat(form.precio) });
-    setForm(estadoInicial);
+    setProcesando(true);
+    try {
+      await onGuardar({ ...form, duracionMinutos: parseInt(form.duracionMinutos), precio: parseFloat(form.precio) }, archivo);
+      setForm(estadoInicial);
+      setArchivo(null);
+      setVistaPrevia(null);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setProcesando(false);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm space-y-5">
-      <h2 className="text-sm font-black text-slate-800 uppercase tracking-widest border-b pb-3 mb-2 flex items-center gap-2">
-        <Stethoscope className="text-sky-500" size={18} /> Registrar Nuevo Servicio
-      </h2>
-      
+    <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm space-y-5">
+      {/* Carga de Imagen */}
+      <div className="flex items-center gap-4 bg-slate-50 dark:bg-slate-900/40 p-4 rounded-2xl border border-slate-100/80 dark:border-slate-700/60">
+        <div className="w-16 h-16 rounded-xl bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 overflow-hidden shrink-0 flex items-center justify-center text-slate-400 shadow-inner relative">
+          {vistaPrevia ? (
+            <img src={vistaPrevia} alt="Vista previa del servicio" className={`w-full h-full object-cover ${procesando ? 'opacity-40' : ''}`} />
+          ) : (
+            <Stethoscope size={24} className="text-slate-300" />
+          )}
+          {procesando && (
+            <div className="absolute inset-0 flex items-center justify-center bg-slate-950/20 backdrop-blur-[1px]">
+              <CargadorSpinner size="xs" />
+            </div>
+          )}
+        </div>
+        <div>
+          <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 uppercase tracking-wide">Imagen del Servicio</label>
+          <label className={`inline-flex items-center gap-1.5 bg-white dark:bg-slate-700 hover:bg-slate-150 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-600 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm ${procesando ? 'opacity-55 cursor-not-allowed' : 'cursor-pointer'}`}>
+            <Camera size={14} />
+            {archivo ? "Cambiar foto" : "Cargar foto"}
+            <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" disabled={procesando} />
+          </label>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="relative">
-          <select name="nombre" value={form.nombre} onChange={handleSelectChange} required 
-            className="w-full border border-slate-300 p-2.5 pl-4 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 outline-none transition-all bg-slate-50 focus:bg-white appearance-none">
-            <option value="">-- Selecciona un servicio --</option>
-            {CATALOGO_PREDEFINIDO.map((categoria, idx) => (
-              <optgroup key={idx} label={categoria.categoria}>
-                {categoria.servicios.map((s, i) => <option key={i} value={s.nombre}>{s.nombre}</option>)}
-              </optgroup>
-            ))}
-          </select>
-          <ChevronDown className="absolute right-3 top-3 text-slate-400 pointer-events-none" size={18} />
+          <Combobox
+            value={form.nombre}
+            onChange={(val, precio) => {
+              setForm((prev) => ({
+                ...prev,
+                nombre: val,
+                precio: precio !== undefined ? precio.toString() : prev.precio,
+              }));
+            }}
+            opciones={CATALOGO_PREDEFINIDO.flatMap((cat) =>
+              cat.servicios.map((s) => ({
+                label: s.nombre,
+                precio: s.precio,
+                categoria: cat.categoria,
+              }))
+            )}
+            placeholder="Escribe o selecciona un servicio..."
+            required={true}
+          />
         </div>
 
         <div className="relative">
           <Tag className="absolute left-3 top-3 text-slate-400" size={18} />
           <input type="number" step="0.01" name="precio" value={form.precio} placeholder="Precio (S/.)" onChange={handleChange} required 
-            className="w-full pl-10 border border-slate-300 p-2.5 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 outline-none transition-all bg-slate-50 focus:bg-white" />
+            className="w-full pl-10 border border-slate-300 dark:border-slate-600 p-2.5 rounded-xl text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-sky-500 outline-none transition-all bg-slate-50 dark:bg-slate-700 focus:bg-white dark:focus:bg-slate-600 placeholder:text-slate-400 dark:placeholder:text-slate-500" />
         </div>
       </div>
 
-      <div className="relative">
-        <FileText className="absolute left-3 top-3 text-slate-400" size={18} />
-        <textarea name="descripcion" value={form.descripcion} placeholder="Descripción detallada del servicio..." onChange={handleChange} required rows="2"
-          className="w-full pl-10 border border-slate-300 p-2.5 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 outline-none transition-all bg-slate-50 focus:bg-white" />
-      </div>
+      <AreaTexto 
+        value={form.descripcion} 
+        onChange={(val) => setForm(prev => ({ ...prev, descripcion: val }))} 
+        placeholder="Descripción detallada del servicio..." 
+        limite={250} 
+        required={true}
+      />
 
       <div className="flex gap-4 items-center">
         <div className="relative w-1/3">
           <Clock className="absolute left-3 top-3 text-slate-400" size={18} />
           <input type="number" name="duracionMinutos" value={form.duracionMinutos} placeholder="Minutos" onChange={handleChange} required 
-            className="w-full pl-10 border border-slate-300 p-2.5 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 outline-none transition-all bg-slate-50 focus:bg-white" />
+            className="w-full pl-10 border border-slate-300 dark:border-slate-600 p-2.5 rounded-xl text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-sky-500 outline-none transition-all bg-slate-50 dark:bg-slate-700 focus:bg-white dark:focus:bg-slate-600 placeholder:text-slate-400 dark:placeholder:text-slate-500" />
         </div>
         
-        <button type="submit" className="bg-gradient-to-r from-sky-500 to-cyan-400 hover:from-sky-600 hover:to-cyan-500 text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-sky-500/30 transition-all flex items-center gap-2">
-          <PlusCircle size={18} /> Guardar Servicio
-        </button>
+        <Boton 
+          type="submit" 
+          variant="primary"
+          cargando={procesando}
+          icono={PlusCircle}
+        >
+          Guardar Servicio
+        </Boton>
       </div>
     </form>
   );

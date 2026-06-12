@@ -6,8 +6,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.multipart.MultipartFile;
+import huesitos_backend.servicios.StorageService;
 
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/servicios")
@@ -15,6 +19,7 @@ import java.util.List;
 public class ServicioControlador {
 
     private final ServicioServicio servicioServicio;
+    private final StorageService storageService;
 
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_ADMINISTRADOR')")
@@ -54,6 +59,32 @@ public class ServicioControlador {
         try {
             servicioServicio.cambiarEstadoServicio(id, activo);
             return ResponseEntity.ok("Estado del servicio actualizado con éxito");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/{id}/foto")
+    @PreAuthorize("hasAuthority('ROLE_ADMINISTRADOR')")
+    public ResponseEntity<?> subirFotoServicio(@PathVariable Long id, @RequestParam("archivo") MultipartFile archivo) {
+        try {
+            String urlFoto = servicioServicio.subirFotoServicio(id, archivo, storageService);
+            Map<String, String> respuesta = new HashMap<>();
+            respuesta.put("fotoUrl", urlFoto);
+            return ResponseEntity.ok(respuesta);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMINISTRADOR')")
+    public ResponseEntity<?> eliminarServicio(@PathVariable Long id) {
+        try {
+            servicioServicio.eliminarServicio(id, storageService);
+            Map<String, String> respuesta = new HashMap<>();
+            respuesta.put("mensaje", "Servicio eliminado con éxito");
+            return ResponseEntity.ok(respuesta);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

@@ -41,6 +41,7 @@ public class DueñoServicio {
                 res.setUsuarioId(d.getUsuario().getId());
                 res.setCorreo(d.getUsuario().getCorreo());
                 res.setActivo(d.getUsuario().getActivo());
+                res.setFotoPerfilUrl(d.getUsuario().getFotoPerfilUrl());
             }
             return res;
         }).collect(Collectors.toList());
@@ -82,6 +83,7 @@ public class DueñoServicio {
         res.setTelefono(dueño.getTelefono());
         res.setDireccion(dueño.getDireccion());
         res.setActivo(usuario.getActivo());
+        res.setFotoPerfilUrl(usuario.getFotoPerfilUrl());
         return res;
     }
 
@@ -123,6 +125,7 @@ public class DueñoServicio {
             res.setUsuarioId(usuario.getId());
             res.setCorreo(usuario.getCorreo());
             res.setActivo(usuario.getActivo());
+            res.setFotoPerfilUrl(usuario.getFotoPerfilUrl());
         }
         res.setNombreCompleto(dueño.getNombreCompleto());
         res.setTelefono(dueño.getTelefono());

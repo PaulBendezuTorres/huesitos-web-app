@@ -62,5 +62,6 @@ public class DueñoControlador {
         private String telefono;
         private String direccion;
         private Boolean activo;
+        private String fotoPerfilUrl;
     }
 }

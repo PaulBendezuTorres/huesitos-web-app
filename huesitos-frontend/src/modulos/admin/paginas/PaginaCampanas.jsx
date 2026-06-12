@@ -293,14 +293,14 @@ const PaginaCampanas = () => {
     <div className="space-y-6 animate-in fade-in duration-300">
       
       {/* Selector de pestañas */}
-      <div className="bg-white rounded-2xl border border-slate-200/60 p-4 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 p-4 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
         <div className="flex gap-2">
           <button
             onClick={() => setActiveTab('campanas')}
             className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all uppercase tracking-wide flex items-center gap-2 border ${
               activeTab === 'campanas'
                 ? 'bg-sky-500 text-white border-sky-500 shadow-md shadow-sky-500/15'
-                : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'
+                : 'bg-white dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-600'
             }`}
           >
             <Megaphone size={14} /> Campañas Publicitarias
@@ -311,7 +311,7 @@ const PaginaCampanas = () => {
             className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all uppercase tracking-wide flex items-center gap-2 border ${
               activeTab === 'ofertas'
                 ? 'bg-sky-500 text-white border-sky-500 shadow-md shadow-sky-500/15'
-                : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'
+                : 'bg-white dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-600'
             }`}
           >
             <Percent size={14} /> Ofertas de Productos
@@ -351,15 +351,15 @@ const PaginaCampanas = () => {
 
       {/* GRILLAS PRINCIPALES */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-slate-200/60 shadow-sm gap-3">
+        <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm gap-3">
           <CargadorSpinner size="lg" />
-          <span className="text-sm font-bold text-slate-400 font-semibold">Consultando datos de marketing...</span>
+          <span className="text-sm font-bold text-slate-400 dark:text-slate-500 font-semibold">Consultando datos de marketing...</span>
         </div>
       ) : activeTab === 'campanas' ? (
         /* ─── PESTAÑA: CAMPAÑAS ─── */
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {campanas.length === 0 ? (
-            <div className="col-span-full py-16 text-center text-slate-400 font-bold bg-white rounded-2xl border border-slate-200/60 shadow-sm">
+            <div className="col-span-full py-16 text-center text-slate-400 dark:text-slate-500 font-bold bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
               No hay campañas de marketing registradas.
             </div>
           ) : (
@@ -368,8 +368,8 @@ const PaginaCampanas = () => {
               return (
                 <div
                   key={c.id}
-                  className={`bg-white rounded-2xl border ${
-                    c.activo ? 'border-slate-200/60 hover:border-sky-300' : 'border-slate-200 bg-slate-50/50'
+                  className={`bg-white dark:bg-slate-800 rounded-2xl border ${
+                    c.activo ? 'border-slate-200/60 dark:border-slate-700/60 hover:border-sky-300' : 'border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/30'
                   } shadow-sm p-5 transition-all duration-300 flex flex-col justify-between min-h-[220px] relative hover:shadow-md hover:shadow-sky-500/5`}
                 >
                   <div className="space-y-3">
@@ -387,14 +387,14 @@ const PaginaCampanas = () => {
                     </div>
 
                     <div>
-                      <h3 className="font-black text-slate-800 text-sm tracking-tight leading-tight group-hover:text-sky-600 transition-colors">
+                      <h3 className="font-black text-slate-800 dark:text-slate-100 text-sm tracking-tight leading-tight group-hover:text-sky-600 transition-colors">
                         {c.nombre}
                       </h3>
-                      <p className="text-[11px] text-slate-500 font-medium leading-relaxed mt-1">{c.descripcion}</p>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-relaxed mt-1">{c.descripcion}</p>
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-400 font-semibold mt-4">
+                  <div className="pt-4 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between text-[10px] text-slate-400 dark:text-slate-500 font-semibold mt-4">
                     <div className="flex items-center gap-1.5">
                       <Calendar size={12} />
                       <span>{formatarFecha(c.fechaInicio)} — {formatarFecha(c.fechaFin)}</span>
@@ -430,7 +430,7 @@ const PaginaCampanas = () => {
         /* ─── PESTAÑA: OFERTAS ─── */
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {ofertas.length === 0 ? (
-            <div className="col-span-full py-16 text-center text-slate-400 font-bold bg-white rounded-2xl border border-slate-200/60 shadow-sm">
+            <div className="col-span-full py-16 text-center text-slate-400 dark:text-slate-500 font-bold bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
               No hay ofertas de productos activas.
             </div>
           ) : (
@@ -442,8 +442,8 @@ const PaginaCampanas = () => {
               return (
                 <div
                   key={o.id}
-                  className={`bg-white rounded-2xl border ${
-                    o.activo ? 'border-slate-200/60 hover:border-emerald-300' : 'border-slate-200 bg-slate-50/50'
+                  className={`bg-white dark:bg-slate-800 rounded-2xl border ${
+                    o.activo ? 'border-slate-200/60 dark:border-slate-700/60 hover:border-emerald-300' : 'border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/30'
                   } shadow-sm p-5 transition-all duration-300 flex flex-col justify-between min-h-[260px] relative hover:shadow-md hover:shadow-emerald-500/5`}
                 >
                   <div className="space-y-4">
@@ -461,14 +461,14 @@ const PaginaCampanas = () => {
                     </div>
 
                     <div>
-                      <h3 className="font-black text-slate-800 text-sm tracking-tight leading-tight">
+                      <h3 className="font-black text-slate-800 dark:text-slate-100 text-sm tracking-tight leading-tight">
                         {o.titulo}
                       </h3>
-                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1.5 mt-1">
+                      <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider flex items-center gap-1.5 mt-1">
                         <ShoppingBag size={12} className="text-slate-400" />
                         Producto: {o.producto?.nombre}
                       </p>
-                      <p className="text-[11px] text-slate-500 font-medium leading-relaxed mt-2">{o.descripcion}</p>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-relaxed mt-2">{o.descripcion}</p>
                     </div>
 
                     {/* Precios y descuento */}
@@ -487,7 +487,7 @@ const PaginaCampanas = () => {
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-400 font-semibold mt-4">
+                  <div className="pt-4 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between text-[10px] text-slate-400 dark:text-slate-500 font-semibold mt-4">
                     <div className="flex items-center gap-1.5">
                       <Clock size={12} />
                       <span>{formatarFecha(o.fechaInicio)} — {formatarFecha(o.fechaFin)}</span>
@@ -524,12 +524,12 @@ const PaginaCampanas = () => {
       {/* ─── MODAL CREAR/EDITAR CAMPAÑA ─── */}
       {modalCampana && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-2xl max-w-md w-full border border-slate-200 shadow-2xl overflow-hidden">
-            <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-              <h3 className="font-black text-slate-800 text-sm uppercase tracking-wide">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden">
+            <div className="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/40">
+              <h3 className="font-black text-slate-800 dark:text-slate-100 text-sm uppercase tracking-wide">
                 {edicionItem ? 'Editar Campaña Publicitaria' : 'Nueva Campaña Publicitaria'}
               </h3>
-              <button onClick={() => setModalCampana(false)} className="p-1.5 rounded-lg hover:bg-slate-200 text-slate-400 transition-all">
+              <button onClick={() => setModalCampana(false)} className="p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-400 transition-all">
                 <X size={18} />
               </button>
             </div>
@@ -543,7 +543,7 @@ const PaginaCampanas = () => {
                   value={formCampana.nombre}
                   onChange={(e) => setFormCampana({ ...formCampana, nombre: e.target.value })}
                   placeholder="Ej: Descuento Navideño, Campaña de Desparasitación"
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:border-sky-400 transition-all"
+                  className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all bg-white dark:bg-slate-700"
                 />
               </div>
 
@@ -566,7 +566,7 @@ const PaginaCampanas = () => {
                     required
                     value={formCampana.fechaInicio}
                     onChange={(e) => setFormCampana({ ...formCampana, fechaInicio: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:border-sky-400 transition-all"
+                    className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all bg-white dark:bg-slate-700"
                   />
                 </div>
 
@@ -600,11 +600,11 @@ const PaginaCampanas = () => {
                 </div>
               )}
 
-              <div className="pt-3 border-t border-slate-100 flex justify-end gap-2.5">
+              <div className="pt-3 border-t border-slate-100 dark:border-slate-700 flex justify-end gap-2.5">
                 <button
                   type="button"
                   onClick={() => setModalCampana(false)}
-                  className="px-4 py-2 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition-colors"
+                  className="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
                 >
                   Cancelar
                 </button>
@@ -625,12 +625,12 @@ const PaginaCampanas = () => {
       {/* ─── MODAL CREAR/EDITAR OFERTA ─── */}
       {modalOferta && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-2xl max-w-md w-full border border-slate-200 shadow-2xl overflow-hidden">
-            <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-              <h3 className="font-black text-slate-800 text-sm uppercase tracking-wide">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden">
+            <div className="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/40">
+              <h3 className="font-black text-slate-800 dark:text-slate-100 text-sm uppercase tracking-wide">
                 {edicionItem ? 'Editar Oferta de Descuento' : 'Nueva Oferta de Descuento'}
               </h3>
-              <button onClick={() => setModalOferta(false)} className="p-1.5 rounded-lg hover:bg-slate-200 text-slate-400 transition-all">
+              <button onClick={() => setModalOferta(false)} className="p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-400 transition-all">
                 <X size={18} />
               </button>
             </div>
@@ -664,7 +664,7 @@ const PaginaCampanas = () => {
                   required
                   value={formOferta.productoId}
                   onChange={(e) => setFormOferta({ ...formOferta, productoId: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:border-sky-400 transition-all bg-white"
+                  className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all bg-white dark:bg-slate-700"
                 >
                   <option value="">Seleccionar Producto</option>
                   {productos.map((prod) => (
@@ -685,7 +685,7 @@ const PaginaCampanas = () => {
                     value={formOferta.descuentoPorcentaje}
                     onChange={(e) => setFormOferta({ ...formOferta, descuentoPorcentaje: e.target.value })}
                     placeholder="20"
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:border-sky-400 transition-all"
+                    className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all bg-white dark:bg-slate-700"
                   />
                 </div>
 
@@ -697,7 +697,7 @@ const PaginaCampanas = () => {
                     value={formOferta.precioOferta}
                     onChange={(e) => setFormOferta({ ...formOferta, precioOferta: e.target.value })}
                     placeholder="Opcional"
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:border-sky-400 transition-all"
+                    className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all bg-white dark:bg-slate-700"
                   />
                 </div>
               </div>
@@ -707,7 +707,7 @@ const PaginaCampanas = () => {
                 <select
                   value={formOferta.campanaId}
                   onChange={(e) => setFormOferta({ ...formOferta, campanaId: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:border-sky-400 transition-all bg-white"
+                  className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all bg-white dark:bg-slate-700"
                 >
                   <option value="">Ninguna campaña</option>
                   {campanas.filter((c) => c.activo).map((camp) => (
@@ -726,7 +726,7 @@ const PaginaCampanas = () => {
                     required
                     value={formOferta.fechaInicio}
                     onChange={(e) => setFormOferta({ ...formOferta, fechaInicio: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:border-sky-400 transition-all"
+                    className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all bg-white dark:bg-slate-700"
                   />
                 </div>
 
@@ -737,7 +737,7 @@ const PaginaCampanas = () => {
                     required
                     value={formOferta.fechaFin}
                     onChange={(e) => setFormOferta({ ...formOferta, fechaFin: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:border-sky-400 transition-all"
+                    className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all bg-white dark:bg-slate-700"
                   />
                 </div>
               </div>
@@ -749,11 +749,11 @@ const PaginaCampanas = () => {
                 </div>
               )}
 
-              <div className="pt-3 border-t border-slate-100 flex justify-end gap-2.5">
+              <div className="pt-3 border-t border-slate-100 dark:border-slate-700 flex justify-end gap-2.5">
                 <button
                   type="button"
                   onClick={() => setModalOferta(false)}
-                  className="px-4 py-2 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 transition-colors"
+                  className="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
                 >
                   Cancelar
                 </button>
