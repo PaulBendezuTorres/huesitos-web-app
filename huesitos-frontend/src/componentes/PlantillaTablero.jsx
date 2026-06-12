@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { User, Menu } from 'lucide-react';
 import BarraLateral from './BarraLateral';
 
@@ -13,6 +14,7 @@ const PlantillaTablero = ({
   sinPadding,
   children
 }) => {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const selectionClass = rol === 'VETERINARIO' ? 'selection:bg-emerald-500 selection:text-white' : 'selection:bg-sky-500 selection:text-white';
 
@@ -56,11 +58,15 @@ const PlantillaTablero = ({
             </h1>
           </div>
 
-          <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 p-1 rounded-full md:pr-4 md:gap-3 shrink-0">
-            <div className={`w-8 h-8 rounded-full bg-gradient-to-tr ${rol === 'VETERINARIO' ? 'from-emerald-500 to-teal-400' : 'from-sky-500 to-cyan-300'} shadow-sm flex items-center justify-center text-white shrink-0`}>
+          <div 
+            onClick={() => navigate('/perfil')}
+            className="flex items-center gap-2 bg-slate-50 hover:bg-slate-100/90 border border-slate-200 hover:border-slate-300 p-1 rounded-full md:pr-4 md:gap-3 shrink-0 cursor-pointer active:scale-95 transition-all select-none group"
+            title="Ver mi perfil"
+          >
+            <div className={`w-8 h-8 rounded-full bg-gradient-to-tr ${rol === 'VETERINARIO' ? 'from-emerald-500 to-teal-400' : 'from-sky-500 to-cyan-300'} shadow-sm flex items-center justify-center text-white shrink-0 group-hover:scale-105 transition-transform`}>
               <User size={16} strokeWidth={2.5} />
             </div>
-            <span className="text-xs md:text-sm font-bold text-slate-650 truncate max-w-[80px] sm:max-w-[120px] md:max-w-[200px]" title={correo}>
+            <span className="text-xs md:text-sm font-bold text-slate-650 group-hover:text-slate-800 transition-colors truncate max-w-[80px] sm:max-w-[120px] md:max-w-[200px]" title={correo}>
               {correo}
             </span>
           </div>
