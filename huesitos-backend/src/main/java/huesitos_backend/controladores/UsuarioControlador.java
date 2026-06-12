@@ -75,6 +75,16 @@ public class UsuarioControlador {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarUsuario(@PathVariable Long id) {
+        try {
+            usuarioServicio.eliminarUsuario(id);
+            return ResponseEntity.ok("Usuario eliminado con éxito.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @Data
     static class SolicitudCredenciales {
         private String correo;

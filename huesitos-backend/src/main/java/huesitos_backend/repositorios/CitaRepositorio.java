@@ -22,6 +22,11 @@ public interface CitaRepositorio extends JpaRepository<Cita, Long> {
      boolean existsByVeterinarioIdAndFechaHoraAndEstadoNotAndIdNot(Long veterinarioId, LocalDateTime fechaHora, EstadoCita estado, Long id);
 
     /**
+     * Lista todas las citas asignadas a un veterinario.
+     */
+    List<Cita> findByVeterinarioId(Long veterinarioId);
+
+    /**
      * Lista todas las citas programadas entre un rango de fechas (para el calendario diario).
      */
     List<Cita> findByFechaHoraBetween(LocalDateTime inicio, LocalDateTime fin);

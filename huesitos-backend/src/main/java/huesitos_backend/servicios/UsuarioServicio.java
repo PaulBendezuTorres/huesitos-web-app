@@ -4,9 +4,15 @@ import huesitos_backend.entidades.Usuario;
 import huesitos_backend.entidades.Rol;
 import huesitos_backend.entidades.Dueño;
 import huesitos_backend.entidades.Actividad;
+import huesitos_backend.entidades.HorarioPersonal;
+import huesitos_backend.entidades.Mascota;
+import huesitos_backend.entidades.Cita;
 import huesitos_backend.repositorios.UsuarioRepositorio;
 import huesitos_backend.repositorios.DueñoRepositorio;
 import huesitos_backend.repositorios.ActividadRepositorio;
+import huesitos_backend.repositorios.HorarioPersonalRepositorio;
+import huesitos_backend.repositorios.MascotaRepositorio;
+import huesitos_backend.repositorios.CitaRepositorio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +30,9 @@ public class UsuarioServicio {
     private final DueñoRepositorio dueñoRepositorio;
     private final ActividadRepositorio actividadRepositorio;
     private final PasswordEncoder passwordEncoder;
+    private final HorarioPersonalRepositorio horarioPersonalRepositorio;
+    private final MascotaRepositorio mascotaRepositorio;
+    private final CitaRepositorio citaRepositorio;
 
     @Transactional(readOnly = true)
     public List<Usuario> listarTodos() {
@@ -129,5 +138,62 @@ public class UsuarioServicio {
         }
 
         return usuario;
+    }
+
+    @Transactional
+    public void eliminarUsuario(Long id) {
+        Usuario usuario = usuarioRepositorio.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
+
+        // Proteger cuenta de administrador principal
+        if ("admin@huesitos.com".equalsIgnoreCase(usuario.getCorreo())) {
+            throw new RuntimeException("No se puede eliminar la cuenta del administrador principal del sistema.");
+        }
+
+        // Manejar dependencias según rol
+        if (usuario.getRol() == Rol.CLIENTE) {
+            Optional<Dueño> duenoOpt = dueñoRepositorio.findByUsuarioId(id);
+            if (duenoOpt.isPresent()) {
+                Dueño dueno = duenoOpt.get();
+                List<Mascota> mascotas = mascotaRepositorio.findByDueñoId(dueno.getId());
+                if (!mascotas.isEmpty()) {
+                    throw new RuntimeException("No se puede eliminar la cuenta del cliente porque tiene mascotas registradas.");
+                }
+                dueñoRepositorio.delete(dueno);
+            }
+        } else if (usuario.getRol() == Rol.VETERINARIO) {
+            // Validar citas pendientes
+            List<Cita> citas = citaRepositorio.findByVeterinarioId(id);
+            boolean tieneCitasPendientes = citas.stream()
+                    .anyMatch(c -> c.getEstado() == EstadoCita.PENDIENTE 
+                            || c.getEstado() == EstadoCita.CONFIRMADA 
+                            || c.getEstado() == EstadoCita.EN_ESPERA);
+            
+            if (tieneCitasPendientes) {
+                throw new RuntimeException("No se puede eliminar la cuenta del veterinario porque tiene citas pendientes o confirmadas programadas.");
+            }
+
+            // Desvincular citas del veterinario (pasa a null para registro histórico)
+            for (Cita cita : citas) {
+                cita.setVeterinario(null);
+            }
+            citaRepositorio.saveAll(citas);
+
+            // Eliminar horarios de personal del veterinario
+            List<HorarioPersonal> horarios = horarioPersonalRepositorio.findByUsuarioId(id);
+            if (!horarios.isEmpty()) {
+                horarioPersonalRepositorio.deleteAll(horarios);
+            }
+        }
+
+        // Registrar auditoría de eliminación
+        Actividad actividad = new Actividad();
+        actividad.setMensaje("Se eliminó permanentemente la cuenta de usuario: " + usuario.getCorreo());
+        actividad.setTipo("USUARIO");
+        actividad.setFecha(LocalDateTime.now());
+        actividadRepositorio.save(actividad);
+
+        // Eliminar físicamente el usuario
+        usuarioRepositorio.delete(usuario);
     }
 }

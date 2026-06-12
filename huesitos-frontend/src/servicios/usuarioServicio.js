@@ -30,3 +30,8 @@ export const actualizarCredencialesUsuario = async (usuarioId, datos) => {
   const response = await usuarioApi.patch(`/${usuarioId}/credenciales`, datos);
   return response.data;
 };
+
+export const eliminarCuentaUsuario = async (id) => {
+  const response = await usuarioApi.delete(`/${id}`);
+  return response.data;
+};
