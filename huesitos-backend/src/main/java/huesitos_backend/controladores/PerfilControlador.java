@@ -99,6 +99,9 @@ public class PerfilControlador {
                     datos.put("telefono", "");
                     datos.put("direccion", "");
                 }
+            } else {
+                datos.put("telefono", usuario.getTelefono() != null ? usuario.getTelefono() : "");
+                datos.put("direccion", usuario.getDireccion() != null ? usuario.getDireccion() : "");
             }
 
             return ResponseEntity.ok(datos);
@@ -133,7 +136,6 @@ public class PerfilControlador {
             usuario.setNombre(request.getNombre());
             usuario.setApellido(request.getApellido());
 
-            // 4. Si es cliente, guardar sus datos en la entidad Dueño
             if (usuario.getRol() == Rol.CLIENTE) {
                 Dueño dueño = dueñoRepositorio.findByUsuarioId(usuario.getId())
                         .orElseGet(() -> {
@@ -158,6 +160,9 @@ public class PerfilControlador {
 
                 dueño.setDireccion(request.getDireccion());
                 dueñoRepositorio.save(dueño);
+            } else {
+                usuario.setTelefono(request.getTelefono());
+                usuario.setDireccion(request.getDireccion());
             }
 
             usuarioRepositorio.save(usuario);

@@ -41,6 +41,12 @@ public class Usuario {
     @Column(name = "apellido", length = 50)
     private String apellido;
 
+    @Column(name = "telefono", length = 20)
+    private String telefono;
+
+    @Column(name = "direccion", length = 255)
+    private String direccion;
+
     @Column(name = "token_recuperacion", length = 255)
     private String tokenRecuperacion;
 

@@ -45,10 +45,8 @@ const MiPerfil = () => {
         setCorreo(datos.correo || '');
         setFotoPerfilUrl(datos.fotoPerfilUrl || '');
         
-        if (datos.rol === 'CLIENTE') {
-          setTelefono(datos.telefono || '');
-          setDireccion(datos.direccion || '');
-        }
+        setTelefono(datos.telefono || '');
+        setDireccion(datos.direccion || '');
       } catch (error) {
         console.error('Error al cargar datos del perfil:', error);
         setErrorMsg('No se pudo cargar la información de tu perfil');
@@ -100,7 +98,7 @@ const MiPerfil = () => {
       return;
     }
 
-    if (rol === 'CLIENTE' && telefono && telefono.length !== 9) {
+    if (telefono && telefono.length !== 9) {
       setErrorMsg('El teléfono móvil debe tener exactamente 9 dígitos');
       return;
     }
@@ -111,8 +109,8 @@ const MiPerfil = () => {
         apellido,
         correo,
         contrasena: contrasena || null,
-        telefono: rol === 'CLIENTE' ? (telefono || null) : null,
-        direccion: rol === 'CLIENTE' ? (direccion || null) : null,
+        telefono: telefono || null,
+        direccion: direccion || null,
       };
 
       await actualizarPerfil(usuarioId, payload);
@@ -240,7 +238,6 @@ const MiPerfil = () => {
                 </div>
               </div>
 
-              {rol === 'CLIENTE' && (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
                   <div className="sm:col-span-1">
                     <label className="block text-xs font-semibold text-slate-600 mb-1.5">Teléfono móvil</label>
@@ -273,7 +270,6 @@ const MiPerfil = () => {
                     </div>
                   </div>
                 </div>
-              )}
             </div>
           </div>
 
