@@ -174,9 +174,9 @@ const PaginaUsuarios = () => {
 
   if (loading && usuarios.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 gap-3 bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm">
+      <div className="flex flex-col items-center justify-center h-64 gap-3 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
         <CargadorSpinner size="lg" />
-        <span className="text-slate-500 text-sm font-semibold animate-pulse">Sincronizando cuentas de usuario...</span>
+        <span className="text-slate-500 dark:text-slate-400 text-sm font-semibold animate-pulse">Sincronizando cuentas de usuario...</span>
       </div>
     );
   }
@@ -196,9 +196,9 @@ const PaginaUsuarios = () => {
   return (
     <div className="space-y-6">
       {/* CABECERA Y BOTÓN NUEVO */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
         <div>
-          <h1 className="text-2xl font-black text-slate-800 tracking-tight">Gestión de Usuarios y Permisos</h1>
+          <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">Gestión de Usuarios y Permisos</h1>
         </div>
         <button 
           onClick={() => setModalCrearOpen(true)}
@@ -216,28 +216,28 @@ const PaginaUsuarios = () => {
       />
 
       {/* TABLA PRINCIPAL */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200/60 dark:border-slate-700/60 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-slate-100">
-            <thead className="bg-slate-50/50">
+          <table className="min-w-full divide-y divide-slate-100 dark:divide-slate-700">
+            <thead className="bg-slate-50/50 dark:bg-slate-900/40">
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-widest">Identificador / Correo</th>
-                <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-widest">Rol Asignado</th>
-                <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-widest">Estado Cuenta</th>
-                <th className="px-6 py-4 text-center text-xs font-bold text-slate-500 uppercase tracking-widest">Acciones</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Identificador / Correo</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Rol Asignado</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Estado Cuenta</th>
+                <th className="px-6 py-4 text-center text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-sm">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-700 text-sm">
               {usuariosFiltrados.length === 0 ? (
                 <tr>
-                  <td colSpan="4" className="px-6 py-10 text-center text-slate-500 font-semibold">
+                  <td colSpan="4" className="px-6 py-10 text-center text-slate-500 dark:text-slate-400 font-semibold">
                     No se encontraron usuarios que coincidan con la búsqueda.
                   </td>
                 </tr>
               ) : (
                 usuariosFiltrados.map((usuario) => (
-                  <tr key={usuario.id} className="hover:bg-sky-50/30 transition-colors">
-                    <td className="px-6 py-4 font-bold text-slate-800">
+                  <tr key={usuario.id} className="hover:bg-sky-50/30 dark:hover:bg-slate-700/40 transition-colors">
+                    <td className="px-6 py-4 font-bold text-slate-800 dark:text-slate-100">
                       <div className="flex items-center gap-3">
                         <Avatar url={usuario.fotoPerfilUrl} />
                         <div className="flex items-center gap-2">
@@ -253,7 +253,7 @@ const PaginaUsuarios = () => {
                         value={usuario.rol}
                         onChange={(e) => handleRolChange(usuario.id, e.target.value)}
                         disabled={usuarioEnAccionId === usuario.id || loading}
-                        className={`border border-slate-200 rounded-lg p-2 bg-slate-50 hover:bg-white text-slate-700 focus:ring-2 focus:ring-sky-500 focus:outline-none font-bold text-xs tracking-wide cursor-pointer transition-all ${usuarioEnAccionId === usuario.id ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`border border-slate-200 dark:border-slate-600 rounded-lg p-2 bg-slate-50 dark:bg-slate-700 hover:bg-white dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-sky-500 focus:outline-none font-bold text-xs tracking-wide cursor-pointer transition-all ${usuarioEnAccionId === usuario.id ? 'opacity-50 cursor-not-allowed' : ''}`}
                       >
                         <option value="ADMINISTRADOR">ADMINISTRADOR</option>
                         <option value="VETERINARIO">VETERINARIO</option>
@@ -271,7 +271,7 @@ const PaginaUsuarios = () => {
                         <button 
                           onClick={() => abrirDetallesModal(usuario)} 
                           disabled={usuarioEnAccionId === usuario.id || loading}
-                          className={`bg-white hover:bg-sky-50 text-sky-600 p-2 rounded-lg transition-all border border-slate-200 hover:border-sky-200 shadow-sm ${usuarioEnAccionId === usuario.id ? 'opacity-50 cursor-not-allowed' : ''}`} 
+                          className={`bg-white dark:bg-slate-700 hover:bg-sky-50 dark:hover:bg-sky-900/30 text-sky-600 dark:text-sky-400 p-2 rounded-lg transition-all border border-slate-200 dark:border-slate-600 hover:border-sky-200 shadow-sm ${usuarioEnAccionId === usuario.id ? 'opacity-50 cursor-not-allowed' : ''}`} 
                           title="Ver / Editar"
                         >
                           <Edit size={16} />
@@ -279,7 +279,7 @@ const PaginaUsuarios = () => {
                         <button 
                           onClick={() => handleEstadoToggle(usuario.id, usuario.activo)} 
                           disabled={usuarioEnAccionId === usuario.id || loading}
-                          className={`p-2 rounded-lg transition-all border shadow-sm ${usuarioEnAccionId === usuario.id ? 'opacity-50 cursor-not-allowed' : ''} ${usuario.activo ? "bg-white hover:bg-red-50 text-slate-400 hover:text-red-500 border-slate-200 hover:border-red-200" : "bg-white hover:bg-emerald-50 text-slate-400 hover:text-emerald-500 border-slate-200 hover:border-emerald-200"}`} 
+                          className={`p-2 rounded-lg transition-all border shadow-sm ${usuarioEnAccionId === usuario.id ? 'opacity-50 cursor-not-allowed' : ''} ${usuario.activo ? "bg-white dark:bg-slate-700 hover:bg-red-50 dark:hover:bg-red-900/30 text-slate-400 hover:text-red-500 border-slate-200 dark:border-slate-600 hover:border-red-200" : "bg-white dark:bg-slate-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 text-slate-400 hover:text-emerald-500 border-slate-200 dark:border-slate-600 hover:border-emerald-200"}`} 
                           title={usuario.activo ? "Suspender" : "Habilitar"}
                         >
                           {usuario.activo ? <ShieldAlert size={16} /> : <ShieldCheck size={16} />}
@@ -287,7 +287,7 @@ const PaginaUsuarios = () => {
                         <button 
                           onClick={() => abrirModalEliminar(usuario)} 
                           disabled={usuarioEnAccionId === usuario.id || loading}
-                          className={`bg-white hover:bg-red-50 text-red-600 p-2 rounded-lg transition-all border border-slate-200 hover:border-red-200 shadow-sm ${usuarioEnAccionId === usuario.id ? 'opacity-50 cursor-not-allowed' : ''}`} 
+                          className={`bg-white dark:bg-slate-700 hover:bg-red-50 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 p-2 rounded-lg transition-all border border-slate-200 dark:border-slate-600 hover:border-red-200 shadow-sm ${usuarioEnAccionId === usuario.id ? 'opacity-50 cursor-not-allowed' : ''}`} 
                           title="Eliminar Cuenta"
                         >
                           <Trash2 size={16} />
@@ -307,24 +307,24 @@ const PaginaUsuarios = () => {
       {/* ========================================== */}
       {modalCrearOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl shadow-2xl border border-slate-200 max-w-md w-full overflow-hidden flex flex-col">
-            <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-              <h3 className="text-lg font-black text-slate-800 flex items-center gap-2">
+          <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 max-w-md w-full overflow-hidden flex flex-col">
+            <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/40">
+              <h3 className="text-lg font-black text-slate-800 dark:text-slate-100 flex items-center gap-2">
                 <UserPlus className="text-sky-500" size={20} /> Alta de Nuevo Personal
               </h3>
-              <button onClick={() => setModalCrearOpen(false)} className="text-slate-400 hover:text-slate-700 transition-colors">
+              <button onClick={() => setModalCrearOpen(false)} className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
                 <X size={20}/>
               </button>
             </div>
 
             <form onSubmit={ejecutarCreacionPersonal} className="p-6 space-y-5">
-              <p className="text-sm text-slate-500 flex items-start gap-2 bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <p className="text-sm text-slate-500 dark:text-slate-400 flex items-start gap-2 bg-slate-50 dark:bg-slate-900/40 p-3 rounded-xl border border-slate-100 dark:border-slate-700">
                 <Info className="text-sky-500 shrink-0 mt-0.5" size={16} />
                 Crea credenciales seguras para los colaboradores de la clínica.
               </p>
               
               <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Correo Electrónico</label>
+                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Correo Electrónico</label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-3 text-slate-400" size={18} />
                   <input
@@ -334,13 +334,13 @@ const PaginaUsuarios = () => {
                     onChange={handleCrearFormChange}
                     required
                     placeholder="ejemplo@huesitos.com"
-                    className="w-full pl-10 border border-slate-300 p-2.5 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all bg-slate-50 focus:bg-white"
+                    className="w-full pl-10 border border-slate-300 dark:border-slate-600 p-2.5 rounded-xl text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all bg-slate-50 dark:bg-slate-700 focus:bg-white dark:focus:bg-slate-600"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Contraseña Inicial</label>
+                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Contraseña Inicial</label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-3 text-slate-400" size={18} />
                   <input
@@ -351,18 +351,18 @@ const PaginaUsuarios = () => {
                     required
                     placeholder="Mínimo 6 caracteres"
                     minLength="6"
-                    className="w-full pl-10 border border-slate-300 p-2.5 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all bg-slate-50 focus:bg-white"
+                    className="w-full pl-10 border border-slate-300 dark:border-slate-600 p-2.5 rounded-xl text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all bg-slate-50 dark:bg-slate-700 focus:bg-white dark:focus:bg-slate-600"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Asignar Rol</label>
+                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Asignar Rol</label>
                 <select
                   name="rol"
                   value={crearForm.rol}
                   onChange={handleCrearFormChange}
-                  className="w-full border border-slate-300 p-2.5 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 font-bold bg-slate-50 focus:bg-white cursor-pointer"
+                  className="w-full border border-slate-300 dark:border-slate-600 p-2.5 rounded-xl text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-sky-500 font-bold bg-slate-50 dark:bg-slate-700 focus:bg-white dark:focus:bg-slate-600 cursor-pointer"
                 >
                   <option value="RECEPCIONISTA">RECEPCIONISTA</option>
                   <option value="VETERINARIO">VETERINARIO</option>
@@ -370,11 +370,11 @@ const PaginaUsuarios = () => {
                 </select>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-700">
                 <button
                   type="button"
                   onClick={() => setModalCrearOpen(false)}
-                  className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-100 transition-colors"
+                  className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
                 >
                   Cancelar
                 </button>
@@ -396,46 +396,44 @@ const PaginaUsuarios = () => {
       {/* ========================================== */}
       {modalOpen && usuarioSeleccionado && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl shadow-2xl border border-slate-200 max-w-2xl w-full overflow-hidden flex flex-col max-h-[90vh]">
-            <div className="px-6 py-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
-              <h3 className="text-lg font-black text-slate-800">Detalles de Cuenta de Usuario</h3>
-              <button onClick={() => setModalOpen(false)} className="text-slate-400 hover:text-slate-700 transition-colors">
+          <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 max-w-2xl w-full overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 flex justify-between items-center">
+              <h3 className="text-lg font-black text-slate-800 dark:text-slate-100">Detalles de Cuenta de Usuario</h3>
+              <button onClick={() => setModalOpen(false)} className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
                 <X size={20}/>
               </button>
             </div>
 
             <div className="p-6 overflow-y-auto space-y-6">
-              {/* Información General y Foto */}
-              <div className="flex flex-col sm:flex-row items-center gap-6 bg-slate-50 p-5 rounded-2xl border border-slate-100">
+              <div className="flex flex-col sm:flex-row items-center gap-6 bg-slate-50 dark:bg-slate-900/40 p-5 rounded-2xl border border-slate-100 dark:border-slate-700">
                  <Avatar url={usuarioSeleccionado.fotoPerfilUrl} size="w-20 h-20" className="border-2 border-slate-200" />
                 <div className="space-y-1 text-center sm:text-left">
-                  <p className="text-sm font-bold text-slate-500">Rol del Sistema: <span className="text-sky-600 font-black tracking-wide">{usuarioSeleccionado.rol}</span></p>
-                  <p className="text-slate-800 font-bold text-lg tracking-tight">{usuarioSeleccionado.correo}</p>
-                  <p className="text-xs text-slate-400 font-mono flex items-center justify-center sm:justify-start gap-1 mt-1">
+                  <p className="text-sm font-bold text-slate-500 dark:text-slate-400">Rol del Sistema: <span className="text-sky-600 dark:text-sky-400 font-black tracking-wide">{usuarioSeleccionado.rol}</span></p>
+                  <p className="text-slate-800 dark:text-slate-100 font-bold text-lg tracking-tight">{usuarioSeleccionado.correo}</p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 font-mono flex items-center justify-center sm:justify-start gap-1 mt-1">
                     <Lock size={12} /> Contraseña: •••••••• 
                   </p>
                 </div>
               </div>
 
-              {/* Datos Extendidos de Dueño si es CLIENTE */}
               {usuarioSeleccionado.rol === "CLIENTE" && (
-                <div className="border-t border-slate-100 pt-5 space-y-4">
-                  <h4 className="font-black text-slate-800 text-sm tracking-widest uppercase">Información de Dueño Asociada</h4>
+                <div className="border-t border-slate-100 dark:border-slate-700 pt-5 space-y-4">
+                  <h4 className="font-black text-slate-800 dark:text-slate-100 text-sm tracking-widest uppercase">Información de Dueño Asociada</h4>
                   {loadingDueño ? (
-                    <p className="text-xs text-sky-600 animate-pulse font-medium">Cargando datos de contacto desde la tabla dueño...</p>
+                    <p className="text-xs text-sky-600 dark:text-sky-400 animate-pulse font-medium">Cargando datos de contacto desde la tabla dueño...</p>
                   ) : datosDueño ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-sky-50/50 p-5 rounded-2xl border border-sky-100/50 text-sm">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-sky-50/50 dark:bg-sky-900/20 p-5 rounded-2xl border border-sky-100/50 dark:border-sky-800/50 text-sm">
                       <div>
-                        <span className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Nombre Completo</span>
-                        <p className="font-bold text-slate-800">{datosDueño.nombreCompleto}</p>
+                        <span className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Nombre Completo</span>
+                        <p className="font-bold text-slate-800 dark:text-slate-100">{datosDueño.nombreCompleto}</p>
                       </div>
                       <div>
-                        <span className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Teléfono / Celular</span>
-                        <p className="font-bold text-slate-800">{datosDueño.telefono}</p>
+                        <span className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Teléfono / Celular</span>
+                        <p className="font-bold text-slate-800 dark:text-slate-100">{datosDueño.telefono}</p>
                       </div>
                       <div className="sm:col-span-2">
-                        <span className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Dirección de Domicilio</span>
-                        <p className="font-bold text-slate-800">{datosDueño.direccion}</p>
+                        <span className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Dirección de Domicilio</span>
+                        <p className="font-bold text-slate-800 dark:text-slate-100">{datosDueño.direccion}</p>
                       </div>
                     </div>
                   ) : (
@@ -446,17 +444,16 @@ const PaginaUsuarios = () => {
                 </div>
               )}
 
-              {/* Formulario de Edición Exclusivo para Personal */}
               {usuarioSeleccionado.rol !== "CLIENTE" && (
-                <form onSubmit={ejecutarGuardadoCredenciales} className="border-t border-slate-100 pt-5 space-y-5">
+                <form onSubmit={ejecutarGuardadoCredenciales} className="border-t border-slate-100 dark:border-slate-700 pt-5 space-y-5">
                   <div>
-                    <h4 className="font-black text-slate-800 text-sm tracking-widest uppercase">Modificación de Credenciales</h4>
-                    <p className="text-xs text-slate-400 mt-1">Puedes modificar uno o ambos campos. Deja la contraseña en blanco si no deseas cambiarla.</p>
+                    <h4 className="font-black text-slate-800 dark:text-slate-100 text-sm tracking-widest uppercase">Modificación de Credenciales</h4>
+                    <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">Puedes modificar uno o ambos campos. Deja la contraseña en blanco si no deseas cambiarla.</p>
                   </div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Correo Electrónico</label>
+                      <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Correo Electrónico</label>
                       <div className="relative">
                         <Mail className="absolute left-3 top-3 text-slate-400" size={18} />
                         <input
@@ -465,12 +462,12 @@ const PaginaUsuarios = () => {
                           value={editForm.correo}
                           onChange={handleFormChange}
                           required
-                          className="w-full pl-10 border border-slate-300 p-2.5 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all bg-slate-50 focus:bg-white"
+                          className="w-full pl-10 border border-slate-300 dark:border-slate-600 p-2.5 rounded-xl text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all bg-slate-50 dark:bg-slate-700 focus:bg-white dark:focus:bg-slate-600"
                         />
                       </div>
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Nueva Contraseña</label>
+                      <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Nueva Contraseña</label>
                       <div className="relative">
                         <Lock className="absolute left-3 top-3 text-slate-400" size={18} />
                         <input
@@ -479,17 +476,17 @@ const PaginaUsuarios = () => {
                           value={editForm.contrasena}
                           onChange={handleFormChange}
                           placeholder="Dejar en blanco para conservar"
-                          className="w-full pl-10 border border-slate-300 p-2.5 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all bg-slate-50 focus:bg-white"
+                          className="w-full pl-10 border border-slate-300 dark:border-slate-600 p-2.5 rounded-xl text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all bg-slate-50 dark:bg-slate-700 focus:bg-white dark:focus:bg-slate-600"
                         />
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                  <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-700">
                     <button
                       type="button"
                       onClick={() => setModalOpen(false)}
-                      className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-100 transition-colors"
+                      className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
                     >
                       Cancelar
                     </button>
@@ -505,12 +502,11 @@ const PaginaUsuarios = () => {
               )}
             </div>
 
-            {/* Cierre del Modal para Clientes */}
             {usuarioSeleccionado.rol === "CLIENTE" && (
-              <div className="p-5 border-t border-slate-100 bg-slate-50/50 flex justify-end">
+              <div className="p-5 border-t border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 flex justify-end">
                 <button
                   onClick={() => setModalOpen(false)}
-                  className="px-6 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-sm font-bold shadow-md transition-colors"
+                  className="px-6 py-2.5 bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 dark:hover:bg-slate-600 text-white rounded-xl text-sm font-bold shadow-md transition-colors"
                 >
                   Cerrar Vista
                 </button>
@@ -525,14 +521,14 @@ const PaginaUsuarios = () => {
       {/* ========================================== */}
       {modalEliminarOpen && usuarioAEliminar && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl shadow-2xl border border-red-100 max-w-md w-full overflow-hidden flex flex-col">
-            <div className="px-6 py-5 border-b border-red-50 flex justify-between items-center bg-red-50/30">
-              <h3 className="text-lg font-black text-red-700 flex items-center gap-2">
+          <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-red-100 dark:border-red-900/50 max-w-md w-full overflow-hidden flex flex-col">
+            <div className="px-6 py-5 border-b border-red-50 dark:border-red-900/50 flex justify-between items-center bg-red-50/30 dark:bg-red-900/20">
+              <h3 className="text-lg font-black text-red-700 dark:text-red-400 flex items-center gap-2">
                 <AlertTriangle className="text-red-600 animate-bounce" size={22} /> Advertencia Crítica
               </h3>
               <button 
                 onClick={() => setModalEliminarOpen(false)} 
-                className="text-slate-400 hover:text-slate-700 transition-colors"
+                className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
                 disabled={procesandoEliminacion}
               >
                 <X size={20}/>
@@ -540,19 +536,19 @@ const PaginaUsuarios = () => {
             </div>
 
             <div className="p-6 space-y-6">
-              <div className="bg-red-50/50 border border-red-100 p-4 rounded-2xl space-y-3">
-                <p className="text-sm font-semibold text-slate-700">
+              <div className="bg-red-50/50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/50 p-4 rounded-2xl space-y-3">
+                <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                   ¿Estás seguro de que deseas eliminar permanentemente esta cuenta? Esta acción no se puede deshacer.
                 </p>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Se eliminarán o desvincularán todos los registros asociados a este usuario respetando las reglas de integridad de datos.
                 </p>
               </div>
 
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-sm">
-                <span className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Usuario a eliminar</span>
-                <p className="font-bold text-slate-800 break-all">{usuarioAEliminar.correo}</p>
-                <p className="text-xs text-sky-600 font-bold mt-1">Rol: {usuarioAEliminar.rol}</p>
+              <div className="bg-slate-50 dark:bg-slate-900/40 p-4 rounded-xl border border-slate-100 dark:border-slate-700 text-sm">
+                <span className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Usuario a eliminar</span>
+                <p className="font-bold text-slate-800 dark:text-slate-100 break-all">{usuarioAEliminar.correo}</p>
+                <p className="text-xs text-sky-600 dark:text-sky-400 font-bold mt-1">Rol: {usuarioAEliminar.rol}</p>
               </div>
 
               <label className="flex items-start gap-3 cursor-pointer select-none group">
@@ -563,17 +559,17 @@ const PaginaUsuarios = () => {
                   disabled={procesandoEliminacion}
                   className="mt-1 h-4.5 w-4.5 rounded border-slate-300 text-red-600 focus:ring-red-500 cursor-pointer"
                 />
-                <span className="text-xs font-bold text-slate-600 group-hover:text-slate-800 transition-colors leading-tight">
+                <span className="text-xs font-bold text-slate-600 dark:text-slate-400 group-hover:text-slate-800 dark:group-hover:text-slate-200 transition-colors leading-tight">
                   Confirmo que deseo eliminar definitivamente esta cuenta de usuario del sistema.
                 </span>
               </label>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-700">
                 <button
                   type="button"
                   onClick={() => setModalEliminarOpen(false)}
                   disabled={procesandoEliminacion}
-                  className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-100 transition-colors disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors disabled:opacity-50"
                 >
                   Cancelar
                 </button>
@@ -581,7 +577,7 @@ const PaginaUsuarios = () => {
                   type="button"
                   onClick={ejecutarEliminacionUsuario}
                   disabled={!confirmadoEliminar || procesandoEliminacion}
-                  className="px-5 py-2.5 bg-red-600 hover:bg-red-700 disabled:bg-slate-200 text-white disabled:text-slate-400 text-sm font-bold rounded-xl shadow-lg shadow-red-600/20 disabled:shadow-none transition-all cursor-pointer disabled:cursor-not-allowed"
+                  className="px-5 py-2.5 bg-red-600 hover:bg-red-700 disabled:bg-slate-200 dark:disabled:bg-slate-700 text-white disabled:text-slate-400 text-sm font-bold rounded-xl shadow-lg shadow-red-600/20 disabled:shadow-none transition-all cursor-pointer disabled:cursor-not-allowed"
                 >
                   {procesandoEliminacion ? "Eliminando..." : "Eliminar cuenta"}
                 </button>
