@@ -58,7 +58,7 @@ public class AutenticacionControlador {
                         .orElse(null);
             }
             
-            RespuestaLogin respuesta = new RespuestaLogin(token, usuario.getCorreo(), usuario.getRol().name(), usuario.getId(), duenoId);
+            RespuestaLogin respuesta = new RespuestaLogin(token, usuario.getCorreo(), usuario.getRol().name(), usuario.getId(), duenoId, usuario.getFotoPerfilUrl());
             return ResponseEntity.ok(respuesta);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());

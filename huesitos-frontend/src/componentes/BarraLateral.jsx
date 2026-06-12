@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, 
   Stethoscope, 
@@ -97,6 +98,15 @@ const BarraLateral = ({
 }) => {
   const navigate = useNavigate();
   const config = configsRoles[rol] || configsRoles.CLIENTE;
+  const [fotoPerfilUrl, setFotoPerfilUrl] = useState(localStorage.getItem('fotoPerfilUrl') || '');
+
+  useEffect(() => {
+    const manejarCambioStorage = () => {
+      setFotoPerfilUrl(localStorage.getItem('fotoPerfilUrl') || '');
+    };
+    window.addEventListener('storage', manejarCambioStorage);
+    return () => window.removeEventListener('storage', manejarCambioStorage);
+  }, []);
 
   const baseBtnClass = "w-full text-left px-3.5 py-2.5 rounded-lg font-semibold transition-all duration-200 flex items-center gap-3 text-xs tracking-wide group";
   const shadowColor = rol === 'VETERINARIO' ? 'shadow-emerald-500/10' : 'shadow-sky-500/10';
@@ -204,8 +214,16 @@ const BarraLateral = ({
               : "bg-slate-950/40 border border-slate-800/40 text-slate-400 hover:bg-slate-850/65 hover:border-slate-750 hover:text-slate-200"
           }`}
         >
-          <div className={`w-7 h-7 rounded-lg ${vistaActual === 'perfil' ? 'bg-white/20' : config.badgeBg} flex items-center justify-center text-white font-bold shrink-0 shadow-sm`}>
-            <User size={12} />
+          <div className={`w-7 h-7 rounded-lg ${vistaActual === 'perfil' ? 'bg-white/20' : config.badgeBg} flex items-center justify-center text-white font-bold shrink-0 shadow-sm overflow-hidden`}>
+            {fotoPerfilUrl && fotoPerfilUrl !== '/uploads/defecto-usuario.png' ? (
+              <img 
+                src={`http://localhost:8080${fotoPerfilUrl}`} 
+                alt="Foto de perfil" 
+                className="w-full h-full object-cover" 
+              />
+            ) : (
+              <User size={12} />
+            )}
           </div>
           <div className="overflow-hidden">
             <p className={`text-[8px] font-bold uppercase tracking-wider ${vistaActual === 'perfil' ? 'text-white/70' : 'text-slate-500'}`}>{config.badgeRol}</p>

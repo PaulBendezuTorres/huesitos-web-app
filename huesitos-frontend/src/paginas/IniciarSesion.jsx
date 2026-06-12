@@ -36,6 +36,7 @@ const IniciarSesion = () => {
         localStorage.setItem('usuarioRol', data.rol);
         if (data.usuarioId) localStorage.setItem('usuarioId', data.usuarioId);
         if (data.duenoId) localStorage.setItem('duenoId', data.duenoId);
+        if (data.fotoPerfilUrl) localStorage.setItem('fotoPerfilUrl', data.fotoPerfilUrl);
 
         // Redirección dinámica según el rol
         if (data.rol === 'ADMINISTRADOR') {
