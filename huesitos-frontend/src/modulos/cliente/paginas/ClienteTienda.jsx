@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
   Search, ShoppingCart, X, Plus, Minus, Trash2, Package,
-  AlertTriangle, Check, Loader2, Tag, Filter,
+  AlertTriangle, Check, Tag, Filter,
 } from 'lucide-react';
+import CargadorSpinner from '../../../componentes/CargadorSpinner';
 import {
   obtenerProductos,
   buscarProductos,
@@ -160,7 +161,7 @@ const ClienteTienda = () => {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 border-4 border-sky-500 border-t-transparent rounded-full animate-spin" />
+          <CargadorSpinner size="lg" />
           <span className="text-sm font-semibold text-slate-400">Cargando tienda...</span>
         </div>
       </div>
@@ -288,7 +289,7 @@ const ClienteTienda = () => {
                   className="w-full mt-3 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-sky-50 text-sky-600 text-xs font-bold hover:bg-sky-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   {agregando === producto.id ? (
-                    <Loader2 size={14} className="animate-spin" />
+                    <CargadorSpinner size="xs" color="border-sky-650" />
                   ) : (
                     <ShoppingCart size={14} />
                   )}
@@ -402,7 +403,7 @@ const ClienteTienda = () => {
                   className="w-full py-3 rounded-xl bg-emerald-500 text-white font-semibold text-sm hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20 disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {procesando ? (
-                    <><Loader2 size={16} className="animate-spin" /> Procesando...</>
+                    <><CargadorSpinner size="xs" color="border-white" /> Procesando...</>
                   ) : (
                     <><ShoppingCart size={16} /> Finalizar compra (Checkout FEFO)</>
                   )}
