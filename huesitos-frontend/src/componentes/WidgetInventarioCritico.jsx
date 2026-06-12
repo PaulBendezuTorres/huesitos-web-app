@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { AlertTriangle, Calendar, RefreshCw, Loader2, Package } from 'lucide-react';
+import { AlertTriangle, Calendar, RefreshCw, Package } from 'lucide-react';
 import { obtenerAlertasBajoStock, obtenerAlertasVencimientos } from '../servicios/finanzasServicio';
+import CargadorSpinner from './CargadorSpinner';
 
 const WidgetInventarioCritico = () => {
   const [bajoStock, setBajoStock] = useState([]);
@@ -44,7 +45,7 @@ const WidgetInventarioCritico = () => {
           className="p-1.5 bg-white hover:bg-slate-50 border border-slate-200 shadow-sm rounded-lg text-xs font-semibold text-slate-550 hover:text-sky-600 transition-all flex items-center justify-center"
           title="Refrescar alertas"
         >
-          {loading ? <Loader2 size={12} className="animate-spin" /> : <RefreshCw size={12} />}
+          {loading ? <CargadorSpinner size="xs" /> : <RefreshCw size={12} />}
         </button>
       </div>
 
@@ -66,7 +67,10 @@ const WidgetInventarioCritico = () => {
             </div>
             <div className="flex-1 space-y-3 overflow-y-auto max-h-[220px] pr-1 text-left">
               {loading ? (
-                <p className="text-xs text-slate-400 animate-pulse font-semibold text-center py-4">Consultando stock...</p>
+                <div className="flex flex-col items-center justify-center py-4 gap-1.5">
+                  <CargadorSpinner size="xs" />
+                  <span className="text-xs font-semibold text-slate-400">Consultando stock...</span>
+                </div>
               ) : bajoStock.length === 0 ? (
                 <p className="text-xs text-emerald-600 font-semibold text-center py-4">Insumos y productos al día.</p>
               ) : (
@@ -93,7 +97,10 @@ const WidgetInventarioCritico = () => {
             </div>
             <div className="flex-1 space-y-3 overflow-y-auto max-h-[220px] pr-1 text-left">
               {loading ? (
-                <p className="text-xs text-slate-400 animate-pulse font-semibold text-center py-4">Analizando lotes...</p>
+                <div className="flex flex-col items-center justify-center py-4 gap-1.5">
+                  <CargadorSpinner size="xs" />
+                  <span className="text-xs font-semibold text-slate-400">Analizando lotes...</span>
+                </div>
               ) : vencimientos.length === 0 ? (
                 <p className="text-xs text-emerald-600 font-semibold text-center py-4">Lotes en buen estado.</p>
               ) : (
