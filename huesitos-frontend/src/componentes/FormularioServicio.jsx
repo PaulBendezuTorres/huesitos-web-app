@@ -3,6 +3,7 @@ import { PlusCircle, Stethoscope, Tag, Clock, FileText, Camera } from 'lucide-re
 import Combobox from "./Combobox";
 import CargadorSpinner from "./CargadorSpinner";
 import AreaTexto from "./AreaTexto";
+import Boton from "./Boton";
 
 // Catálogo predefinido
 const CATALOGO_PREDEFINIDO = [
@@ -193,22 +194,14 @@ const FormularioServicio = ({ onGuardar }) => {
             className="w-full pl-10 border border-slate-300 p-2.5 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 outline-none transition-all bg-slate-50 focus:bg-white" />
         </div>
         
-        <button 
+        <Boton 
           type="submit" 
-          disabled={procesando}
-          className="bg-gradient-to-r from-sky-500 to-cyan-400 hover:from-sky-600 hover:to-cyan-500 text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-sky-500/30 transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          variant="primary"
+          cargando={procesando}
+          icono={PlusCircle}
         >
-          {procesando ? (
-            <>
-              <CargadorSpinner size="xs" color="border-white" />
-              Guardando...
-            </>
-          ) : (
-            <>
-              <PlusCircle size={18} /> Guardar Servicio
-            </>
-          )}
-        </button>
+          Guardar Servicio
+        </Boton>
       </div>
     </form>
   );

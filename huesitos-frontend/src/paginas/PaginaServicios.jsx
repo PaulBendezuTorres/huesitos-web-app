@@ -7,6 +7,7 @@ import { X, Stethoscope, Tag, Clock, FileText, Camera, List, Plus } from 'lucide
 import CargadorSpinner from "../componentes/CargadorSpinner";
 import AreaTexto from "../componentes/AreaTexto";
 import ModalConfirmacion from "../componentes/ModalConfirmacion";
+import Boton from "../componentes/Boton";
 
 const PaginaServicios = () => {
   const { servicios, loading, obtenerServicios } = useServicios();
@@ -16,7 +17,7 @@ const PaginaServicios = () => {
   const [subiendoFoto, setSubiendoFoto] = useState(false);
   const [servicioAEliminar, setServicioAEliminar] = useState(null);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
-  const [mostrarTabla, setMostrarTabla] = useState(false);
+  const [mostrarTabla, setMostrarTabla] = useState(true); // Empezar mostrando el Catálogo por defecto
 
   const handleSubirFoto = async (e) => {
     const file = e.target.files[0];
@@ -139,31 +140,31 @@ const PaginaServicios = () => {
       <div className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-800 tracking-tight">
-            {mostrarTabla ? "Catálogo de Servicios" : "Gestión de Catálogo"}
+            {mostrarTabla ? "Catálogo de Servicios" : "Registrar Servicio Médico"}
           </h1>
           <p className="text-slate-500 text-sm mt-1">
             {mostrarTabla 
               ? "Lista completa de la oferta médica y los servicios disponibles en la clínica." 
-              : "Registra nuevos servicios médicos y edita la información en tiempo real."}
+              : "Crea un nuevo servicio médico y configúralo en tiempo real."}
           </p>
         </div>
         
         {mostrarTabla ? (
-          <button
+          <Boton
             onClick={() => setMostrarTabla(false)}
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-sky-500 to-cyan-400 hover:from-sky-600 hover:to-cyan-500 text-white px-4.5 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-sky-500/20 active:scale-95 transition-all select-none shrink-0"
+            variant="primary"
+            icono={Plus}
           >
-            <Plus size={16} />
             Registrar nuevo servicio
-          </button>
+          </Boton>
         ) : (
-          <button
+          <Boton
             onClick={() => setMostrarTabla(true)}
-            className="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 px-4.5 py-2.5 rounded-xl text-sm font-bold shadow-sm active:scale-95 transition-all select-none shrink-0"
+            variant="secondary"
+            icono={List}
           >
-            <List size={16} className="text-sky-500" />
             Ver todos mis servicios
-          </button>
+          </Boton>
         )}
       </div>
 
