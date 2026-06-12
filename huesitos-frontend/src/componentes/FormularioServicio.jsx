@@ -92,8 +92,8 @@ const FormularioServicio = ({ onGuardar }) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    if (file.size > 2 * 1024 * 1024) {
-      alert("El tamaño de la imagen no debe superar los 2MB");
+    if (file.size > 5 * 1024 * 1024) {
+      alert("El tamaño de la imagen no debe superar los 5MB");
       e.target.value = "";
       return;
     }
