@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
+import { useNavigate, useLocation, Routes, Route, Navigate } from 'react-router-dom';
 
 import PaginaServicios from './PaginaServicios';
 import DashboardAnalytics from '../modulos/admin/paginas/TableroAnaliticas';
@@ -20,16 +20,12 @@ const TableroAdministrador = () => {
   const location = useLocation();
   const [correo] = useState(localStorage.getItem('usuarioCorreo') || 'Admin');
 
-  // Obtener la subvista actual de la URL
+  // Obtener la subvista actual de la URL (si es vacía, asume 'dashboard' para la barra lateral)
   const subvistaUrl = location.pathname.split('/')[2];
   const vistaActual = subvistaUrl || 'dashboard';
 
   const setVistaActual = (nuevaVista) => {
-    if (nuevaVista === 'dashboard') {
-      navigate('/admin');
-    } else {
-      navigate(`/admin/${nuevaVista}`);
-    }
+    navigate(`/admin/${nuevaVista}`);
   };
 
   useEffect(() => {
@@ -62,7 +58,8 @@ const TableroAdministrador = () => {
       tituloHeader="Centro de Administración"
     >
       <Routes>
-        <Route path="/" element={<DashboardAnalytics />} />
+        <Route path="/" element={<Navigate to="dashboard" replace />} />
+        <Route path="dashboard" element={<DashboardAnalytics />} />
         <Route path="servicios" element={<PaginaServicios />} />
         <Route path="usuarios" element={<PaginaUsuarios />} />
         <Route path="duenos" element={<PaginaDuenos />} />
