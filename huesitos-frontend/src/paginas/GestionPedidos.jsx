@@ -58,7 +58,7 @@ const GestionPedidos = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col lg:flex-row overflow-hidden h-full bg-slate-50 w-full">
+    <div className="flex-1 flex flex-col lg:flex-row overflow-hidden h-full bg-slate-50 dark:bg-slate-900 w-full">
       {/* PANEL IZQUIERDO: Listado de pedidos */}
       <section className={`w-full lg:w-[40%] lg:max-w-md bg-white dark:bg-slate-800 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-700 flex flex-col overflow-hidden animate-in fade-in duration-200 shrink-0 ${
         pedidoSeleccionado ? 'hidden lg:flex' : 'flex'
@@ -156,7 +156,7 @@ const GestionPedidos = () => {
       </section>
 
       {/* PANEL DERECHO: Detalle del pedido seleccionado */}
-      <section className={`flex-1 bg-slate-50 flex flex-col overflow-hidden animate-in fade-in duration-200 ${
+      <section className={`flex-1 bg-slate-50 dark:bg-slate-900 flex flex-col overflow-hidden animate-in fade-in duration-200 ${
         pedidoSeleccionado ? 'flex' : 'hidden lg:flex'
       }`}>
         {pedidoSeleccionado ? (
@@ -274,12 +274,12 @@ const GestionPedidos = () => {
             </div>
           </>
         ) : (
-          <div className="flex-1 flex flex-col justify-center items-center p-8 text-center text-slate-500 select-none">
-            <div className="w-16 h-16 bg-slate-200/50 rounded-full flex items-center justify-center text-slate-400 mb-4 animate-pulse">
+          <div className="flex-1 flex flex-col justify-center items-center p-8 text-center text-slate-500 dark:text-slate-400 select-none">
+            <div className="w-16 h-16 bg-slate-200/50 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-400 dark:text-slate-500 mb-4 animate-pulse">
               <Truck size={32} />
             </div>
-            <h3 className="text-base font-bold text-slate-800 tracking-tight">Despacho de pedidos</h3>
-            <p className="text-xs text-slate-400 max-w-sm mt-1 font-medium">
+            <h3 className="text-base font-bold text-slate-800 dark:text-slate-100 tracking-tight">Despacho de pedidos</h3>
+            <p className="text-xs text-slate-400 dark:text-slate-500 max-w-sm mt-1 font-medium">
               Selecciona un pedido entrante de la lista para gestionar su estado de pago, control de inventario FEFO y despacho físico del producto.
             </p>
           </div>
