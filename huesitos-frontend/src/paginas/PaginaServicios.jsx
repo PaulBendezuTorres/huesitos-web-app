@@ -4,6 +4,7 @@ import TablaServicio from "../componentes/TablaServicio";
 import { crearServicio, cambiarEstadoServicio, actualizarServicio } from "../servicios/servicioServicio";
 import { useServicios } from "../hooks/useServicios";
 import { X, Stethoscope, Tag, Clock, FileText } from 'lucide-react';
+import CargadorSpinner from "../componentes/CargadorSpinner";
 
 const PaginaServicios = () => {
   const { servicios, loading, obtenerServicios } = useServicios();
@@ -69,7 +70,12 @@ const PaginaServicios = () => {
   };
 
   if (loading) {
-    return <div className="flex justify-center items-center h-64 text-sky-600 font-bold animate-pulse">Cargando catálogo de servicios...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center h-64 gap-3 bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm">
+        <CargadorSpinner size="lg" />
+        <span className="text-slate-500 text-sm font-semibold animate-pulse">Sincronizando catálogo...</span>
+      </div>
+    );
   }
 
   return (
