@@ -1,8 +1,14 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-12 (Seguridad, optimización de imágenes WebP, limpieza de disco y sincronización de avatar)
+Última actualización: 2026-06-12 (Integración de Dark Mode global y merge a la rama main)
 
 ## 🚀 Logros Recientes
+- [x] **Implementación de Dark Mode en toda la aplicación**:
+  - Configurado Tailwind CSS con la directiva `darkMode: 'class'`.
+  - Creado e integrado `huesitos-frontend/src/contextos/ContextoTema.jsx` para proveer un estado global reactivo de tema claro/oscuro.
+  - Rediseñadas todas las vistas principales de la aplicación para soportar el tema oscuro (TableroAdministrador, AgendaSemanal, GestionPedidos, PaginaServicios, PaginaDuenos, PaginaFinanzas, PaginaInventario, PaginaCampanas, PaginaUsuarios, ConfiguracionHorarios, ConfiguracionDinamica y WidgetInventarioCritico).
+- [x] **Fusión e Integración de Código en Producción**:
+  - Realizado el merge explícito no fast-forward de la rama `develop` a `main` tras validar la compilación exitosa y sin errores de producción en el frontend.
 - [x] **Seguridad en Cambio de Contraseña**: Implementada validación en backend (`PerfilControlador.java` y `PerfilRequest.java`) y frontend (`MiPerfil.jsx`) para requerir la contraseña actual y exigir una longitud mínima de 6 caracteres antes de permitir la actualización.
 - [x] **Conversión y Compresión de Imágenes a WebP**: Integrada la dependencia `webp-imageio` en `pom.xml`. Se configuró `StorageService.java` para convertir y guardar automáticamente las imágenes subidas en formato `.webp` con calidad del 75%, conservando el canal alfa (transparencia) para archivos PNG.
 - [x] **Servicio de Recursos Estáticos de Uploads**: Creada la clase de configuración `WebConfig.java` para exponer el directorio físico de subidas y servir archivos estáticos. Se actualizó `SeguridadConfig.java` para permitir el acceso público sin token a la ruta `/uploads/**`.
@@ -212,7 +218,5 @@
 - **Cruce de Horario en Reprogramación**: Para la reprogramación de citas se verifica que no existan colisiones de horario para el veterinario en la nueva fecha y hora propuesta, excluyendo la propia cita actual del cálculo para evitar falsos positivos de cruces de agenda cuando no se cambia la hora.
 - **División de Fases y Commits**: A partir de la Fase 11A, se decide realizar una división más granular de las fases y sus correspondientes commits. Esto asegura que cada commit al final de una fase contenga de manera explícita y pormenorizada los puntos y archivos específicos modificados, mejorando enormemente la claridad y control de los cambios realizados.
 - **Planificación de Vistas Frontend (Figma / Stitch)**: Estructuración y diseño inicial del frontend mapeados a las APIs del backend de Huesitos para facilitar la maquetación rápida en Figma y generación con Stitch.
-
-
-
-
+- **Estrategia de Tema Oscuro**: Se adoptó la directiva `darkMode: 'class'` en Tailwind CSS, inyectando la clase `dark` en la etiqueta raíz `<html>` a través de un contexto global de React. Esto permite un cambio de tema reactivo fluido y consistente.
+- **Paleta de Colores en Modo Oscuro**: Se evitó el uso de colores oscuros genéricos, prefiriendo la combinación de tonos `slate` (como `bg-slate-900` y `bg-slate-800`) para proporcionar una estética premium con buena legibilidad.
