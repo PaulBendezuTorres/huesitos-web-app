@@ -1,4 +1,4 @@
-import { Edit2, ShieldAlert, ShieldCheck } from 'lucide-react';
+import { Edit2, ShieldAlert, ShieldCheck, Stethoscope } from 'lucide-react';
 
 const TablaServicio = ({ servicios, onEditar, onEstado }) => {
   if (servicios.length === 0) {
@@ -26,8 +26,19 @@ const TablaServicio = ({ servicios, onEditar, onEstado }) => {
             {servicios.map((servicio) => (
               <tr key={servicio.id} className="hover:bg-sky-50/30 transition-colors">
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="font-bold text-slate-900">{servicio.nombre}</div>
-                  <div className="text-xs text-slate-500 truncate max-w-[250px]">{servicio.descripcion}</div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-slate-50 border border-slate-200/60 overflow-hidden shrink-0 flex items-center justify-center text-slate-400 shadow-inner">
+                      {servicio.fotoUrl && servicio.fotoUrl !== '/uploads/defecto-servicio.png' ? (
+                        <img src={`http://localhost:8080${servicio.fotoUrl}`} alt={servicio.nombre} className="w-full h-full object-cover" />
+                      ) : (
+                        <Stethoscope size={20} className="text-slate-350" />
+                      )}
+                    </div>
+                    <div>
+                      <div className="font-bold text-slate-900">{servicio.nombre}</div>
+                      <div className="text-xs text-slate-550 truncate max-w-[250px]">{servicio.descripcion}</div>
+                    </div>
+                  </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap font-black text-slate-900">S/. {servicio.precio.toFixed(2)}</td>
                 <td className="px-6 py-4 whitespace-nowrap font-semibold text-slate-600">{servicio.duracionMinutos} min</td>

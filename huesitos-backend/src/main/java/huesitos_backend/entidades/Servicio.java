@@ -33,4 +33,7 @@ public class Servicio {
 
     @Column(nullable = false)
     private Boolean activo = true;
+
+    @Column(name = "foto_url", length = 255)
+    private String fotoUrl = "/uploads/defecto-servicio.png";
 }

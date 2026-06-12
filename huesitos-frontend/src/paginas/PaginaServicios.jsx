@@ -1,16 +1,35 @@
 import { useState } from "react";
 import FormularioServicio from "../componentes/FormularioServicio";
 import TablaServicio from "../componentes/TablaServicio";
-import { crearServicio, cambiarEstadoServicio, actualizarServicio } from "../servicios/servicioServicio";
+import { crearServicio, cambiarEstadoServicio, actualizarServicio, subirFotoServicio } from "../servicios/servicioServicio";
 import { useServicios } from "../hooks/useServicios";
-import { X, Stethoscope, Tag, Clock, FileText } from 'lucide-react';
+import { X, Stethoscope, Tag, Clock, FileText, Camera } from 'lucide-react';
 import CargadorSpinner from "../componentes/CargadorSpinner";
 
 const PaginaServicios = () => {
   const { servicios, loading, obtenerServicios } = useServicios();
   const [modalOpen, setModalOpen] = useState(false);
   const [servicioAEditar, setServicioAEditar] = useState(null);
-  const [formEdit, setFormEdit] = useState({ nombre: "", precio: "", descripcion: "", duracionMinutos: "" });
+  const [formEdit, setFormEdit] = useState({ nombre: "", precio: "", descripcion: "", duracionMinutos: "", fotoUrl: "" });
+  const [subiendoFoto, setSubiendoFoto] = useState(false);
+
+  const handleSubirFoto = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !servicioAEditar) return;
+    setSubiendoFoto(true);
+    try {
+      const res = await subirFotoServicio(servicioAEditar.id, file);
+      setFormEdit(prev => ({ ...prev, fotoUrl: res.fotoUrl }));
+      setServicioAEditar(prev => ({ ...prev, fotoUrl: res.fotoUrl }));
+      obtenerServicios();
+      alert("Foto del servicio actualizada con éxito");
+    } catch (error) {
+      console.error(error);
+      alert("Hubo un error al subir la imagen");
+    } finally {
+      setSubiendoFoto(false);
+    }
+  };
 
   const guardar = async (data) => {
     try {
@@ -39,7 +58,8 @@ const PaginaServicios = () => {
       nombre: servicio.nombre,
       precio: servicio.precio,
       descripcion: servicio.descripcion,
-      duracionMinutos: servicio.duracionMinutos
+      duracionMinutos: servicio.duracionMinutos,
+      fotoUrl: servicio.fotoUrl || ""
     });
     setModalOpen(true);
   };
@@ -112,6 +132,25 @@ const PaginaServicios = () => {
             </div>
             
             <form onSubmit={ejecutarEdicion} className="p-6 space-y-5">
+              {/* Sección de Foto del Servicio */}
+              <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                <div className="w-16 h-16 rounded-xl bg-white border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center text-slate-400 shadow-inner">
+                  {servicioAEditar?.fotoUrl && servicioAEditar.fotoUrl !== '/uploads/defecto-servicio.png' ? (
+                    <img src={`http://localhost:8080${servicioAEditar.fotoUrl}`} alt="Servicio" className="w-full h-full object-cover" />
+                  ) : (
+                    <Stethoscope size={24} className="text-slate-350" />
+                  )}
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wide">Imagen del Servicio</label>
+                  <label className="inline-flex items-center gap-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all shadow-sm">
+                    <Camera size={14} />
+                    {subiendoFoto ? "Cargando..." : "Subir foto"}
+                    <input type="file" accept="image/*" onChange={handleSubirFoto} className="hidden" disabled={subiendoFoto} />
+                  </label>
+                </div>
+              </div>
+
               <div>
                 <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wide">Nombre del Servicio</label>
                 <input 

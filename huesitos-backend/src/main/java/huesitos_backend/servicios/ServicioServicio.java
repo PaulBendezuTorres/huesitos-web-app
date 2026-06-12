@@ -7,6 +7,7 @@ import huesitos_backend.repositorios.ServicioRepositorio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -66,7 +67,22 @@ public Servicio crearServicio(Servicio servicio) {
         servicioExistente.setPrecio(datosNuevos.getPrecio());
         servicioExistente.setDescripcion(datosNuevos.getDescripcion());
         servicioExistente.setDuracionMinutos(datosNuevos.getDuracionMinutos());
+        if (datosNuevos.getFotoUrl() != null) {
+            servicioExistente.setFotoUrl(datosNuevos.getFotoUrl());
+        }
         
         return servicioRepositorio.save(servicioExistente);
+    }
+
+    @Transactional
+    public String subirFotoServicio(Long id, MultipartFile archivo, StorageService storageService) {
+        Servicio servicio = servicioRepositorio.findById(id)
+                .orElseThrow(() -> new RuntimeException("Servicio no encontrado con ID: " + id));
+        String fotoAnterior = servicio.getFotoUrl();
+        String urlFoto = storageService.comprimirYGuardarFoto(archivo, "servicio");
+        servicio.setFotoUrl(urlFoto);
+        servicioRepositorio.save(servicio);
+        storageService.borrarFoto(fotoAnterior);
+        return urlFoto;
     }
 }
