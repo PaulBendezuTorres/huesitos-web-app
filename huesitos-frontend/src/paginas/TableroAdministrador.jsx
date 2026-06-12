@@ -62,7 +62,7 @@ const TableroAdministrador = () => {
         <Route path="dashboard" element={<DashboardAnalytics />} />
         <Route path="servicios" element={<PaginaServicios />} />
         <Route path="usuarios" element={<PaginaUsuarios />} />
-        <Route path="duenos" element={<PaginaDuenos />} />
+        <Route path="clientes" element={<PaginaDuenos />} />
         <Route path="agenda" element={<AgendaSemanal />} />
         <Route path="horarios" element={<ConfiguracionHorarios />} />
         <Route path="inventario" element={<PaginaInventario />} />
