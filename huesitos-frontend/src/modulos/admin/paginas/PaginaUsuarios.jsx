@@ -8,8 +8,9 @@ import {
   registrarNuevoPersonal,
   eliminarCuentaUsuario
 } from "../../../servicios/usuarioServicio";
-import { UserPlus, ShieldAlert, ShieldCheck, Edit, Mail, Lock, UserCircle, X, Info, Trash2, AlertTriangle, Search } from 'lucide-react';
+import { UserPlus, ShieldAlert, ShieldCheck, Edit, Mail, Lock, UserCircle, X, Info, Trash2, AlertTriangle } from 'lucide-react';
 import CargadorSpinner from "../../../componentes/CargadorSpinner";
+import Buscador from "../../../componentes/Buscador";
 
 const PaginaUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -208,29 +209,11 @@ const PaginaUsuarios = () => {
       </div>
 
       {/* BUSCADOR DE USUARIOS */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200/60 shadow-sm flex items-center gap-3">
-        <div className="relative flex-1">
-          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
-            <Search size={18} />
-          </span>
-          <input
-            type="text"
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-            placeholder="Buscar usuario por correo, rol o estado (permitido/suspendido)..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 focus:bg-white"
-          />
-        </div>
-        {busqueda && (
-          <button 
-            type="button"
-            onClick={() => setBusqueda('')}
-            className="text-xs font-bold text-slate-400 hover:text-slate-650 transition-colors px-3 py-2 hover:bg-slate-100 rounded-lg shrink-0"
-          >
-            Limpiar
-          </button>
-        )}
-      </div>
+      <Buscador 
+        value={busqueda} 
+        onChange={setBusqueda} 
+        placeholder="Buscar usuario por correo, rol o estado (permitido/suspendido)..." 
+      />
 
       {/* TABLA PRINCIPAL */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
