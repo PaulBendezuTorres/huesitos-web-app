@@ -4,7 +4,6 @@ import {
   User,
   Search,
   Save,
-  Loader2,
   Calendar,
   AlertTriangle,
   Plus,
@@ -12,6 +11,7 @@ import {
   CheckCircle,
   HelpCircle
 } from 'lucide-react';
+import CargadorSpinner from '../../../componentes/CargadorSpinner';
 import { obtenerUsuarios, obtenerHorariosVeterinario, guardarHorarioPersonal } from '../../../api/citaApi';
 
 const DIAS_MAP = [
@@ -246,8 +246,9 @@ const ConfiguracionHorarios = () => {
 
         <div className="flex-1 overflow-y-auto p-3 space-y-2">
           {cargandoPersonal ? (
-            <div className="text-center py-10 text-xs font-bold text-slate-400 animate-pulse">
-              Cargando personal...
+            <div className="flex flex-col items-center justify-center py-10 gap-2">
+              <CargadorSpinner size="sm" />
+              <span className="text-xs font-bold text-slate-400">Cargando personal...</span>
             </div>
           ) : personalFiltrado.length === 0 ? (
             <div className="text-center py-10 text-slate-400 text-xs font-semibold">
@@ -315,8 +316,8 @@ const ConfiguracionHorarios = () => {
 
             {/* Contenido Configuración */}
             {cargandoHorarios ? (
-              <div className="flex-1 flex flex-col items-center justify-center py-20">
-                <Loader2 className="text-sky-500 animate-spin mb-3" size={28} />
+              <div className="flex-1 flex flex-col items-center justify-center py-20 gap-3">
+                <CargadorSpinner size="md" />
                 <span className="text-xs font-bold text-slate-400">Cargando horario...</span>
               </div>
             ) : (
@@ -510,7 +511,7 @@ const ConfiguracionHorarios = () => {
                   >
                     {guardando ? (
                       <>
-                        <Loader2 size={14} className="animate-spin" /> Guardando...
+                        <CargadorSpinner size="xs" color="border-white" /> Guardando...
                       </>
                     ) : (
                       <>
