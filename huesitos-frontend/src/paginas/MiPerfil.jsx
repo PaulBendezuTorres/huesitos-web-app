@@ -128,6 +128,7 @@ const MiPerfil = () => {
 
       await actualizarPerfil(usuarioId, payload);
       setSuccessMsg('Perfil actualizado correctamente');
+      alert('¡Perfil actualizado con éxito!');
       setContrasenaActual('');
       setContrasena('');
       setConfirmarContrasena('');
@@ -137,6 +138,7 @@ const MiPerfil = () => {
     } catch (error) {
       console.error('Error al actualizar perfil:', error);
       setErrorMsg(error.response?.data || 'Error al actualizar el perfil');
+      alert(error.response?.data || 'Error al actualizar el perfil');
     }
   };
 
@@ -242,7 +244,10 @@ const MiPerfil = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5">Correo electrónico</label>
+                <label className="block text-xs font-semibold text-slate-650 mb-1.5 flex justify-between items-center">
+                  <span>Correo electrónico</span>
+                  <span className="text-[10px] text-slate-405 lowercase italic">(No modificable)</span>
+                </label>
                 <div className="relative">
                   <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
                     <Mail size={16} />
@@ -250,9 +255,8 @@ const MiPerfil = () => {
                   <input
                     type="email"
                     value={correo}
-                    onChange={e => setCorreo(e.target.value)}
-                    required
-                    className={`w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 focus:bg-white ${colorBordeFocus}`}
+                    disabled
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-400 text-sm font-semibold bg-slate-100 cursor-not-allowed outline-none transition-all"
                   />
                 </div>
               </div>
