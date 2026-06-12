@@ -16,6 +16,13 @@ const PaginaServicios = () => {
   const handleSubirFoto = async (e) => {
     const file = e.target.files[0];
     if (!file || !servicioAEditar) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert("El tamaño de la imagen no debe superar los 2MB");
+      e.target.value = "";
+      return;
+    }
+
     setSubiendoFoto(true);
     try {
       const res = await subirFotoServicio(servicioAEditar.id, file);

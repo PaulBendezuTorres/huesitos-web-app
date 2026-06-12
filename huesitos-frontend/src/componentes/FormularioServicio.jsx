@@ -91,6 +91,13 @@ const FormularioServicio = ({ onGuardar }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert("El tamaño de la imagen no debe superar los 2MB");
+      e.target.value = "";
+      return;
+    }
+
     setArchivo(file);
     setVistaPrevia(URL.createObjectURL(file));
   };
