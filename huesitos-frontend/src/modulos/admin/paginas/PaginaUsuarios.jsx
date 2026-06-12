@@ -8,13 +8,14 @@ import {
   registrarNuevoPersonal,
   eliminarCuentaUsuario
 } from "../../../servicios/usuarioServicio";
-import { UserPlus, ShieldAlert, ShieldCheck, Edit, Mail, Lock, UserCircle, X, Info, Trash2, AlertTriangle } from 'lucide-react';
+import { UserPlus, ShieldAlert, ShieldCheck, Edit, Mail, Lock, UserCircle, X, Info, Trash2, AlertTriangle, Search } from 'lucide-react';
 import CargadorSpinner from "../../../componentes/CargadorSpinner";
 
 const PaginaUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [busqueda, setBusqueda] = useState('');
 
   // Estados Modal DETALLES/EDICIÓN
   const [modalOpen, setModalOpen] = useState(false);
@@ -178,6 +179,18 @@ const PaginaUsuarios = () => {
     );
   }
 
+  const usuariosFiltrados = usuarios.filter((usuario) => {
+    const termino = busqueda.toLowerCase().trim();
+    if (!termino) return true;
+    
+    const correoMatches = usuario.correo?.toLowerCase().includes(termino);
+    const rolMatches = usuario.rol?.toLowerCase().includes(termino);
+    const estadoTexto = usuario.activo ? "permitido" : "suspendido";
+    const estadoMatches = estadoTexto.includes(termino);
+    
+    return correoMatches || rolMatches || estadoMatches;
+  });
+
   return (
     <div className="space-y-6">
       {/* CABECERA Y BOTÓN NUEVO */}
@@ -194,6 +207,31 @@ const PaginaUsuarios = () => {
         </button>
       </div>
 
+      {/* BUSCADOR DE USUARIOS */}
+      <div className="bg-white p-4 rounded-2xl border border-slate-200/60 shadow-sm flex items-center gap-3">
+        <div className="relative flex-1">
+          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
+            <Search size={18} />
+          </span>
+          <input
+            type="text"
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            placeholder="Buscar usuario por correo, rol o estado (permitido/suspendido)..."
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 focus:bg-white"
+          />
+        </div>
+        {busqueda && (
+          <button 
+            type="button"
+            onClick={() => setBusqueda('')}
+            className="text-xs font-bold text-slate-400 hover:text-slate-650 transition-colors px-3 py-2 hover:bg-slate-100 rounded-lg shrink-0"
+          >
+            Limpiar
+          </button>
+        )}
+      </div>
+
       {/* TABLA PRINCIPAL */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
         <div className="overflow-x-auto">
@@ -207,69 +245,77 @@ const PaginaUsuarios = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-sm">
-              {usuarios.map((usuario) => (
-                 <tr key={usuario.id} className="hover:bg-sky-50/30 transition-colors">
-                  <td className="px-6 py-4 font-bold text-slate-800">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-                         <UserCircle size={18} />
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {usuario.correo}
-                        {usuarioEnAccionId === usuario.id && (
-                          <CargadorSpinner size="xs" color="border-sky-500" />
-                        )}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <select
-                      value={usuario.rol}
-                      onChange={(e) => handleRolChange(usuario.id, e.target.value)}
-                      disabled={usuarioEnAccionId === usuario.id || loading}
-                      className={`border border-slate-200 rounded-lg p-2 bg-slate-50 hover:bg-white text-slate-700 focus:ring-2 focus:ring-sky-500 focus:outline-none font-bold text-xs tracking-wide cursor-pointer transition-all ${usuarioEnAccionId === usuario.id ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    >
-                      <option value="ADMINISTRADOR">ADMINISTRADOR</option>
-                      <option value="VETERINARIO">VETERINARIO</option>
-                      <option value="RECEPCIONISTA">RECEPCIONISTA</option>
-                      <option value="CLIENTE">CLIENTE</option>
-                    </select>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex px-3 py-1 rounded-lg text-[10px] font-black tracking-widest uppercase border ${usuario.activo ? "bg-emerald-50 text-emerald-600 border-emerald-200" : "bg-red-50 text-red-600 border-red-200"}`}>
-                      {usuario.activo ? "Permitido" : "Suspendido"}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex gap-2 justify-center">
-                      <button 
-                        onClick={() => abrirDetallesModal(usuario)} 
-                        disabled={usuarioEnAccionId === usuario.id || loading}
-                        className={`bg-white hover:bg-sky-50 text-sky-600 p-2 rounded-lg transition-all border border-slate-200 hover:border-sky-200 shadow-sm ${usuarioEnAccionId === usuario.id ? 'opacity-50 cursor-not-allowed' : ''}`} 
-                        title="Ver / Editar"
-                      >
-                        <Edit size={16} />
-                      </button>
-                      <button 
-                        onClick={() => handleEstadoToggle(usuario.id, usuario.activo)} 
-                        disabled={usuarioEnAccionId === usuario.id || loading}
-                        className={`p-2 rounded-lg transition-all border shadow-sm ${usuarioEnAccionId === usuario.id ? 'opacity-50 cursor-not-allowed' : ''} ${usuario.activo ? "bg-white hover:bg-red-50 text-slate-400 hover:text-red-500 border-slate-200 hover:border-red-200" : "bg-white hover:bg-emerald-50 text-slate-400 hover:text-emerald-500 border-slate-200 hover:border-emerald-200"}`} 
-                        title={usuario.activo ? "Suspender" : "Habilitar"}
-                      >
-                        {usuario.activo ? <ShieldAlert size={16} /> : <ShieldCheck size={16} />}
-                      </button>
-                      <button 
-                        onClick={() => abrirModalEliminar(usuario)} 
-                        disabled={usuarioEnAccionId === usuario.id || loading}
-                        className={`bg-white hover:bg-red-50 text-red-600 p-2 rounded-lg transition-all border border-slate-200 hover:border-red-200 shadow-sm ${usuarioEnAccionId === usuario.id ? 'opacity-50 cursor-not-allowed' : ''}`} 
-                        title="Eliminar Cuenta"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
+              {usuariosFiltrados.length === 0 ? (
+                <tr>
+                  <td colSpan="4" className="px-6 py-10 text-center text-slate-500 font-semibold">
+                    No se encontraron usuarios que coincidan con la búsqueda.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                usuariosFiltrados.map((usuario) => (
+                  <tr key={usuario.id} className="hover:bg-sky-50/30 transition-colors">
+                    <td className="px-6 py-4 font-bold text-slate-800">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+                           <UserCircle size={18} />
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {usuario.correo}
+                          {usuarioEnAccionId === usuario.id && (
+                            <CargadorSpinner size="xs" color="border-sky-500" />
+                          )}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <select
+                        value={usuario.rol}
+                        onChange={(e) => handleRolChange(usuario.id, e.target.value)}
+                        disabled={usuarioEnAccionId === usuario.id || loading}
+                        className={`border border-slate-200 rounded-lg p-2 bg-slate-50 hover:bg-white text-slate-700 focus:ring-2 focus:ring-sky-500 focus:outline-none font-bold text-xs tracking-wide cursor-pointer transition-all ${usuarioEnAccionId === usuario.id ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      >
+                        <option value="ADMINISTRADOR">ADMINISTRADOR</option>
+                        <option value="VETERINARIO">VETERINARIO</option>
+                        <option value="RECEPCIONISTA">RECEPCIONISTA</option>
+                        <option value="CLIENTE">CLIENTE</option>
+                      </select>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex px-3 py-1 rounded-lg text-[10px] font-black tracking-widest uppercase border ${usuario.activo ? "bg-emerald-50 text-emerald-600 border-emerald-200" : "bg-red-50 text-red-600 border-red-200"}`}>
+                        {usuario.activo ? "Permitido" : "Suspendido"}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex gap-2 justify-center">
+                        <button 
+                          onClick={() => abrirDetallesModal(usuario)} 
+                          disabled={usuarioEnAccionId === usuario.id || loading}
+                          className={`bg-white hover:bg-sky-50 text-sky-600 p-2 rounded-lg transition-all border border-slate-200 hover:border-sky-200 shadow-sm ${usuarioEnAccionId === usuario.id ? 'opacity-50 cursor-not-allowed' : ''}`} 
+                          title="Ver / Editar"
+                        >
+                          <Edit size={16} />
+                        </button>
+                        <button 
+                          onClick={() => handleEstadoToggle(usuario.id, usuario.activo)} 
+                          disabled={usuarioEnAccionId === usuario.id || loading}
+                          className={`p-2 rounded-lg transition-all border shadow-sm ${usuarioEnAccionId === usuario.id ? 'opacity-50 cursor-not-allowed' : ''} ${usuario.activo ? "bg-white hover:bg-red-50 text-slate-400 hover:text-red-500 border-slate-200 hover:border-red-200" : "bg-white hover:bg-emerald-50 text-slate-400 hover:text-emerald-500 border-slate-200 hover:border-emerald-200"}`} 
+                          title={usuario.activo ? "Suspender" : "Habilitar"}
+                        >
+                          {usuario.activo ? <ShieldAlert size={16} /> : <ShieldCheck size={16} />}
+                        </button>
+                        <button 
+                          onClick={() => abrirModalEliminar(usuario)} 
+                          disabled={usuarioEnAccionId === usuario.id || loading}
+                          className={`bg-white hover:bg-red-50 text-red-600 p-2 rounded-lg transition-all border border-slate-200 hover:border-red-200 shadow-sm ${usuarioEnAccionId === usuario.id ? 'opacity-50 cursor-not-allowed' : ''}`} 
+                          title="Eliminar Cuenta"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
