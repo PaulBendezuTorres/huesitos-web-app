@@ -60,6 +60,7 @@ const MiPerfil = () => {
   }, [usuarioId]);
 
   const handleSubirFoto = async (e) => {
+    if (subiendoFoto) return;
     const archivo = e.target.files[0];
     if (!archivo) return;
 
@@ -171,18 +172,23 @@ const MiPerfil = () => {
             {/* Foto de Perfil */}
             <div className="bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col items-center justify-center text-center">
               <div className="relative group mb-4">
-                <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-slate-100 shadow-inner bg-slate-50 flex items-center justify-center">
+                <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-slate-100 shadow-inner bg-slate-50 flex items-center justify-center relative">
                   {fotoPerfilUrl ? (
                     <img 
                       src={`http://localhost:8080${fotoPerfilUrl}`} 
                       alt="Foto de perfil" 
-                      className="w-full h-full object-cover" 
+                      className={`w-full h-full object-cover transition-opacity duration-200 ${subiendoFoto ? 'opacity-40' : ''}`} 
                     />
                   ) : (
                     <span className="text-4xl text-slate-350 font-bold">{nombre.slice(0, 1).toUpperCase()}</span>
                   )}
+                  {subiendoFoto && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-slate-950/20 backdrop-blur-[1px]">
+                      <CargadorSpinner size="sm" />
+                    </div>
+                  )}
                 </div>
-                <label className="absolute bottom-1.5 right-1.5 bg-slate-900 text-white p-2 rounded-full cursor-pointer hover:bg-slate-800 transition-colors shadow-md flex items-center justify-center">
+                <label className={`absolute bottom-1.5 right-1.5 bg-slate-900 text-white p-2 rounded-full shadow-md flex items-center justify-center transition-all ${subiendoFoto ? 'opacity-50 cursor-not-allowed pointer-events-none' : 'cursor-pointer hover:bg-slate-800'}`}>
                   <Camera size={16} />
                   <input 
                     type="file" 
