@@ -9,6 +9,7 @@ import {
   eliminarCuentaUsuario
 } from "../../../servicios/usuarioServicio";
 import { UserPlus, ShieldAlert, ShieldCheck, Edit, Mail, Lock, UserCircle, X, Info, Trash2, AlertTriangle } from 'lucide-react';
+import CargadorSpinner from "../../../componentes/CargadorSpinner";
 
 const PaginaUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -211,7 +212,7 @@ const PaginaUsuarios = () => {
                       <div className="flex items-center gap-2">
                         {usuario.correo}
                         {usuarioEnAccionId === usuario.id && (
-                          <span className="w-3.5 h-3.5 border-2 border-sky-500 border-t-transparent rounded-full animate-spin" title="Procesando..."/>
+                          <CargadorSpinner size="xs" color="border-sky-500" />
                         )}
                       </div>
                     </div>
