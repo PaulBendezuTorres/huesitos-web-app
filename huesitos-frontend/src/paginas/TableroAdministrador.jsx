@@ -3,6 +3,7 @@ import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
 
 import PaginaServicios from './PaginaServicios';
 import DashboardAnalytics from '../modulos/admin/paginas/TableroAnaliticas';
+import MiPerfil from './MiPerfil';
 import ConfiguracionDinamica from '../modulos/admin/paginas/ConfiguracionDinamica';
 import PaginaUsuarios from '../modulos/admin/paginas/PaginaUsuarios';
 import PaginaFinanzas from '../modulos/admin/paginas/PaginaFinanzas';
@@ -72,6 +73,7 @@ const TableroAdministrador = () => {
         <Route path="campanas" element={<PaginaCampanas />} />
         <Route path="configuracion" element={<ConfiguracionDinamica />} />
         <Route path="pedidos" element={<GestionPedidos />} />
+        <Route path="perfil" element={<MiPerfil sinPlantilla={true} />} />
         <Route path="*" element={<DashboardAnalytics />} />
       </Routes>
     </PlantillaTablero>

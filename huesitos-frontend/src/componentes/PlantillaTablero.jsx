@@ -68,7 +68,7 @@ const PlantillaTablero = ({
           </div>
 
           <div 
-            onClick={() => navigate('/perfil')}
+            onClick={() => navigate(rol === 'ADMINISTRADOR' ? '/admin/perfil' : '/perfil')}
             className="flex items-center gap-2 bg-slate-50 hover:bg-slate-100/90 border border-slate-200 hover:border-slate-300 p-1 rounded-full md:pr-4 md:gap-3 shrink-0 cursor-pointer active:scale-95 transition-all select-none group"
             title="Ver mi perfil"
           >

@@ -5,7 +5,7 @@ import { obtenerPerfil, actualizarPerfil, subirFotoPerfil } from '../api/perfilA
 import PlantillaTablero from '../componentes/PlantillaTablero';
 import CargadorSpinner from '../componentes/CargadorSpinner';
 
-const MiPerfil = () => {
+const MiPerfil = ({ sinPlantilla = false }) => {
   const navigate = useNavigate();
   const usuarioId = localStorage.getItem('usuarioId');
   const rol = localStorage.getItem('usuarioRol') || 'CLIENTE';
@@ -355,6 +355,10 @@ const MiPerfil = () => {
     localStorage.clear();
     navigate('/');
   };
+
+  if (sinPlantilla) {
+    return contenido;
+  }
 
   return (
     <PlantillaTablero 

@@ -206,7 +206,7 @@ const BarraLateral = ({
       <div className="p-3 border-t border-slate-800/30 bg-slate-900/50">
         <div 
           onClick={() => {
-            navigate('/perfil');
+            navigate(rol === 'ADMINISTRADOR' ? '/admin/perfil' : '/perfil');
           }}
           className={`p-2.5 rounded-lg flex items-center gap-2.5 mb-3 cursor-pointer transition-all border ${
             vistaActual === 'perfil' 
