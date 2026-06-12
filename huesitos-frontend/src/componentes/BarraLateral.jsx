@@ -21,6 +21,7 @@ import {
   Receipt
 } from 'lucide-react';
 import logo from '../assets/Logo Huesitos.png';
+import { useNavigate } from 'react-router-dom';
 
 const configsRoles = {
   ADMINISTRADOR: {
@@ -40,7 +41,8 @@ const configsRoles = {
       { id: 'usuarios', label: 'Usuarios y Roles', icon: ShieldCheck },
       { id: 'campanas', label: 'Campañas y Ofertas', icon: Percent },
       { id: 'horarios', label: 'Horarios del Personal', icon: Clock },
-      { id: 'configuracion', label: 'Configuración Global', icon: Settings }
+      { id: 'configuracion', label: 'Configuración Global', icon: Settings },
+      { id: 'perfil', label: 'Mi Perfil', icon: User, ruta: '/perfil' }
     ]
   },
   VETERINARIO: {
@@ -52,7 +54,8 @@ const configsRoles = {
     items: [
       { id: 'agenda', label: 'Agenda del día', icon: Calendar },
       { id: 'consulta', label: 'Consulta activa', icon: Stethoscope, tienePing: true },
-      { id: 'mascotas', label: 'Buscar expedientes', icon: History }
+      { id: 'mascotas', label: 'Buscar expedientes', icon: History },
+      { id: 'perfil', label: 'Mi Perfil', icon: User, ruta: '/perfil' }
     ]
   },
   RECEPCIONISTA: {
@@ -64,7 +67,8 @@ const configsRoles = {
     items: [
       { id: 'caja', label: 'Caja y POS', icon: Wallet },
       { id: 'pedidos', label: 'Despacho de pedidos', icon: Truck },
-      { id: 'agenda', label: 'Agenda semanal', icon: Calendar }
+      { id: 'agenda', label: 'Agenda semanal', icon: Calendar },
+      { id: 'perfil', label: 'Mi Perfil', icon: User, ruta: '/perfil' }
     ]
   },
   CLIENTE: {
@@ -79,7 +83,8 @@ const configsRoles = {
       { id: 'citas', label: 'Reservar cita', icon: CalendarPlus },
       { id: 'tienda', label: 'Tienda online', icon: ShoppingBag, seccion: 'Compras' },
       { id: 'recetas', label: 'Mis recetas', icon: FileText },
-      { id: 'facturacion', label: 'Facturación', icon: Receipt }
+      { id: 'facturacion', label: 'Facturación', icon: Receipt },
+      { id: 'perfil', label: 'Mi Perfil', icon: User, ruta: '/perfil' }
     ]
   }
 };
@@ -94,6 +99,7 @@ const BarraLateral = ({
   correo, 
   tieneCitaActiva 
 }) => {
+  const navigate = useNavigate();
   const config = configsRoles[rol] || configsRoles.CLIENTE;
 
   const baseBtnClass = "w-full text-left px-3.5 py-2.5 rounded-lg font-semibold transition-all duration-200 flex items-center gap-3 text-xs tracking-wide group";
@@ -124,7 +130,9 @@ const BarraLateral = ({
         <button 
           key={item.id}
           onClick={() => { 
-            if (setVistaActual) {
+            if (item.ruta) {
+              navigate(item.ruta);
+            } else if (setVistaActual) {
               setVistaActual(item.id);
             } else {
               localStorage.setItem('subvistaDefecto', item.id);
@@ -192,7 +200,7 @@ const BarraLateral = ({
       <div className="p-3 border-t border-slate-800/30 bg-slate-900/50">
         <div 
           onClick={() => {
-            window.location.href = '/perfil';
+            navigate('/perfil');
           }}
           className="bg-slate-950/40 border border-slate-800/40 p-2.5 rounded-lg flex items-center gap-2.5 mb-3 cursor-pointer hover:bg-slate-850/65 hover:border-slate-750 transition-all"
         >
