@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { PlusCircle, Stethoscope, Tag, Clock, FileText, Camera } from 'lucide-react';
+import Combobox from "./Combobox";
 
 // Catálogo predefinido
 const CATALOGO_PREDEFINIDO = [
@@ -127,23 +128,25 @@ const FormularioServicio = ({ onGuardar }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="relative">
-          <input
-            type="text"
-            name="nombre"
+          <Combobox
             value={form.nombre}
-            onChange={handleChange}
-            list="servicios-predefinidos"
-            required
-            placeholder="Escribe o selecciona un servicio..."
-            className="w-full border border-slate-300 p-2.5 pl-4 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all bg-slate-50 focus:bg-white"
-          />
-          <datalist id="servicios-predefinidos">
-            {CATALOGO_PREDEFINIDO.map((cat) =>
-              cat.servicios.map((s, idx) => (
-                <option key={`${cat.categoria}-${idx}`} value={s.nombre} />
-              ))
+            onChange={(val, precio) => {
+              setForm((prev) => ({
+                ...prev,
+                nombre: val,
+                precio: precio !== undefined ? precio.toString() : prev.precio,
+              }));
+            }}
+            opciones={CATALOGO_PREDEFINIDO.flatMap((cat) =>
+              cat.servicios.map((s) => ({
+                label: s.nombre,
+                precio: s.precio,
+                categoria: cat.categoria,
+              }))
             )}
-          </datalist>
+            placeholder="Escribe o selecciona un servicio..."
+            required={true}
+          />
         </div>
 
         <div className="relative">
