@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import FormularioServicio from "../componentes/FormularioServicio";
 import TablaServicio from "../componentes/TablaServicio";
 import { crearServicio, cambiarEstadoServicio, actualizarServicio, subirFotoServicio, eliminarServicio } from "../servicios/servicioServicio";
@@ -10,6 +11,8 @@ import ModalConfirmacion from "../componentes/ModalConfirmacion";
 import Boton from "../componentes/Boton";
 
 const PaginaServicios = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { servicios, loading, obtenerServicios } = useServicios();
   const [modalOpen, setModalOpen] = useState(false);
   const [servicioAEditar, setServicioAEditar] = useState(null);
@@ -17,7 +20,8 @@ const PaginaServicios = () => {
   const [subiendoFoto, setSubiendoFoto] = useState(false);
   const [servicioAEliminar, setServicioAEliminar] = useState(null);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
-  const [mostrarTabla, setMostrarTabla] = useState(true); // Empezar mostrando el Catálogo por defecto
+
+  const esRegistro = location.pathname.endsWith('/registrar');
 
   const handleSubirFoto = async (e) => {
     const file = e.target.files[0];
@@ -52,7 +56,7 @@ const PaginaServicios = () => {
       }
       obtenerServicios();
       alert("Servicio creado con éxito");
-      setMostrarTabla(true); // Redirigir a la lista para ver el servicio creado
+      navigate('/admin/servicios'); // Redirigir a la lista
     } catch (error) {
       console.error(error);
       alert("Hubo un error al crear el servicio");
@@ -140,18 +144,18 @@ const PaginaServicios = () => {
       <div className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-800 tracking-tight">
-            {mostrarTabla ? "Catálogo de Servicios" : "Registrar Servicio Médico"}
+            {!esRegistro ? "Catálogo de Servicios" : "Registrar Servicio Médico"}
           </h1>
           <p className="text-slate-500 text-sm mt-1">
-            {mostrarTabla 
+            {!esRegistro 
               ? "Lista completa de la oferta médica y los servicios disponibles en la clínica." 
               : "Crea un nuevo servicio médico y configúralo en tiempo real."}
           </p>
         </div>
         
-        {mostrarTabla ? (
+        {!esRegistro ? (
           <Boton
-            onClick={() => setMostrarTabla(false)}
+            onClick={() => navigate('registrar')}
             variant="primary"
             icono={Plus}
           >
@@ -159,7 +163,7 @@ const PaginaServicios = () => {
           </Boton>
         ) : (
           <Boton
-            onClick={() => setMostrarTabla(true)}
+            onClick={() => navigate('/admin/servicios')}
             variant="secondary"
             icono={List}
           >
@@ -169,16 +173,17 @@ const PaginaServicios = () => {
       </div>
 
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
-        {mostrarTabla ? (
-          <TablaServicio 
-            servicios={servicios} 
-            onEstado={cambiarEstado} 
-            onEditar={abrirEditarModal} 
-            onEliminar={abrirEliminarModal}
-          />
-        ) : (
-          <FormularioServicio onGuardar={guardar} />
-        )}
+        <Routes>
+          <Route path="/" element={
+            <TablaServicio 
+              servicios={servicios} 
+              onEstado={cambiarEstado} 
+              onEditar={abrirEditarModal} 
+              onEliminar={abrirEliminarModal}
+            />
+          } />
+          <Route path="registrar" element={<FormularioServicio onGuardar={guardar} />} />
+        </Routes>
       </div>
 
       {/* MODAL DE EDICIÓN PREMIUM */}
