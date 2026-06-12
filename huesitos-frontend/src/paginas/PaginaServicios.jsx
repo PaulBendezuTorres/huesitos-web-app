@@ -31,9 +31,12 @@ const PaginaServicios = () => {
     }
   };
 
-  const guardar = async (data) => {
+  const guardar = async (data, archivo) => {
     try {
-      await crearServicio(data);
+      const nuevoServicio = await crearServicio(data);
+      if (archivo) {
+        await subirFotoServicio(nuevoServicio.id, archivo);
+      }
       obtenerServicios();
       alert("Servicio creado con éxito");
     } catch (error) {

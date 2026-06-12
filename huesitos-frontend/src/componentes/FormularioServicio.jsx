@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PlusCircle, Stethoscope, Tag, Clock, FileText, ChevronDown } from 'lucide-react';
+import { PlusCircle, Stethoscope, Tag, Clock, FileText, Camera } from 'lucide-react';
 
 // Catálogo predefinido
 const CATALOGO_PREDEFINIDO = [
@@ -63,29 +63,41 @@ const CATALOGO_PREDEFINIDO = [
   }
 ];
 
+
 const FormularioServicio = ({ onGuardar }) => {
   const estadoInicial = { nombre: "", descripcion: "", duracionMinutos: "", precio: "" };
   const [form, setForm] = useState(estadoInicial);
+  const [archivo, setArchivo] = useState(null);
+  const [vistaPrevia, setVistaPrevia] = useState(null);
 
-  const handleSelectChange = (e) => {
-    const nombreSeleccionado = e.target.value;
-    let precioEncontrado = "";
-    for (const cat of CATALOGO_PREDEFINIDO) {
-      const servicio = cat.servicios.find(s => s.nombre === nombreSeleccionado);
-      if (servicio) {
-        precioEncontrado = servicio.precio;
-        break;
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    let nuevoPrecio = form.precio;
+    if (name === "nombre") {
+      for (const cat of CATALOGO_PREDEFINIDO) {
+        const servicio = cat.servicios.find(s => s.nombre.toLowerCase() === value.toLowerCase());
+        if (servicio) {
+          nuevoPrecio = servicio.precio;
+          break;
+        }
       }
     }
-    setForm({ ...form, nombre: nombreSeleccionado, precio: precioEncontrado });
+    setForm({ ...form, [name]: value, precio: nuevoPrecio });
   };
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setArchivo(file);
+    setVistaPrevia(URL.createObjectURL(file));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onGuardar({ ...form, duracionMinutos: parseInt(form.duracionMinutos), precio: parseFloat(form.precio) });
+    onGuardar({ ...form, duracionMinutos: parseInt(form.duracionMinutos), precio: parseFloat(form.precio) }, archivo);
     setForm(estadoInicial);
+    setArchivo(null);
+    setVistaPrevia(null);
   };
 
   return (
@@ -94,18 +106,44 @@ const FormularioServicio = ({ onGuardar }) => {
         <Stethoscope className="text-sky-500" size={18} /> Registrar Nuevo Servicio
       </h2>
       
+      {/* Carga de Imagen */}
+      <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100/80">
+        <div className="w-16 h-16 rounded-xl bg-white border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center text-slate-400 shadow-inner">
+          {vistaPrevia ? (
+            <img src={vistaPrevia} alt="Vista previa del servicio" className="w-full h-full object-cover" />
+          ) : (
+            <Stethoscope size={24} className="text-slate-300" />
+          )}
+        </div>
+        <div>
+          <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wide">Imagen del Servicio</label>
+          <label className="inline-flex items-center gap-1.5 bg-white hover:bg-slate-150 text-slate-700 border border-slate-300 px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all shadow-sm">
+            <Camera size={14} />
+            {archivo ? "Cambiar foto" : "Cargar foto"}
+            <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+          </label>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="relative">
-          <select name="nombre" value={form.nombre} onChange={handleSelectChange} required 
-            className="w-full border border-slate-300 p-2.5 pl-4 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 outline-none transition-all bg-slate-50 focus:bg-white appearance-none">
-            <option value="">-- Selecciona un servicio --</option>
-            {CATALOGO_PREDEFINIDO.map((categoria, idx) => (
-              <optgroup key={idx} label={categoria.categoria}>
-                {categoria.servicios.map((s, i) => <option key={i} value={s.nombre}>{s.nombre}</option>)}
-              </optgroup>
-            ))}
-          </select>
-          <ChevronDown className="absolute right-3 top-3 text-slate-400 pointer-events-none" size={18} />
+          <input
+            type="text"
+            name="nombre"
+            value={form.nombre}
+            onChange={handleChange}
+            list="servicios-predefinidos"
+            required
+            placeholder="Escribe o selecciona un servicio..."
+            className="w-full border border-slate-300 p-2.5 pl-4 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all bg-slate-50 focus:bg-white"
+          />
+          <datalist id="servicios-predefinidos">
+            {CATALOGO_PREDEFINIDO.map((cat) =>
+              cat.servicios.map((s, idx) => (
+                <option key={`${cat.categoria}-${idx}`} value={s.nombre} />
+              ))
+            )}
+          </datalist>
         </div>
 
         <div className="relative">
