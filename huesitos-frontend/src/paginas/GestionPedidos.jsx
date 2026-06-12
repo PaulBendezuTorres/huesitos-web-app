@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ShoppingBag, Truck, Check, X, ChevronLeft } from 'lucide-react';
 import { obtenerTodosLosPedidos, cambiarEstadoPedido } from '../api/tiendaApi';
+import CargadorSpinner from '../componentes/CargadorSpinner';
 
 const GestionPedidos = () => {
   const [pedidos, setPedidos] = useState([]);
@@ -93,8 +94,9 @@ const GestionPedidos = () => {
 
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {loadingPedidos ? (
-            <div className="text-center py-10 text-xs font-bold text-slate-400 animate-pulse">
-              Consultando pedidos entrantes...
+            <div className="flex flex-col items-center justify-center py-10 gap-2">
+              <CargadorSpinner size="sm" />
+              <span className="text-xs font-semibold text-slate-450">Consultando pedidos entrantes...</span>
             </div>
           ) : pedidosFiltrados.length === 0 ? (
             <div className="text-center py-10 text-slate-400 text-xs font-semibold">
@@ -183,9 +185,9 @@ const GestionPedidos = () => {
                   <button
                     onClick={() => actualizarEstadoPedido(pedidoSeleccionado.id, 'PAGADO')}
                     disabled={procesandoDespacho}
-                    className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md shadow-sky-500/10 transition-colors disabled:opacity-50"
+                    className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md shadow-sky-500/10 transition-colors disabled:opacity-50 flex items-center gap-1.5"
                   >
-                    Confirmar pago
+                    {procesandoDespacho ? <CargadorSpinner size="xs" color="border-white" /> : null} Confirmar pago
                   </button>
                 )}
                 {pedidoSeleccionado.estado === 'PAGADO' && (
@@ -194,16 +196,16 @@ const GestionPedidos = () => {
                     disabled={procesandoDespacho}
                     className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md shadow-emerald-500/10 transition-colors disabled:opacity-50 flex items-center gap-1.5"
                   >
-                    <Check size={14} /> Marcar como entregado
+                    {procesandoDespacho ? <CargadorSpinner size="xs" color="border-white" /> : <Check size={14} />} Marcar como entregado
                   </button>
                 )}
                 {pedidoSeleccionado.estado !== 'ENTREGADO' && pedidoSeleccionado.estado !== 'CANCELADO' && (
                   <button
                     onClick={() => actualizarEstadoPedido(pedidoSeleccionado.id, 'CANCELADO')}
                     disabled={procesandoDespacho}
-                    className="bg-red-50 hover:bg-red-150 text-red-500 border border-red-200 px-4 py-2 rounded-xl text-xs font-bold transition-colors disabled:opacity-50"
+                    className="bg-red-50 hover:bg-red-150 text-red-500 border border-red-200 px-4 py-2 rounded-xl text-xs font-bold transition-colors disabled:opacity-50 flex items-center gap-1.5"
                   >
-                    Cancelar compra
+                    {procesandoDespacho ? <CargadorSpinner size="xs" color="border-red-500" /> : null} Cancelar compra
                   </button>
                 )}
               </div>
