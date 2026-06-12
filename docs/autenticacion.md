@@ -9,12 +9,12 @@ Esta documentación describe la arquitectura y los flujos de control para el **R
 El sistema de autenticación se basa en **Spring Boot (Spring Security + JWT)** en el backend y **React (React Router + Tailwind CSS)** en el frontend.
 
 ### Entidades Afectadas
-*   **[Usuario.java](file:///c:/Users/Paul%20Bendez%C3%BA/Desktop/huesitos-web-app/huesitos-backend/src/main/java/huesitos_backend/entidades/Usuario.java)**:
+*   **[Usuario.java](../huesitos-backend/src/main/java/huesitos_backend/entidades/Usuario.java)**:
     *   `nombre` y `apellido`: Datos del usuario registrados en la base de datos (se omiten del Dueño inicialmente).
     *   `activo` (booleano): Indica si la cuenta ha sido verificada. Las cuentas recién creadas inician en `false`.
     *   `tokenRecuperacion` (String): Almacena el código numérico temporal de 6 dígitos para activación o recuperación de contraseñas.
     *   `expiracionToken` (LocalDateTime): Fecha límite de validez del código (15 minutos desde su generación).
-*   **[Dueño.java](file:///c:/Users/Paul%20Bendez%C3%BA/Desktop/huesitos-web-app/huesitos-backend/src/main/java/huesitos_backend/entidades/Due%C3%B1o.java)**:
+*   **[Dueño.java](../huesitos-backend/src/main/java/huesitos_backend/entidades/Dueño.java)**:
     *   `nombreCompleto`: Concatenación de nombre y apellido del usuario.
     *   `telefono` y `direccion`: Registrados como opcionales (`nullable = true`) para permitir el registro simplificado, completándose posteriormente en la sección de Perfil.
 
@@ -65,7 +65,7 @@ sequenceDiagram
 ```
 
 #### Reenvío de código:
-*   Si el temporizador expira o no le llega el correo, el usuario puede presionar **"Solicitar un nuevo código"** en [VerificarCuenta.jsx](file:///c:/Users/Paul%20Bendez%C3%BA/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/VerificarCuenta.jsx).
+*   Si el temporizador expira o no le llega el correo, el usuario puede presionar **"Solicitar un nuevo código"** en [VerificarCuenta.jsx](../huesitos-frontend/src/paginas/VerificarCuenta.jsx).
 *   Se envía una petición a `POST /api/autenticacion/reenviar-codigo?correo={correo}`.
 *   El backend regenera el token, actualiza la fecha de expiración y reenvía el correo.
 
@@ -133,7 +133,7 @@ sequenceDiagram
 
 ## 3. Detalle de Endpoints (Controladores)
 
-Los endpoints de autenticación están definidos en [AutenticacionControlador.java](file:///c:/Users/Paul%20Bendez%C3%BA/Desktop/huesitos-web-app/huesitos-backend/src/main/java/huesitos_backend/controladores/AutenticacionControlador.java):
+Los endpoints de autenticación están definidos en [AutenticacionControlador.java](../huesitos-backend/src/main/java/huesitos_backend/controladores/AutenticacionControlador.java):
 
 | Método | Endpoint | Acceso | Parámetros / Cuerpo | Descripción |
 | :--- | :--- | :--- | :--- | :--- |
@@ -148,7 +148,7 @@ Los endpoints de autenticación están definidos en [AutenticacionControlador.ja
 
 ## 4. Configuración de Seguridad (Spring Security)
 
-Los endpoints anteriores están configurados como **públicos** en el filtro de seguridad de [SeguridadConfig.java](file:///c:/Users/Paul%20Bendez%C3%BA/Desktop/huesitos-web-app/huesitos-backend/src/main/java/huesitos_backend/config/SeguridadConfig.java):
+Los endpoints anteriores están configurados como **públicos** en el filtro de seguridad de [SeguridadConfig.java](../huesitos-backend/src/main/java/huesitos_backend/config/SeguridadConfig.java):
 
 ```java
 .requestMatchers(
@@ -167,8 +167,8 @@ Cualquier otra petición al API (salvo listado de servicios públicos) requerir�
 
 ## 5. Resumen de Vistas del Frontend
 
-1.  **[Registro.jsx](file:///c:/Users/Paul%20Bendez%C3%BA/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/Registro.jsx)**: Solicita únicamente Nombre, Apellido, Correo y Contraseña. Envía un JSON con valores de teléfono y dirección nulos por defecto.
-2.  **[VerificarCuenta.jsx](file:///c:/Users/Paul%20Bendez%C3%BA/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/VerificarCuenta.jsx)**: Formulario de 6 casilleros con autoenfoque al escribir, soporte para pegar códigos enteros y temporizador visual de 15 minutos en tiempo real.
-3.  **[IniciarSesion.jsx](file:///c:/Users/Paul%20Bendez%C3%BA/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/IniciarSesion.jsx)**: Formulario convencional de email y contraseña. Muestra mensaje si la cuenta no ha sido activada aún.
-4.  **[RecuperarContrasena.jsx](file:///c:/Users/Paul%20Bendez%C3%BA/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/RecuperarContrasena.jsx)**: Solicita el correo electrónico para iniciar el proceso de recuperación de contraseña.
-5.  **[RestablecerContrasena.jsx](file:///c:/Users/Paul%20Bendez%C3%BA/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/RestablecerContrasena.jsx)**: Recibe el código de 6 dígitos ingresado por el usuario y los dos campos de contraseña nueva para reescribir las credenciales.
+1.  **[Registro.jsx](../huesitos-frontend/src/paginas/Registro.jsx)**: Solicita únicamente Nombre, Apellido, Correo y Contraseña. Envía un JSON con valores de teléfono y dirección nulos por defecto.
+2.  **[VerificarCuenta.jsx](../huesitos-frontend/src/paginas/VerificarCuenta.jsx)**: Formulario de 6 casilleros con autoenfoque al escribir, soporte para pegar códigos enteros y temporizador visual de 15 minutos en tiempo real.
+3.  **[IniciarSesion.jsx](../huesitos-frontend/src/paginas/IniciarSesion.jsx)**: Formulario convencional de email y contraseña. Muestra mensaje si la cuenta no ha sido activada aún.
+4.  **[RecuperarContrasena.jsx](../huesitos-frontend/src/paginas/RecuperarContrasena.jsx)**: Solicita el correo electrónico para iniciar el proceso de recuperación de contraseña.
+5.  **[RestablecerContrasena.jsx](../huesitos-frontend/src/paginas/RestablecerContrasena.jsx)**: Recibe el código de 6 dígitos ingresado por el usuario y los dos campos de contraseña nueva para reescribir las credenciales.
