@@ -198,7 +198,6 @@ const PaginaUsuarios = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm">
         <div>
           <h1 className="text-2xl font-black text-slate-800 tracking-tight">Gestión de Usuarios y Permisos</h1>
-          <p className="text-slate-500 text-sm mt-1">Control centralizado de accesos de colaboradores y clientes de la clínica (RF-03).</p>
         </div>
         <button 
           onClick={() => setModalCrearOpen(true)}
@@ -239,8 +238,12 @@ const PaginaUsuarios = () => {
                   <tr key={usuario.id} className="hover:bg-sky-50/30 transition-colors">
                     <td className="px-6 py-4 font-bold text-slate-800">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-                           <UserCircle size={18} />
+                        <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 overflow-hidden shadow-inner border border-slate-200/50">
+                          {usuario.fotoPerfilUrl && usuario.fotoPerfilUrl !== "/uploads/defecto-usuario.png" ? (
+                            <img src={`http://localhost:8080${usuario.fotoPerfilUrl}`} alt="Perfil" className="w-full h-full object-cover" />
+                          ) : (
+                            <UserCircle size={18} />
+                          )}
                         </div>
                         <div className="flex items-center gap-2">
                           {usuario.correo}
