@@ -49,6 +49,14 @@ Dado que el proyecto utiliza Spring Data JPA, la migración de la base de datos 
    spring.jpa.hibernate.ddl-auto=update
    ```
 
+### 1.1 Alternativas Gratuitas de MySQL en la Nube
+Si prefieres no migrar el backend a PostgreSQL y seguir utilizando **MySQL** (la base de datos nativa de Huesitos), puedes emplear estas opciones gratuitas administradas:
+
+* **Aiven**: Ofrece un plan de base de datos MySQL alojado de forma totalmente gratuita y sin límite de tiempo. Es ideal para crear prototipos, aprender y demostraciones rápidas.
+* **PlanetScale**: Muy popular para proyectos modernos. Ofrece una infraestructura escalable basada en Vitess con planes de desarrollo o pruebas para proyectos personales.
+* **Oracle Cloud (Always Free)**: Su nivel "Always Free" es de los más potentes del mercado. Permite aprovisionar instancias MySQL o máquinas virtuales con recursos generosos y hasta 50 GB de almacenamiento gratuito.
+* **AWS (Amazon RDS)**: Ofrece 750 horas al mes gratuitas de uso de base de datos MySQL en su capa gratuita del primer año (suficiente para mantenerla encendida 24/7) y 20 GB de almacenamiento SSD.
+
 ---
 
 ## 2. Almacenamiento de Imágenes: Supabase Storage
