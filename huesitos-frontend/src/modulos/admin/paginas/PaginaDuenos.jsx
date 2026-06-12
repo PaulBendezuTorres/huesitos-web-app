@@ -52,9 +52,9 @@ const PaginaDuenos = () => {
     setForm({
       correo: dueno.correo || "",
       contrasena: "",
-      nombreCompleto: dueno.nombreCompleto,
-      telefono: dueno.telefono,
-      direccion: dueno.direccion
+      nombreCompleto: dueno.nombreCompleto || "",
+      telefono: dueno.telefono || "",
+      direccion: dueno.direccion || ""
     });
     setModalOpen(true);
   };

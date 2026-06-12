@@ -141,8 +141,9 @@ const AgendaSemanal = () => {
     setLoading(true);
     setError('');
     try {
-      const inicioStr = formatarFechaYMD(lunes);
-      const finStr = formatarFechaYMD(domingo);
+      const { lunes: lunesRango, domingo: domingoRango } = obtenerRangoSemana(offsetSemanas);
+      const inicioStr = formatarFechaYMD(lunesRango);
+      const finStr = formatarFechaYMD(domingoRango);
       const data = await obtenerCitasAgenda(
         inicioStr,
         finStr,
@@ -156,7 +157,7 @@ const AgendaSemanal = () => {
     } finally {
       setLoading(false);
     }
-  }, [lunes, domingo, filtroVeterinario, filtroEstado]);
+  }, [offsetSemanas, filtroVeterinario, filtroEstado, obtenerRangoSemana]);
 
   useEffect(() => {
     fetchCitas();
