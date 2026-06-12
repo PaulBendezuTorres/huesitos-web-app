@@ -4,8 +4,9 @@ import {
   crearNuevoDueno, 
   actualizarDuenoExistente 
 } from "../../../servicios/duenoServicio";
-import { UserPlus, Search, MapPin, Phone, Mail, User, X, Edit2 } from 'lucide-react';
+import { UserPlus, MapPin, Phone, Mail, User, X, Edit2 } from 'lucide-react';
 import CargadorSpinner from "../../../componentes/CargadorSpinner";
+import Buscador from "../../../componentes/Buscador";
 
 const PaginaDuenos = () => {
   const [duenos, setDuenos] = useState([]);
@@ -113,14 +114,11 @@ const PaginaDuenos = () => {
       </div>
 
       {/* BUSCADOR */}
-      <div className="relative max-w-md">
-        <Search className="absolute left-3 top-3 text-slate-400" size={18} />
-        <input
-          type="text"
-          placeholder="Buscar por nombre, correo o teléfono..."
-          value={busqueda}
-          onChange={(e) => setBusqueda(e.target.value)}
-          className="w-full pl-10 border border-slate-300 p-2.5 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all bg-slate-50 focus:bg-white"
+      <div className="max-w-md">
+        <Buscador 
+          value={busqueda} 
+          onChange={setBusqueda} 
+          placeholder="Buscar por nombre, correo o teléfono..." 
         />
       </div>
 
@@ -137,31 +135,39 @@ const PaginaDuenos = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-sm">
-              {duenosFiltrados.map((dueno) => (
-                <tr key={dueno.id} className="hover:bg-sky-50/30 transition-colors">
-                  <td className="px-6 py-4">
-                    <div className="font-bold text-slate-800 flex items-center gap-3">
-                       <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400"><User size={16}/></div>
-                       {dueno.nombreCompleto}
-                    </div>
-                    <div className="text-xs text-sky-600 font-semibold mt-1 flex items-center gap-1"><Mail size={12}/> {dueno.correo || "Sin correo"}</div>
-                  </td>
-                  <td className="px-6 py-4 font-medium text-slate-600">
-                    <div className="flex items-center gap-1.5">
-                      <Phone size={14}/> {dueno.telefono}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-slate-500 max-w-xs truncate"><div className="flex items-center gap-1.5"><MapPin size={14}/> {dueno.direccion}</div></td>
-                  <td className="px-6 py-4 text-center">
-                    <button
-                      onClick={() => abrirEditarModal(dueno)}
-                      className="bg-white hover:bg-sky-50 text-sky-600 p-2 rounded-lg transition-all border border-slate-200 hover:border-sky-200 shadow-sm"
-                    >
-                      <Edit2 size={16} />
-                    </button>
+              {duenosFiltrados.length === 0 ? (
+                <tr>
+                  <td colSpan="4" className="px-6 py-10 text-center text-slate-500 font-semibold">
+                    No se encontraron clientes que coincidan con la búsqueda.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                duenosFiltrados.map((dueno) => (
+                  <tr key={dueno.id} className="hover:bg-sky-50/30 transition-colors">
+                    <td className="px-6 py-4">
+                      <div className="font-bold text-slate-800 flex items-center gap-3">
+                         <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400"><User size={16}/></div>
+                         {dueno.nombreCompleto}
+                      </div>
+                      <div className="text-xs text-sky-600 font-semibold mt-1 flex items-center gap-1"><Mail size={12}/> {dueno.correo || "Sin correo"}</div>
+                    </td>
+                    <td className="px-6 py-4 font-medium text-slate-600">
+                      <div className="flex items-center gap-1.5">
+                        <Phone size={14}/> {dueno.telefono}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-slate-500 max-w-xs truncate"><div className="flex items-center gap-1.5"><MapPin size={14}/> {dueno.direccion}</div></td>
+                    <td className="px-6 py-4 text-center">
+                      <button
+                        onClick={() => abrirEditarModal(dueno)}
+                        className="bg-white hover:bg-sky-50 text-sky-600 p-2 rounded-lg transition-all border border-slate-200 hover:border-sky-200 shadow-sm"
+                      >
+                        <Edit2 size={16} />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

@@ -3,7 +3,6 @@ import {
   Package,
   AlertTriangle,
   Calendar,
-  Search,
   Filter,
   Plus,
   Edit2,
@@ -17,6 +16,7 @@ import {
   FolderOpen
 } from 'lucide-react';
 import CargadorSpinner from '../../../componentes/CargadorSpinner';
+import Buscador from '../../../componentes/Buscador';
 import {
   obtenerProductos,
   obtenerCategorias,
@@ -329,16 +329,12 @@ const PaginaInventario = () => {
       <div className="bg-white rounded-2xl border border-slate-200/60 p-4 md:p-5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Buscador y categoría */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1 max-w-2xl">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-3 text-slate-400" size={14} />
-            <input
-              type="text"
-              placeholder="Buscar producto por nombre..."
-              value={busqueda}
-              onChange={(e) => setBusqueda(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-xs outline-none focus:border-sky-450 focus:ring-2 focus:ring-sky-500/10 transition-all bg-slate-50 focus:bg-white"
-            />
-          </div>
+          <Buscador 
+            value={busqueda} 
+            onChange={setBusqueda} 
+            placeholder="Buscar producto por nombre..." 
+            sinContenedor={true} 
+          />
 
           <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 shrink-0">
             <Filter size={13} className="text-slate-400" />

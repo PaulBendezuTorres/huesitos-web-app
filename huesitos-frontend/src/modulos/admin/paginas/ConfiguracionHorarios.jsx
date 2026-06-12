@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import {
   Clock,
   User,
-  Search,
   Save,
   Calendar,
   AlertTriangle,
@@ -12,6 +11,7 @@ import {
   HelpCircle
 } from 'lucide-react';
 import CargadorSpinner from '../../../componentes/CargadorSpinner';
+import Buscador from '../../../componentes/Buscador';
 import { obtenerUsuarios, obtenerHorariosVeterinario, guardarHorarioPersonal } from '../../../api/citaApi';
 
 const DIAS_MAP = [
@@ -232,14 +232,12 @@ const ConfiguracionHorarios = () => {
             Selecciona para administrar su horario.
           </p>
           
-          <div className="relative mt-3">
-            <Search className="absolute left-3 top-3 text-slate-400" size={14} />
-            <input
-              type="text"
-              placeholder="Buscar por nombre o correo..."
-              value={busqueda}
-              onChange={(e) => setBusqueda(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100 transition-all"
+          <div className="mt-3">
+            <Buscador 
+              value={busqueda} 
+              onChange={setBusqueda} 
+              placeholder="Buscar por nombre o correo..." 
+              sinContenedor={true} 
             />
           </div>
         </div>
