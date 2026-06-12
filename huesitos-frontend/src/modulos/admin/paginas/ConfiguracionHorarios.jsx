@@ -222,13 +222,13 @@ const ConfiguracionHorarios = () => {
     <div className="flex flex-col md:flex-row gap-6 h-[calc(100vh-140px)] overflow-hidden">
       
       {/* PANEL IZQUIERDO: LISTADO DE PERSONAL (30%) */}
-      <aside className="w-full md:w-[30%] bg-white rounded-2xl border border-slate-200/60 flex flex-col overflow-hidden shadow-sm shrink-0">
-        <div className="p-4 border-b border-slate-100 bg-slate-50/50 shrink-0">
-          <h3 className="font-black text-slate-800 text-sm tracking-wide uppercase flex items-center gap-2">
+      <aside className="w-full md:w-[30%] bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 flex flex-col overflow-hidden shadow-sm shrink-0">
+        <div className="p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 shrink-0">
+          <h3 className="font-black text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase flex items-center gap-2">
             <User size={16} className="text-sky-500" />
             Personal de la Clínica
           </h3>
-          <p className="text-[11px] text-slate-400 font-bold mt-0.5">
+          <p className="text-[11px] text-slate-400 dark:text-slate-500 font-bold mt-0.5">
             Selecciona para administrar su horario.
           </p>
           
@@ -263,18 +263,18 @@ const ConfiguracionHorarios = () => {
                   onClick={() => setEmpleadoSeleccionado(emp)}
                   className={`w-full flex items-center gap-3 p-3 rounded-xl border text-left transition-all duration-300 ${
                     seleccionado
-                      ? 'border-sky-500 bg-sky-50/40 shadow-sm shadow-sky-500/5'
-                      : 'border-slate-100 hover:border-sky-200 hover:bg-slate-50'
+                      ? 'border-sky-500 bg-sky-50/40 dark:bg-sky-900/20 shadow-sm shadow-sky-500/5'
+                      : 'border-slate-100 dark:border-slate-700 hover:border-sky-200 hover:bg-slate-50 dark:hover:bg-slate-700/40'
                   }`}
                 >
-                  <div className="w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center font-black text-slate-500 text-sm border border-slate-200">
+                  <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center font-black text-slate-500 dark:text-slate-300 text-sm border border-slate-200 dark:border-slate-600">
                     {emp.nombre?.charAt(0).toUpperCase() || emp.correo?.charAt(0).toUpperCase() || 'U'}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h4 className="font-bold text-slate-800 text-xs truncate">
+                    <h4 className="font-bold text-slate-800 dark:text-slate-100 text-xs truncate">
                       {emp.nombre || emp.correo}
                     </h4>
-                    <p className="text-[10px] text-slate-400 truncate mt-0.5">{emp.correo}</p>
+                    <p className="text-[10px] text-slate-400 dark:text-slate-500 truncate mt-0.5">{emp.correo}</p>
                     <div className="flex gap-1.5 mt-1.5">
                       <span className={`text-[9px] font-black px-2 py-0.5 rounded-full border ${colorRol}`}>
                         {emp.rol}
@@ -289,20 +289,20 @@ const ConfiguracionHorarios = () => {
       </aside>
 
       {/* PANEL DERECHO: FORMULARIO DE CONFIGURACIÓN (70%) */}
-      <main className="flex-1 bg-white rounded-2xl border border-slate-200/60 flex flex-col overflow-hidden shadow-sm">
+      <main className="flex-1 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 flex flex-col overflow-hidden shadow-sm">
         {empleadoSeleccionado ? (
           <>
             {/* Header del Empleado */}
-            <div className="p-4 border-b border-slate-100 bg-slate-50/30 flex justify-between items-center shrink-0">
+            <div className="p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/30 dark:bg-slate-900/40 flex justify-between items-center shrink-0">
               <div className="flex items-center gap-3">
                 <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-500 to-cyan-300 flex items-center justify-center text-white font-black text-base shadow-sm">
                   {empleadoSeleccionado.nombre?.charAt(0).toUpperCase() || empleadoSeleccionado.correo?.charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <h3 className="font-black text-slate-800 text-sm tracking-tight leading-tight">
+                  <h3 className="font-black text-slate-800 dark:text-slate-100 text-sm tracking-tight leading-tight">
                     {empleadoSeleccionado.nombre || 'Empleado'}
                   </h3>
-                  <p className="text-[10px] text-slate-400 font-bold uppercase mt-0.5">
+                  <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase mt-0.5">
                     {empleadoSeleccionado.rol} — {empleadoSeleccionado.correo}
                   </p>
                 </div>
@@ -316,7 +316,7 @@ const ConfiguracionHorarios = () => {
             {cargandoHorarios ? (
               <div className="flex-1 flex flex-col items-center justify-center py-20 gap-3">
                 <CargadorSpinner size="md" />
-                <span className="text-xs font-bold text-slate-400">Cargando horario...</span>
+                <span className="text-xs font-bold text-slate-400 dark:text-slate-500">Cargando horario...</span>
               </div>
             ) : (
               <form onSubmit={handleGuardarSemana} className="flex-1 flex flex-col overflow-hidden">
@@ -338,19 +338,19 @@ const ConfiguracionHorarios = () => {
 
                   {/* SECCIÓN 1: GRILLA SEMANAL */}
                   <div className="space-y-4">
-                    <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest border-b pb-2 flex items-center gap-2">
+                    <h4 className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest border-b dark:border-slate-700 pb-2 flex items-center gap-2">
                       <Clock size={14} className="text-sky-500" />
                       Jornada Laboral Semanal
                     </h4>
                     
-                    <div className="divide-y divide-slate-100 border border-slate-150 rounded-2xl overflow-hidden bg-white shadow-sm">
+                    <div className="divide-y divide-slate-100 dark:divide-slate-700 border border-slate-150 dark:border-slate-700 rounded-2xl overflow-hidden bg-white dark:bg-slate-800/50 shadow-sm">
                       {DIAS_MAP.map((d) => {
                         const h = horarios[d.key] || { activo: true, horaEntrada: '09:00', horaSalida: '18:00' };
                         return (
                           <div
                             key={d.key}
                             className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 gap-4 transition-colors ${
-                              h.activo ? 'bg-white' : 'bg-slate-50/50'
+                              h.activo ? 'bg-white dark:bg-slate-800/50' : 'bg-slate-50/50 dark:bg-slate-900/30'
                             }`}
                           >
                             <div className="flex items-center gap-4 min-w-[120px]">
@@ -364,35 +364,35 @@ const ConfiguracionHorarios = () => {
                                 />
                                 <div className="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-sky-500"></div>
                               </label>
-                              <span className="text-xs font-black text-slate-700">{d.label}</span>
+                              <span className="text-xs font-black text-slate-700 dark:text-slate-200">{d.label}</span>
                             </div>
 
                             {h.activo ? (
                               <div className="flex items-center gap-3">
                                 <div>
-                                  <label className="block text-[9px] font-bold text-slate-400 uppercase mb-1">Entrada</label>
+                                  <label className="block text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase mb-1">Entrada</label>
                                   <input
                                     type="time"
                                     value={h.horaEntrada}
                                     onChange={(e) => handleHorarioChange(d.key, 'horaEntrada', e.target.value)}
                                     required={h.activo}
-                                    className="px-3 py-1.5 border border-slate-200 rounded-lg text-xs outline-none focus:border-sky-400 transition-all font-semibold"
+                                    className="px-3 py-1.5 border border-slate-200 dark:border-slate-600 rounded-lg text-xs text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all font-semibold bg-transparent dark:bg-slate-700"
                                   />
                                 </div>
-                                <span className="text-slate-300 text-sm mt-4">—</span>
+                                <span className="text-slate-300 dark:text-slate-600 text-sm mt-4">—</span>
                                 <div>
-                                  <label className="block text-[9px] font-bold text-slate-400 uppercase mb-1">Salida</label>
+                                  <label className="block text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase mb-1">Salida</label>
                                   <input
                                     type="time"
                                     value={h.horaSalida}
                                     onChange={(e) => handleHorarioChange(d.key, 'horaSalida', e.target.value)}
                                     required={h.activo}
-                                    className="px-3 py-1.5 border border-slate-200 rounded-lg text-xs outline-none focus:border-sky-400 transition-all font-semibold"
+                                    className="px-3 py-1.5 border border-slate-200 dark:border-slate-600 rounded-lg text-xs text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all font-semibold bg-transparent dark:bg-slate-700"
                                   />
                                 </div>
                               </div>
                             ) : (
-                              <span className="text-slate-400 text-xs font-bold uppercase tracking-wider bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200/50">
+                              <span className="text-slate-400 dark:text-slate-500 text-xs font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-200/50 dark:border-slate-600">
                                 Día Libre / Inactivo
                               </span>
                             )}
@@ -404,38 +404,38 @@ const ConfiguracionHorarios = () => {
 
                   {/* SECCIÓN 2: EXCEPCIONES Y VACACIONES */}
                   <div className="space-y-4 pt-2">
-                    <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest border-b pb-2 flex items-center gap-2">
+                    <h4 className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest border-b dark:border-slate-700 pb-2 flex items-center gap-2">
                       <Calendar size={14} className="text-sky-500" />
                       Excepciones y Fechas Bloqueadas
                     </h4>
-                    <p className="text-[11px] text-slate-400 font-bold leading-normal">
+                    <p className="text-[11px] text-slate-400 dark:text-slate-500 font-bold leading-normal">
                       Bloquea fechas específicas (vacaciones, feriados o licencias) para evitar que se puedan reservar citas en esos días.
                     </p>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {/* Formulario Agregar Bloqueo */}
-                      <div className="bg-slate-50 p-4 border border-slate-200/60 rounded-2xl space-y-3.5">
-                        <h5 className="text-xs font-black text-slate-700">Agregar Bloqueo Temporal</h5>
+                      <div className="bg-slate-50 dark:bg-slate-900/40 p-4 border border-slate-200/60 dark:border-slate-700 rounded-2xl space-y-3.5">
+                        <h5 className="text-xs font-black text-slate-700 dark:text-slate-200">Agregar Bloqueo Temporal</h5>
                         
                         <div className="space-y-1">
-                          <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wide">Seleccionar Fecha</label>
+                          <label className="block text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">Seleccionar Fecha</label>
                           <input
                             type="date"
                             value={nuevaExcepcion}
                             min={new Date().toISOString().split('T')[0]}
                             onChange={(e) => setNuevaExcepcion(e.target.value)}
-                            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs outline-none focus:border-sky-400 transition-all font-semibold"
+                            className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-xs text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all font-semibold bg-white dark:bg-slate-700"
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wide">Motivo / Descripción</label>
+                          <label className="block text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">Motivo / Descripción</label>
                           <input
                             type="text"
                             placeholder="Ej: Feriado Nacional, Licencia médica..."
                             value={descExcepcion}
                             onChange={(e) => setDescExcepcion(e.target.value)}
-                            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs outline-none focus:border-sky-400 transition-all font-medium"
+                            className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-xs text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all font-medium bg-white dark:bg-slate-700 placeholder:text-slate-400 dark:placeholder:text-slate-500"
                           />
                         </div>
 
@@ -450,8 +450,8 @@ const ConfiguracionHorarios = () => {
                       </div>
 
                       {/* Lista de Fechas Bloqueadas */}
-                      <div className="bg-white border border-slate-200/80 rounded-2xl p-4 flex flex-col h-[230px]">
-                        <h5 className="text-xs font-black text-slate-700 border-b pb-2 mb-3">Fechas Inactivas ({excepciones.length})</h5>
+                      <div className="bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-2xl p-4 flex flex-col h-[230px]">
+                        <h5 className="text-xs font-black text-slate-700 dark:text-slate-200 border-b dark:border-slate-700 pb-2 mb-3">Fechas Inactivas ({excepciones.length})</h5>
                         
                         <div className="flex-1 overflow-y-auto space-y-2">
                           {excepciones.length === 0 ? (
@@ -488,12 +488,12 @@ const ConfiguracionHorarios = () => {
                   </div>
 
                   {/* INFO EXTRA */}
-                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-150 space-y-2">
-                    <div className="flex items-center gap-2 text-slate-800">
+                  <div className="bg-slate-50 dark:bg-slate-900/40 p-4 rounded-2xl border border-slate-150 dark:border-slate-700 space-y-2">
+                    <div className="flex items-center gap-2 text-slate-800 dark:text-slate-100">
                       <HelpCircle size={16} className="text-sky-500" />
-                      <h5 className="font-bold text-xs">Consideración Operativa</h5>
+                      <h5 className="font-bold text-xs dark:text-slate-100">Consideración Operativa</h5>
                     </div>
-                    <p className="text-[10px] text-slate-500 leading-relaxed font-medium">
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
                       Los cambios en la jornada laboral del personal veterinario restringirán inmediatamente la disponibilidad de turnos en el módulo de reservas del cliente y el panel de agendamiento de la recepcionista.
                     </p>
                   </div>
@@ -501,7 +501,7 @@ const ConfiguracionHorarios = () => {
                 </div>
 
                 {/* Acciones de pie */}
-                <div className="p-4 border-t border-slate-100 bg-slate-50/45 flex justify-end shrink-0">
+                <div className="p-4 border-t border-slate-100 dark:border-slate-700 bg-slate-50/45 dark:bg-slate-900/30 flex justify-end shrink-0">
                   <button
                     type="submit"
                     disabled={guardando}
@@ -523,11 +523,11 @@ const ConfiguracionHorarios = () => {
           </>
         ) : (
           <div className="flex-1 flex flex-col justify-center items-center p-8 text-center text-slate-500 select-none">
-            <div className="w-16 h-16 bg-slate-100 rounded-3xl flex items-center justify-center text-slate-400 mb-4 border border-slate-200/60 shadow-sm animate-pulse">
+            <div className="w-16 h-16 bg-slate-100 dark:bg-slate-700 rounded-3xl flex items-center justify-center text-slate-400 dark:text-slate-500 mb-4 border border-slate-200/60 dark:border-slate-600 shadow-sm animate-pulse">
               <Clock size={32} />
             </div>
-            <h3 className="text-base font-black text-slate-800 tracking-tight">Configuración de Horarios</h3>
-            <p className="text-xs text-slate-400 max-w-sm mt-1">
+            <h3 className="text-base font-black text-slate-800 dark:text-slate-100 tracking-tight">Configuración de Horarios</h3>
+            <p className="text-xs text-slate-400 dark:text-slate-500 max-w-sm mt-1">
               Selecciona un veterinario o recepcionista de la lista para ver, definir o modificar su horario laboral semanal y excepciones de calendario.
             </p>
           </div>
