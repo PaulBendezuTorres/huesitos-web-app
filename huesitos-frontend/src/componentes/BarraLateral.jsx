@@ -41,8 +41,7 @@ const configsRoles = {
       { id: 'usuarios', label: 'Usuarios y Roles', icon: ShieldCheck },
       { id: 'campanas', label: 'Campañas y Ofertas', icon: Percent },
       { id: 'horarios', label: 'Horarios del Personal', icon: Clock },
-      { id: 'configuracion', label: 'Configuración Global', icon: Settings },
-      { id: 'perfil', label: 'Mi Perfil', icon: User, ruta: '/perfil' }
+      { id: 'configuracion', label: 'Configuración Global', icon: Settings }
     ]
   },
   VETERINARIO: {
@@ -54,8 +53,7 @@ const configsRoles = {
     items: [
       { id: 'agenda', label: 'Agenda del día', icon: Calendar },
       { id: 'consulta', label: 'Consulta activa', icon: Stethoscope, tienePing: true },
-      { id: 'mascotas', label: 'Buscar expedientes', icon: History },
-      { id: 'perfil', label: 'Mi Perfil', icon: User, ruta: '/perfil' }
+      { id: 'mascotas', label: 'Buscar expedientes', icon: History }
     ]
   },
   RECEPCIONISTA: {
@@ -67,8 +65,7 @@ const configsRoles = {
     items: [
       { id: 'caja', label: 'Caja y POS', icon: Wallet },
       { id: 'pedidos', label: 'Despacho de pedidos', icon: Truck },
-      { id: 'agenda', label: 'Agenda semanal', icon: Calendar },
-      { id: 'perfil', label: 'Mi Perfil', icon: User, ruta: '/perfil' }
+      { id: 'agenda', label: 'Agenda semanal', icon: Calendar }
     ]
   },
   CLIENTE: {
@@ -83,8 +80,7 @@ const configsRoles = {
       { id: 'citas', label: 'Reservar cita', icon: CalendarPlus },
       { id: 'tienda', label: 'Tienda online', icon: ShoppingBag, seccion: 'Compras' },
       { id: 'recetas', label: 'Mis recetas', icon: FileText },
-      { id: 'facturacion', label: 'Facturación', icon: Receipt },
-      { id: 'perfil', label: 'Mi Perfil', icon: User, ruta: '/perfil' }
+      { id: 'facturacion', label: 'Facturación', icon: Receipt }
     ]
   }
 };
@@ -202,13 +198,17 @@ const BarraLateral = ({
           onClick={() => {
             navigate('/perfil');
           }}
-          className="bg-slate-950/40 border border-slate-800/40 p-2.5 rounded-lg flex items-center gap-2.5 mb-3 cursor-pointer hover:bg-slate-850/65 hover:border-slate-750 transition-all"
+          className={`p-2.5 rounded-lg flex items-center gap-2.5 mb-3 cursor-pointer transition-all border ${
+            vistaActual === 'perfil' 
+              ? `bg-gradient-to-r ${config.activeColor} text-white border-transparent shadow-md ${shadowColor} translate-x-0.5` 
+              : "bg-slate-950/40 border border-slate-800/40 text-slate-400 hover:bg-slate-850/65 hover:border-slate-750 hover:text-slate-200"
+          }`}
         >
-          <div className={`w-7 h-7 rounded-lg ${config.badgeBg} flex items-center justify-center text-white font-bold shrink-0 shadow-sm`}>
+          <div className={`w-7 h-7 rounded-lg ${vistaActual === 'perfil' ? 'bg-white/20' : config.badgeBg} flex items-center justify-center text-white font-bold shrink-0 shadow-sm`}>
             <User size={12} />
           </div>
           <div className="overflow-hidden">
-            <p className="text-[8px] text-slate-500 font-bold uppercase tracking-wider">{config.badgeRol}</p>
+            <p className={`text-[8px] font-bold uppercase tracking-wider ${vistaActual === 'perfil' ? 'text-white/70' : 'text-slate-500'}`}>{config.badgeRol}</p>
             <p className="text-white text-xs font-bold truncate" title={correo}>{correo}</p>
           </div>
         </div>
