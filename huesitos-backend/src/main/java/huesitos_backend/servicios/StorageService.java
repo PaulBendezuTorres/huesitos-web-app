@@ -101,6 +101,20 @@ public class StorageService {
         ImageWriter writer = writers.next();
         ImageWriteParam param = writer.getDefaultWriteParam();
         param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+        
+        // Configurar tipo de compresión explícita para evitar "No compression type set!"
+        String[] types = param.getCompressionTypes();
+        if (types != null && types.length > 0) {
+            String tipoSeleccionado = types[0];
+            for (String t : types) {
+                if (t.equalsIgnoreCase("Lossy")) {
+                    tipoSeleccionado = t;
+                    break;
+                }
+            }
+            param.setCompressionType(tipoSeleccionado);
+        }
+        
         param.setCompressionQuality(0.75f); // 75% de calidad para WebP
 
         try (FileImageOutputStream outputStream = new FileImageOutputStream(outputFile)) {
