@@ -34,6 +34,9 @@ const PaginaUsuarios = () => {
   const [confirmadoEliminar, setConfirmadoEliminar] = useState(false);
   const [procesandoEliminacion, setProcesandoEliminacion] = useState(false);
 
+  // Estado para bloquear la fila de un usuario en acción
+  const [usuarioEnAccionId, setUsuarioEnAccionId] = useState(null);
+
   useEffect(() => {
     const fetchUsuarios = async () => {
       setLoading(true);
@@ -51,6 +54,7 @@ const PaginaUsuarios = () => {
   }, [refreshTrigger]);
 
   const handleRolChange = async (id, nuevoRol) => {
+    setUsuarioEnAccionId(id);
     try {
       await modificarRolUsuario(id, nuevoRol);
       setRefreshTrigger(prev => prev + 1);
@@ -58,16 +62,21 @@ const PaginaUsuarios = () => {
     } catch (error) {
       console.error(error);
       alert("No se pudo procesar el cambio de rol.");
+    } finally {
+      setUsuarioEnAccionId(null);
     }
   };
 
   const handleEstadoToggle = async (id, estadoActual) => {
+    setUsuarioEnAccionId(id);
     try {
       await modificarEstadoUsuario(id, !estadoActual);
       setRefreshTrigger(prev => prev + 1);
     } catch (error) {
       console.error(error);
       alert("Error al actualizar el estado de acceso.");
+    } finally {
+      setUsuarioEnAccionId(null);
     }
   };
 
@@ -193,20 +202,26 @@ const PaginaUsuarios = () => {
             </thead>
             <tbody className="divide-y divide-slate-100 text-sm">
               {usuarios.map((usuario) => (
-                <tr key={usuario.id} className="hover:bg-sky-50/30 transition-colors">
+                 <tr key={usuario.id} className="hover:bg-sky-50/30 transition-colors">
                   <td className="px-6 py-4 font-bold text-slate-800">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
                          <UserCircle size={18} />
                       </div>
-                      {usuario.correo}
+                      <div className="flex items-center gap-2">
+                        {usuario.correo}
+                        {usuarioEnAccionId === usuario.id && (
+                          <span className="w-3.5 h-3.5 border-2 border-sky-500 border-t-transparent rounded-full animate-spin" title="Procesando..."/>
+                        )}
+                      </div>
                     </div>
                   </td>
                   <td className="px-6 py-4">
                     <select
                       value={usuario.rol}
                       onChange={(e) => handleRolChange(usuario.id, e.target.value)}
-                      className="border border-slate-200 rounded-lg p-2 bg-slate-50 hover:bg-white text-slate-700 focus:ring-2 focus:ring-sky-500 focus:outline-none font-bold text-xs tracking-wide cursor-pointer transition-all"
+                      disabled={usuarioEnAccionId === usuario.id || loading}
+                      className={`border border-slate-200 rounded-lg p-2 bg-slate-50 hover:bg-white text-slate-700 focus:ring-2 focus:ring-sky-500 focus:outline-none font-bold text-xs tracking-wide cursor-pointer transition-all ${usuarioEnAccionId === usuario.id ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
                       <option value="ADMINISTRADOR">ADMINISTRADOR</option>
                       <option value="VETERINARIO">VETERINARIO</option>
@@ -223,21 +238,24 @@ const PaginaUsuarios = () => {
                     <div className="flex gap-2 justify-center">
                       <button 
                         onClick={() => abrirDetallesModal(usuario)} 
-                        className="bg-white hover:bg-sky-50 text-sky-600 p-2 rounded-lg transition-all border border-slate-200 hover:border-sky-200 shadow-sm" 
+                        disabled={usuarioEnAccionId === usuario.id || loading}
+                        className={`bg-white hover:bg-sky-50 text-sky-600 p-2 rounded-lg transition-all border border-slate-200 hover:border-sky-200 shadow-sm ${usuarioEnAccionId === usuario.id ? 'opacity-50 cursor-not-allowed' : ''}`} 
                         title="Ver / Editar"
                       >
                         <Edit size={16} />
                       </button>
                       <button 
                         onClick={() => handleEstadoToggle(usuario.id, usuario.activo)} 
-                        className={`p-2 rounded-lg transition-all border shadow-sm ${usuario.activo ? "bg-white hover:bg-red-50 text-slate-400 hover:text-red-500 border-slate-200 hover:border-red-200" : "bg-white hover:bg-emerald-50 text-slate-400 hover:text-emerald-500 border-slate-200 hover:border-emerald-200"}`} 
+                        disabled={usuarioEnAccionId === usuario.id || loading}
+                        className={`p-2 rounded-lg transition-all border shadow-sm ${usuarioEnAccionId === usuario.id ? 'opacity-50 cursor-not-allowed' : ''} ${usuario.activo ? "bg-white hover:bg-red-50 text-slate-400 hover:text-red-500 border-slate-200 hover:border-red-200" : "bg-white hover:bg-emerald-50 text-slate-400 hover:text-emerald-500 border-slate-200 hover:border-emerald-200"}`} 
                         title={usuario.activo ? "Suspender" : "Habilitar"}
                       >
                         {usuario.activo ? <ShieldAlert size={16} /> : <ShieldCheck size={16} />}
                       </button>
                       <button 
                         onClick={() => abrirModalEliminar(usuario)} 
-                        className="bg-white hover:bg-red-50 text-red-600 p-2 rounded-lg transition-all border border-slate-200 hover:border-red-200 shadow-sm" 
+                        disabled={usuarioEnAccionId === usuario.id || loading}
+                        className={`bg-white hover:bg-red-50 text-red-600 p-2 rounded-lg transition-all border border-slate-200 hover:border-red-200 shadow-sm ${usuarioEnAccionId === usuario.id ? 'opacity-50 cursor-not-allowed' : ''}`} 
                         title="Eliminar Cuenta"
                       >
                         <Trash2 size={16} />
