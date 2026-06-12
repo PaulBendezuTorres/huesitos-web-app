@@ -1,6 +1,11 @@
-import { Edit2, ShieldAlert, ShieldCheck, Stethoscope } from 'lucide-react';
+import { useState } from 'react';
+import { Edit2, ShieldAlert, ShieldCheck, Stethoscope, Trash2 } from 'lucide-react';
+import Paginacion from './Paginacion';
 
-const TablaServicio = ({ servicios, onEditar, onEstado }) => {
+const TablaServicio = ({ servicios, onEditar, onEstado, onEliminar }) => {
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [itemsPorPagina, setItemsPorPagina] = useState(5);
+
   if (servicios.length === 0) {
     return (
       <div className="text-center p-8 text-slate-500 bg-white rounded-2xl shadow-sm border border-slate-200">
@@ -9,8 +14,17 @@ const TablaServicio = ({ servicios, onEditar, onEstado }) => {
     );
   }
 
+  // Ajustar la página si los servicios se reducen (por ejemplo, al eliminar)
+  const totalPaginas = Math.ceil(servicios.length / itemsPorPagina);
+  const paginaValida = paginaActual > totalPaginas ? Math.max(1, totalPaginas) : paginaActual;
+
+  const serviciosPaginados = servicios.slice(
+    (paginaValida - 1) * itemsPorPagina,
+    paginaValida * itemsPorPagina
+  );
+
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden flex flex-col">
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-slate-100">
           <thead className="bg-slate-50/50">
@@ -23,7 +37,7 @@ const TablaServicio = ({ servicios, onEditar, onEstado }) => {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 text-sm">
-            {servicios.map((servicio) => (
+            {serviciosPaginados.map((servicio) => (
               <tr key={servicio.id} className="hover:bg-sky-50/30 transition-colors">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center gap-3">
@@ -44,7 +58,7 @@ const TablaServicio = ({ servicios, onEditar, onEstado }) => {
                 <td className="px-6 py-4 whitespace-nowrap font-semibold text-slate-600">{servicio.duracionMinutos} min</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`inline-flex px-3 py-1 rounded-lg text-[10px] font-black tracking-widest uppercase border ${servicio.activo ? "bg-emerald-50 text-emerald-600 border-emerald-200" : "bg-red-50 text-red-600 border-red-200"}`}>
-                    {servicio.activo ? "Activo" : "Inactivo"}
+                     {servicio.activo ? "Activo" : "Inactivo"}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -58,10 +72,17 @@ const TablaServicio = ({ servicios, onEditar, onEstado }) => {
                     </button>
                     <button 
                       onClick={() => onEstado(servicio.id, !servicio.activo)} 
-                      className={`p-2 rounded-lg transition-all border shadow-sm ${servicio.activo ? "bg-white hover:bg-red-50 text-slate-400 hover:text-red-500 border-slate-200 hover:border-red-200" : "bg-white hover:bg-emerald-50 text-slate-400 hover:text-emerald-500 border-slate-200 hover:border-emerald-200"}`}
+                      className={`p-2 rounded-lg transition-all border shadow-sm ${servicio.activo ? "bg-white hover:bg-amber-50 text-slate-400 hover:text-amber-500 border-slate-200 hover:border-amber-200" : "bg-white hover:bg-emerald-50 text-slate-400 hover:text-emerald-500 border-slate-200 hover:border-emerald-200"}`}
                       title={servicio.activo ? "Desactivar" : "Activar"}
                     >
                       {servicio.activo ? <ShieldAlert size={16} /> : <ShieldCheck size={16} />}
+                    </button>
+                    <button 
+                      onClick={() => onEliminar(servicio)} 
+                      className="bg-white hover:bg-red-50 text-red-650 p-2 rounded-lg transition-all border border-slate-200 hover:border-red-200 shadow-sm"
+                      title="Eliminar"
+                    >
+                      <Trash2 size={16} />
                     </button>
                   </div>
                 </td>
@@ -70,6 +91,15 @@ const TablaServicio = ({ servicios, onEditar, onEstado }) => {
           </tbody>
         </table>
       </div>
+      
+      {/* Componente de Paginación */}
+      <Paginacion
+        paginaActual={paginaValida}
+        totalItems={servicios.length}
+        itemsPorPagina={itemsPorPagina}
+        onPaginaChange={setPaginaActual}
+        onItemsPorPaginaChange={setItemsPorPagina}
+      />
     </div>
   );
 };

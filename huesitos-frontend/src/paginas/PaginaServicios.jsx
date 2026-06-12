@@ -1,11 +1,12 @@
 import { useState } from "react";
 import FormularioServicio from "../componentes/FormularioServicio";
 import TablaServicio from "../componentes/TablaServicio";
-import { crearServicio, cambiarEstadoServicio, actualizarServicio, subirFotoServicio } from "../servicios/servicioServicio";
+import { crearServicio, cambiarEstadoServicio, actualizarServicio, subirFotoServicio, eliminarServicio } from "../servicios/servicioServicio";
 import { useServicios } from "../hooks/useServicios";
 import { X, Stethoscope, Tag, Clock, FileText, Camera } from 'lucide-react';
 import CargadorSpinner from "../componentes/CargadorSpinner";
 import AreaTexto from "../componentes/AreaTexto";
+import ModalConfirmacion from "../componentes/ModalConfirmacion";
 
 const PaginaServicios = () => {
   const { servicios, loading, obtenerServicios } = useServicios();
@@ -13,6 +14,8 @@ const PaginaServicios = () => {
   const [servicioAEditar, setServicioAEditar] = useState(null);
   const [formEdit, setFormEdit] = useState({ nombre: "", precio: "", descripcion: "", duracionMinutos: "", fotoUrl: "" });
   const [subiendoFoto, setSubiendoFoto] = useState(false);
+  const [servicioAEliminar, setServicioAEliminar] = useState(null);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
   const handleSubirFoto = async (e) => {
     const file = e.target.files[0];
@@ -75,6 +78,25 @@ const PaginaServicios = () => {
     setModalOpen(true);
   };
 
+  const abrirEliminarModal = (servicio) => {
+    setServicioAEliminar(servicio);
+    setConfirmDeleteOpen(true);
+  };
+
+  const ejecutarEliminacion = async () => {
+    if (!servicioAEliminar) return;
+    try {
+      await eliminarServicio(servicioAEliminar.id);
+      setConfirmDeleteOpen(false);
+      setServicioAEliminar(null);
+      obtenerServicios();
+      alert("Servicio eliminado con éxito");
+    } catch (error) {
+      console.error(error);
+      alert("Error al eliminar el servicio");
+    }
+  };
+
   const handleEditChange = (e) => {
     setFormEdit({
       ...formEdit,
@@ -123,6 +145,7 @@ const PaginaServicios = () => {
           servicios={servicios} 
           onEstado={cambiarEstado} 
           onEditar={abrirEditarModal} 
+          onEliminar={abrirEliminarModal}
         />
       </div>
 
@@ -232,6 +255,18 @@ const PaginaServicios = () => {
           </div>
         </div>
       )}
+
+      {/* Modal de confirmación para eliminar servicio */}
+      <ModalConfirmacion
+        isOpen={confirmDeleteOpen}
+        onClose={() => setConfirmDeleteOpen(false)}
+        onConfirm={ejecutarEliminacion}
+        titulo="Eliminar Servicio Médico"
+        mensaje={`¿Estás seguro de que deseas eliminar permanentemente el servicio "${servicioAEliminar?.nombre}"? Esta acción borrará el registro de la base de datos y no se podrá deshacer.`}
+        textoConfirmar="Eliminar permanentemente"
+        textoCancelar="Volver"
+        tipo="danger"
+      />
     </div>
   );
 };

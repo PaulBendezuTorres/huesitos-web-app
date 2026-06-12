@@ -76,4 +76,17 @@ public class ServicioControlador {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMINISTRADOR')")
+    public ResponseEntity<?> eliminarServicio(@PathVariable Long id) {
+        try {
+            servicioServicio.eliminarServicio(id, storageService);
+            Map<String, String> respuesta = new HashMap<>();
+            respuesta.put("mensaje", "Servicio eliminado con éxito");
+            return ResponseEntity.ok(respuesta);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

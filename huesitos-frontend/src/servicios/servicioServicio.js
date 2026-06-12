@@ -30,3 +30,8 @@ export const subirFotoServicio = async (id, archivo) => {
   });
   return response.data;
 };
+
+export const eliminarServicio = async (id) => {
+  const response = await servicioApi.delete(`/${id}`);
+  return response.data;
+};

@@ -85,4 +85,20 @@ public Servicio crearServicio(Servicio servicio) {
         storageService.borrarFoto(fotoAnterior);
         return urlFoto;
     }
+
+    @Transactional
+    public void eliminarServicio(Long id, StorageService storageService) {
+        Servicio servicio = servicioRepositorio.findById(id)
+                .orElseThrow(() -> new RuntimeException("Servicio no encontrado con ID: " + id));
+        String fotoUrl = servicio.getFotoUrl();
+        servicioRepositorio.delete(servicio);
+        if (fotoUrl != null) {
+            storageService.borrarFoto(fotoUrl);
+        }
+        Actividad act = new Actividad();
+        act.setMensaje("Se eliminó el servicio: " + servicio.getNombre());
+        act.setTipo("SERVICIO");
+        act.setFecha(java.time.LocalDateTime.now());
+        actividadRepositorio.save(act);
+    }
 }
