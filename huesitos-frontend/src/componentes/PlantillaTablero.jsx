@@ -51,8 +51,8 @@ const PlantillaTablero = ({
 
       {/* ÁREA DE CONTENIDO PRINCIPAL */}
       <main className="flex-1 flex flex-col h-full overflow-hidden relative bg-slate-50">
-        {/* Header Superior Responsivo */}
-        <header className="bg-white/80 backdrop-blur-md h-20 px-4 md:px-6 lg:px-8 flex justify-between items-center shadow-sm z-10 border-b border-slate-200/60 sticky top-0 shrink-0">
+        {/* Header Superior Responsivo con Elevación y Contraste Premium */}
+        <header className="bg-white h-20 px-4 md:px-6 lg:px-8 flex justify-between items-center shadow-[0_4px_20px_-4px_rgba(148,163,184,0.15)] border-b border-slate-200/75 sticky top-0 z-30 shrink-0 transition-all">
           <div className="flex items-center gap-3 min-w-0">
             {/* Botón hamburguesa */}
             <button
@@ -69,7 +69,7 @@ const PlantillaTablero = ({
 
           <div 
             onClick={() => navigate(rol === 'ADMINISTRADOR' ? '/admin/perfil' : '/perfil')}
-            className="flex items-center gap-2 bg-slate-50 hover:bg-slate-100/90 border border-slate-200 hover:border-slate-300 p-1 rounded-full md:pr-4 md:gap-3 shrink-0 cursor-pointer active:scale-95 transition-all select-none group"
+            className="flex items-center gap-2 bg-slate-50 hover:bg-slate-100/70 border border-slate-200 hover:border-slate-300 p-1.5 rounded-full md:pr-4 md:gap-3 shrink-0 cursor-pointer active:scale-95 transition-all select-none shadow-sm hover:shadow group"
             title="Ver mi perfil"
           >
             <div className={`w-8 h-8 rounded-full bg-gradient-to-tr ${rol === 'VETERINARIO' ? 'from-emerald-500 to-teal-400' : 'from-sky-500 to-cyan-300'} shadow-sm flex items-center justify-center text-white shrink-0 group-hover:scale-105 transition-transform overflow-hidden`}>
@@ -83,7 +83,7 @@ const PlantillaTablero = ({
                 <User size={16} strokeWidth={2.5} />
               )}
             </div>
-            <span className="text-xs md:text-sm font-bold text-slate-650 group-hover:text-slate-800 transition-colors truncate max-w-[80px] sm:max-w-[120px] md:max-w-[200px]" title={correo}>
+            <span className="text-xs md:text-sm font-bold text-slate-600 group-hover:text-slate-800 transition-colors truncate max-w-[80px] sm:max-w-[120px] md:max-w-[200px]" title={correo}>
               {correo}
             </span>
           </div>
