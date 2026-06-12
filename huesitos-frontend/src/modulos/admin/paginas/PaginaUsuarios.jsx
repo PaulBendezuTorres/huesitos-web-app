@@ -8,9 +8,10 @@ import {
   registrarNuevoPersonal,
   eliminarCuentaUsuario
 } from "../../../servicios/usuarioServicio";
-import { UserPlus, ShieldAlert, ShieldCheck, Edit, Mail, Lock, UserCircle, X, Info, Trash2, AlertTriangle } from 'lucide-react';
+import { UserPlus, ShieldAlert, ShieldCheck, Edit, Mail, Lock, X, Info, Trash2, AlertTriangle } from 'lucide-react';
 import CargadorSpinner from "../../../componentes/CargadorSpinner";
 import Buscador from "../../../componentes/Buscador";
+import Avatar from "../../../componentes/Avatar";
 
 const PaginaUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -238,13 +239,7 @@ const PaginaUsuarios = () => {
                   <tr key={usuario.id} className="hover:bg-sky-50/30 transition-colors">
                     <td className="px-6 py-4 font-bold text-slate-800">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 overflow-hidden shadow-inner border border-slate-200/50">
-                          {usuario.fotoPerfilUrl && usuario.fotoPerfilUrl !== "/uploads/defecto-usuario.png" ? (
-                            <img src={`http://localhost:8080${usuario.fotoPerfilUrl}`} alt="Perfil" className="w-full h-full object-cover" />
-                          ) : (
-                            <UserCircle size={18} />
-                          )}
-                        </div>
+                        <Avatar url={usuario.fotoPerfilUrl} />
                         <div className="flex items-center gap-2">
                           {usuario.correo}
                           {usuarioEnAccionId === usuario.id && (
@@ -412,11 +407,7 @@ const PaginaUsuarios = () => {
             <div className="p-6 overflow-y-auto space-y-6">
               {/* Información General y Foto */}
               <div className="flex flex-col sm:flex-row items-center gap-6 bg-slate-50 p-5 rounded-2xl border border-slate-100">
-                <div className="w-20 h-20 rounded-full bg-white border-2 border-slate-200 shadow-sm flex items-center justify-center text-3xl overflow-hidden text-slate-400">
-                  {usuarioSeleccionado.fotoPerfilUrl && usuarioSeleccionado.fotoPerfilUrl !== "/uploads/defecto-usuario.png" ? (
-                    <img src={`http://localhost:8080${usuarioSeleccionado.fotoPerfilUrl}`} alt="Perfil" className="w-full h-full object-cover" />
-                  ) : <UserCircle size={40} strokeWidth={1.5} />}
-                </div>
+                 <Avatar url={usuarioSeleccionado.fotoPerfilUrl} size="w-20 h-20" className="border-2 border-slate-200" />
                 <div className="space-y-1 text-center sm:text-left">
                   <p className="text-sm font-bold text-slate-500">Rol del Sistema: <span className="text-sky-600 font-black tracking-wide">{usuarioSeleccionado.rol}</span></p>
                   <p className="text-slate-800 font-bold text-lg tracking-tight">{usuarioSeleccionado.correo}</p>
