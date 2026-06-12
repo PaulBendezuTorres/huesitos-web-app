@@ -60,14 +60,14 @@ const GestionPedidos = () => {
   return (
     <div className="flex-1 flex flex-col lg:flex-row overflow-hidden h-full bg-slate-50 w-full">
       {/* PANEL IZQUIERDO: Listado de pedidos */}
-      <section className={`w-full lg:w-[40%] lg:max-w-md bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col overflow-hidden animate-in fade-in duration-200 shrink-0 ${
+      <section className={`w-full lg:w-[40%] lg:max-w-md bg-white dark:bg-slate-800 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-700 flex flex-col overflow-hidden animate-in fade-in duration-200 shrink-0 ${
         pedidoSeleccionado ? 'hidden lg:flex' : 'flex'
       }`}>
-        <div className="p-4 border-b border-slate-100 bg-slate-50/50 shrink-0">
+        <div className="p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 shrink-0">
           <div className="flex justify-between items-center mb-3">
             <div className="flex items-center gap-2">
               <ShoppingBag size={16} className="text-sky-500" />
-              <h2 className="font-bold text-slate-800 text-sm tracking-tight">Pedidos de tienda online</h2>
+              <h2 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-tight">Pedidos de tienda online</h2>
             </div>
             <span className="bg-sky-100 text-sky-700 text-[10px] font-bold px-2 py-0.5 rounded-full">
               {pedidosFiltrados.length} total
@@ -83,7 +83,7 @@ const GestionPedidos = () => {
                 className={`px-3 py-1.5 rounded-lg font-semibold text-[10px] tracking-wide border transition-all shrink-0 ${
                   filtroEstadoPedido === estado
                     ? 'bg-sky-500 text-white border-sky-500 shadow-md shadow-sky-500/15'
-                    : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'
+                    : 'bg-white dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-600'
                 }`}
               >
                 {formatEstado(estado)}
@@ -96,10 +96,10 @@ const GestionPedidos = () => {
           {loadingPedidos ? (
             <div className="flex flex-col items-center justify-center py-10 gap-2">
               <CargadorSpinner size="sm" />
-              <span className="text-xs font-semibold text-slate-450">Consultando pedidos entrantes...</span>
+              <span className="text-xs font-semibold text-slate-450 dark:text-slate-500">Consultando pedidos entrantes...</span>
             </div>
           ) : pedidosFiltrados.length === 0 ? (
-            <div className="text-center py-10 text-slate-400 text-xs font-semibold">
+            <div className="text-center py-10 text-slate-400 dark:text-slate-500 text-xs font-semibold">
               No se encontraron pedidos con el estado seleccionado.
             </div>
           ) : (
@@ -123,15 +123,15 @@ const GestionPedidos = () => {
                   key={pedido.id}
                   className={`p-4 rounded-2xl border transition-all duration-300 cursor-pointer ${
                     pedidoSeleccionado?.id === pedido.id
-                      ? 'border-sky-500 bg-sky-50/50 shadow-md shadow-sky-500/5'
-                      : 'border-slate-200 hover:bg-slate-50/50'
+                      ? 'border-sky-500 bg-sky-50/50 dark:bg-sky-900/20 shadow-md shadow-sky-500/5'
+                      : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50/50 dark:hover:bg-slate-700/40'
                   }`}
                   onClick={() => setPedidoSeleccionado(pedido)}
                 >
                   <div className="flex justify-between items-start mb-2">
                     <div>
-                      <span className="text-[10px] text-slate-400 font-semibold">Pedido #{pedido.id}</span>
-                      <h4 className="font-bold text-slate-800 text-sm tracking-tight mt-0.5">
+                      <span className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold">Pedido #{pedido.id}</span>
+                      <h4 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-tight mt-0.5">
                         {pedido.cliente ? pedido.cliente.correo : 'Cliente Huesitos'}
                       </h4>
                     </div>
@@ -141,10 +141,10 @@ const GestionPedidos = () => {
                   </div>
 
                   <div className="flex justify-between items-center text-xs pt-1">
-                    <span className="text-slate-400 font-semibold">
+                    <span className="text-slate-400 dark:text-slate-500 font-semibold">
                       {new Date(pedido.fecha).toLocaleDateString('es-PE')}
                     </span>
-                    <span className="font-bold text-slate-800">
+                    <span className="font-bold text-slate-800 dark:text-slate-100">
                       S/ {pedido.total ? pedido.total.toFixed(2) : '0.00'}
                     </span>
                   </div>
@@ -161,19 +161,19 @@ const GestionPedidos = () => {
       }`}>
         {pedidoSeleccionado ? (
           <>
-            <div className="bg-white p-5 border-b border-slate-200 flex justify-between items-center shrink-0">
+            <div className="bg-white dark:bg-slate-800 p-5 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center shrink-0">
               <div className="flex items-center">
                 {/* Botón Volver para móviles */}
                 <button
                   onClick={() => setPedidoSeleccionado(null)}
-                  className="lg:hidden p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors mr-2 flex items-center justify-center"
+                  className="lg:hidden p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-700 transition-colors mr-2 flex items-center justify-center"
                   title="Volver al listado"
                 >
                   <ChevronLeft size={20} />
                 </button>
                 <div>
-                  <span className="text-[10px] text-slate-400 font-bold tracking-wider">Detalles de compra</span>
-                  <h3 className="text-base font-bold text-slate-800 tracking-tight mt-0.5">
+                  <span className="text-[10px] text-slate-400 dark:text-slate-500 font-bold tracking-wider">Detalles de compra</span>
+                  <h3 className="text-base font-bold text-slate-800 dark:text-slate-100 tracking-tight mt-0.5">
                     Pedido #{pedidoSeleccionado.id}
                   </h3>
                 </div>
@@ -213,18 +213,18 @@ const GestionPedidos = () => {
 
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
               {/* Tarjeta de información del cliente */}
-              <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm space-y-4">
-                <h4 className="font-bold text-slate-800 text-xs tracking-wide border-b border-slate-100 pb-2">
+              <div className="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm space-y-4">
+                <h4 className="font-bold text-slate-800 dark:text-slate-100 text-xs tracking-wide border-b border-slate-100 dark:border-slate-700 pb-2">
                   Contacto y entrega
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-medium">
                   <div>
-                    <span className="block text-[9px] text-slate-400 font-semibold mb-0.5">Correo registrado</span>
-                    <span className="text-slate-800">{pedidoSeleccionado.cliente?.correo}</span>
+                    <span className="block text-[9px] text-slate-400 dark:text-slate-500 font-semibold mb-0.5">Correo registrado</span>
+                    <span className="text-slate-800 dark:text-slate-100">{pedidoSeleccionado.cliente?.correo}</span>
                   </div>
                   <div>
-                    <span className="block text-[9px] text-slate-400 font-semibold mb-0.5">Fecha de operación</span>
-                    <span className="text-slate-800">
+                    <span className="block text-[9px] text-slate-400 dark:text-slate-500 font-semibold mb-0.5">Fecha de operación</span>
+                    <span className="text-slate-800 dark:text-slate-100">
                       {new Date(pedidoSeleccionado.fecha).toLocaleString('es-PE')}
                     </span>
                   </div>
@@ -232,29 +232,29 @@ const GestionPedidos = () => {
               </div>
 
               {/* Desglose de productos comprados */}
-              <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm space-y-4">
-                <h4 className="font-bold text-slate-800 text-xs tracking-wide border-b border-slate-100 pb-2">
+              <div className="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm space-y-4">
+                <h4 className="font-bold text-slate-800 dark:text-slate-100 text-xs tracking-wide border-b border-slate-100 dark:border-slate-700 pb-2">
                   Artículos del carrito
                 </h4>
                 
-                <div className="divide-y divide-slate-100">
+                <div className="divide-y divide-slate-100 dark:divide-slate-700">
                   {pedidoSeleccionado.detalles && pedidoSeleccionado.detalles.length > 0 ? (
                     pedidoSeleccionado.detalles.map((item) => (
                       <div key={item.id} className="flex justify-between items-center py-3 first:pt-0 last:pb-0">
                         <div>
-                          <p className="text-xs font-bold text-slate-800">
+                          <p className="text-xs font-bold text-slate-800 dark:text-slate-100">
                             {item.inventario?.producto ? item.inventario.producto.nombre : 'Producto Huesitos'}
                           </p>
-                          <p className="text-[10px] text-slate-400 mt-0.5">
+                          <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">
                             Cant: {item.cantidad} x S/ {item.precioUnitario?.toFixed(2)}
                           </p>
                           {item.inventario?.numeroLote && (
-                            <span className="inline-block bg-slate-100 text-[9px] font-bold text-slate-600 px-2 py-0.5 rounded-md mt-1 border border-slate-200">
+                            <span className="inline-block bg-slate-100 dark:bg-slate-700 text-[9px] font-bold text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-md mt-1 border border-slate-200 dark:border-slate-600">
                               Descuento FEFO - Lote: {item.inventario.numeroLote}
                             </span>
                           )}
                         </div>
-                        <span className="text-xs font-bold text-slate-800">
+                        <span className="text-xs font-bold text-slate-800 dark:text-slate-100">
                           S/ {(item.cantidad * item.precioUnitario)?.toFixed(2)}
                         </span>
                       </div>
@@ -264,9 +264,9 @@ const GestionPedidos = () => {
                   )}
                 </div>
 
-                <div className="border-t border-slate-100 pt-4 flex justify-between items-center">
-                  <span className="font-semibold text-slate-600 text-xs tracking-wider">Monto total</span>
-                  <span className="text-base font-bold text-slate-850">
+                <div className="border-t border-slate-100 dark:border-slate-700 pt-4 flex justify-between items-center">
+                  <span className="font-semibold text-slate-600 dark:text-slate-400 text-xs tracking-wider">Monto total</span>
+                  <span className="text-base font-bold text-slate-850 dark:text-slate-100">
                     S/ {pedidoSeleccionado.total ? pedidoSeleccionado.total.toFixed(2) : '0.00'}
                   </span>
                 </div>

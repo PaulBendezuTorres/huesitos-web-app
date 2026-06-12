@@ -310,23 +310,23 @@ const AgendaSemanal = () => {
     <div className="space-y-6 animate-in fade-in duration-300 font-sans text-slate-700 w-full">
       
       {/* SECCIÓN SUPERIOR: CABECERA Y FILTROS */}
-      <div className="bg-white rounded-xl border border-slate-200/50 p-4 md:p-5 shadow-sm space-y-4">
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200/50 dark:border-slate-700/50 p-4 md:p-5 shadow-sm space-y-4">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h2 className="text-lg md:text-xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
+            <h2 className="text-lg md:text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-2">
               <Calendar className="text-sky-500" size={20} />
               Agenda semanal de citas
             </h2>
-            <p className="text-xs text-slate-400 mt-0.5 font-medium">
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 font-medium">
               Consulta, filtra y gestiona la programación semanal de atención veterinaria.
             </p>
           </div>
           
           {/* Navegador de Semanas */}
-          <div className="flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-lg p-1 self-start md:self-auto shrink-0">
+          <div className="flex items-center gap-1 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg p-1 self-start md:self-auto shrink-0">
             <button
               onClick={() => setOffsetSemanas(o => o - 1)}
-              className="p-1.5 rounded hover:bg-white hover:shadow-sm text-slate-600 hover:text-sky-500 transition-all"
+              className="p-1.5 rounded hover:bg-white dark:hover:bg-slate-600 hover:shadow-sm text-slate-600 dark:text-slate-300 hover:text-sky-500 transition-all"
               title="Semana anterior"
             >
               <ChevronLeft size={14} />
@@ -336,14 +336,14 @@ const AgendaSemanal = () => {
               className={`px-3 py-1 text-xs font-semibold rounded transition-all ${
                 offsetSemanas === 0
                   ? 'bg-sky-500 text-white shadow-sm font-bold'
-                  : 'text-slate-600 hover:bg-white'
+                  : 'text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-600'
               }`}
             >
               Semana actual
             </button>
             <button
               onClick={() => setOffsetSemanas(o => o + 1)}
-              className="p-1.5 rounded hover:bg-white hover:shadow-sm text-slate-600 hover:text-sky-500 transition-all"
+              className="p-1.5 rounded hover:bg-white dark:hover:bg-slate-600 hover:shadow-sm text-slate-600 dark:text-slate-300 hover:text-sky-500 transition-all"
               title="Semana siguiente"
             >
               <ChevronRight size={14} />
@@ -352,21 +352,21 @@ const AgendaSemanal = () => {
         </div>
  
         {/* Rango de Fechas e Indicador */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-100">
-          <div className="text-xs md:text-sm font-bold text-slate-700">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-100 dark:border-slate-700">
+          <div className="text-xs md:text-sm font-bold text-slate-700 dark:text-slate-200">
             {lunes.toLocaleDateString('es-PE', { day: '2-digit', month: 'long' })}
-            <span className="font-medium text-slate-400 mx-1.5">al</span>
+            <span className="font-medium text-slate-400 dark:text-slate-500 mx-1.5">al</span>
             {domingo.toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric' })}
           </div>
  
           {/* Filtros de Veterinario y Estado */}
           <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-            <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 flex-1 sm:flex-initial sm:min-w-[180px]">
+            <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg px-2.5 py-1.5 flex-1 sm:flex-initial sm:min-w-[180px]">
               <User size={13} className="text-slate-400" />
               <select
                 value={filtroVeterinario}
                 onChange={(e) => setFiltroVeterinario(e.target.value)}
-                className="bg-transparent text-xs font-semibold text-slate-650 outline-none w-full cursor-pointer"
+                className="bg-transparent text-xs font-semibold text-slate-650 dark:text-slate-200 outline-none w-full cursor-pointer"
               >
                 <option value="">Todos los veterinarios</option>
                 {veterinarios.map((vet) => (
@@ -377,12 +377,12 @@ const AgendaSemanal = () => {
               </select>
             </div>
  
-            <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 flex-1 sm:flex-initial sm:min-w-[150px]">
+            <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg px-2.5 py-1.5 flex-1 sm:flex-initial sm:min-w-[150px]">
               <Filter size={13} className="text-slate-400" />
               <select
                 value={filtroEstado}
                 onChange={(e) => setFiltroEstado(e.target.value)}
-                className="bg-transparent text-xs font-semibold text-slate-650 outline-none w-full cursor-pointer"
+                className="bg-transparent text-xs font-semibold text-slate-650 dark:text-slate-200 outline-none w-full cursor-pointer"
               >
                 {ESTADOS.map((est) => (
                   <option key={est.value} value={est.value}>
@@ -394,7 +394,7 @@ const AgendaSemanal = () => {
  
             <button
               onClick={fetchCitas}
-              className="p-1.5 bg-white hover:bg-slate-50 text-slate-650 hover:text-sky-500 rounded-lg border border-slate-250 transition-all flex items-center justify-center shadow-sm shrink-0"
+              className="p-1.5 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-650 dark:text-slate-200 hover:text-sky-500 rounded-lg border border-slate-250 dark:border-slate-600 transition-all flex items-center justify-center shadow-sm shrink-0"
               title="Refrescar agenda"
             >
               <RefreshCw size={13} />
@@ -413,9 +413,9 @@ const AgendaSemanal = () => {
 
       {/* GRILLA CALENDARIO SEMANAL */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-slate-200/60 shadow-sm gap-3">
+        <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm gap-3">
           <CargadorSpinner size="lg" />
-          <span className="text-sm font-semibold text-slate-400">Consultando agenda...</span>
+          <span className="text-sm font-semibold text-slate-400 dark:text-slate-500">Consultando agenda...</span>
         </div>
       ) : (
         <div className="overflow-x-auto pb-4 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0">
@@ -426,21 +426,21 @@ const AgendaSemanal = () => {
               return (
                 <div
                   key={dia.fechaStr}
-                  className={`bg-white rounded-xl border ${
-                    esHoy ? 'border-sky-400 ring-2 ring-sky-100' : 'border-slate-200/60'
+                  className={`bg-white dark:bg-slate-800 rounded-xl border ${
+                    esHoy ? 'border-sky-400 ring-2 ring-sky-100 dark:ring-sky-900' : 'border-slate-200/60 dark:border-slate-700/60'
                   } shadow-sm flex flex-col min-h-[350px] overflow-hidden`}
                 >
                   {/* Cabecera del día */}
-                  <div className={`p-3 border-b text-center ${
-                    esHoy ? 'bg-sky-50/50' : 'bg-slate-50/50'
+                  <div className={`p-3 border-b dark:border-slate-700 text-center ${
+                    esHoy ? 'bg-sky-50/50 dark:bg-sky-900/20' : 'bg-slate-50/50 dark:bg-slate-900/30'
                   }`}>
                     <p className={`text-[10px] font-bold tracking-wide ${
-                      esHoy ? 'text-sky-600' : 'text-slate-500'
+                      esHoy ? 'text-sky-600' : 'text-slate-500 dark:text-slate-400'
                     }`}>
                       {dia.nombre}
                     </p>
                     <p className={`text-xs font-bold mt-0.5 ${
-                      esHoy ? 'text-sky-700' : 'text-slate-700'
+                      esHoy ? 'text-sky-700' : 'text-slate-700 dark:text-slate-200'
                     }`}>
                       {dia.fechaLabel}
                     </p>
@@ -451,7 +451,7 @@ const AgendaSemanal = () => {
                     {citasDia.length === 0 ? (
                       <div className="h-full flex flex-col items-center justify-center py-12 text-center text-slate-350">
                         <PawPrint size={18} className="stroke-[1.5] mb-1.5 opacity-60 text-slate-400" />
-                        <span className="text-[9px] font-semibold tracking-wider text-slate-400">Sin citas</span>
+                        <span className="text-[9px] font-semibold tracking-wider text-slate-400 dark:text-slate-500">Sin citas</span>
                       </div>
                     ) : (
                       citasDia.map((cita) => {
@@ -460,10 +460,10 @@ const AgendaSemanal = () => {
                           <div
                             key={cita.id}
                             onClick={() => abrirModalReprogramar(cita)}
-                            className="group border border-slate-100 hover:border-sky-200 bg-white rounded-xl p-2.5 shadow-sm hover:shadow-md hover:shadow-sky-500/5 transition-all duration-200 cursor-pointer text-left relative"
+                            className="group border border-slate-100 dark:border-slate-700 hover:border-sky-200 bg-white dark:bg-slate-800/80 rounded-xl p-2.5 shadow-sm hover:shadow-md hover:shadow-sky-500/5 transition-all duration-200 cursor-pointer text-left relative"
                           >
                             <div className="flex items-center justify-between gap-1 mb-1">
-                              <span className="text-[10px] font-bold text-slate-800 flex items-center gap-1">
+                              <span className="text-[10px] font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1">
                                 <Clock size={10} className="text-slate-400" />
                                 {hora}
                               </span>
@@ -472,23 +472,23 @@ const AgendaSemanal = () => {
                               </span>
                             </div>
 
-                            <h4 className="text-xs font-bold text-slate-800 tracking-tight group-hover:text-sky-500 transition-colors">
+                            <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100 tracking-tight group-hover:text-sky-500 transition-colors">
                               {cita.mascota?.nombre}
                             </h4>
                             
-                            <p className="text-[9px] font-semibold text-slate-500 mt-0.5 truncate">
+                            <p className="text-[9px] font-semibold text-slate-500 dark:text-slate-400 mt-0.5 truncate">
                               {formatEspecie(cita.mascota?.especie)} {cita.mascota?.raza ? `· ${cita.mascota.raza}` : ''}
                             </p>
 
-                            <div className="mt-1.5 pt-1.5 border-t border-slate-50 space-y-0.5 text-[9px] font-medium">
-                              <p className="text-slate-500 truncate">
-                                <span className="font-semibold text-slate-600">Serv:</span> {cita.servicio?.nombre}
+                            <div className="mt-1.5 pt-1.5 border-t border-slate-50 dark:border-slate-700 space-y-0.5 text-[9px] font-medium">
+                              <p className="text-slate-500 dark:text-slate-400 truncate">
+                                <span className="font-semibold text-slate-600 dark:text-slate-300">Serv:</span> {cita.servicio?.nombre}
                               </p>
-                              <p className="text-slate-500 truncate">
-                                <span className="font-semibold text-slate-600">Vet:</span> {cita.veterinario ? (cita.veterinario.nombre || cita.veterinario.correo) : 'Sin asignar'}
+                              <p className="text-slate-500 dark:text-slate-400 truncate">
+                                <span className="font-semibold text-slate-600 dark:text-slate-300">Vet:</span> {cita.veterinario ? (cita.veterinario.nombre || cita.veterinario.correo) : 'Sin asignar'}
                               </p>
-                              <p className="text-slate-400 truncate">
-                                <span className="font-semibold text-slate-500">Prop:</span> {cita.mascota?.dueño?.nombreCompleto || 'Cliente'}
+                              <p className="text-slate-400 dark:text-slate-500 truncate">
+                                <span className="font-semibold text-slate-500 dark:text-slate-400">Prop:</span> {cita.mascota?.dueño?.nombreCompleto || 'Cliente'}
                               </p>
                             </div>
 
@@ -511,12 +511,12 @@ const AgendaSemanal = () => {
       {/* MODAL DE REPROGRAMACIÓN DE CITA */}
       {citaSeleccionada && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-2xl max-w-md w-full border border-slate-200 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
             {/* Header Modal */}
-            <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+            <div className="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/40">
               <div>
-                <h3 className="font-bold text-slate-800 text-base tracking-tight">Reprogramar cita</h3>
-                <p className="text-xs text-slate-400 mt-0.5 font-medium">ID cita: #{citaSeleccionada.id}</p>
+                <h3 className="font-bold text-slate-800 dark:text-slate-100 text-base tracking-tight">Reprogramar cita</h3>
+                <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 font-medium">ID cita: #{citaSeleccionada.id}</p>
               </div>
               <button
                 onClick={() => setCitaSeleccionada(null)}
@@ -529,20 +529,20 @@ const AgendaSemanal = () => {
             {/* Contenido/Formulario */}
             <form onSubmit={handleReprogramarSubmit} className="p-5 space-y-4">
               {/* Resumen cita */}
-              <div className="bg-slate-50 rounded-xl p-3.5 border border-slate-100 space-y-2">
+              <div className="bg-slate-50 dark:bg-slate-900/40 rounded-xl p-3.5 border border-slate-100 dark:border-slate-700 space-y-2">
                 <div className="flex justify-between items-start">
                   <div>
                     <span className="text-[9px] font-bold text-sky-500 uppercase tracking-wider">Paciente</span>
-                    <h4 className="font-bold text-slate-800 text-sm">{citaSeleccionada.mascota?.nombre}</h4>
-                    <p className="text-[10px] text-slate-400 font-semibold">{citaSeleccionada.mascota?.dueño?.nombreCompleto || 'Propietario'}</p>
+                    <h4 className="font-bold text-slate-800 dark:text-slate-100 text-sm">{citaSeleccionada.mascota?.nombre}</h4>
+                    <p className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold">{citaSeleccionada.mascota?.dueño?.nombreCompleto || 'Propietario'}</p>
                   </div>
                   <div className="text-right">
                     <span className="text-[9px] font-bold text-emerald-500 uppercase tracking-wider">Servicio</span>
-                    <p className="font-bold text-slate-800 text-xs">{citaSeleccionada.servicio?.nombre}</p>
+                    <p className="font-bold text-slate-800 dark:text-slate-100 text-xs">{citaSeleccionada.servicio?.nombre}</p>
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-slate-200/50 flex justify-between text-[10px] text-slate-500">
+                <div className="pt-2 border-t border-slate-200/50 dark:border-slate-700 flex justify-between text-[10px] text-slate-500 dark:text-slate-400">
                   <span className="flex items-center gap-1 font-semibold">
                     <User size={12} className="text-slate-400" />
                     Vet: {citaSeleccionada.veterinario ? (citaSeleccionada.veterinario.nombre || citaSeleccionada.veterinario.correo) : 'Sin asignar'}
@@ -556,7 +556,7 @@ const AgendaSemanal = () => {
 
               {/* Selector de nueva Fecha */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-500 tracking-wide block">
+                <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wide block">
                   Nueva fecha
                 </label>
                 <input
@@ -565,14 +565,14 @@ const AgendaSemanal = () => {
                   min={formatarFechaYMD(new Date())}
                   onChange={(e) => setFechaReprogramar(e.target.value)}
                   required
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-700 focus:border-sky-400 focus:ring-2 focus:ring-sky-100 outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 text-sm text-slate-700 dark:text-slate-100 bg-white dark:bg-slate-700 focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:focus:ring-sky-900 outline-none transition-all"
                 />
               </div>
 
               {/* Selector de nueva Hora (Slots) */}
               {fechaReprogramar && (
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold text-slate-500 tracking-wide block">
+                  <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wide block">
                     Horarios disponibles
                   </label>
                   
@@ -617,12 +617,12 @@ const AgendaSemanal = () => {
               )}
 
               {/* Botones de acción */}
-              <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2.5">
+              <div className="pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center justify-end gap-2.5">
                 <button
                   type="button"
                   onClick={() => setCitaSeleccionada(null)}
                   disabled={guardandoReprogramacion}
-                  className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100 border border-slate-200 transition-all"
+                  className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-600 transition-all"
                 >
                   Cancelar
                 </button>
