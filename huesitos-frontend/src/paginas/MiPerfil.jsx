@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { User, Phone, MapPin, Mail, Lock, Camera, Save, AlertCircle, CheckCircle } from 'lucide-react';
 import { obtenerPerfil, actualizarPerfil, subirFotoPerfil } from '../api/perfilApi';
 import PlantillaTablero from '../componentes/PlantillaTablero';
+import CargadorSpinner from '../componentes/CargadorSpinner';
 
 const MiPerfil = () => {
   const navigate = useNavigate();
@@ -137,7 +138,7 @@ const MiPerfil = () => {
 
       {cargando ? (
         <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-sky-500"></div>
+          <CargadorSpinner size="lg" />
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -186,7 +187,11 @@ const MiPerfil = () => {
                 {rol.replace('_', ' ')}
               </span>
               <p className="text-xs text-slate-400 mt-4 leading-relaxed">
-                {subiendoFoto ? 'Cargando imagen...' : 'Formatos recomendados: JPG o PNG. Tamaño máximo de 2MB.'}
+                {subiendoFoto ? (
+                  <span className="flex items-center justify-center gap-1.5 text-sky-600 font-semibold animate-pulse">
+                    <CargadorSpinner size="xs" /> Cargando imagen...
+                  </span>
+                ) : 'Formatos recomendados: JPG o PNG. Tamaño máximo de 2MB.'}
               </p>
             </div>
 
