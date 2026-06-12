@@ -8,13 +8,13 @@ import {
   Check,
   X,
   AlertTriangle,
-  Loader2,
   RefreshCw,
   Filter,
   PawPrint,
   CheckCircle,
   FileText
 } from 'lucide-react';
+import CargadorSpinner from '../componentes/CargadorSpinner';
 import {
   obtenerCitasAgenda,
   reprogramarCita,
@@ -413,8 +413,8 @@ const AgendaSemanal = () => {
 
       {/* GRILLA CALENDARIO SEMANAL */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-slate-200/60 shadow-sm">
-          <Loader2 className="text-sky-500 animate-spin mb-3" size={32} />
+        <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-slate-200/60 shadow-sm gap-3">
+          <CargadorSpinner size="lg" />
           <span className="text-sm font-semibold text-slate-400">Consultando agenda...</span>
         </div>
       ) : (
@@ -577,8 +577,8 @@ const AgendaSemanal = () => {
                   </label>
                   
                   {cargandoSlots ? (
-                    <div className="flex items-center justify-center py-6 bg-slate-50 border border-slate-200 rounded-xl">
-                      <Loader2 className="text-sky-500 animate-spin mr-2" size={16} />
+                    <div className="flex items-center justify-center py-6 bg-slate-50 border border-slate-200 rounded-xl gap-2">
+                      <CargadorSpinner size="sm" />
                       <span className="text-xs font-semibold text-slate-400">Verificando horarios...</span>
                     </div>
                   ) : slotsDisponibles.length === 0 ? (
@@ -633,7 +633,7 @@ const AgendaSemanal = () => {
                 >
                   {guardandoReprogramacion ? (
                     <>
-                      <Loader2 size={12} className="animate-spin" /> Reprogramando...
+                      <CargadorSpinner size="xs" color="border-white" /> Reprogramando...
                     </>
                   ) : (
                     <>
