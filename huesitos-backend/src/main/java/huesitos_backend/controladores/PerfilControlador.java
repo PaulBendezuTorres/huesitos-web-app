@@ -129,6 +129,15 @@ public class PerfilControlador {
 
             // 2. Cambiar contraseña si se solicita
             if (request.getContrasena() != null && !request.getContrasena().isBlank()) {
+                if (request.getContrasenaActual() == null || request.getContrasenaActual().isBlank()) {
+                    throw new RuntimeException("Para cambiar tu contraseña debes ingresar tu contraseña actual");
+                }
+                if (!passwordEncoder.matches(request.getContrasenaActual(), usuario.getContrasena())) {
+                    throw new RuntimeException("La contraseña actual es incorrecta");
+                }
+                if (request.getContrasena().length() < 6) {
+                    throw new RuntimeException("La nueva contraseña debe tener al menos 6 caracteres");
+                }
                 usuario.setContrasena(passwordEncoder.encode(request.getContrasena()));
             }
 

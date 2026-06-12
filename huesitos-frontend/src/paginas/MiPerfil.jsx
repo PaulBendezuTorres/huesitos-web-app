@@ -17,6 +17,7 @@ const MiPerfil = () => {
   const [direccion, setDireccion] = useState('');
   const [fotoPerfilUrl, setFotoPerfilUrl] = useState('');
   
+  const [contrasenaActual, setContrasenaActual] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [confirmarContrasena, setConfirmarContrasena] = useState('');
 
@@ -93,9 +94,19 @@ const MiPerfil = () => {
       return;
     }
 
-    if (contrasena && contrasena !== confirmarContrasena) {
-      setErrorMsg('Las contraseñas no coinciden');
-      return;
+    if (contrasena) {
+      if (!contrasenaActual) {
+        setErrorMsg('Debes ingresar tu contraseña actual para cambiarla');
+        return;
+      }
+      if (contrasena.length < 6) {
+        setErrorMsg('La nueva contraseña debe tener al menos 6 caracteres');
+        return;
+      }
+      if (contrasena !== confirmarContrasena) {
+        setErrorMsg('Las contraseñas nuevas no coinciden');
+        return;
+      }
     }
 
     if (telefono && telefono.length !== 9) {
@@ -108,6 +119,7 @@ const MiPerfil = () => {
         nombre,
         apellido,
         correo,
+        contrasenaActual: contrasenaActual || null,
         contrasena: contrasena || null,
         telefono: telefono || null,
         direccion: direccion || null,
@@ -115,6 +127,7 @@ const MiPerfil = () => {
 
       await actualizarPerfil(usuarioId, payload);
       setSuccessMsg('Perfil actualizado correctamente');
+      setContrasenaActual('');
       setContrasena('');
       setConfirmarContrasena('');
       
@@ -280,7 +293,17 @@ const MiPerfil = () => {
             </h3>
             <p className="text-xs text-slate-400">Deja estos campos vacíos si no deseas cambiar tu contraseña actual.</p>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 mb-1.5">Contraseña actual</label>
+                <input
+                  type="password"
+                  value={contrasenaActual}
+                  onChange={e => setContrasenaActual(e.target.value)}
+                  placeholder="••••••••"
+                  className={`w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 focus:bg-white ${colorBordeFocus}`}
+                />
+              </div>
               <div>
                 <label className="block text-xs font-semibold text-slate-600 mb-1.5">Nueva contraseña</label>
                 <input
