@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Settings, Save, Building, Phone, Mail, MapPin, Clock, Percent } from 'lucide-react';
+import CargadorSpinner from "../../../componentes/CargadorSpinner";
 
 const ConfiguracionDinamica = () => {
   const [form, setForm] = useState({
@@ -55,7 +56,12 @@ const ConfiguracionDinamica = () => {
   };
 
   if (loading) {
-    return <div className="text-center p-8 font-semibold text-sky-600 animate-pulse">Cargando parámetros globales...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center h-64 gap-3 bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm max-w-4xl mx-auto">
+        <CargadorSpinner size="lg" />
+        <span className="text-slate-500 text-sm font-semibold animate-pulse">Cargando parámetros globales...</span>
+      </div>
+    );
   }
 
   return (
@@ -165,7 +171,7 @@ const ConfiguracionDinamica = () => {
         <div className="flex justify-end pt-6 border-t border-slate-100">
           <button type="submit" disabled={guardando}
             className="bg-gradient-to-r from-sky-500 to-cyan-400 hover:from-sky-600 hover:to-cyan-500 text-white px-8 py-3 rounded-xl font-black shadow-lg shadow-sky-500/30 transition-all flex items-center gap-2">
-            <Save size={18} /> {guardando ? "Sincronizando..." : "Guardar Cambios"}
+            {guardando ? <CargadorSpinner size="xs" color="border-white" /> : <Save size={18} />} {guardando ? "Sincronizando..." : "Guardar Cambios"}
           </button>
         </div>
       </form>
