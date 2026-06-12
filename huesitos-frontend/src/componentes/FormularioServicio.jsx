@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { PlusCircle, Stethoscope, Tag, Clock, FileText, Camera } from 'lucide-react';
 import Combobox from "./Combobox";
+import CargadorSpinner from "./CargadorSpinner";
 
 // Catálogo predefinido
 const CATALOGO_PREDEFINIDO = [
@@ -70,6 +71,7 @@ const FormularioServicio = ({ onGuardar }) => {
   const [form, setForm] = useState(estadoInicial);
   const [archivo, setArchivo] = useState(null);
   const [vistaPrevia, setVistaPrevia] = useState(null);
+  const [procesando, setProcesando] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -93,12 +95,19 @@ const FormularioServicio = ({ onGuardar }) => {
     setVistaPrevia(URL.createObjectURL(file));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onGuardar({ ...form, duracionMinutos: parseInt(form.duracionMinutos), precio: parseFloat(form.precio) }, archivo);
-    setForm(estadoInicial);
-    setArchivo(null);
-    setVistaPrevia(null);
+    setProcesando(true);
+    try {
+      await onGuardar({ ...form, duracionMinutos: parseInt(form.duracionMinutos), precio: parseFloat(form.precio) }, archivo);
+      setForm(estadoInicial);
+      setArchivo(null);
+      setVistaPrevia(null);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setProcesando(false);
+    }
   };
 
   return (
@@ -109,19 +118,24 @@ const FormularioServicio = ({ onGuardar }) => {
       
       {/* Carga de Imagen */}
       <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100/80">
-        <div className="w-16 h-16 rounded-xl bg-white border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center text-slate-400 shadow-inner">
+        <div className="w-16 h-16 rounded-xl bg-white border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center text-slate-400 shadow-inner relative">
           {vistaPrevia ? (
-            <img src={vistaPrevia} alt="Vista previa del servicio" className="w-full h-full object-cover" />
+            <img src={vistaPrevia} alt="Vista previa del servicio" className={`w-full h-full object-cover ${procesando ? 'opacity-40' : ''}`} />
           ) : (
             <Stethoscope size={24} className="text-slate-300" />
+          )}
+          {procesando && (
+            <div className="absolute inset-0 flex items-center justify-center bg-slate-950/20 backdrop-blur-[1px]">
+              <CargadorSpinner size="xs" />
+            </div>
           )}
         </div>
         <div>
           <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wide">Imagen del Servicio</label>
-          <label className="inline-flex items-center gap-1.5 bg-white hover:bg-slate-150 text-slate-700 border border-slate-300 px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all shadow-sm">
+          <label className={`inline-flex items-center gap-1.5 bg-white hover:bg-slate-150 text-slate-700 border border-slate-300 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm ${procesando ? 'opacity-55 cursor-not-allowed' : 'cursor-pointer'}`}>
             <Camera size={14} />
             {archivo ? "Cambiar foto" : "Cargar foto"}
-            <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+            <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" disabled={procesando} />
           </label>
         </div>
       </div>
@@ -169,8 +183,21 @@ const FormularioServicio = ({ onGuardar }) => {
             className="w-full pl-10 border border-slate-300 p-2.5 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 outline-none transition-all bg-slate-50 focus:bg-white" />
         </div>
         
-        <button type="submit" className="bg-gradient-to-r from-sky-500 to-cyan-400 hover:from-sky-600 hover:to-cyan-500 text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-sky-500/30 transition-all flex items-center gap-2">
-          <PlusCircle size={18} /> Guardar Servicio
+        <button 
+          type="submit" 
+          disabled={procesando}
+          className="bg-gradient-to-r from-sky-500 to-cyan-400 hover:from-sky-600 hover:to-cyan-500 text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-sky-500/30 transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {procesando ? (
+            <>
+              <CargadorSpinner size="xs" color="border-white" />
+              Guardando...
+            </>
+          ) : (
+            <>
+              <PlusCircle size={18} /> Guardar Servicio
+            </>
+          )}
         </button>
       </div>
     </form>

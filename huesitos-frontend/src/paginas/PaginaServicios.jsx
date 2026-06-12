@@ -137,16 +137,21 @@ const PaginaServicios = () => {
             <form onSubmit={ejecutarEdicion} className="p-6 space-y-5">
               {/* Sección de Foto del Servicio */}
               <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                <div className="w-16 h-16 rounded-xl bg-white border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center text-slate-400 shadow-inner">
+                <div className="w-16 h-16 rounded-xl bg-white border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center text-slate-400 shadow-inner relative">
                   {servicioAEditar?.fotoUrl && servicioAEditar.fotoUrl !== '/uploads/defecto-servicio.png' ? (
-                    <img src={`http://localhost:8080${servicioAEditar.fotoUrl}`} alt="Servicio" className="w-full h-full object-cover" />
+                    <img src={`http://localhost:8080${servicioAEditar.fotoUrl}`} alt="Servicio" className={`w-full h-full object-cover ${subiendoFoto ? 'opacity-40' : ''}`} />
                   ) : (
                     <Stethoscope size={24} className="text-slate-350" />
+                  )}
+                  {subiendoFoto && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-slate-950/20 backdrop-blur-[1px]">
+                      <CargadorSpinner size="xs" />
+                    </div>
                   )}
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wide">Imagen del Servicio</label>
-                  <label className="inline-flex items-center gap-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all shadow-sm">
+                  <label className={`inline-flex items-center gap-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm ${subiendoFoto ? 'opacity-55 cursor-not-allowed' : 'cursor-pointer'}`}>
                     <Camera size={14} />
                     {subiendoFoto ? "Cargando..." : "Subir foto"}
                     <input type="file" accept="image/*" onChange={handleSubirFoto} className="hidden" disabled={subiendoFoto} />
