@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import PanelIzquierdoAutenticacion from '../componentes/PanelIzquierdoAutenticacion';
 import BotonVolver from '../componentes/BotonVolver';
+import { useTema } from '../contextos/ContextoTema';
 
 const IniciarSesion = () => {
+  const { cambiarTema } = useTema();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
@@ -37,6 +39,10 @@ const IniciarSesion = () => {
         if (data.usuarioId) localStorage.setItem('usuarioId', data.usuarioId);
         if (data.duenoId) localStorage.setItem('duenoId', data.duenoId);
         if (data.fotoPerfilUrl) localStorage.setItem('fotoPerfilUrl', data.fotoPerfilUrl);
+        if (data.tema) {
+          localStorage.setItem('tema', data.tema);
+          cambiarTema(data.tema);
+        }
 
         // Redirección dinámica según el rol
         if (data.rol === 'ADMINISTRADOR') {

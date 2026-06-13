@@ -4,9 +4,11 @@ import { User, Phone, MapPin, Mail, Lock, Camera, Save, AlertCircle, CheckCircle
 import { obtenerPerfil, actualizarPerfil, subirFotoPerfil } from '../api/perfilApi';
 import PlantillaTablero from '../componentes/PlantillaTablero';
 import CargadorSpinner from '../componentes/CargadorSpinner';
+import { useTema } from '../contextos/ContextoTema';
 
 const MiPerfil = ({ sinPlantilla = false }) => {
   const navigate = useNavigate();
+  const { cambiarTema } = useTema();
   const usuarioId = localStorage.getItem('usuarioId');
   const rol = localStorage.getItem('usuarioRol') || 'CLIENTE';
 
@@ -16,6 +18,7 @@ const MiPerfil = ({ sinPlantilla = false }) => {
   const [telefono, setTelefono] = useState('');
   const [direccion, setDireccion] = useState('');
   const [fotoPerfilUrl, setFotoPerfilUrl] = useState('');
+  const [temaLocal, setTemaLocal] = useState('claro');
   
   const [contrasenaActual, setContrasenaActual] = useState('');
   const [contrasena, setContrasena] = useState('');
@@ -48,6 +51,7 @@ const MiPerfil = ({ sinPlantilla = false }) => {
         
         setTelefono(datos.telefono || '');
         setDireccion(datos.direccion || '');
+        setTemaLocal(datos.tema || 'claro');
       } catch (error) {
         console.error('Error al cargar datos del perfil:', error);
         setErrorMsg('No se pudo cargar la información de tu perfil');
@@ -124,6 +128,7 @@ const MiPerfil = ({ sinPlantilla = false }) => {
         contrasena: contrasena || null,
         telefono: telefono || null,
         direccion: direccion || null,
+        tema: temaLocal,
       };
 
       await actualizarPerfil(usuarioId, payload);
@@ -142,12 +147,17 @@ const MiPerfil = ({ sinPlantilla = false }) => {
     }
   };
 
+  const handleCambiarTema = (nuevoTema) => {
+    setTemaLocal(nuevoTema);
+    cambiarTema(nuevoTema);
+  };
+
   const contenido = (
     <div className="max-w-4xl mx-auto py-6 px-4">
       {/* Cabecera */}
       <div className="mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-slate-800">Mi Perfil</h1>
-        <p className="text-sm text-slate-500 mt-1">Administra tu información personal y de seguridad</p>
+        <h1 className="text-2xl md:text-3xl font-bold text-slate-800 dark:text-white">Mi Perfil</h1>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Administra tu información personal y de seguridad</p>
       </div>
 
       {cargando ? (
@@ -172,9 +182,9 @@ const MiPerfil = ({ sinPlantilla = false }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Foto de Perfil */}
-            <div className="bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col items-center justify-center text-center">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 p-6 flex flex-col items-center justify-center text-center">
               <div className="relative group mb-4">
-                <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-slate-100 shadow-inner bg-slate-50 flex items-center justify-center relative">
+                <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-slate-100 dark:border-slate-700 shadow-inner bg-slate-50 dark:bg-slate-900 flex items-center justify-center relative">
                   {fotoPerfilUrl ? (
                     <img 
                       src={`http://localhost:8080${fotoPerfilUrl}`} 
@@ -182,7 +192,7 @@ const MiPerfil = ({ sinPlantilla = false }) => {
                       className={`w-full h-full object-cover transition-opacity duration-200 ${subiendoFoto ? 'opacity-40' : ''}`} 
                     />
                   ) : (
-                    <span className="text-4xl text-slate-350 font-bold">{nombre.slice(0, 1).toUpperCase()}</span>
+                    <span className="text-4xl text-slate-350 dark:text-slate-500 font-bold">{nombre.slice(0, 1).toUpperCase()}</span>
                   )}
                   {subiendoFoto && (
                     <div className="absolute inset-0 flex items-center justify-center bg-slate-950/20 backdrop-blur-[1px]">
@@ -190,7 +200,7 @@ const MiPerfil = ({ sinPlantilla = false }) => {
                     </div>
                   )}
                 </div>
-                <label className={`absolute bottom-1.5 right-1.5 bg-slate-900 text-white p-2 rounded-full shadow-md flex items-center justify-center transition-all ${subiendoFoto ? 'opacity-50 cursor-not-allowed pointer-events-none' : 'cursor-pointer hover:bg-slate-800'}`}>
+                <label className={`absolute bottom-1.5 right-1.5 bg-slate-900 dark:bg-slate-750 text-white p-2 rounded-full shadow-md flex items-center justify-center transition-all ${subiendoFoto ? 'opacity-50 cursor-not-allowed pointer-events-none' : 'cursor-pointer hover:bg-slate-800 dark:hover:bg-slate-700'}`}>
                   <Camera size={16} />
                   <input 
                     type="file" 
@@ -201,13 +211,13 @@ const MiPerfil = ({ sinPlantilla = false }) => {
                   />
                 </label>
               </div>
-              <h2 className="text-lg font-bold text-slate-800">{`${nombre} ${apellido}`}</h2>
-              <span className={`text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-600 mt-1.5 uppercase tracking-wide`}>
+              <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">{`${nombre} ${apellido}`}</h2>
+              <span className={`text-xs font-bold px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 mt-1.5 uppercase tracking-wide`}>
                 {rol.replace('_', ' ')}
               </span>
-              <p className="text-xs text-slate-400 mt-4 leading-relaxed">
+              <p className="text-xs text-slate-400 dark:text-slate-400 mt-4 leading-relaxed">
                 {subiendoFoto ? (
-                  <span className="flex items-center justify-center gap-1.5 text-sky-600 font-semibold animate-pulse">
+                  <span className="flex items-center justify-center gap-1.5 text-sky-600 dark:text-sky-400 font-semibold animate-pulse">
                     <CargadorSpinner size="xs" /> Cargando imagen...
                   </span>
                 ) : 'Formatos recomendados: JPG o PNG. Tamaño máximo de 2MB.'}
@@ -215,38 +225,38 @@ const MiPerfil = ({ sinPlantilla = false }) => {
             </div>
 
             {/* Datos Personales */}
-            <div className="md:col-span-2 bg-white rounded-2xl border border-slate-200/80 p-6 space-y-5">
-              <h3 className="text-base font-bold text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
+            <div className="md:col-span-2 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 p-6 space-y-5">
+              <h3 className="text-base font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-700 pb-3 flex items-center gap-2">
                 <User size={18} className={colorTexto} /> Datos Personales
               </h3>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 mb-1.5">Nombre</label>
+                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Nombre</label>
                   <input
                     type="text"
                     value={nombre}
                     onChange={e => setNombre(e.target.value)}
                     required
-                    className={`w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 focus:bg-white ${colorBordeFocus}`}
+                    className={`w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-850 dark:text-white text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 ${colorBordeFocus}`}
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 mb-1.5">Apellido</label>
+                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Apellido</label>
                   <input
                     type="text"
                     value={apellido}
                     onChange={e => setApellido(e.target.value)}
                     required
-                    className={`w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 focus:bg-white ${colorBordeFocus}`}
+                    className={`w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-850 dark:text-white text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 ${colorBordeFocus}`}
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-650 mb-1.5 flex justify-between items-center">
+                <label className="block text-xs font-semibold text-slate-650 dark:text-slate-300 mb-1.5 flex justify-between items-center">
                   <span>Correo electrónico</span>
-                  <span className="text-[10px] text-slate-405 lowercase italic">(No modificable)</span>
+                  <span className="text-[10px] text-slate-405 dark:text-slate-400 lowercase italic">(No modificable)</span>
                 </label>
                 <div className="relative">
                   <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
@@ -256,14 +266,14 @@ const MiPerfil = ({ sinPlantilla = false }) => {
                     type="email"
                     value={correo}
                     disabled
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-400 text-sm font-semibold bg-slate-100 cursor-not-allowed outline-none transition-all"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-400 text-sm font-semibold bg-slate-100 dark:bg-slate-900 cursor-not-allowed outline-none transition-all"
                   />
                 </div>
               </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
                   <div className="sm:col-span-1">
-                    <label className="block text-xs font-semibold text-slate-600 mb-1.5">Teléfono móvil</label>
+                    <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Teléfono móvil</label>
                     <div className="relative">
                       <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
                         <Phone size={16} />
@@ -273,12 +283,12 @@ const MiPerfil = ({ sinPlantilla = false }) => {
                         value={telefono}
                         onChange={e => setTelefono(e.target.value.replace(/\D/g, '').slice(0, 9))}
                         placeholder="Completar teléfono"
-                        className={`w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 focus:bg-white ${colorBordeFocus}`}
+                        className={`w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-850 dark:text-white text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 ${colorBordeFocus}`}
                       />
                     </div>
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="block text-xs font-semibold text-slate-600 mb-1.5">Dirección física</label>
+                    <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Dirección física</label>
                     <div className="relative">
                       <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
                         <MapPin size={16} />
@@ -288,7 +298,7 @@ const MiPerfil = ({ sinPlantilla = false }) => {
                         value={direccion}
                         onChange={e => setDireccion(e.target.value)}
                         placeholder="Completar dirección"
-                        className={`w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 focus:bg-white ${colorBordeFocus}`}
+                        className={`w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-850 dark:text-white text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 ${colorBordeFocus}`}
                       />
                     </div>
                   </div>
@@ -297,43 +307,79 @@ const MiPerfil = ({ sinPlantilla = false }) => {
           </div>
 
           {/* Seguridad / Contraseña */}
-          <div className="bg-white rounded-2xl border border-slate-200/80 p-6 space-y-5">
-            <h3 className="text-base font-bold text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 p-6 space-y-5">
+            <h3 className="text-base font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-700 pb-3 flex items-center gap-2">
               <Lock size={18} className={colorTexto} /> Contraseña y Seguridad
             </h3>
-            <p className="text-xs text-slate-400">Deja estos campos vacíos si no deseas cambiar tu contraseña actual.</p>
+            <p className="text-xs text-slate-400 dark:text-slate-400">Deja estos campos vacíos si no deseas cambiar tu contraseña actual.</p>
             
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5">Contraseña actual</label>
+                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Contraseña actual</label>
                 <input
                   type="password"
                   value={contrasenaActual}
                   onChange={e => setContrasenaActual(e.target.value)}
                   placeholder="••••••••"
-                  className={`w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 focus:bg-white ${colorBordeFocus}`}
+                  className={`w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-850 dark:text-white text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 ${colorBordeFocus}`}
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5">Nueva contraseña</label>
+                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Nueva contraseña</label>
                 <input
                   type="password"
                   value={contrasena}
                   onChange={e => setContrasena(e.target.value)}
                   placeholder="••••••••"
-                  className={`w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 focus:bg-white ${colorBordeFocus}`}
+                  className={`w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-850 dark:text-white text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 ${colorBordeFocus}`}
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5">Confirmar nueva contraseña</label>
+                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Confirmar nueva contraseña</label>
                 <input
                   type="password"
                   value={confirmarContrasena}
                   onChange={e => setConfirmarContrasena(e.target.value)}
                   placeholder="••••••••"
-                  className={`w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 focus:bg-white ${colorBordeFocus}`}
+                  className={`w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-850 dark:text-white text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 ${colorBordeFocus}`}
                 />
               </div>
+            </div>
+          </div>
+
+          {/* Apariencia / Tema */}
+          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 p-6 space-y-5">
+            <h3 className="text-base font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-700 pb-3 flex items-center gap-2">
+              <span className="text-sky-600 dark:text-sky-400 font-bold">🎨</span> Apariencia y Visualización
+            </h3>
+            <p className="text-xs text-slate-400 dark:text-slate-300">Selecciona el tema visual de tu preferencia para la aplicación.</p>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <button
+                type="button"
+                onClick={() => handleCambiarTema('claro')}
+                className={`flex items-center justify-between px-4 py-3 rounded-xl border text-sm font-semibold transition-all ${
+                  temaLocal === 'claro'
+                    ? 'border-sky-500 bg-sky-50/50 text-sky-700 dark:text-sky-300'
+                    : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
+              >
+                <span className="flex items-center gap-2">☀️ Tema Claro</span>
+                {temaLocal === 'claro' && <span className="text-xs font-bold uppercase tracking-wider bg-sky-100 dark:bg-sky-950 text-sky-700 dark:text-sky-300 px-2 py-0.5 rounded-full">Activo</span>}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleCambiarTema('oscuro')}
+                className={`flex items-center justify-between px-4 py-3 rounded-xl border text-sm font-semibold transition-all ${
+                  temaLocal === 'oscuro'
+                    ? 'border-sky-500 bg-sky-950/20 text-sky-700 dark:text-sky-300'
+                    : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
+              >
+                <span className="flex items-center gap-2">🌙 Tema Oscuro</span>
+                {temaLocal === 'oscuro' && <span className="text-xs font-bold uppercase tracking-wider bg-sky-100 dark:bg-sky-950 text-sky-700 dark:text-sky-300 px-2 py-0.5 rounded-full">Activo</span>}
+              </button>
             </div>
           </div>
 

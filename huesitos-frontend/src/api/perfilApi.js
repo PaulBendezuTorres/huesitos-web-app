@@ -19,6 +19,11 @@ export const actualizarPerfil = async (id, datos) => {
   return respuesta.data;
 };
 
+export const actualizarTemaUsuario = async (id, tema) => {
+  const respuesta = await axios.patch(`${API_BASE}/usuario/${id}/tema?tema=${tema}`, {}, obtenerHeaders());
+  return respuesta.data;
+};
+
 export const subirFotoPerfil = async (id, archivo) => {
   const formData = new FormData();
   formData.append('archivo', archivo);

@@ -70,13 +70,19 @@ const PlantillaTablero = ({
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            {/* Toggle tema claro/oscuro */}
+            {/* Toggle tema claro/oscuro premium */}
             <button
               onClick={alternarTema}
               title={tema === 'oscuro' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-              className="p-2 rounded-lg text-slate-300 hover:bg-slate-600 hover:text-white transition-all active:scale-90"
+              className="relative p-2.5 rounded-xl text-slate-300 dark:text-slate-200 bg-slate-800/40 hover:bg-slate-700/60 border border-slate-600/30 hover:border-slate-500/50 shadow-inner transition-all duration-300 hover:scale-105 active:scale-95 group overflow-hidden"
             >
-              {tema === 'oscuro' ? <Sun size={18} /> : <Moon size={18} />}
+              <div className="relative z-10 flex items-center justify-center">
+                {tema === 'oscuro' ? (
+                  <Sun size={18} className="text-amber-400 group-hover:rotate-45 transition-transform duration-500" />
+                ) : (
+                  <Moon size={18} className="text-sky-300 group-hover:-rotate-12 transition-transform duration-500" />
+                )}
+              </div>
             </button>
 
             {/* Perfil */}

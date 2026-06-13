@@ -47,6 +47,9 @@ public class Usuario {
     @Column(name = "direccion", length = 255)
     private String direccion;
 
+    @Column(name = "tema", nullable = false, length = 20)
+    private String tema = "claro";
+
     @Column(name = "token_recuperacion", length = 255)
     private String tokenRecuperacion;
 

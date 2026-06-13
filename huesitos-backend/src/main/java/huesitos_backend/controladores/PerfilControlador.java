@@ -92,6 +92,7 @@ public class PerfilControlador {
             datos.put("correo", usuario.getCorreo());
             datos.put("rol", usuario.getRol().name());
             datos.put("fotoPerfilUrl", usuario.getFotoPerfilUrl());
+            datos.put("tema", usuario.getTema());
 
             if (usuario.getRol() == Rol.CLIENTE) {
                 Optional<Dueño> dueñoOpt = dueñoRepositorio.findByUsuarioId(usuario.getId());
@@ -149,6 +150,10 @@ public class PerfilControlador {
             usuario.setNombre(request.getNombre());
             usuario.setApellido(request.getApellido());
 
+            if (request.getTema() != null && !request.getTema().isBlank()) {
+                usuario.setTema(request.getTema());
+            }
+
             if (usuario.getRol() == Rol.CLIENTE) {
                 Dueño dueño = dueñoRepositorio.findByUsuarioId(usuario.getId())
                         .orElseGet(() -> {
@@ -182,6 +187,29 @@ public class PerfilControlador {
 
             Map<String, String> respuesta = new HashMap<>();
             respuesta.put("mensaje", "Perfil actualizado correctamente");
+            return ResponseEntity.ok(respuesta);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    /**
+     * Actualiza únicamente la preferencia de tema del usuario.
+     */
+    @PatchMapping("/usuario/{id}/tema")
+    public ResponseEntity<?> actualizarTemaUsuario(@PathVariable Long id, @RequestParam String tema) {
+        try {
+            if (!"claro".equalsIgnoreCase(tema) && !"oscuro".equalsIgnoreCase(tema)) {
+                throw new RuntimeException("El tema debe ser 'claro' o 'oscuro'");
+            }
+            Usuario usuario = usuarioRepositorio.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
+            usuario.setTema(tema.toLowerCase());
+            usuarioRepositorio.save(usuario);
+
+            Map<String, String> respuesta = new HashMap<>();
+            respuesta.put("mensaje", "Tema actualizado correctamente");
+            respuesta.put("tema", usuario.getTema());
             return ResponseEntity.ok(respuesta);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

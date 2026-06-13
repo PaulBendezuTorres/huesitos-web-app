@@ -4,8 +4,9 @@ import { motion } from 'framer-motion';
 import { 
   Stethoscope, Syringe, Activity, Microscope, HeartPulse, 
   Phone, MapPin, Mail, CheckCircle2, ShieldPlus,
-  Home, Clock
+  Home, Clock, Sun, Moon
 } from 'lucide-react';
+import { useTema } from '../contextos/ContextoTema';
 
 // === IMPORTACIONES DE TUS IMÁGENES LOCALES ===
 import imagenNosotros from '../assets/veterinario.jpg';
@@ -17,6 +18,7 @@ import iconoYoutube from '../assets/youtube.png';
 import logo from '../assets/Logo Huesitos.png';
 
 const App = () => {
+  const { tema, alternarTema } = useTema();
   // Animación principal
   const fadeUp = {
     hidden: { opacity: 0, y: 60 },
@@ -54,10 +56,10 @@ const App = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans scroll-smooth selection:bg-blue-600 selection:text-white">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans scroll-smooth selection:bg-blue-600 selection:text-white">
       
       {/* NAVEGACIÓN */}
-      <header className="bg-white/80 backdrop-blur-xl sticky top-0 z-50 border-b border-slate-200/50 shadow-sm transition-all duration-300">
+      <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl sticky top-0 z-50 border-b border-slate-200/50 dark:border-slate-800/60 shadow-sm transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-between">
           
           {/* Logo y Nombre */}
@@ -66,25 +68,40 @@ const App = () => {
               <img src={logo} alt="Logo de la clínica" />
             </div>
             <div className="flex flex-col">
-              <span className="font-extrabold text-xl sm:text-3xl text-slate-900 tracking-tight leading-tight">{config.nombreNegocio}</span>
-              <span className="text-[10px] sm:text-xs font-semibold text-blue-600 tracking-widest uppercase">Clínica Veterinaria</span>
+              <span className="font-extrabold text-xl sm:text-3xl text-slate-900 dark:text-white tracking-tight leading-tight">{config.nombreNegocio}</span>
+              <span className="text-[10px] sm:text-xs font-semibold text-blue-600 dark:text-sky-400 tracking-widest uppercase">Clínica Veterinaria</span>
             </div>
           </a>
 
           {/* Menú Desktop */}
-          <nav className="hidden md:flex items-center gap-8 font-medium text-slate-600 text-sm tracking-wide">
-            <a href="#inicio" className="hover:text-blue-600 transition-colors">Inicio</a>
-            <a href="#nosotros" className="hover:text-blue-600 transition-colors">Nosotros</a>
-            <a href="#servicios" className="hover:text-blue-600 transition-colors">Servicios</a>
-            <a href="#ubicacion" className="hover:text-blue-600 transition-colors">Ubicación</a>
-            <a href="#emergencias" className="text-red-500 font-bold hover:text-red-600 transition-colors">Emergencias 24/7</a>
+          <nav className="hidden md:flex items-center gap-8 font-medium text-slate-600 dark:text-slate-300 text-sm tracking-wide">
+            <a href="#inicio" className="hover:text-blue-600 dark:hover:text-sky-400 transition-colors">Inicio</a>
+            <a href="#nosotros" className="hover:text-blue-600 dark:hover:text-sky-400 transition-colors">Nosotros</a>
+            <a href="#servicios" className="hover:text-blue-600 dark:hover:text-sky-400 transition-colors">Servicios</a>
+            <a href="#ubicacion" className="hover:text-blue-600 dark:hover:text-sky-400 transition-colors">Ubicación</a>
+            <a href="#emergencias" className="text-red-500 font-bold hover:text-red-650 transition-colors">Emergencias 24/7</a>
           </nav>
 
           {/* Botones Desktop */}
           <div className="hidden md:flex items-center gap-3">
+            {/* Toggle Tema Claro/Oscuro */}
+            <button
+              onClick={alternarTema}
+              title={tema === 'oscuro' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+              className="relative p-2.5 rounded-xl text-slate-500 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/80 shadow-sm transition-all duration-300 hover:scale-105 active:scale-95 group overflow-hidden mr-1"
+            >
+              <div className="relative z-10 flex items-center justify-center">
+                {tema === 'oscuro' ? (
+                  <Sun size={18} className="text-amber-500 group-hover:rotate-45 transition-transform duration-500" />
+                ) : (
+                  <Moon size={18} className="text-slate-600 group-hover:-rotate-12 transition-transform duration-500" />
+                )}
+              </div>
+            </button>
+
             <button
               onClick={() => window.location.href = '/registro'}
-              className="flex items-center gap-2 border border-slate-200 hover:border-sky-400 text-slate-600 hover:text-sky-600 px-5 py-2.5 rounded-xl font-semibold transition-all duration-300 hover:-translate-y-0.5"
+              className="flex items-center gap-2 border border-slate-200 dark:border-slate-750 hover:border-sky-400 text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 px-5 py-2.5 rounded-xl font-semibold transition-all duration-300 hover:-translate-y-0.5 bg-transparent"
             >
               Crear cuenta
             </button>
@@ -97,7 +114,7 @@ const App = () => {
           </div>
 
           {/* Botón Menú Móvil */}
-          <button className="md:hidden text-slate-600 p-2" onClick={() => setMenuAbierto(!menuAbierto)}>
+          <button className="md:hidden text-slate-600 dark:text-slate-300 p-2" onClick={() => setMenuAbierto(!menuAbierto)}>
             <div className="space-y-1.5">
               <span className={`block w-6 h-0.5 bg-current transition-all ${menuAbierto ? 'rotate-45 translate-y-2' : ''}`}></span>
               <span className={`block w-6 h-0.5 bg-current transition-all ${menuAbierto ? 'opacity-0' : ''}`}></span>
@@ -113,13 +130,25 @@ const App = () => {
           {/* Overlay oscuro */}
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setMenuAbierto(false)} />
           {/* Panel centrado */}
-          <div className="relative z-10 w-full max-w-sm bg-white rounded-2xl shadow-2xl p-6 flex flex-col gap-1 border border-slate-100 animate-in fade-in slide-in-from-top-4 duration-200">
-            <a href="#inicio"      onClick={() => setMenuAbierto(false)} className="text-slate-700 font-semibold text-sm py-3 px-3 rounded-xl hover:bg-slate-50 hover:text-blue-600 transition-colors">🏠 Inicio</a>
-            <a href="#nosotros"    onClick={() => setMenuAbierto(false)} className="text-slate-700 font-semibold text-sm py-3 px-3 rounded-xl hover:bg-slate-50 hover:text-blue-600 transition-colors">ℹ️ Nosotros</a>
-            <a href="#servicios"   onClick={() => setMenuAbierto(false)} className="text-slate-700 font-semibold text-sm py-3 px-3 rounded-xl hover:bg-slate-50 hover:text-blue-600 transition-colors">🩺 Servicios</a>
-            <a href="#ubicacion"   onClick={() => setMenuAbierto(false)} className="text-slate-700 font-semibold text-sm py-3 px-3 rounded-xl hover:bg-slate-50 hover:text-blue-600 transition-colors">📍 Ubicación</a>
-            <a href="#emergencias" onClick={() => setMenuAbierto(false)} className="text-red-500 font-bold text-sm py-3 px-3 rounded-xl hover:bg-red-50 transition-colors">🚨 Emergencias 24/7</a>
-            <div className="flex flex-col gap-2 pt-3 mt-2 border-t border-slate-100">
+          <div className="relative z-10 w-full max-w-sm bg-white dark:bg-slate-900 rounded-2xl shadow-2xl p-6 flex flex-col gap-1 border border-slate-100 dark:border-slate-800 animate-in fade-in slide-in-from-top-4 duration-200">
+            <a href="#inicio"      onClick={() => setMenuAbierto(false)} className="text-slate-700 dark:text-slate-200 font-semibold text-sm py-3 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-sky-400 transition-colors">🏠 Inicio</a>
+            <a href="#nosotros"    onClick={() => setMenuAbierto(false)} className="text-slate-700 dark:text-slate-200 font-semibold text-sm py-3 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-sky-400 transition-colors">ℹ️ Nosotros</a>
+            <a href="#servicios"   onClick={() => setMenuAbierto(false)} className="text-slate-700 dark:text-slate-200 font-semibold text-sm py-3 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-sky-400 transition-colors">🩺 Servicios</a>
+            <a href="#ubicacion"   onClick={() => setMenuAbierto(false)} className="text-slate-700 dark:text-slate-200 font-semibold text-sm py-3 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-sky-400 transition-colors">📍 Ubicación</a>
+            <a href="#emergencias" onClick={() => setMenuAbierto(false)} className="text-red-500 font-bold text-sm py-3 px-3 rounded-xl hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors">🚨 Emergencias 24/7</a>
+            
+            <div className="flex flex-col gap-2 pt-3 mt-2 border-t border-slate-100 dark:border-slate-800">
+              {/* Alternar Tema Móvil */}
+              <button
+                onClick={alternarTema}
+                className="w-full py-2.5 px-4 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold rounded-xl flex items-center justify-between transition-all text-sm border border-slate-200 dark:border-slate-700"
+              >
+                <span className="flex items-center gap-2">
+                  {tema === 'oscuro' ? '☀️ Modo Claro' : '🌙 Modo Oscuro'}
+                </span>
+                <span className="text-xs text-slate-400 capitalize">{tema}</span>
+              </button>
+
               <button
                 onClick={() => { setMenuAbierto(false); window.location.href = '/login'; }}
                 className="w-full py-2.5 bg-gradient-to-tr from-sky-500 to-cyan-400 text-white font-bold rounded-xl shadow-lg shadow-sky-400/30 hover:from-sky-600 hover:to-cyan-500 transition-all text-sm"
@@ -128,7 +157,7 @@ const App = () => {
               </button>
               <button
                 onClick={() => { setMenuAbierto(false); window.location.href = '/registro'; }}
-                className="w-full py-2.5 border border-slate-200 text-slate-600 font-semibold rounded-xl hover:border-sky-400 hover:text-sky-600 transition-all text-sm"
+                className="w-full py-2.5 border border-slate-200 dark:border-slate-700 text-slate-650 dark:text-slate-300 font-semibold rounded-xl hover:border-sky-400 hover:text-sky-600 transition-all text-sm"
               >
                 Crear cuenta
               </button>
@@ -188,7 +217,7 @@ const App = () => {
       </motion.section>
 
       {/* SECCIÓN: NOSOTROS (Texto Dinámico) */}
-      <motion.section id="nosotros" className="py-16 sm:py-24 lg:py-32 bg-white relative" variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
+      <motion.section id="nosotros" className="py-16 sm:py-24 lg:py-32 bg-white dark:bg-slate-900 relative transition-colors duration-300" variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-10 lg:gap-20 items-center">
             <div className="relative group">
@@ -206,11 +235,11 @@ const App = () => {
             
             <div className="space-y-10">
               <div className="space-y-4">
-                <h2 className="text-sm font-bold text-blue-600 tracking-widest uppercase">Sobre Nosotros</h2>
-                <h3 className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 leading-tight">Comprometidos con la salud y el bienestar animal.</h3>
+                <h2 className="text-sm font-bold text-blue-600 dark:text-sky-400 tracking-widest uppercase">Sobre Nosotros</h2>
+                <h3 className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white leading-tight">Comprometidos con la salud y el bienestar animal.</h3>
               </div>
               
-              <div className="space-y-6 text-lg text-slate-600 leading-relaxed">
+              <div className="space-y-6 text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
                 <p>
                   En <strong>Clínica Veterinaria {config.nombreNegocio}</strong> nos dedicamos a elevar el estándar de la atención médica veterinaria. Combinamos un trato profundamente humano y empático con rigurosos protocolos médicos y quirúrgicos.
                 </p>
@@ -221,18 +250,18 @@ const App = () => {
 
               <div className="grid sm:grid-cols-2 gap-6 pt-6">
                 <div className="space-y-3">
-                  <div className="w-12 h-12 bg-sky-100 text-sky-600 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-sky-100 dark:bg-sky-950/40 text-sky-600 dark:text-sky-400 rounded-xl flex items-center justify-center">
                     <CheckCircle2 />
                   </div>
-                  <h4 className="font-bold text-slate-900 text-xl">Nuestra Misión</h4>
-                  <p className="text-slate-600 text-sm">Ofrecer diagnósticos certeros y soluciones médicas oportunas que faciliten la recuperación de cada mascota en un entorno seguro.</p>
+                  <h4 className="font-bold text-slate-900 dark:text-white text-xl">Nuestra Misión</h4>
+                  <p className="text-slate-600 dark:text-slate-400 text-sm">Ofrecer diagnósticos certeros y soluciones médicas oportunas que faciliten la recuperación de cada mascota en un entorno seguro.</p>
                 </div>
                 <div className="space-y-3">
-                  <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-blue-100 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center">
                     <ShieldPlus />
                   </div>
-                  <h4 className="font-bold text-slate-900 text-xl">Nuestra Visión</h4>
-                  <p className="text-slate-600 text-sm">Consolidarnos como el centro hospitalario de referencia veterinaria, destacados por nuestra excelencia tecnológica y especialidades complejas.</p>
+                  <h4 className="font-bold text-slate-900 dark:text-white text-xl">Nuestra Visión</h4>
+                  <p className="text-slate-600 dark:text-slate-400 text-sm">Consolidarnos como el centro hospitalario de referencia veterinaria, destacados por nuestra excelencia tecnológica y especialidades complejas.</p>
                 </div>
               </div>
             </div>
@@ -241,11 +270,11 @@ const App = () => {
       </motion.section>
 
       {/* SECCIÓN: SERVICIOS Y TARIFAS */}
-      <motion.section id="servicios" className="py-32 bg-sky-100 border-y border-sky-200" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}>
+      <motion.section id="servicios" className="py-32 bg-sky-100 dark:bg-slate-950 border-y border-sky-200 dark:border-slate-800 transition-colors duration-300" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
           <div className="text-center space-y-6 max-w-3xl mx-auto">
-            <h2 className="text-4xl font-black text-slate-900">Servicios Médicos y Tarifas</h2>
-            <p className="text-lg text-slate-700">Catálogo de atenciones estructurado. Transparencia total en los costos.</p>
+            <h2 className="text-4xl font-black text-slate-900 dark:text-white">Servicios Médicos y Tarifas</h2>
+            <p className="text-lg text-slate-700 dark:text-slate-300">Catálogo de atenciones estructurado. Transparencia total en los costos.</p>
           </div>
 
           {/* Selector de Categorías */}
@@ -263,7 +292,7 @@ const App = () => {
                 className={`flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
                   categoriaActiva === tab.id 
                     ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' 
-                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'
+                    : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-350 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`}
               >
                 {tab.icono}
@@ -273,15 +302,15 @@ const App = () => {
           </div>
 
           {/* Tablas de Contenido */}
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden min-h-[400px]">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden min-h-[400px]">
             <div className="p-8 md:p-12">
               
               {/* TAB: Consultas */}
               {categoriaActiva === 'consultas' && (
                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <div className="grid md:grid-cols-2 gap-8 items-center mb-6">
-                    <p className="text-slate-600 leading-relaxed">Las consultas médicas nos ayudan a monitorear el estado de salud de tu mascota y detectar cualquier malestar o enfermedad. Nuestro equipo veterinario le brindará la atención oportuna para facilitar su recuperación.</p>
-                    <div className="bg-slate-50 p-5 rounded-2xl text-xs text-slate-500 space-y-2 border border-slate-100">
+                    <p className="text-slate-600 dark:text-slate-300 leading-relaxed">Las consultas médicas nos ayudan a monitorear el estado de salud de tu mascota y detectar cualquier malestar o enfermedad. Nuestro equipo veterinario le brindará la atención oportuna para facilitar su recuperación.</p>
+                    <div className="bg-slate-50 dark:bg-slate-850 p-5 rounded-2xl text-xs text-slate-500 dark:text-slate-400 space-y-2 border border-slate-100 dark:border-slate-800">
                       <p><strong>Urgencia:</strong> Atención no programada el mismo día por signos clínicos agudos que generan malestar.</p>
                       <p><strong>Emergencia:</strong> Situación médica crítica e inmediata que representa un riesgo grave e inminente para la vida de la mascota.</p>
                     </div>
@@ -289,13 +318,13 @@ const App = () => {
                   <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                       <thead>
-                        <tr className="border-b border-slate-200 text-slate-400 text-xs uppercase tracking-wider">
+                        <tr className="border-b border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-400 text-xs uppercase tracking-wider">
                           <th className="py-4 font-bold">Tipo de Consulta</th>
                           <th className="py-4 font-bold text-right">Precio Regular</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100 text-slate-700 font-medium">
-                        <tr className="hover:bg-slate-50/50 transition-colors"><td className="py-4">Consulta general</td><td className="py-4 text-right">S/ 80.00</td></tr>
+                      <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300 font-medium">
+                        <tr className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors"><td className="py-4">Consulta general</td><td className="py-4 text-right">S/ 80.00</td></tr>
                         <tr className="hover:bg-slate-50/50 transition-colors"><td className="py-4">Consulta general - Medicina felina</td><td className="py-4 text-right">S/ 100.00</td></tr>
                         <tr className="hover:bg-slate-50/50 transition-colors"><td className="py-4 text-amber-600">Consulta de urgencia</td><td className="py-4 text-right text-amber-600">S/ 120.00</td></tr>
                         <tr className="hover:bg-slate-50/50 transition-colors"><td className="py-4">Consulta a domicilio</td><td className="py-4 text-right">S/ 150.00</td></tr>
@@ -432,39 +461,39 @@ const App = () => {
       </motion.section>
 
       {/* SECCIÓN: UBICACIÓN Y CONTACTO (Datos Dinámicos) */}
-      <motion.section id="ubicacion" className="py-24 bg-white border-t border-slate-200" variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
+      <motion.section id="ubicacion" className="py-24 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 transition-colors duration-300" variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             
             <div className="space-y-8">
               <div>
-                <h2 className="text-sm font-bold text-blue-600 tracking-widest uppercase mb-2">Visítanos</h2>
-                <h3 className="text-4xl font-black text-slate-900">Nuestra Ubicación</h3>
+                <h2 className="text-sm font-bold text-blue-600 dark:text-sky-400 tracking-widest uppercase mb-2">Visítanos</h2>
+                <h3 className="text-4xl font-black text-slate-900 dark:text-white">Nuestra Ubicación</h3>
               </div>
-              <p className="text-lg text-slate-600">
+              <p className="text-lg text-slate-600 dark:text-slate-300">
                 Estamos estratégicamente ubicados para atender cualquier emergencia con rapidez y brindar el mejor cuidado médico a tu engreído en instalaciones de primer nivel.
               </p>
               
-              <div className="space-y-6 bg-slate-50 p-8 rounded-3xl border border-slate-100">
+              <div className="space-y-6 bg-slate-50 dark:bg-slate-850 p-8 rounded-3xl border border-slate-100 dark:border-slate-800">
                 <div className="flex items-start gap-4">
-                  <MapPin className="text-blue-600 mt-1" size={24} />
+                  <MapPin className="text-blue-600 dark:text-sky-400 mt-1" size={24} />
                   <div>
-                    <h4 className="font-bold text-slate-900 text-lg">Dirección Principal</h4>
+                    <h4 className="font-bold text-slate-900 dark:text-white text-lg">Dirección Principal</h4>
                     {/* DIRECCIÓN DINÁMICA */}
-                    <p className="text-slate-600 mt-1">{config.direccion}</p>
+                    <p className="text-slate-600 dark:text-slate-400 mt-1">{config.direccion}</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start gap-4">
-                  <Clock className="text-blue-600 mt-1" size={24} />
+                  <Clock className="text-blue-600 dark:text-sky-400 mt-1" size={24} />
                   <div>
-                    <h4 className="font-bold text-slate-900 text-lg">Horarios de Atención</h4>
+                    <h4 className="font-bold text-slate-900 dark:text-white text-lg">Horarios de Atención</h4>
                     {/* HORARIOS DINÁMICOS */}
-                    <p className="text-slate-600 mt-1">
+                    <p className="text-slate-600 dark:text-slate-400 mt-1">
                       {config.horarioSemana} <br/>
                       {config.horarioDomingo}
                     </p>
-                    <span className="inline-block mt-2 text-xs font-bold bg-red-100 text-red-600 px-3 py-1 rounded-full border border-red-200">Emergencias 24/7</span>
+                    <span className="inline-block mt-2 text-xs font-bold bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 px-3 py-1 rounded-full border border-red-200 dark:border-red-900/60">Emergencias 24/7</span>
                   </div>
                 </div>
               </div>
@@ -490,13 +519,13 @@ const App = () => {
       </motion.section>
       
       {/* SECCIÓN EMERGENCIAS (Teléfono Dinámico) */}
-      <motion.section id="emergencias" className="py-24 bg-sky-100 border-t border-sky-200" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
+      <motion.section id="emergencias" className="py-24 bg-sky-100 dark:bg-slate-950 border-t border-sky-200 dark:border-slate-800 transition-colors duration-300" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
         <div className="max-w-4xl mx-auto px-4 text-center space-y-8">
-          <div className="inline-block p-4 bg-sky-200 rounded-2xl border border-sky-300">
-            <ShieldPlus size={40} className="text-sky-700" />
+          <div className="inline-block p-4 bg-sky-200 dark:bg-slate-900 rounded-2xl border border-sky-300 dark:border-slate-800">
+            <ShieldPlus size={40} className="text-sky-700 dark:text-sky-400" />
           </div>
-          <h2 className="text-4xl md:text-5xl font-black text-slate-900">¿Tienes una Emergencia?</h2>
-          <p className="text-lg text-slate-700">
+          <h2 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white">¿Tienes una Emergencia?</h2>
+          <p className="text-lg text-slate-700 dark:text-slate-300">
             Si tu mascota presenta signos críticos, no esperes. Contamos con atención de emergencia las 24 horas del día. 
             Comunícate inmediatamente para recibir asistencia prioritaria.
           </p>

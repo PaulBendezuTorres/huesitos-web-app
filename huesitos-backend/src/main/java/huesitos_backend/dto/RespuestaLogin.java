@@ -6,5 +6,6 @@ public record RespuestaLogin(
     String rol,
     Long usuarioId,
     Long duenoId,
-    String fotoPerfilUrl
+    String fotoPerfilUrl,
+    String tema
 ) {}

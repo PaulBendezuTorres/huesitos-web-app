@@ -11,4 +11,5 @@ public class PerfilRequest {
     private String contrasena;
     private String telefono;
     private String direccion;
+    private String tema;
 }
