@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail } from 'lucide-react';
-import PanelIzquierdoAutenticacion from '@/componentes/autenticacion/PanelIzquierdoAutenticacion';
+import ContenedorAutenticacion from '@/componentes/autenticacion/ContenedorAutenticacion';
+import CampoFormulario from '@/componentes/autenticacion/CampoFormulario';
 import BotonVolver from '@/componentes/comun/BotonVolver';
 
 const RecuperarContrasena = () => {
@@ -31,7 +32,6 @@ const RecuperarContrasena = () => {
 
       if (response.ok) {
         setSuccessMsg('¡Código enviado! Revisa tu bandeja de entrada (o spam) para obtener tu código de 6 dígitos.');
-        // Redirigir rápidamente a la pantalla de ingresar código
         setTimeout(() => {
           navigate('/restablecer-contrasena');
         }, 1500);
@@ -48,78 +48,65 @@ const RecuperarContrasena = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex items-start md:items-center justify-center py-6 px-4 selection:bg-sky-500 selection:text-white font-sans">
-      <div className="auth-card animate-in fade-in duration-200">
-        
-        {/* ======================== PANEL IZQUIERDO ======================== */}
-        <PanelIzquierdoAutenticacion
-          badgeIcon="🔑"
-          badgeText="Recuperación de contraseña"
-          titleMain="¿Olvidaste tu"
-          titleHighlight="contraseña?"
-          description="No te preocupes. Ingresa tu correo electrónico registrado y te enviaremos un código de seguridad para restablecer tu acceso."
-          chips={[
-            { icon: '📧', label: 'Código de 6 dígitos' },
-            { icon: '⏱️', label: 'Expira en 15m' },
-            { icon: '🛡️', label: 'Acceso protegido' },
-          ]}
+    <ContenedorAutenticacion
+      badgeIcon="🔑"
+      badgeText="Recuperación de contraseña"
+      titleMain="¿Olvidaste tu"
+      titleHighlight="contraseña?"
+      description="No te preocupes. Ingresa tu correo electrónico registrado y te enviaremos un código de seguridad para restablecer tu acceso."
+      chips={[
+        { icon: '📧', label: 'Código de 6 dígitos' },
+        { icon: '⏱️', label: 'Expira en 15m' },
+        { icon: '🛡️', label: 'Acceso protegido' },
+      ]}
+    >
+      {/* CABECERA: botón volver + título */}
+      <div className="flex flex-wrap items-start justify-between gap-2 mb-5">
+        <div className="min-w-0">
+          <h2 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100 transition-colors">
+            Recuperar contraseña
+          </h2>
+          <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 font-semibold transition-colors">
+            Solicita tu código de verificación de 6 dígitos
+          </p>
+        </div>
+        <BotonVolver />
+      </div>
+
+      {/* Mensajes de error/éxito */}
+      {errorMsg && (
+        <div className="bg-red-50 dark:bg-red-950/20 text-red-650 dark:text-red-405 border border-red-100 dark:border-red-900/30 rounded-xl p-3 text-xs font-semibold mb-4 transition-colors">
+          {errorMsg}
+        </div>
+      )}
+
+      {successMsg && (
+        <div className="bg-emerald-50 dark:bg-emerald-950/20 text-emerald-650 dark:text-emerald-405 border border-emerald-100 dark:border-emerald-900/30 rounded-xl p-3 text-xs font-semibold mb-4 transition-colors">
+          {successMsg}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <CampoFormulario
+          id="email"
+          label="Correo electrónico"
+          type="email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          placeholder="correo@ejemplo.com"
+          required
+          icon={Mail}
         />
 
-        {/* ======================== PANEL DERECHO ======================== */}
-        <div className="auth-right-panel">
-
-          {/* CABECERA: botón volver + título */}
-          <div className="flex flex-wrap items-start justify-between gap-2 mb-5">
-            <div className="min-w-0">
-              <h2 className="text-xl md:text-2xl font-bold text-slate-800">Recuperar contraseña</h2>
-              <p className="text-xs text-slate-400 mt-1 font-semibold">Solicita tu código de verificación de 6 dígitos</p>
-            </div>
-            <BotonVolver />
-          </div>
-
-          {/* Mensajes de error/éxito */}
-          {errorMsg && (
-            <div className="bg-red-50 text-red-650 border border-red-100 rounded-xl p-3 text-xs font-semibold mb-4">
-              {errorMsg}
-            </div>
-          )}
-
-          {successMsg && (
-            <div className="bg-emerald-50 text-emerald-650 border border-emerald-100 rounded-xl p-3 text-xs font-semibold mb-4">
-              {successMsg}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1.5 tracking-wide">Correo electrónico</label>
-              <div className="relative">
-                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
-                  <Mail size={16} />
-                </span>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="correo@ejemplo.com"
-                  required
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 focus:bg-white"
-                />
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 bg-sky-500 hover:bg-sky-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-sky-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-70"
-            >
-              {loading ? 'Enviando...' : 'Enviar código de verificación'}
-            </button>
-          </form>
-
-        </div>
-      </div>
-    </div>
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full py-3 bg-sky-500 hover:bg-sky-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-sky-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+        >
+          {loading ? 'Enviando...' : 'Enviar código de verificación'}
+        </button>
+      </form>
+    </ContenedorAutenticacion>
   );
 };
 

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Phone, MapPin, Mail, Lock, Eye, EyeOff } from 'lucide-react';
-import PanelIzquierdoAutenticacion from '@/componentes/autenticacion/PanelIzquierdoAutenticacion';
+import { User, Mail, Lock } from 'lucide-react';
+import ContenedorAutenticacion from '@/componentes/autenticacion/ContenedorAutenticacion';
+import CampoFormulario from '@/componentes/autenticacion/CampoFormulario';
 import BotonVolver from '@/componentes/comun/BotonVolver';
 
 const Registro = () => {
@@ -11,7 +12,6 @@ const Registro = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [aceptaTerminos, setAceptaTerminos] = useState(false);
-  const [showPass, setShowPass] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
@@ -72,167 +72,126 @@ const Registro = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex items-start md:items-center justify-center py-6 px-4 selection:bg-sky-500 selection:text-white font-sans">
-      <div className="auth-card animate-in fade-in duration-200">
-        
-        {/* ======================== PANEL IZQUIERDO ======================== */}
-        <PanelIzquierdoAutenticacion
-          badgeIcon="🐶"
-          badgeText="Únete a la familia Huesitos"
-          titleMain="La salud de tu mascota en"
-          titleHighlight="buenas manos"
-          description="Crea una cuenta para agendar citas médicas, acceder al historial clínico y comprar en nuestra tienda online."
-          chips={[
-            { icon: '📅', label: 'Citas online' },
-            { icon: '🛒', label: 'Tienda pet' },
-            { icon: '📁', label: 'Historial digital' },
-          ]}
+    <ContenedorAutenticacion
+      badgeIcon="🐶"
+      badgeText="Únete a la familia Huesitos"
+      titleMain="La salud de tu mascota en"
+      titleHighlight="buenas manos"
+      description="Crea una cuenta para agendar citas médicas, acceder al historial clínico y comprar en nuestra tienda online."
+      chips={[
+        { icon: '📅', label: 'Citas online' },
+        { icon: '🛒', label: 'Tienda pet' },
+        { icon: '📁', label: 'Historial digital' },
+      ]}
+    >
+      {/* CABECERA: título + botón volver */}
+      <div className="flex flex-wrap items-start justify-between gap-2 mb-5">
+        <div className="min-w-0">
+          <h2 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100 transition-colors">
+            Crea tu cuenta
+          </h2>
+          <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 font-semibold transition-colors">
+            Registra tus datos como dueño de mascota
+          </p>
+        </div>
+        <BotonVolver />
+      </div>
+
+      {/* Mensajes de error/éxito */}
+      {errorMsg && (
+        <div className="bg-red-50 dark:bg-red-950/20 text-red-650 dark:text-red-405 border border-red-100 dark:border-red-900/30 rounded-xl p-3 text-xs font-semibold mb-4 transition-colors">
+          {errorMsg}
+        </div>
+      )}
+
+      {successMsg && (
+        <div className="bg-emerald-50 dark:bg-emerald-950/20 text-emerald-650 dark:text-emerald-405 border border-emerald-100 dark:border-emerald-900/30 rounded-xl p-3 text-xs font-semibold mb-4 transition-colors">
+          {successMsg}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <CampoFormulario
+            id="nombre"
+            label="Nombre"
+            type="text"
+            value={nombre}
+            onChange={e => setNombre(e.target.value)}
+            placeholder="Juan"
+            required
+            icon={User}
+          />
+          <CampoFormulario
+            id="apellido"
+            label="Apellido"
+            type="text"
+            value={apellido}
+            onChange={e => setApellido(e.target.value)}
+            placeholder="Pérez"
+            required
+            icon={User}
+          />
+        </div>
+
+        <CampoFormulario
+          id="email"
+          label="Correo electrónico"
+          type="email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          placeholder="correo@ejemplo.com"
+          required
+          icon={Mail}
         />
 
-        {/* ======================== PANEL DERECHO ======================== */}
-        <div className="auth-right-panel">
-
-          {/* CABECERA: título + botón volver */}
-          <div className="flex flex-wrap items-start justify-between gap-2 mb-5">
-            <div className="min-w-0">
-              <h2 className="text-xl md:text-2xl font-bold text-slate-800">Crea tu cuenta</h2>
-              <p className="text-xs text-slate-400 mt-1 font-semibold">Registra tus datos como dueño de mascota</p>
-            </div>
-            <BotonVolver />
-          </div>
-
-          {/* Mensajes de error/éxito */}
-          {errorMsg && (
-            <div className="bg-red-50 text-red-650 border border-red-100 rounded-xl p-3 text-xs font-semibold mb-4">
-              {errorMsg}
-            </div>
-          )}
-
-          {successMsg && (
-            <div className="bg-emerald-50 text-emerald-650 border border-emerald-100 rounded-xl p-3 text-xs font-semibold mb-4">
-              {successMsg}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5 tracking-wide">Nombre</label>
-                <div className="relative">
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
-                    <User size={16} />
-                  </span>
-                  <input
-                    type="text"
-                    value={nombre}
-                    onChange={e => setNombre(e.target.value)}
-                    placeholder="Juan"
-                    required
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 focus:bg-white"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5 tracking-wide">Apellido</label>
-                <div className="relative">
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
-                    <User size={16} />
-                  </span>
-                  <input
-                    type="text"
-                    value={apellido}
-                    onChange={e => setApellido(e.target.value)}
-                    placeholder="Pérez"
-                    required
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 focus:bg-white"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1.5 tracking-wide">Correo electrónico</label>
-              <div className="relative">
-                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
-                  <Mail size={16} />
-                </span>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="correo@ejemplo.com"
-                  required
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 focus:bg-white"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5 tracking-wide">Contraseña</label>
-                <div className="relative">
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
-                    <Lock size={16} />
-                  </span>
-                  <input
-                    type={showPass ? 'text' : 'password'}
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    required
-                    className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 focus:bg-white"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPass(!showPass)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-650 transition-colors"
-                  >
-                    {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
-                  </button>
-                </div>
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5 tracking-wide">Confirmar contraseña</label>
-                <div className="relative">
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
-                    <Lock size={16} />
-                  </span>
-                  <input
-                    type={showPass ? 'text' : 'password'}
-                    value={confirmPassword}
-                    onChange={e => setConfirmPassword(e.target.value)}
-                    placeholder="••••••••"
-                    required
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 focus:bg-white"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-2.5 py-1">
-              <input
-                type="checkbox"
-                id="terminos"
-                checked={aceptaTerminos}
-                onChange={e => setAceptaTerminos(e.target.checked)}
-                className="w-4 h-4 text-sky-500 border-slate-300 rounded focus:ring-sky-400 focus:ring-2 outline-none cursor-pointer mt-0.5"
-              />
-              <label htmlFor="terminos" className="text-[11px] text-slate-500 font-semibold cursor-pointer select-none leading-relaxed">
-                Acepto los términos y condiciones de privacidad de datos personales.
-              </label>
-            </div>
-
-            <button
-              type="submit"
-              className="w-full py-3 bg-sky-500 hover:bg-sky-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-sky-500/20 transition-all flex items-center justify-center gap-2"
-            >
-              Crear cuenta
-            </button>
-          </form>
-
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <CampoFormulario
+            id="password"
+            label="Contraseña"
+            type="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            placeholder="••••••••"
+            required
+            icon={Lock}
+          />
+          <CampoFormulario
+            id="confirmPassword"
+            label="Confirmar contraseña"
+            type="password"
+            value={confirmPassword}
+            onChange={e => setConfirmarPassword(e.target.value)}
+            placeholder="••••••••"
+            required
+            icon={Lock}
+          />
         </div>
-      </div>
-    </div>
+
+        <div className="flex items-start gap-2.5 py-1">
+          <input
+            type="checkbox"
+            id="terminos"
+            checked={aceptaTerminos}
+            onChange={e => setAceptaTerminos(e.target.checked)}
+            className="w-4 h-4 text-sky-500 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded focus:ring-sky-400 dark:focus:ring-sky-500 focus:ring-2 outline-none cursor-pointer mt-0.5"
+          />
+          <label 
+            htmlFor="terminos" 
+            className="text-[11px] text-slate-500 dark:text-slate-400 font-semibold cursor-pointer select-none leading-relaxed transition-colors"
+          >
+            Acepto los términos y condiciones de privacidad de datos personales.
+          </label>
+        </div>
+
+        <button
+          type="submit"
+          className="w-full py-3 bg-sky-500 hover:bg-sky-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-sky-500/20 transition-all flex items-center justify-center gap-2"
+        >
+          Crear cuenta
+        </button>
+      </form>
+    </ContenedorAutenticacion>
   );
 };
 

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
-import PanelIzquierdoAutenticacion from '@/componentes/autenticacion/PanelIzquierdoAutenticacion';
+import { Mail, Lock } from 'lucide-react';
+import ContenedorAutenticacion from '@/componentes/autenticacion/ContenedorAutenticacion';
+import CampoFormulario from '@/componentes/autenticacion/CampoFormulario';
 import BotonVolver from '@/componentes/comun/BotonVolver';
 import { useTema } from '@/contextos/ContextoTema';
 
@@ -9,7 +10,6 @@ const IniciarSesion = () => {
   const { cambiarTema } = useTema();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPass, setShowPass] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   
   const navigate = useNavigate();
@@ -67,119 +67,93 @@ const IniciarSesion = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex items-start md:items-center justify-center py-6 px-4 selection:bg-sky-500 selection:text-white font-sans">
-      <div className="auth-card">
-        
-        {/* ======================== PANEL IZQUIERDO ======================== */}
-        <PanelIzquierdoAutenticacion
-          badgeIcon="🛡️"
-          badgeText="Medicina veterinaria de vanguardia"
-          titleMain="Excelencia médica para"
-          titleHighlight="quienes más amas"
-          description="Las consultas médicas nos ayudan a monitorear la salud de tu mascota con tecnología de vanguardia y especialistas certificados."
-          chips={[
-            { icon: '🔬', label: 'Laboratorio 24h' },
-            { icon: '🩺', label: 'Especialistas' },
-            { icon: '📞', label: 'Emergencias 24/7' },
-          ]}
+    <ContenedorAutenticacion
+      badgeIcon="🛡️"
+      badgeText="Medicina veterinaria de vanguardia"
+      titleMain="Excelencia médica para"
+      titleHighlight="quienes más amas"
+      description="Las consultas médicas nos ayudan a monitorear la salud de tu mascota con tecnología de vanguardia y especialistas certificados."
+      chips={[
+        { icon: '🔬', label: 'Laboratorio 24h' },
+        { icon: '🩺', label: 'Especialistas' },
+        { icon: '📞', label: 'Emergencias 24/7' },
+      ]}
+    >
+      {/* CABECERA: título + botón volver */}
+      <div className="flex flex-wrap items-start justify-between gap-2 mb-5">
+        <div className="min-w-0">
+          <h2 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100 transition-colors">
+            Iniciar sesión
+          </h2>
+          <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 font-semibold transition-colors">
+            Bienvenido de nuevo a Huesitos
+          </p>
+        </div>
+        <BotonVolver />
+      </div>
+
+      {/* Mensaje de error si falla el login */}
+      {errorMsg && (
+        <div className="bg-red-50 dark:bg-red-950/20 text-red-650 dark:text-red-405 border border-red-100 dark:border-red-900/30 rounded-xl p-3 text-xs font-semibold mb-4 transition-colors">
+          {errorMsg}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <CampoFormulario
+          id="email"
+          label="Correo electrónico"
+          type="email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          placeholder="correo@ejemplo.com"
+          required
+          icon={Mail}
         />
 
-        {/* ======================== PANEL DERECHO ======================== */}
-        <div className="auth-right-panel">
+        <CampoFormulario
+          id="password"
+          label="Contraseña"
+          type="password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          placeholder="••••••••"
+          required
+          icon={Lock}
+        />
 
-          {/* CABECERA: título + botón volver */}
-          <div className="flex flex-wrap items-start justify-between gap-2 mb-5">
-            <div className="min-w-0">
-              <h2 className="text-xl md:text-2xl font-bold text-slate-800">Iniciar sesión</h2>
-              <p className="text-xs text-slate-400 mt-1 font-semibold">Bienvenido de nuevo a Huesitos</p>
-            </div>
-            <BotonVolver />
-          </div>
-
-          {/* Mensaje de error si falla el login */}
-          {errorMsg && (
-            <div className="bg-red-50 text-red-650 border border-red-100 rounded-xl p-3 text-xs font-semibold mb-4">
-              {errorMsg}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1.5 tracking-wide">Correo electrónico</label>
-              <div className="relative">
-                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
-                  <Mail size={16} />
-                </span>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="correo@ejemplo.com"
-                  required
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 focus:bg-white"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1.5 tracking-wide">Contraseña</label>
-              <div className="relative">
-                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
-                  <Lock size={16} />
-                </span>
-                <input
-                  type={showPass ? 'text' : 'password'}
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                  className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 text-slate-850 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 focus:bg-white"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-650 transition-colors"
-                >
-                  {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-            </div>
-
-            <div className="text-right">
-              <button
-                type="button"
-                onClick={() => navigate('/olvide-contrasena')}
-                className="text-xs font-semibold text-sky-600 hover:text-sky-700 transition-colors"
-              >
-                ¿Olvidaste tu contraseña?
-              </button>
-            </div>
-
-            <button
-              type="submit"
-              className="w-full py-3 bg-sky-500 hover:bg-sky-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-sky-500/20 transition-all flex items-center justify-center gap-2"
-            >
-              Ingresar
-            </button>
-          </form>
-
-          <div className="relative flex items-center justify-center my-6">
-            <hr className="w-full border-slate-100" />
-          </div>
-
-          <p className="text-center text-xs text-slate-500 font-semibold">
-            ¿Nuevo aquí?{' '}
-            <button
-              onClick={() => navigate('/registro')}
-              className="font-bold text-sky-600 hover:text-sky-700 transition-colors"
-            >
-              Crea una cuenta
-            </button>
-          </p>
-
+        <div className="text-right">
+          <button
+            type="button"
+            onClick={() => navigate('/olvide-contrasena')}
+            className="text-xs font-semibold text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 transition-colors"
+          >
+            ¿Olvidaste tu contraseña?
+          </button>
         </div>
+
+        <button
+          type="submit"
+          className="w-full py-3 bg-sky-500 hover:bg-sky-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-sky-500/20 transition-all flex items-center justify-center gap-2"
+        >
+          Ingresar
+        </button>
+      </form>
+
+      <div className="relative flex items-center justify-center my-6">
+        <hr className="w-full border-slate-100 dark:border-slate-800 transition-colors" />
       </div>
-    </div>
+
+      <p className="text-center text-xs text-slate-500 dark:text-slate-400 font-semibold transition-colors">
+        ¿Nuevo aquí?{' '}
+        <button
+          onClick={() => navigate('/registro')}
+          className="font-bold text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 transition-colors"
+        >
+          Crea una cuenta
+        </button>
+      </p>
+    </ContenedorAutenticacion>
   );
 };
 
