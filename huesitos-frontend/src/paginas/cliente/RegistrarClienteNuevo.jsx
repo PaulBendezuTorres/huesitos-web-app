@@ -104,25 +104,28 @@ const RegistrarClienteNuevo = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-6 px-4">
-      {/* Botón Volver y Cabecera */}
-      <div className="flex items-center gap-3 mb-6">
-        <button
-          onClick={() => navigate('/admin/clientes')}
-          className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border border-slate-200 dark:border-slate-700"
-          title="Regresar a la lista de clientes"
-        >
-          <ArrowLeft size={18} />
-        </button>
-        <div>
-          <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">
-            {editando ? 'Editar Expediente de Cliente' : 'Registro de Cliente Nuevo'}
-          </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            {editando ? 'Modifica los datos personales y de acceso del cliente.' : 'Registra y activa un cliente de forma presencial y directa.'}
-          </p>
+    <div className="space-y-6">
+      {/* Botón Volver y Cabecera de Ancho Completo */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => navigate('/admin/clientes')}
+            className="p-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900"
+            title="Regresar a la lista de clientes"
+          >
+            <ArrowLeft size={18} />
+          </button>
+          <div>
+            <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">
+              {editando ? 'Editar Expediente de Cliente' : 'Registro de Cliente Nuevo'}
+            </h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
+              {editando ? 'Modifica los datos personales y de acceso del cliente.' : 'Registra y activa un cliente de forma presencial y directa.'}
+            </p>
+          </div>
         </div>
       </div>
+
 
       {cargandoDatos ? (
         <div className="flex justify-center items-center py-12">
