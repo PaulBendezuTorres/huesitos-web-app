@@ -41,7 +41,7 @@ const SeccionNosotros = ({
               </h3>
             </div>
 
-            <div className="space-y-6 text-lg text-slate-655 dark:text-slate-300 leading-relaxed transition-colors">
+            <div className="space-y-6 text-lg text-slate-600 dark:text-slate-300 leading-relaxed transition-colors">
               <p>
                 En <strong>Clínica Veterinaria {config.nombreNegocio}</strong> nos dedicamos a elevar el estándar de la atención médica veterinaria. Combinamos un trato profundamente humano y empático con rigurosos protocolos médicos y quirúrgicos.
               </p>

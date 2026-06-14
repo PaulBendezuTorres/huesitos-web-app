@@ -43,8 +43,8 @@ const SeccionServicios = ({
               onClick={() => setCategoriaActiva(tab.id)}
               className={`flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
                 categoriaActiva === tab.id 
-                  ? 'bg-blue-600 dark:bg-sky-550 text-white shadow-lg shadow-blue-500/30' 
-                  : 'bg-white dark:bg-oscuro-tarjeta text-slate-655 dark:text-slate-300 border border-slate-200 dark:border-oscuro-borde/40 hover:bg-slate-100 dark:hover:bg-oscuro-borde/30'
+                  ? 'bg-blue-600 dark:bg-sky-500 text-white shadow-lg shadow-blue-500/30' 
+                  : 'bg-white dark:bg-oscuro-tarjeta text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-oscuro-borde/40 hover:bg-slate-100 dark:hover:bg-oscuro-borde/30'
               }`}
             >
               {tab.icono}
@@ -61,10 +61,10 @@ const SeccionServicios = ({
             {categoriaActiva === 'consultas' && (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="grid md:grid-cols-2 gap-8 items-center mb-6">
-                  <p className="text-slate-655 dark:text-slate-300 leading-relaxed transition-colors">
+                  <p className="text-slate-600 dark:text-slate-300 leading-relaxed transition-colors">
                     Las consultas médicas nos ayudan a monitorear el estado de salud de tu mascota y detectar cualquier malestar o enfermedad. Nuestro equipo veterinario le brindará la atención oportuna para facilitar su recuperación.
                   </p>
-                  <div className="bg-slate-50 dark:bg-oscuro-base p-5 rounded-2xl text-xs text-slate-550 dark:text-slate-400 space-y-2 border border-slate-100 dark:border-oscuro-borde/30 transition-colors">
+                  <div className="bg-slate-50 dark:bg-oscuro-base p-5 rounded-2xl text-xs text-slate-500 dark:text-slate-400 space-y-2 border border-slate-100 dark:border-oscuro-borde/30 transition-colors">
                     <p><strong>Urgencia:</strong> Atención no programada el mismo día por signos clínicos agudos que generan malestar.</p>
                     <p><strong>Emergencia:</strong> Situación médica crítica e inmediata que representa un riesgo grave e inminente para la vida de la mascota.</p>
                   </div>
@@ -72,7 +72,7 @@ const SeccionServicios = ({
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="border-b border-slate-200 dark:border-oscuro-borde text-slate-400 dark:text-slate-455 text-xs uppercase tracking-wider">
+                      <tr className="border-b border-slate-200 dark:border-oscuro-borde text-slate-400 dark:text-slate-400 text-xs uppercase tracking-wider">
                         <th className="py-4 font-bold">Tipo de Consulta</th>
                         <th className="py-4 font-bold text-right">Precio Regular</th>
                       </tr>
@@ -107,13 +107,13 @@ const SeccionServicios = ({
             {/* TAB: Especialidades */}
             {categoriaActiva === 'especialidades' && (
               <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <p className="text-slate-655 dark:text-slate-300 transition-colors">
+                <p className="text-slate-600 dark:text-slate-300 transition-colors">
                   Contamos con los mejores especialistas en diversas ramas de la medicina veterinaria. La medicina especializada facilita encontrar el diagnóstico específico y efectivo para condiciones médicas complejas.
                 </p>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="border-b border-slate-200 dark:border-oscuro-borde text-slate-400 dark:text-slate-455 text-xs uppercase tracking-wider">
+                      <tr className="border-b border-slate-200 dark:border-oscuro-borde text-slate-400 dark:text-slate-400 text-xs uppercase tracking-wider">
                         <th className="py-4 font-bold">Especialidad Clínica</th>
                         <th className="py-4 font-bold text-right">Precio Regular</th>
                       </tr>
@@ -150,13 +150,13 @@ const SeccionServicios = ({
             {/* TAB: Vacunas */}
             {categoriaActiva === 'vacunas' && (
               <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <p className="text-slate-655 dark:text-slate-300 transition-colors">
+                <p className="text-slate-600 dark:text-slate-300 transition-colors">
                   Las vacunas son fundamentales como parte de la atención preventiva integral. Nos ayudan a evitar complicaciones en las enfermedades más peligrosas. Diseñamos un plan personalizado según el entorno de tu engreído.
                 </p>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="border-b border-slate-200 dark:border-oscuro-borde text-slate-400 dark:text-slate-455 text-xs uppercase tracking-wider">
+                      <tr className="border-b border-slate-200 dark:border-oscuro-borde text-slate-400 dark:text-slate-400 text-xs uppercase tracking-wider">
                         <th className="py-4 font-bold">Vacuna</th>
                         <th className="py-4 font-bold text-right">Precio Regular</th>
                       </tr>
@@ -181,12 +181,12 @@ const SeccionServicios = ({
                 <div className="grid md:grid-cols-2 gap-12">
                   <div className="space-y-4">
                     <h4 className="text-xl font-bold text-slate-900 dark:text-white transition-colors">Análisis Clínicos</h4>
-                    <p className="text-slate-655 dark:text-slate-350 text-sm transition-colors">
+                    <p className="text-slate-600 dark:text-slate-300 text-sm transition-colors">
                       Esenciales para detectar enfermedades y sus causas. Equipos propios automatizados para resultados veloces.
                     </p>
                     <table className="w-full text-left border-collapse text-sm">
                       <thead>
-                        <tr className="border-b border-slate-200 dark:border-oscuro-borde text-slate-400 dark:text-slate-455 uppercase text-xs">
+                        <tr className="border-b border-slate-200 dark:border-oscuro-borde text-slate-400 dark:text-slate-400 uppercase text-xs">
                           <th className="py-2 font-bold">Tipo de Prueba</th>
                           <th className="py-2 font-bold text-right">Precio Regular</th>
                         </tr>
@@ -233,13 +233,13 @@ const SeccionServicios = ({
             {/* TAB: Internamiento */}
             {categoriaActiva === 'internamiento' && (
               <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <p className="text-slate-655 dark:text-slate-300 transition-colors">
+                <p className="text-slate-600 dark:text-slate-300 transition-colors">
                   Ofrecemos hospitalización con un equipo médico disponible las 24 horas, en espacios separados para perros y gatos para reducir el estrés de tu mascota durante su estancia de recuperación o post-procedimiento.
                 </p>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="border-b border-slate-200 dark:border-oscuro-borde text-slate-400 dark:text-slate-455 text-xs uppercase tracking-wider">
+                      <tr className="border-b border-slate-200 dark:border-oscuro-borde text-slate-400 dark:text-slate-400 text-xs uppercase tracking-wider">
                         <th className="py-4 font-bold">Tipo de Internamiento</th>
                         <th className="py-4 font-bold text-right">Precio Regular</th>
                       </tr>
@@ -268,7 +268,7 @@ const SeccionServicios = ({
                     </tbody>
                   </table>
                 </div>
-                <p className="text-xs text-slate-400 dark:text-slate-550 max-w-3xl leading-relaxed transition-colors">
+                <p className="text-xs text-slate-400 dark:text-slate-400 max-w-3xl leading-relaxed transition-colors">
                   *Se considera paciente infeccioso a todo aquel con diagnóstico confirmado o signos compatibles con enfermedades contagiosas, requiriendo un aislamiento diferenciado y estrictas medidas de bioseguridad.
                 </p>
               </div>

@@ -21,7 +21,7 @@ const SeccionEmergencias = ({
         <h2 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white transition-colors">
           ¿Tienes una Emergencia?
         </h2>
-        <p className="text-lg text-slate-700 dark:text-slate-355 transition-colors">
+        <p className="text-lg text-slate-700 dark:text-slate-300 transition-colors">
           Si tu mascota presenta signos críticos, no esperes. Contamos con atención de emergencia las 24 horas del día. 
           Comunícate inmediatamente para recibir asistencia prioritaria.
         </p>
@@ -29,7 +29,7 @@ const SeccionEmergencias = ({
         <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
           <a
             href={`tel:${config.telefonoEmergencia}`}
-            className="bg-sky-750 hover:bg-sky-850 dark:bg-sky-600 dark:hover:bg-sky-550 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg shadow-sky-500/10 hover:shadow-sky-550/20 dark:shadow-sky-950/30 transition-all hover:-translate-y-0.5"
+            className="bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-400 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg shadow-sky-500/10 hover:shadow-sky-550/20 dark:shadow-sky-950/30 transition-all hover:-translate-y-0.5"
           >
             Llamar a Emergencias: {config.telefonoEmergencia}
           </a>

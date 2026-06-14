@@ -113,7 +113,7 @@ const EncabezadoPortada = ({
               </button>
               <button
                 onClick={() => { setMenuAbierto(false); window.location.href = '/registro'; }}
-                className="w-full py-2.5 border border-slate-200 dark:border-oscuro-borde text-slate-655 dark:text-slate-300 font-semibold rounded-xl hover:border-sky-400 hover:text-sky-600 transition-all text-sm"
+                className="w-full py-2.5 border border-slate-200 dark:border-oscuro-borde text-slate-600 dark:text-slate-300 font-semibold rounded-xl hover:border-sky-400 hover:text-sky-600 transition-all text-sm"
               >
                 Crear cuenta
               </button>

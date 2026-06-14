@@ -26,7 +26,7 @@ const SeccionUbicacion = ({
                 Nuestra Ubicación
               </h3>
             </div>
-            <p className="text-lg text-slate-655 dark:text-slate-300 transition-colors">
+            <p className="text-lg text-slate-600 dark:text-slate-300 transition-colors">
               Estamos estratégicamente ubicados para atender cualquier emergency con rapidez y brindar el mejor cuidado médico a tu engreído en instalaciones de primer nivel.
             </p>
             
@@ -37,7 +37,7 @@ const SeccionUbicacion = ({
                   <h4 className="font-bold text-slate-900 dark:text-white text-lg transition-colors">
                     Dirección Principal
                   </h4>
-                  <p className="text-slate-600 dark:text-slate-355 mt-1 transition-colors">{config.direccion}</p>
+                  <p className="text-slate-600 dark:text-slate-300 mt-1 transition-colors">{config.direccion}</p>
                 </div>
               </div>
               
@@ -47,7 +47,7 @@ const SeccionUbicacion = ({
                   <h4 className="font-bold text-slate-900 dark:text-white text-lg transition-colors">
                     Horarios de Atención
                   </h4>
-                  <p className="text-slate-600 dark:text-slate-355 mt-1 transition-colors">
+                  <p className="text-slate-600 dark:text-slate-300 mt-1 transition-colors">
                     {config.horarioSemana} <br/>
                     {config.horarioDomingo}
                   </p>

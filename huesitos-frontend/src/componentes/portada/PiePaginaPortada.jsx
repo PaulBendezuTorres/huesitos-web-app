@@ -23,7 +23,7 @@ const PiePaginaPortada = ({
             <p className="text-slate-400 text-sm leading-relaxed pr-4">
               Nuestra vocación es salvar vidas y procurar el mayor bienestar para tu familia. Laboratorio, sala de procedimientos e internamiento.
             </p>
-            <div className="flex items-center gap-2 text-red-400 bg-red-550/10 p-3 rounded-xl border border-red-500/20 text-xs font-bold w-fit">
+            <div className="flex items-center gap-2 text-red-400 bg-red-500/10 p-3 rounded-xl border border-red-500/20 text-xs font-bold w-fit">
               <Activity size={14} />
               <span>Emergencias 24 Horas Activas</span>
             </div>
@@ -43,7 +43,7 @@ const PiePaginaPortada = ({
           {/* 3. Conversa con nosotros */}
           <div className="space-y-4">
             <h4 className="text-white font-bold text-lg tracking-wide">Contacto</h4>
-            <div className="space-y-3 text-sm font-medium text-slate-355">
+            <div className="space-y-3 text-sm font-medium text-slate-300">
               <p className="flex items-center gap-3 hover:text-white transition-colors cursor-pointer">
                 <Phone size={16} className="text-blue-500 shrink-0" />
                 <span>{config.telefono}</span>
