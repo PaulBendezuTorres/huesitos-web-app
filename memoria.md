@@ -1,8 +1,9 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-14 (Mejoras y Refactorización del Módulo de Inventario)
+Última actualización: 2026-06-14 (Mejoras y Modularización de Inventario y Servicios)
 
 ## 🚀 Logros Recientes
+- [x] **Modularización del Catálogo de Servicios**: Extraído el modal de edición de servicios médicos de `PaginaServicios.jsx` al nuevo subcomponente [ModalEditarServicio.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/servicio/ModalEditarServicio.jsx), simplificando la vista del catálogo.
 - [x] **Modularización del Módulo de Inventario**: Separada la lógica de `PaginaInventario.jsx` en componentes atómicos independientes en `src/componentes/tienda/` (`TarjetasAlertasInventario.jsx`, `TablaInventario.jsx`, `ModalIngresoLote.jsx` y `ModalAjusteStockLote.jsx`), reduciendo drásticamente el tamaño del archivo principal.
 - [x] **Rediseño del Ancho Completo en Registro de Productos**: Modificada la vista `RegistrarProductoNuevo.jsx` para ocupar todo el ancho de la pantalla alineada a la izquierda (evitando que se centre y achique) y agrupando el título junto al botón de volver.
 - [x] **Desacoplamiento de Registro de Productos**: Convertido el formulario de registro en una página dedicada (`RegistrarProductoNuevo.jsx`) ruteada en el panel del administrador, removiendo el modal interno de inventario.
