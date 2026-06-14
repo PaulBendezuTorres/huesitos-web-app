@@ -55,4 +55,18 @@ public class Usuario {
 
     @Column(name = "expiracion_token")
     private LocalDateTime expiracionToken;
+
+    @PrePersist
+    @PreUpdate
+    public void preGuardar() {
+        if (this.tema == null) {
+            this.tema = "claro";
+        }
+        if (this.fotoPerfilUrl == null) {
+            this.fotoPerfilUrl = "/uploads/defecto-usuario.png";
+        }
+        if (this.activo == null) {
+            this.activo = true;
+        }
+    }
 }

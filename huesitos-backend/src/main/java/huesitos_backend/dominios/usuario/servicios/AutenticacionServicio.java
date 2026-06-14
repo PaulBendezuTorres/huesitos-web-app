@@ -66,6 +66,9 @@ public class AutenticacionServicio {
         if (usuario.getFotoPerfilUrl() == null) {
             usuario.setFotoPerfilUrl("/uploads/defecto-usuario.png");
         }
+        if (usuario.getTema() == null) {
+            usuario.setTema("claro");
+        }
 
         // 5. Guardar primero el Usuario en su repositorio
         Usuario usuarioGuardado = usuarioRepositorio.save(usuario);
@@ -157,6 +160,9 @@ public class AutenticacionServicio {
         usuario.setActivo(true);
         if (usuario.getFotoPerfilUrl() == null) {
             usuario.setFotoPerfilUrl("/uploads/defecto-usuario.png");
+        }
+        if (usuario.getTema() == null) {
+            usuario.setTema("claro");
         }
 
         Usuario usuarioGuardado = usuarioRepositorio.save(usuario);
