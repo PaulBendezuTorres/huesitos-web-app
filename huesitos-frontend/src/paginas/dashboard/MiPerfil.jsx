@@ -198,7 +198,7 @@ const MiPerfil = ({ sinPlantilla = false }) => {
                       className={`w-full h-full object-cover transition-opacity duration-200 ${subiendoFoto ? 'opacity-40' : ''}`} 
                     />
                   ) : (
-                    <span className="text-4xl text-slate-350 dark:text-slate-500 font-bold">{nombre.slice(0, 1).toUpperCase()}</span>
+                    <span className="text-4xl text-slate-400 dark:text-slate-500 font-bold">{nombre.slice(0, 1).toUpperCase()}</span>
                   )}
                   {subiendoFoto && (
                     <div className="absolute inset-0 flex items-center justify-center bg-slate-950/20 backdrop-blur-[1px]">
@@ -206,7 +206,7 @@ const MiPerfil = ({ sinPlantilla = false }) => {
                     </div>
                   )}
                 </div>
-                <label className={`absolute bottom-1.5 right-1.5 bg-slate-900 dark:bg-slate-750 text-white p-2 rounded-full shadow-md flex items-center justify-center transition-all ${subiendoFoto ? 'opacity-50 cursor-not-allowed pointer-events-none' : 'cursor-pointer hover:bg-slate-800 dark:hover:bg-slate-700'}`}>
+                <label className={`absolute bottom-1.5 right-1.5 bg-slate-900 dark:bg-slate-700 text-white p-2 rounded-full shadow-md flex items-center justify-center transition-all ${subiendoFoto ? 'opacity-50 cursor-not-allowed pointer-events-none' : 'cursor-pointer hover:bg-slate-800 dark:hover:bg-slate-600'}`}>
                   <Camera size={16} />
                   <input 
                     type="file" 
@@ -244,7 +244,7 @@ const MiPerfil = ({ sinPlantilla = false }) => {
                     value={nombre}
                     onChange={e => setNombre(e.target.value)}
                     required
-                    className={`w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-850 dark:text-white text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 ${colorBordeFocus}`}
+                    className={`w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 ${colorBordeFocus}`}
                   />
                 </div>
                 <div>
@@ -254,15 +254,15 @@ const MiPerfil = ({ sinPlantilla = false }) => {
                     value={apellido}
                     onChange={e => setApellido(e.target.value)}
                     required
-                    className={`w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-850 dark:text-white text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 ${colorBordeFocus}`}
+                    className={`w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 ${colorBordeFocus}`}
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-650 dark:text-slate-300 mb-1.5 flex justify-between items-center">
+                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5 flex justify-between items-center">
                   <span>Correo electrónico</span>
-                  <span className="text-[10px] text-slate-405 dark:text-slate-400 lowercase italic">(No modificable)</span>
+                  <span className="text-[10px] text-slate-400 dark:text-slate-400 lowercase italic">(No modificable)</span>
                 </label>
                 <div className="relative">
                   <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
@@ -289,7 +289,7 @@ const MiPerfil = ({ sinPlantilla = false }) => {
                         value={telefono}
                         onChange={e => setTelefono(e.target.value.replace(/\D/g, '').slice(0, 9))}
                         placeholder="Completar teléfono"
-                        className={`w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-850 dark:text-white text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 ${colorBordeFocus}`}
+                        className={`w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 ${colorBordeFocus}`}
                       />
                     </div>
                   </div>
@@ -304,7 +304,7 @@ const MiPerfil = ({ sinPlantilla = false }) => {
                         value={direccion}
                         onChange={e => setDireccion(e.target.value)}
                         placeholder="Completar dirección"
-                        className={`w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-850 dark:text-white text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 ${colorBordeFocus}`}
+                        className={`w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 ${colorBordeFocus}`}
                       />
                     </div>
                   </div>
@@ -327,7 +327,7 @@ const MiPerfil = ({ sinPlantilla = false }) => {
                   value={contrasenaActual}
                   onChange={e => setContrasenaActual(e.target.value)}
                   placeholder="••••••••"
-                  className={`w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-850 dark:text-white text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 ${colorBordeFocus}`}
+                  className={`w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 ${colorBordeFocus}`}
                 />
               </div>
               <div>
@@ -337,7 +337,7 @@ const MiPerfil = ({ sinPlantilla = false }) => {
                   value={contrasena}
                   onChange={e => setContrasena(e.target.value)}
                   placeholder="••••••••"
-                  className={`w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-850 dark:text-white text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 ${colorBordeFocus}`}
+                  className={`w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 ${colorBordeFocus}`}
                 />
               </div>
               <div>
@@ -347,7 +347,7 @@ const MiPerfil = ({ sinPlantilla = false }) => {
                   value={confirmarContrasena}
                   onChange={e => setConfirmarContrasena(e.target.value)}
                   placeholder="••••••••"
-                  className={`w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-850 dark:text-white text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 ${colorBordeFocus}`}
+                  className={`w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white text-sm font-semibold focus:ring-2 outline-none transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 ${colorBordeFocus}`}
                 />
               </div>
             </div>
