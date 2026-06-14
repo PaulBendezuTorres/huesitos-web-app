@@ -129,18 +129,9 @@ const PaginaServicios = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-64 gap-3 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
-        <CargadorSpinner size="lg" />
-        <span className="text-slate-500 dark:text-slate-400 text-sm font-semibold animate-pulse">Sincronizando catálogo...</span>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      {/* CABECERA DINÁMICA */}
+      {/* CABECERA DINÁMICA (Siempre visible para evitar Layout Shift) */}
       <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 group">
         <div>
           <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-3">
@@ -149,7 +140,7 @@ const PaginaServicios = () => {
             </div>
             {!esRegistro ? "Catálogo de Servicios" : "Registrar Servicio Médico"}
           </h1>
-          <p className="text-slate-505 dark:text-slate-400 text-sm mt-1.5 md:ml-13">
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 md:ml-13">
             {!esRegistro 
               ? "Lista completa de la oferta médica y los servicios disponibles en la clínica." 
               : "Crea un nuevo servicio médico y configúralo en tiempo real."}
@@ -175,19 +166,26 @@ const PaginaServicios = () => {
         )}
       </div>
 
-      <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
-        <Routes>
-          <Route path="/" element={
-            <TablaServicio 
-              servicios={servicios} 
-              onEstado={cambiarEstado} 
-              onEditar={abrirEditarModal} 
-              onEliminar={abrirEliminarModal}
-            />
-          } />
-          <Route path="registrar" element={<FormularioServicio onGuardar={guardar} />} />
-        </Routes>
-      </div>
+      {loading ? (
+        <div className="flex flex-col items-center justify-center min-h-[400px] gap-3 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
+          <CargadorSpinner size="lg" />
+          <span className="text-slate-500 dark:text-slate-400 text-sm font-semibold animate-pulse">Sincronizando catálogo...</span>
+        </div>
+      ) : (
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <Routes>
+            <Route path="/" element={
+              <TablaServicio 
+                servicios={servicios} 
+                onEstado={cambiarEstado} 
+                onEditar={abrirEditarModal} 
+                onEliminar={abrirEliminarModal}
+              />
+            } />
+            <Route path="registrar" element={<FormularioServicio onGuardar={guardar} />} />
+          </Routes>
+        </div>
+      )}
 
       {/* MODAL DE EDICIÓN PREMIUM */}
       {modalOpen && (
