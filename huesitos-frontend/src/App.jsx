@@ -1,17 +1,17 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Portada from './paginas/Portada';
-import IniciarSesion from './paginas/IniciarSesion';
-import PaginaServicios from './paginas/PaginaServicios';
-import TableroAdministrador from './paginas/TableroAdministrador';
-import Registro from './paginas/Registro';
-import RecuperarContrasena from './paginas/RecuperarContrasena';
-import RestablecerContrasena from './paginas/RestablecerContrasena';
-import VerificarCuenta from './paginas/VerificarCuenta';
-import TableroCliente from './paginas/TableroCliente';
-import MascotaFichaHistorial from './paginas/MascotaFichaHistorial';
-import TableroVeterinario from './paginas/TableroVeterinario';
-import TableroRecepcionista from './paginas/TableroRecepcionista';
-import MiPerfil from './paginas/MiPerfil';
+import Portada from '@/paginas/dashboard/Portada';
+import IniciarSesion from '@/paginas/autenticacion/IniciarSesion';
+import PaginaServicios from '@/paginas/servicio/PaginaServicios';
+import TableroAdministrador from '@/paginas/dashboard/TableroAdministrador';
+import Registro from '@/paginas/autenticacion/Registro';
+import RecuperarContrasena from '@/paginas/autenticacion/RecuperarContrasena';
+import RestablecerContrasena from '@/paginas/autenticacion/RestablecerContrasena';
+import VerificarCuenta from '@/paginas/autenticacion/VerificarCuenta';
+import TableroCliente from '@/paginas/dashboard/TableroCliente';
+import MascotaFichaHistorial from '@/paginas/clinico/MascotaFichaHistorial';
+import TableroVeterinario from '@/paginas/dashboard/TableroVeterinario';
+import TableroRecepcionista from '@/paginas/dashboard/TableroRecepcionista';
+import MiPerfil from '@/paginas/dashboard/MiPerfil';
 
 function App() {
   return (

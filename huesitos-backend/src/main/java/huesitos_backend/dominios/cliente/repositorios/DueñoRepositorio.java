@@ -1,0 +1,12 @@
+package huesitos_backend.dominios.cliente.repositorios;
+
+import huesitos_backend.dominios.cliente.entidades.Dueño;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.Optional;
+
+public interface DueñoRepositorio extends JpaRepository<Dueño, Long> {
+    // Busca los datos de contacto utilizando la relación con el Usuario
+    Optional<Dueño> findByUsuarioId(Long usuarioId);
+
+    boolean existsByTelefono(String telefono);
+}

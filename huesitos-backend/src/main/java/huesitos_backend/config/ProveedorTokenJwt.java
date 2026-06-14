@@ -15,7 +15,7 @@ public class ProveedorTokenJwt {
 
     // Clave secreta para firmar los tokens, definida en propiedades o por defecto
     private final SecretKey claveFirma;
-    
+
     // Tiempo de expiración del token en milisegundos (por defecto 24 horas)
     private final long tiempoExpiracionMs;
 

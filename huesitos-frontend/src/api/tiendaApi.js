@@ -128,3 +128,23 @@ export const desactivarProducto = async (id) => {
   const respuesta = await axios.delete(`${API_BASE}/productos/${id}`, obtenerHeaders());
   return respuesta.data;
 };
+
+/** Registrar nueva categoría */
+export const registrarCategoria = async (categoriaData) => {
+  const respuesta = await axios.post(`${API_BASE}/categorias`, categoriaData, obtenerHeaders());
+  return respuesta.data;
+};
+
+/** Subir foto de producto */
+export const subirFotoProducto = async (id, archivo) => {
+  const formData = new FormData();
+  formData.append('archivo', archivo);
+  const respuesta = await axios.post(`${API_BASE}/productos/${id}/foto`, formData, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return respuesta.data;
+};
+

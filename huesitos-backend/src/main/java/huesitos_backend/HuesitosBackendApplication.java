@@ -1,10 +1,10 @@
 package huesitos_backend;
 
-import huesitos_backend.entidades.Dueño;
-import huesitos_backend.entidades.Rol;
-import huesitos_backend.entidades.Usuario;
-import huesitos_backend.repositorios.DueñoRepositorio;
-import huesitos_backend.repositorios.UsuarioRepositorio;
+import huesitos_backend.dominios.cliente.entidades.Dueño;
+import huesitos_backend.dominios.usuario.entidades.Rol;
+import huesitos_backend.dominios.usuario.entidades.Usuario;
+import huesitos_backend.dominios.cliente.repositorios.DueñoRepositorio;
+import huesitos_backend.dominios.usuario.repositorios.UsuarioRepositorio;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

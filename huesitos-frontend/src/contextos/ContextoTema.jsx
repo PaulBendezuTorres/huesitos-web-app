@@ -1,10 +1,11 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import { actualizarTemaUsuario } from '@/api/perfilApi';
 
 const ContextoTema = createContext(null);
 
 export const ProveedorTema = ({ children }) => {
   const [tema, setTema] = useState(() => {
-    return localStorage.getItem('tema') || 'oscuro';
+    return localStorage.getItem('tema') || 'claro';
   });
 
   useEffect(() => {
@@ -17,12 +18,36 @@ export const ProveedorTema = ({ children }) => {
     localStorage.setItem('tema', tema);
   }, [tema]);
 
-  const alternarTema = () => {
-    setTema(prev => prev === 'oscuro' ? 'claro' : 'oscuro');
+  const alternarTema = async () => {
+    const nuevoTema = tema === 'claro' ? 'oscuro' : 'claro';
+    setTema(nuevoTema);
+
+    const usuarioId = localStorage.getItem('usuarioId');
+    if (usuarioId) {
+      try {
+        await actualizarTemaUsuario(usuarioId, nuevoTema);
+      } catch (error) {
+        console.error('Error al guardar tema en backend:', error);
+      }
+    }
+  };
+
+  const cambiarTema = async (nuevoTema) => {
+    if (nuevoTema !== 'claro' && nuevoTema !== 'oscuro') return;
+    setTema(nuevoTema);
+
+    const usuarioId = localStorage.getItem('usuarioId');
+    if (usuarioId) {
+      try {
+        await actualizarTemaUsuario(usuarioId, nuevoTema);
+      } catch (error) {
+        console.error('Error al guardar tema en backend:', error);
+      }
+    }
   };
 
   return (
-    <ContextoTema.Provider value={{ tema, alternarTema }}>
+    <ContextoTema.Provider value={{ tema, alternarTema, cambiarTema }}>
       {children}
     </ContextoTema.Provider>
   );

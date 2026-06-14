@@ -1,0 +1,105 @@
+package huesitos_backend.dominios.tienda.servicios;
+
+import huesitos_backend.dominios.tienda.entidades.Producto;
+import huesitos_backend.dominios.tienda.repositorios.ProductoRepositorio;
+import huesitos_backend.dominios.tienda.repositorios.InventarioRepositorio;
+import huesitos_backend.dominios.tienda.repositorios.CategoriaRepositorio;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import huesitos_backend.servicios.StorageService;
+import org.springframework.web.multipart.MultipartFile;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class ProductoServicio {
+
+    private final ProductoRepositorio productoRepositorio;
+    private final InventarioRepositorio inventarioRepositorio;
+    private final CategoriaRepositorio categoriaRepositorio;
+    private final StorageService storageService;
+
+    @Transactional
+    public Producto guardarProducto(Producto producto) {
+        if (producto.getNombre() == null || producto.getNombre().trim().isEmpty()) {
+            throw new RuntimeException("El nombre del producto es obligatorio");
+        }
+        if (producto.getPrecio() == null || producto.getPrecio().doubleValue() < 0) {
+            throw new RuntimeException("El precio del producto debe ser mayor o igual a cero");
+        }
+        if (producto.getCategoria() == null || producto.getCategoria().getId() == null) {
+            throw new RuntimeException("La categoría asociada es obligatoria");
+        }
+
+        // Validar que la categoría exista y esté activa
+        categoriaRepositorio.findById(producto.getCategoria().getId())
+                .filter(c -> c.getActivo())
+                .orElseThrow(() -> new RuntimeException("La categoría asociada no existe o no está activa"));
+
+        producto.setNombre(producto.getNombre().trim());
+        Producto nuevoProducto = productoRepositorio.save(producto);
+        
+        // Cargar stock disponible
+        nuevoProducto.setStockDisponible(inventarioRepositorio.obtenerStockDisponible(nuevoProducto.getId()));
+        return nuevoProducto;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Producto> listarActivos() {
+        List<Producto> productos = productoRepositorio.findByActivoTrue();
+        productos.forEach(p -> p.setStockDisponible(inventarioRepositorio.obtenerStockDisponible(p.getId())));
+        return productos;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Producto> listarPorCategoria(Long categoriaId) {
+        List<Producto> productos = productoRepositorio.findByCategoriaIdAndActivoTrue(categoriaId);
+        productos.forEach(p -> p.setStockDisponible(inventarioRepositorio.obtenerStockDisponible(p.getId())));
+        return productos;
+    }
+
+    @Transactional(readOnly = true)
+    public Producto buscarPorId(Long id) {
+        Producto producto = productoRepositorio.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+        producto.setStockDisponible(inventarioRepositorio.obtenerStockDisponible(producto.getId()));
+        return producto;
+    }
+
+    @Transactional
+    public void desactivarProducto(Long id) {
+        Producto producto = buscarPorId(id);
+        producto.setActivo(false);
+        productoRepositorio.save(producto);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Producto> obtenerProductosBajoStock() {
+        List<Producto> productos = productoRepositorio.buscarProductosBajoStock();
+        productos.forEach(p -> p.setStockDisponible(inventarioRepositorio.obtenerStockDisponible(p.getId())));
+        return productos;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Producto> buscarProductos(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            return listarActivos();
+        }
+        List<Producto> productos = productoRepositorio.findByNombreContainingIgnoreCaseAndActivoTrue(nombre.trim());
+        productos.forEach(p -> p.setStockDisponible(inventarioRepositorio.obtenerStockDisponible(p.getId())));
+        return productos;
+    }
+
+    @Transactional
+    public String subirFotoProducto(Long id, MultipartFile archivo) {
+        Producto producto = productoRepositorio.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
+        String fotoAnterior = producto.getFotoUrl();
+        String urlFoto = storageService.comprimirYGuardarFoto(archivo, "producto");
+        producto.setFotoUrl(urlFoto);
+        productoRepositorio.save(producto);
+        storageService.borrarFoto(fotoAnterior);
+        return urlFoto;
+    }
+}

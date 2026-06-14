@@ -1,4 +1,4 @@
-import usuarioApi from "../api/usuarioApi";
+import usuarioApi from '@/api/usuarioApi';
 
 export const obtenerListaUsuarios = async () => {
   const response = await usuarioApi.get("");

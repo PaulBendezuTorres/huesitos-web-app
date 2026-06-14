@@ -1,0 +1,12 @@
+package huesitos_backend.dominios.marketing.repositorios;
+
+import huesitos_backend.dominios.marketing.entidades.Desparasitacion;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.time.LocalDate;
+import java.util.List;
+
+public interface DesparasitacionRepositorio extends JpaRepository<Desparasitacion, Long> {
+    List<Desparasitacion> findByMascotaId(Long mascotaId);
+
+    List<Desparasitacion> findByFechaProximaAplicacionBetween(LocalDate inicio, LocalDate fin);
+}
