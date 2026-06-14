@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import tableroApi from "../api/tableroApi";
+import tableroApi from '@/api/tableroApi';
 
 export const useTablero = () => {
   const [stats, setStats] = useState({

@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { actualizarTemaUsuario } from '../api/perfilApi';
+import { actualizarTemaUsuario } from '@/api/perfilApi';
 
 const ContextoTema = createContext(null);
 

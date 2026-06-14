@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { obtenerMascotasPorDueno, obtenerCitasAgenda, obtenerCampanasActivas } from '../api/clienteApi';
+import { obtenerMascotasPorDueno, obtenerCitasAgenda, obtenerCampanasActivas } from '@/api/clienteApi';
 
 const useTableroCliente = () => {
   const [mascotas, setMascotas] = useState([]);

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { listarServicios } from "../servicios/servicioServicio";
+import { listarServicios } from '@/servicios/servicioServicio';
 
 export const useServicios = () => {
   const [servicios, setServicios] = useState([]);

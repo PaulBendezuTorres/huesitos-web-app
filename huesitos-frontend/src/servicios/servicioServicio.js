@@ -1,4 +1,4 @@
-import servicioApi from "../api/servicioApi";
+import servicioApi from '@/api/servicioApi';
 
 export const listarServicios = async () => {
   const response = await servicioApi.get(""); 
