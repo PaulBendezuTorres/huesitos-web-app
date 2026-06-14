@@ -56,18 +56,9 @@ const PaginaFinanzas = () => {
     }
   };
 
-  if (loading && !reporte) {
-    return (
-      <div className="flex flex-col items-center justify-center h-64 gap-3 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
-        <CargadorSpinner size="lg" />
-        <span className="text-slate-500 dark:text-slate-400 text-sm font-semibold animate-pulse">Calculando métricas financieras...</span>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      {/* CABECERA Y FILTRO */}
+      {/* CABECERA Y FILTRO (Siempre visible para evitar Layout Shift) */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
         <div>
           <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">Caja y Finanzas</h1>
@@ -84,9 +75,17 @@ const PaginaFinanzas = () => {
         </div>
       </div>
 
-      {/* MÉTRICAS FINANCIERAS */}
-      {reporte && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {loading && !reporte ? (
+        <div className="flex flex-col items-center justify-center min-h-[400px] gap-3 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
+          <CargadorSpinner size="lg" />
+          <span className="text-slate-500 dark:text-slate-400 text-sm font-semibold animate-pulse">Calculando métricas financieras...</span>
+        </div>
+      ) : (
+        <>
+          {/* MÉTRICAS FINANCIERAS */}
+          {reporte && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
           <div className="bg-gradient-to-tr from-emerald-500 to-teal-400 p-6 rounded-2xl shadow-xl shadow-emerald-500/20 text-white relative overflow-hidden">
             <Wallet className="absolute -right-4 -bottom-4 text-white/20 w-32 h-32" />
             <h3 className="font-bold text-xs uppercase tracking-widest text-emerald-100 relative z-10">Ingresos Totales</h3>
@@ -163,6 +162,8 @@ const PaginaFinanzas = () => {
           </table>
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 };
