@@ -13,6 +13,11 @@
   * botones interactivos -> `<Boton />`
   * confirmación de acciones destructivas -> `<ModalConfirmacion />`
   * controles de tablas -> `<Paginacion />`
+  * indicador de carga y procesos asíncronos -> `<CargadorSpinner />`
+- **Cargas y Prevención de Layout Shift (CargadorSpinner)**: En todas las operaciones de carga asíncrona desde el backend/base de datos, se debe utilizar obligatoriamente el componente `<CargadorSpinner />` de Huesitos. Para evitar saltos visuales y encogimientos de pantalla (Layout Shift):
+  * Mantener siempre visibles y fijas las cabeceras/headers principales de la sección.
+  * Colocar el spinner en el área de contenido específico debajo de la cabecera.
+  * Definir una altura mínima estable para el contenedor del spinner (ej. `min-h-[400px]` o `min-h-[50vh]`) de modo que la pantalla no colapse de golpe mientras se espera la respuesta.
 - **Micro-interacciones y Hover**: Todos los botones deben incorporar micro-interacciones interactivas, como cambios de escala en el click (`active:scale-95`), sombras dinámicas (`shadow-sky-500/20`) y transiciones suaves (`transition-all duration-200`).
 
 ## Nomenclatura e Idioma
