@@ -186,19 +186,25 @@ const RegistrarProductoNuevo = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300 font-sans text-slate-700 pb-10">
+    <div className="w-full space-y-6 animate-in fade-in duration-300 font-sans text-slate-700 pb-10">
       
       {/* Cabecera / Retorno */}
-      <div className="flex items-center justify-between">
-        <button
-          onClick={() => navigate('/admin/inventario')}
-          className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-slate-700 transition-colors"
-        >
-          <ArrowLeft size={16} /> Volver al Inventario
-        </button>
-        <h2 className="text-xl md:text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">
-          Registrar Producto Nuevo
-        </h2>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate('/admin/inventario')}
+            className="p-2 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-650 text-slate-500 dark:text-slate-200 border border-slate-200 dark:border-slate-600 rounded-lg transition-colors shadow-sm"
+            title="Volver al Inventario"
+          >
+            <ArrowLeft size={16} />
+          </button>
+          <div>
+            <h2 className="text-xl md:text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">
+              Registrar Producto Nuevo
+            </h2>
+            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">Tienda y Productos</p>
+          </div>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
