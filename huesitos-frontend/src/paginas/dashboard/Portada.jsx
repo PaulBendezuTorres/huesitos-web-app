@@ -56,7 +56,7 @@ const Portada = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0B1A30] text-slate-800 dark:text-slate-100 font-sans scroll-smooth selection:bg-blue-600 selection:text-white transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50 dark:bg-oscuro-base text-slate-800 dark:text-slate-100 font-sans scroll-smooth selection:bg-blue-600 selection:text-white transition-colors duration-300">
       
       {/* 1. NAVEGACIÓN */}
       <EncabezadoPortada

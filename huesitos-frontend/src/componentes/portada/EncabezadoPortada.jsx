@@ -9,7 +9,7 @@ const EncabezadoPortada = ({
   logo
 }) => {
   return (
-    <header className="bg-white/80 dark:bg-[#0B1A30]/80 backdrop-blur-xl sticky top-0 z-50 border-b border-slate-200/50 dark:border-[#1D3E70]/60 shadow-sm transition-all duration-300">
+    <header className="bg-white/80 dark:bg-oscuro-base/80 backdrop-blur-xl sticky top-0 z-50 border-b border-slate-200/50 dark:border-oscuro-borde/60 shadow-sm transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-between">
         
         {/* Logo y Nombre */}
@@ -42,7 +42,7 @@ const EncabezadoPortada = ({
           <button
             onClick={alternarTema}
             title={tema === 'oscuro' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-            className="relative p-2.5 rounded-xl text-slate-500 dark:text-slate-300 bg-slate-100 dark:bg-[#152E54] hover:bg-slate-200 dark:hover:bg-[#1D3E70] border border-slate-200 dark:border-[#1D3E70]/85 shadow-sm transition-all duration-300 hover:scale-105 active:scale-95 group overflow-hidden mr-1"
+            className="relative p-2.5 rounded-xl text-slate-500 dark:text-slate-300 bg-slate-100 dark:bg-oscuro-tarjeta hover:bg-slate-200 dark:hover:bg-oscuro-borde border border-slate-200 dark:border-oscuro-borde/85 shadow-sm transition-all duration-300 hover:scale-105 active:scale-95 group overflow-hidden mr-1"
           >
             <div className="relative z-10 flex items-center justify-center">
               {tema === 'oscuro' ? (
@@ -55,7 +55,7 @@ const EncabezadoPortada = ({
 
           <button
             onClick={() => window.location.href = '/registro'}
-            className="flex items-center gap-2 border border-slate-200 dark:border-[#1D3E70] hover:border-sky-400 text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 px-5 py-2.5 rounded-xl font-semibold transition-all duration-300 hover:-translate-y-0.5 bg-transparent"
+            className="flex items-center gap-2 border border-slate-200 dark:border-oscuro-borde hover:border-sky-400 text-slate-650 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 px-5 py-2.5 rounded-xl font-semibold transition-all duration-300 hover:-translate-y-0.5 bg-transparent"
           >
             Crear cuenta
           </button>
@@ -86,18 +86,18 @@ const EncabezadoPortada = ({
           {/* Overlay oscuro */}
           <div className="absolute inset-0 bg-[#0B1A30]/60 backdrop-blur-sm" onClick={() => setMenuAbierto(false)} />
           {/* Panel centrado */}
-          <div className="relative z-10 w-full max-w-sm bg-white dark:bg-[#102442] rounded-2xl shadow-2xl p-6 flex flex-col gap-1 border border-slate-100 dark:border-[#1D3E70] animate-in fade-in slide-in-from-top-4 duration-200">
-            <a href="#inicio"      onClick={() => setMenuAbierto(false)} className="text-slate-700 dark:text-slate-200 font-semibold text-sm py-3 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-[#152E54] hover:text-blue-600 dark:hover:text-sky-400 transition-colors">🏠 Inicio</a>
-            <a href="#nosotros"    onClick={() => setMenuAbierto(false)} className="text-slate-700 dark:text-slate-200 font-semibold text-sm py-3 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-[#152E54] hover:text-blue-600 dark:hover:text-sky-400 transition-colors">ℹ️ Nosotros</a>
-            <a href="#servicios"   onClick={() => setMenuAbierto(false)} className="text-slate-700 dark:text-slate-200 font-semibold text-sm py-3 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-[#152E54] hover:text-blue-600 dark:hover:text-sky-400 transition-colors">🩺 Servicios</a>
-            <a href="#ubicacion"   onClick={() => setMenuAbierto(false)} className="text-slate-700 dark:text-slate-200 font-semibold text-sm py-3 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-[#152E54] hover:text-blue-600 dark:hover:text-sky-400 transition-colors">📍 Ubicación</a>
+          <div className="relative z-10 w-full max-w-sm bg-white dark:bg-oscuro-secundario rounded-2xl shadow-2xl p-6 flex flex-col gap-1 border border-slate-100 dark:border-oscuro-borde animate-in fade-in slide-in-from-top-4 duration-200">
+            <a href="#inicio"      onClick={() => setMenuAbierto(false)} className="text-slate-700 dark:text-slate-200 font-semibold text-sm py-3 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-oscuro-tarjeta hover:text-blue-600 dark:hover:text-sky-400 transition-colors">🏠 Inicio</a>
+            <a href="#nosotros"    onClick={() => setMenuAbierto(false)} className="text-slate-700 dark:text-slate-200 font-semibold text-sm py-3 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-oscuro-tarjeta hover:text-blue-600 dark:hover:text-sky-400 transition-colors">ℹ️ Nosotros</a>
+            <a href="#servicios"   onClick={() => setMenuAbierto(false)} className="text-slate-700 dark:text-slate-200 font-semibold text-sm py-3 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-oscuro-tarjeta hover:text-blue-600 dark:hover:text-sky-400 transition-colors">🩺 Servicios</a>
+            <a href="#ubicacion"   onClick={() => setMenuAbierto(false)} className="text-slate-700 dark:text-slate-200 font-semibold text-sm py-3 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-oscuro-tarjeta hover:text-blue-600 dark:hover:text-sky-400 transition-colors">📍 Ubicación</a>
             <a href="#emergencias" onClick={() => setMenuAbierto(false)} className="text-red-500 font-bold text-sm py-3 px-3 rounded-xl hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors">🚨 Emergencias 24/7</a>
             
-            <div className="flex flex-col gap-2 pt-3 mt-2 border-t border-slate-100 dark:border-[#1D3E70]">
+            <div className="flex flex-col gap-2 pt-3 mt-2 border-t border-slate-100 dark:border-oscuro-borde">
               {/* Alternar Tema Móvil */}
               <button
                 onClick={alternarTema}
-                className="w-full py-2.5 px-4 bg-slate-100 dark:bg-[#152E54] text-slate-700 dark:text-slate-200 font-semibold rounded-xl flex items-center justify-between transition-all text-sm border border-slate-200 dark:border-[#1D3E70]"
+                className="w-full py-2.5 px-4 bg-slate-100 dark:bg-oscuro-tarjeta text-slate-700 dark:text-slate-200 font-semibold rounded-xl flex items-center justify-between transition-all text-sm border border-slate-200 dark:border-oscuro-borde"
               >
                 <span className="flex items-center gap-2">
                   {tema === 'oscuro' ? '☀️ Modo Claro' : '🌙 Modo Oscuro'}
@@ -113,7 +113,7 @@ const EncabezadoPortada = ({
               </button>
               <button
                 onClick={() => { setMenuAbierto(false); window.location.href = '/registro'; }}
-                className="w-full py-2.5 border border-slate-200 dark:border-[#1D3E70] text-slate-655 dark:text-slate-300 font-semibold rounded-xl hover:border-sky-400 hover:text-sky-600 transition-all text-sm"
+                className="w-full py-2.5 border border-slate-200 dark:border-oscuro-borde text-slate-655 dark:text-slate-300 font-semibold rounded-xl hover:border-sky-400 hover:text-sky-600 transition-all text-sm"
               >
                 Crear cuenta
               </button>

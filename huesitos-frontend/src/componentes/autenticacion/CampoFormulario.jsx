@@ -44,10 +44,10 @@ const CampoFormulario = ({
           placeholder={placeholder}
           required={required}
           disabled={disabled}
-          className={`w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 
-            bg-slate-50 dark:bg-slate-800 text-slate-850 dark:text-slate-100 text-sm font-semibold 
+          className={`w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-oscuro-borde 
+            bg-slate-50 dark:bg-oscuro-tarjeta text-slate-850 dark:text-slate-100 text-sm font-semibold 
             focus:ring-2 focus:ring-sky-100 dark:focus:ring-sky-950/30 focus:border-sky-400 dark:focus:border-sky-500 
-            outline-none transition-all focus:bg-white dark:focus:bg-slate-900 disabled:opacity-60 
+            outline-none transition-all focus:bg-white dark:focus:bg-oscuro-base disabled:opacity-60 
             ${esPassword ? 'pr-10' : ''}`}
         />
         {esPassword && (

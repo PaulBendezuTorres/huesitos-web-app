@@ -8,7 +8,7 @@ const PiePaginaPortada = ({
   iconoYoutube
 }) => {
   return (
-    <footer className="bg-[#081226] text-slate-400 border-t border-[#1D3E70]/30 relative overflow-hidden transition-all duration-300">
+    <footer className="bg-[#081226] text-slate-400 border-t border-oscuro-borde/30 relative overflow-hidden transition-all duration-300">
       <div className="absolute top-0 right-0 w-96 h-96 bg-blue-900/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
@@ -63,16 +63,16 @@ const PiePaginaPortada = ({
           <div className="space-y-4">
             <h4 className="text-white font-bold text-lg tracking-wide">Síguenos</h4>
             <div className="flex flex-wrap gap-4 pt-2">
-              <a href="#" className="w-11 h-11 bg-[#102442] border border-[#1D3E70]/60 rounded-xl flex items-center justify-center overflow-hidden hover:border-blue-500 transition-all duration-300 hover:-translate-y-1 shadow-lg">
+              <a href="#" className="w-11 h-11 bg-oscuro-secundario border border-oscuro-borde/60 rounded-xl flex items-center justify-center overflow-hidden hover:border-blue-500 transition-all duration-300 hover:-translate-y-1 shadow-lg">
                 <img src={iconoFacebook} alt="Facebook" className="w-5 h-5 object-contain opacity-70 hover:opacity-100 transition-opacity" />
               </a>
-              <a href="#" className="w-11 h-11 bg-[#102442] border border-[#1D3E70]/60 rounded-xl flex items-center justify-center overflow-hidden hover:border-pink-500 transition-all duration-300 hover:-translate-y-1 shadow-lg">
+              <a href="#" className="w-11 h-11 bg-oscuro-secundario border border-oscuro-borde/60 rounded-xl flex items-center justify-center overflow-hidden hover:border-pink-500 transition-all duration-300 hover:-translate-y-1 shadow-lg">
                 <img src={iconoInstagram} alt="Instagram" className="w-5 h-5 object-contain opacity-70 hover:opacity-100 transition-opacity" />
               </a>
-              <a href="#" className="w-11 h-11 bg-[#102442] border border-[#1D3E70]/60 rounded-xl flex items-center justify-center overflow-hidden hover:border-slate-400 transition-all duration-300 hover:-translate-y-1 shadow-lg">
+              <a href="#" className="w-11 h-11 bg-oscuro-secundario border border-oscuro-borde/60 rounded-xl flex items-center justify-center overflow-hidden hover:border-slate-400 transition-all duration-300 hover:-translate-y-1 shadow-lg">
                 <img src={iconoTwitter} alt="Twitter" className="w-5 h-5 object-contain opacity-70 hover:opacity-100 transition-opacity" />
               </a>
-              <a href="#" className="w-11 h-11 bg-[#102442] border border-[#1D3E70]/60 rounded-xl flex items-center justify-center overflow-hidden hover:border-red-500 transition-all duration-300 hover:-translate-y-1 shadow-lg">
+              <a href="#" className="w-11 h-11 bg-oscuro-secundario border border-oscuro-borde/60 rounded-xl flex items-center justify-center overflow-hidden hover:border-red-500 transition-all duration-300 hover:-translate-y-1 shadow-lg">
                 <img src={iconoYoutube} alt="Youtube" className="w-5 h-5 object-contain opacity-70 hover:opacity-100 transition-opacity" />
               </a>
             </div>
@@ -82,7 +82,7 @@ const PiePaginaPortada = ({
       </div>
       
       {/* Copyright Dinámico */}
-      <div className="border-t border-[#1D3E70]/30 py-6 text-center text-xs text-slate-500 relative z-10">
+      <div className="border-t border-oscuro-borde/30 py-6 text-center text-xs text-slate-500 relative z-10">
         <p>© {new Date().getFullYear()} Clínica Veterinaria {config.nombreNegocio}. Todos los derechos reservados.</p>
       </div>
     </footer>

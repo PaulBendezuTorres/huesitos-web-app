@@ -75,7 +75,7 @@ const CasillerosCodigo = ({
           onPaste={idx === 0 ? handlePaste : undefined}
           disabled={estaDeshabilitado}
           className="w-9 h-11 sm:w-10 sm:h-12 text-center text-base sm:text-lg font-bold rounded-xl border 
-            border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 
+            border-slate-200 dark:border-oscuro-borde bg-slate-50 dark:bg-oscuro-tarjeta text-slate-800 dark:text-slate-100 
             focus:ring-2 focus:ring-sky-100 dark:focus:ring-sky-950/30 focus:border-sky-400 dark:focus:border-sky-500 
             outline-none transition-all disabled:opacity-60"
         />

@@ -8,14 +8,14 @@ const SeccionEmergencias = ({
   return (
     <motion.section
       id="emergencias"
-      className="py-24 bg-sky-100 dark:bg-[#102442] border-t border-sky-200 dark:border-[#1D3E70]/40 transition-colors duration-300"
+      className="py-24 bg-sky-100 dark:bg-oscuro-secundario border-t border-sky-200 dark:border-oscuro-borde/40 transition-colors duration-300"
       variants={fadeUp}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
     >
       <div className="max-w-4xl mx-auto px-4 text-center space-y-8">
-        <div className="inline-block p-4 bg-sky-200 dark:bg-[#152E54] rounded-2xl border border-sky-300 dark:border-[#1D3E70]/40 transition-colors">
+        <div className="inline-block p-4 bg-sky-200 dark:bg-oscuro-tarjeta rounded-2xl border border-sky-300 dark:border-oscuro-borde/40 transition-colors">
           <ShieldPlus size={40} className="text-sky-700 dark:text-sky-400 transition-colors" />
         </div>
         <h2 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white transition-colors">

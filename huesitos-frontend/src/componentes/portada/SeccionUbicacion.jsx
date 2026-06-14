@@ -8,7 +8,7 @@ const SeccionUbicacion = ({
   return (
     <motion.section
       id="ubicacion"
-      className="py-24 bg-white dark:bg-[#0B1A30] border-t border-slate-200 dark:border-[#1D3E70]/40 transition-colors duration-300"
+      className="py-24 bg-white dark:bg-oscuro-base border-t border-slate-200 dark:border-oscuro-borde/40 transition-colors duration-300"
       variants={staggerContainer}
       initial="hidden"
       whileInView="visible"
@@ -27,17 +27,17 @@ const SeccionUbicacion = ({
               </h3>
             </div>
             <p className="text-lg text-slate-655 dark:text-slate-300 transition-colors">
-              Estamos estratégicamente ubicados para atender cualquier emergencia con rapidez y brindar el mejor cuidado médico a tu engreído en instalaciones de primer nivel.
+              Estamos estratégicamente ubicados para atender cualquier emergency con rapidez y brindar el mejor cuidado médico a tu engreído en instalaciones de primer nivel.
             </p>
             
-            <div className="space-y-6 bg-slate-50 dark:bg-[#152E54] p-8 rounded-3xl border border-slate-100 dark:border-[#1D3E70]/30 transition-colors duration-200">
+            <div className="space-y-6 bg-slate-50 dark:bg-oscuro-tarjeta p-8 rounded-3xl border border-slate-100 dark:border-oscuro-borde/30 transition-colors duration-200">
               <div className="flex items-start gap-4">
                 <MapPin className="text-blue-600 dark:text-sky-400 mt-1 shrink-0" size={24} />
                 <div>
                   <h4 className="font-bold text-slate-900 dark:text-white text-lg transition-colors">
                     Dirección Principal
                   </h4>
-                  <p className="text-slate-600 dark:text-slate-350 mt-1 transition-colors">{config.direccion}</p>
+                  <p className="text-slate-600 dark:text-slate-355 mt-1 transition-colors">{config.direccion}</p>
                 </div>
               </div>
               
@@ -47,7 +47,7 @@ const SeccionUbicacion = ({
                   <h4 className="font-bold text-slate-900 dark:text-white text-lg transition-colors">
                     Horarios de Atención
                   </h4>
-                  <p className="text-slate-600 dark:text-slate-350 mt-1 transition-colors">
+                  <p className="text-slate-600 dark:text-slate-355 mt-1 transition-colors">
                     {config.horarioSemana} <br/>
                     {config.horarioDomingo}
                   </p>
@@ -60,7 +60,7 @@ const SeccionUbicacion = ({
           </div>
 
           {/* Mapa de Google Maps Integrado */}
-          <div className="w-full h-[450px] rounded-3xl shadow-lg overflow-hidden relative border border-slate-200 dark:border-[#1D3E70]/40">
+          <div className="w-full h-[450px] rounded-3xl shadow-lg overflow-hidden relative border border-slate-200 dark:border-oscuro-borde/40">
             <iframe 
               title="Ubicación Clínica Veterinaria"
               src="https://maps.google.com/maps?q=Santo%20Domingo%20De%20Marcona%20C-22,%20Ica,%20Peru&t=&z=16&ie=UTF8&iwloc=&output=embed" 

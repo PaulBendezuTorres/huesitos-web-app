@@ -9,7 +9,7 @@ const SeccionNosotros = ({
   return (
     <motion.section
       id="nosotros"
-      className="py-16 sm:py-24 lg:py-32 bg-white dark:bg-[#0B1A30] relative transition-colors duration-300"
+      className="py-16 sm:py-24 lg:py-32 bg-white dark:bg-oscuro-base relative transition-colors duration-300"
       variants={staggerContainer}
       initial="hidden"
       whileInView="visible"
@@ -19,13 +19,13 @@ const SeccionNosotros = ({
         <div className="grid md:grid-cols-2 gap-10 lg:gap-20 items-center">
           
           <div className="relative group">
-            <div className="absolute -inset-4 bg-gradient-to-tr from-blue-100 to-sky-100 dark:from-[#152E54] dark:to-[#1D3E70]/30 rounded-[3rem] transform -rotate-3 group-hover:rotate-0 transition-all duration-500 -z-10"></div>
+            <div className="absolute -inset-4 bg-gradient-to-tr from-blue-100 to-sky-100 dark:from-oscuro-tarjeta dark:to-oscuro-borde/30 rounded-[3rem] transform -rotate-3 group-hover:rotate-0 transition-all duration-500 -z-10"></div>
             <img
               src={imagenNosotros}
               alt="Equipo médico de la clínica"
               className="rounded-3xl shadow-2xl object-cover w-full h-64 sm:h-80 md:h-[450px] lg:h-[550px] transform group-hover:scale-[1.01] transition-all duration-500 grayscale-[15%] group-hover:grayscale-0"
             />
-            <div className="absolute -bottom-8 -right-8 bg-blue-900 dark:bg-[#152E54] dark:border dark:border-[#1D3E70]/40 text-white p-8 rounded-3xl shadow-xl hidden md:block transition-colors">
+            <div className="absolute -bottom-8 -right-8 bg-blue-900 dark:bg-oscuro-tarjeta dark:border dark:border-oscuro-borde/40 text-white p-8 rounded-3xl shadow-xl hidden md:block transition-colors">
               <p className="text-5xl font-black">10+</p>
               <p className="text-blue-200 dark:text-sky-300 font-medium mt-1">Años de Trayectoria</p>
             </div>
@@ -52,7 +52,7 @@ const SeccionNosotros = ({
 
             <div className="grid sm:grid-cols-2 gap-6 pt-6">
               <div className="space-y-3">
-                <div className="w-12 h-12 bg-sky-100 dark:bg-[#152E54] text-sky-600 dark:text-sky-400 rounded-xl flex items-center justify-center transition-colors">
+                <div className="w-12 h-12 bg-sky-100 dark:bg-oscuro-tarjeta text-sky-600 dark:text-sky-400 rounded-xl flex items-center justify-center transition-colors">
                   <CheckCircle2 size={22} />
                 </div>
                 <h4 className="font-bold text-slate-900 dark:text-white text-xl transition-colors">
@@ -63,7 +63,7 @@ const SeccionNosotros = ({
                 </p>
               </div>
               <div className="space-y-3">
-                <div className="w-12 h-12 bg-blue-100 dark:bg-[#152E54] text-blue-600 dark:text-sky-400 rounded-xl flex items-center justify-center transition-colors">
+                <div className="w-12 h-12 bg-blue-100 dark:bg-oscuro-tarjeta text-blue-600 dark:text-sky-400 rounded-xl flex items-center justify-center transition-colors">
                   <ShieldPlus size={22} />
                 </div>
                 <h4 className="font-bold text-slate-900 dark:text-white text-xl transition-colors">
