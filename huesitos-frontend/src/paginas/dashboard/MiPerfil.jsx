@@ -8,7 +8,7 @@ import { useTema } from '@/contextos/ContextoTema';
 
 const MiPerfil = ({ sinPlantilla = false }) => {
   const navigate = useNavigate();
-  const { cambiarTema } = useTema();
+  const { tema, cambiarTema } = useTema();
   const usuarioId = localStorage.getItem('usuarioId');
   const rol = localStorage.getItem('usuarioRol') || 'CLIENTE';
 
@@ -19,6 +19,12 @@ const MiPerfil = ({ sinPlantilla = false }) => {
   const [direccion, setDireccion] = useState('');
   const [fotoPerfilUrl, setFotoPerfilUrl] = useState('');
   const [temaLocal, setTemaLocal] = useState('claro');
+
+  // Sincronizar temaLocal con el tema global del contexto
+  useEffect(() => {
+    setTemaLocal(tema);
+  }, [tema]);
+
   
   const [contrasenaActual, setContrasenaActual] = useState('');
   const [contrasena, setContrasena] = useState('');
