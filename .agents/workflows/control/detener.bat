@@ -1,0 +1,6 @@
+@echo off
+echo Buscando y deteniendo procesos en el puerto 8080 (Backend)...
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr :8080 ^| findstr LISTENING') do taskkill /f /pid %%a 2>nul
+echo Buscando y deteniendo procesos en el puerto 5173 (Frontend)...
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr :5173 ^| findstr LISTENING') do taskkill /f /pid %%a 2>nul
+echo Todos los servicios del proyecto han sido detenidos.
