@@ -1,7 +1,5 @@
 package huesitos_backend.dominios.cliente.repositorios;
 
-import huesitos_backend.dominios.usuario.entidades.Usuario;
-
 import huesitos_backend.dominios.cliente.entidades.Dueño;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;

@@ -1,7 +1,5 @@
 package huesitos_backend.dominios.usuario.dto;
 
-import huesitos_backend.dominios.usuario.entidades.Usuario;
-
 import lombok.Data;
 
 @Data

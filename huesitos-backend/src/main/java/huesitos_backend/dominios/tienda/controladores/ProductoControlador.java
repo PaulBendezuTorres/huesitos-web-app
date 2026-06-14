@@ -1,7 +1,5 @@
 package huesitos_backend.dominios.tienda.controladores;
 
-import huesitos_backend.dominios.tienda.entidades.Categoria;
-
 import huesitos_backend.dominios.tienda.entidades.Producto;
 import huesitos_backend.dominios.tienda.servicios.ProductoServicio;
 import lombok.RequiredArgsConstructor;

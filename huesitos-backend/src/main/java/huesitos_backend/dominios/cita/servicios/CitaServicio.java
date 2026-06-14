@@ -1,8 +1,5 @@
 package huesitos_backend.dominios.cita.servicios;
 
-import huesitos_backend.dominios.usuario.entidades.Usuario;
-import huesitos_backend.dominios.mascota.entidades.Mascota;
-
 import huesitos_backend.dominios.cita.entidades.Cita;
 import huesitos_backend.dominios.cita.entidades.EstadoCita;
 import huesitos_backend.dominios.veterinaria_servicio.entidades.Servicio;
@@ -48,12 +45,12 @@ public class CitaServicio {
             throw new RuntimeException("El servicio especificado no existe o no está disponible");
         }
         Servicio servicioReal = servicioRepositorio.findById(cita.getServicio().getId())
-            .orElseThrow(() -> new RuntimeException("El servicio especificado no existe o no está disponible"));
+                .orElseThrow(() -> new RuntimeException("El servicio especificado no existe o no está disponible"));
         cita.setServicio(servicioReal);
 
         // 1. Validar que la mascota exista
         if (cita.getMascota() == null || cita.getMascota().getId() == null ||
-            !mascotaRepositorio.existsById(cita.getMascota().getId())) {
+                !mascotaRepositorio.existsById(cita.getMascota().getId())) {
             throw new RuntimeException("La mascota especificada no existe");
         }
 
@@ -67,8 +64,7 @@ public class CitaServicio {
             boolean existeCruce = citaRepositorio.existsByVeterinarioIdAndFechaHoraAndEstadoNot(
                     cita.getVeterinario().getId(),
                     cita.getFechaHora(),
-                    EstadoCita.CANCELADA
-            );
+                    EstadoCita.CANCELADA);
             if (existeCruce) {
                 throw new RuntimeException("El veterinario ya tiene una cita programada en ese horario");
             }
@@ -91,7 +87,7 @@ public class CitaServicio {
     /**
      * Cambia el estado de una cita existente.
      *
-     * @param citaId El ID de la cita.
+     * @param citaId      El ID de la cita.
      * @param nuevoEstado El nuevo estado a asignar.
      * @return La cita actualizada.
      */
@@ -142,7 +138,7 @@ public class CitaServicio {
     /**
      * Reprograma una cita validando la disponibilidad del veterinario.
      *
-     * @param citaId El ID de la cita.
+     * @param citaId         El ID de la cita.
      * @param nuevaFechaHora La nueva fecha y hora para la cita.
      * @return La cita actualizada.
      */
@@ -162,8 +158,7 @@ public class CitaServicio {
                     cita.getVeterinario().getId(),
                     nuevaFechaHora,
                     EstadoCita.CANCELADA,
-                    citaId
-            );
+                    citaId);
             if (existeCruce) {
                 throw new RuntimeException("El veterinario ya tiene otra cita programada en ese horario");
             }
@@ -177,11 +172,13 @@ public class CitaServicio {
     }
 
     /**
-     * Valida si la cita se encuentra dentro del horario de atención del veterinario.
+     * Valida si la cita se encuentra dentro del horario de atención del
+     * veterinario.
      * Si no hay horarios configurados para el veterinario, se omite la validación.
      */
     private void validarHorarioAtencion(Long veterinarioId, LocalDateTime fechaHora) {
-        if (veterinarioId == null) return;
+        if (veterinarioId == null)
+            return;
 
         List<HorarioPersonal> horarios = horarioPersonalRepositorio.findByUsuarioId(veterinarioId);
         if (horarios.isEmpty()) {
@@ -194,24 +191,27 @@ public class CitaServicio {
         HorarioPersonal horario = horarios.stream()
                 .filter(h -> h.getDiaSemana() == diaCita)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("El veterinario no atiende los días " + traducirDiaSemana(diaCita)));
+                .orElseThrow(
+                        () -> new RuntimeException("El veterinario no atiende los días " + traducirDiaSemana(diaCita)));
 
         if (!horario.getActivo() || horario.getHoraEntrada() == null || horario.getHoraSalida() == null) {
             throw new RuntimeException("El veterinario no labora el día " + traducirDiaSemana(diaCita));
         }
 
         if (horaCita.isBefore(horario.getHoraEntrada()) || horaCita.isAfter(horario.getHoraSalida())) {
-            throw new RuntimeException("La cita está fuera del horario de atención del veterinario (" + horario.getHoraEntrada() + " a " + horario.getHoraSalida() + ")");
+            throw new RuntimeException("La cita está fuera del horario de atención del veterinario ("
+                    + horario.getHoraEntrada() + " a " + horario.getHoraSalida() + ")");
         }
     }
 
     /**
-     * Lista citas aplicando filtros avanzados de rango de fechas, veterinario y estado.
+     * Lista citas aplicando filtros avanzados de rango de fechas, veterinario y
+     * estado.
      *
-     * @param inicio Fecha de inicio de búsqueda (opcional).
-     * @param fin Fecha de fin de búsqueda (opcional).
+     * @param inicio        Fecha de inicio de búsqueda (opcional).
+     * @param fin           Fecha de fin de búsqueda (opcional).
      * @param veterinarioId ID del veterinario (opcional).
-     * @param estado Estado de la cita (opcional).
+     * @param estado        Estado de la cita (opcional).
      * @return Lista de citas filtradas.
      */
     @Transactional(readOnly = true)

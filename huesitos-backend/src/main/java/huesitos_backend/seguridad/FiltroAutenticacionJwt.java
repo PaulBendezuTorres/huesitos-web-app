@@ -1,7 +1,5 @@
 package huesitos_backend.seguridad;
 
-import huesitos_backend.dominios.usuario.entidades.Rol;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,20 +30,19 @@ public class FiltroAutenticacionJwt extends OncePerRequestFilter {
             String token = authHeader.substring(7);
             String correo = tokenJwtUtil.validarToken(token);
 
-if (correo != null) {
-    String rol = com.auth0.jwt.JWT.decode(token).getClaim("rol").asString();
-    
-    // El prefijo ROLE_ es necesario para que hasRole("ADMINISTRADOR") funcione
-    SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + rol);
-    
-    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-            correo,
-            null,
-            List.of(authority)
-    );
-    
-    SecurityContextHolder.getContext().setAuthentication(authentication);
-}
+            if (correo != null) {
+                String rol = com.auth0.jwt.JWT.decode(token).getClaim("rol").asString();
+
+                // El prefijo ROLE_ es necesario para que hasRole("ADMINISTRADOR") funcione
+                SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + rol);
+
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        correo,
+                        null,
+                        List.of(authority));
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         }
 
         filterChain.doFilter(request, response);

@@ -1,7 +1,5 @@
 package huesitos_backend.seguridad;
 
-import huesitos_backend.dominios.usuario.entidades.Rol;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -26,7 +24,7 @@ public class TokenJwtUtil {
      */
     public String generarToken(Usuario usuario) {
         Algorithm algoritmo = Algorithm.HMAC256(claveSecreta);
-        
+
         Date ahora = new Date();
         Date fechaExpiracion = new Date(ahora.getTime() + 24L * 60 * 60 * 1000); // 24 horas en el futuro
 
@@ -53,7 +51,7 @@ public class TokenJwtUtil {
             JWTVerifier verifier = JWT.require(algoritmo)
                     .withIssuer(emisor)
                     .build();
-            
+
             DecodedJWT jwtDecodificado = verifier.verify(token);
             return jwtDecodificado.getSubject();
         } catch (JWTVerificationException e) {

@@ -1,7 +1,5 @@
 package huesitos_backend.dominios.usuario.repositorios;
 
-import huesitos_backend.dominios.usuario.entidades.Usuario;
-
 import huesitos_backend.dominios.usuario.entidades.HorarioPersonal;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.time.DayOfWeek;

@@ -1,7 +1,5 @@
 package huesitos_backend.dominios.dashboard.controladores;
 
-import huesitos_backend.dominios.usuario.entidades.Usuario;
-
 import huesitos_backend.dominios.dashboard.entidades.ConfiguracionRol;
 import huesitos_backend.dominios.usuario.entidades.Rol;
 import huesitos_backend.dominios.dashboard.repositorios.ConfiguracionRolRepositorio;
@@ -42,7 +40,7 @@ public class ConfiguracionRolControlador {
             if (configuracion.getRol() == null) {
                 throw new RuntimeException("El rol es obligatorio");
             }
-            
+
             // Buscar si ya existe para este rol
             Optional<ConfiguracionRol> configExistente = configuracionRolRepositorio.findByRol(configuracion.getRol());
             if (configExistente.isPresent()) {

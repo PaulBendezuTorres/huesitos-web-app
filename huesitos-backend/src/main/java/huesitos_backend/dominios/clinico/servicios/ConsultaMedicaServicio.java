@@ -1,7 +1,5 @@
 package huesitos_backend.dominios.clinico.servicios;
 
-import huesitos_backend.dominios.mascota.entidades.Mascota;
-
 import huesitos_backend.dominios.cita.entidades.Cita;
 import huesitos_backend.dominios.clinico.entidades.ConsultaMedica;
 import huesitos_backend.dominios.cita.entidades.EstadoCita;
@@ -23,7 +21,8 @@ public class ConsultaMedicaServicio {
 
     /**
      * Registra una nueva consulta médica para una mascota.
-     * Si la consulta está asociada a una cita, cambia el estado de la cita a COMPLETADA.
+     * Si la consulta está asociada a una cita, cambia el estado de la cita a
+     * COMPLETADA.
      *
      * @param consulta Los datos de la consulta a registrar.
      * @return La consulta médica guardada.
@@ -33,7 +32,8 @@ public class ConsultaMedicaServicio {
         consulta.setFecha(LocalDateTime.now());
         ConsultaMedica guardada = consultaMedicaRepositorio.save(consulta);
 
-        // Si la consulta viene vinculada a una cita, buscarla y marcarla como COMPLETADA
+        // Si la consulta viene vinculada a una cita, buscarla y marcarla como
+        // COMPLETADA
         if (consulta.getCita() != null && consulta.getCita().getId() != null) {
             Cita cita = citaRepositorio.findById(consulta.getCita().getId())
                     .orElseThrow(() -> new RuntimeException("Cita no encontrada"));

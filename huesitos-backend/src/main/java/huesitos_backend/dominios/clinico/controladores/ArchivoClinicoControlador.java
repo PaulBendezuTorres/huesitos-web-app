@@ -1,7 +1,5 @@
 package huesitos_backend.dominios.clinico.controladores;
 
-import huesitos_backend.dominios.mascota.entidades.Mascota;
-
 import huesitos_backend.dominios.clinico.entidades.ArchivoClinico;
 import huesitos_backend.dominios.clinico.entidades.TipoArchivoClinico;
 import huesitos_backend.dominios.clinico.servicios.ArchivoClinicoServicio;
@@ -30,7 +28,8 @@ public class ArchivoClinicoControlador {
     }
 
     /**
-     * Endpoint para subir un archivo clínico (PDF, imágenes, etc.) asociado a una mascota y consulta.
+     * Endpoint para subir un archivo clínico (PDF, imágenes, etc.) asociado a una
+     * mascota y consulta.
      */
     @PostMapping(value = "/subir", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> subirArchivo(
@@ -41,10 +40,12 @@ public class ArchivoClinicoControlador {
             @RequestParam("archivo") MultipartFile archivo) {
         try {
             TipoArchivoClinico tipo = TipoArchivoClinico.valueOf(tipoExamen.toUpperCase());
-            ArchivoClinico guardado = archivoClinicoServicio.guardarArchivo(mascotaId, consultaId, descripcion, tipo, archivo);
+            ArchivoClinico guardado = archivoClinicoServicio.guardarArchivo(mascotaId, consultaId, descripcion, tipo,
+                    archivo);
             return ResponseEntity.status(HttpStatus.CREATED).body(guardado);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("El tipo de examen especificado no es válido (Debe ser: LABORATORIO, ECOGRAFIA, RAYOS_X u OTROS)");
+            return ResponseEntity.badRequest().body(
+                    "El tipo de examen especificado no es válido (Debe ser: LABORATORIO, ECOGRAFIA, RAYOS_X u OTROS)");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

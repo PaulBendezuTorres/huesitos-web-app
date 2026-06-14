@@ -1,7 +1,6 @@
 package huesitos_backend.dominios.marketing.entidades;
 
 import huesitos_backend.dominios.mascota.entidades.Mascota;
-import huesitos_backend.dominios.tienda.entidades.Producto;
 
 import jakarta.persistence.*;
 import lombok.*;

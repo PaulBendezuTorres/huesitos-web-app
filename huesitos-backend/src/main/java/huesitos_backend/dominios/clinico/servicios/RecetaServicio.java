@@ -1,7 +1,5 @@
 package huesitos_backend.dominios.clinico.servicios;
 
-import huesitos_backend.dominios.mascota.entidades.Mascota;
-
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
@@ -97,7 +95,8 @@ public class RecetaServicio {
             document.add(header);
 
             Font subFont = FontFactory.getFont(FontFactory.HELVETICA, 8, new Color(127, 140, 141));
-            Paragraph subheader = new Paragraph("Salud, cuidado y amor para tu mascota\nEmergencias y consultas 24 horas", subFont);
+            Paragraph subheader = new Paragraph(
+                    "Salud, cuidado y amor para tu mascota\nEmergencias y consultas 24 horas", subFont);
             subheader.setAlignment(Element.ALIGN_CENTER);
             subheader.setSpacingAfter(15);
             document.add(subheader);
@@ -124,14 +123,19 @@ public class RecetaServicio {
 
             // Fila 1
             table.addCell(crearCeldaSinBorde("Paciente: " + consulta.getMascota().getNombre(), labelFont, valueFont));
-            table.addCell(crearCeldaSinBorde("Propietario: " + consulta.getMascota().getDueño().getNombreCompleto(), labelFont, valueFont));
+            table.addCell(crearCeldaSinBorde("Propietario: " + consulta.getMascota().getDueño().getNombreCompleto(),
+                    labelFont, valueFont));
 
             // Fila 2
-            table.addCell(crearCeldaSinBorde("Especie/Raza: " + consulta.getMascota().getEspecie() + " / " + consulta.getMascota().getRaza(), labelFont, valueFont));
-            table.addCell(crearCeldaSinBorde("Fecha Emisión: " + receta.getFechaEmision().toString(), labelFont, valueFont));
+            table.addCell(crearCeldaSinBorde(
+                    "Especie/Raza: " + consulta.getMascota().getEspecie() + " / " + consulta.getMascota().getRaza(),
+                    labelFont, valueFont));
+            table.addCell(
+                    crearCeldaSinBorde("Fecha Emisión: " + receta.getFechaEmision().toString(), labelFont, valueFont));
 
             // Fila 3
-            table.addCell(crearCeldaSinBorde("Veterinario: " + consulta.getVeterinario().getCorreo(), labelFont, valueFont));
+            table.addCell(
+                    crearCeldaSinBorde("Veterinario: " + consulta.getVeterinario().getCorreo(), labelFont, valueFont));
             table.addCell(crearCeldaSinBorde("Consulta ID: #" + consulta.getId(), labelFont, valueFont));
 
             document.add(table);
@@ -160,7 +164,8 @@ public class RecetaServicio {
             document.add(indContent);
 
             // 6. Firma del Veterinario
-            Paragraph firmaLine = new Paragraph("__________________________________\nFirma del Médico Veterinario", labelFont);
+            Paragraph firmaLine = new Paragraph("__________________________________\nFirma del Médico Veterinario",
+                    labelFont);
             firmaLine.setAlignment(Element.ALIGN_CENTER);
             document.add(firmaLine);
 

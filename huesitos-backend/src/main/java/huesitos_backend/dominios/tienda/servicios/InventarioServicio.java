@@ -1,7 +1,5 @@
 package huesitos_backend.dominios.tienda.servicios;
 
-import huesitos_backend.dominios.tienda.entidades.Producto;
-
 import huesitos_backend.dominios.tienda.entidades.Inventario;
 import huesitos_backend.dominios.tienda.repositorios.InventarioRepositorio;
 import huesitos_backend.dominios.tienda.repositorios.ProductoRepositorio;

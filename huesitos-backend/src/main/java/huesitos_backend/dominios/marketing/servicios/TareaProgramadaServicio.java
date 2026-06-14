@@ -1,7 +1,5 @@
 package huesitos_backend.dominios.marketing.servicios;
 
-import huesitos_backend.dominios.tienda.entidades.Producto;
-
 import huesitos_backend.dominios.clinico.entidades.HistorialVacunacion;
 import huesitos_backend.dominios.clinico.entidades.Vacuna;
 import huesitos_backend.dominios.marketing.entidades.Desparasitacion;
@@ -40,7 +38,8 @@ public class TareaProgramadaServicio {
     }
 
     /**
-     * Tarea programada diaria a la 1:30 AM para inactivar campañas y ofertas expiradas.
+     * Tarea programada diaria a la 1:30 AM para inactivar campañas y ofertas
+     * expiradas.
      */
     @Scheduled(cron = "0 30 1 * * ?")
     @Transactional
@@ -60,7 +59,8 @@ public class TareaProgramadaServicio {
         log.info("Buscando vacunas y desparasitaciones pendientes entre {} y {}", fechaReferencia, limite);
 
         // 1. Escanear vacunas
-        List<HistorialVacunacion> vacunasProximas = historialVacunacionRepositorio.findByFechaProximaDosisBetween(fechaReferencia, limite);
+        List<HistorialVacunacion> vacunasProximas = historialVacunacionRepositorio
+                .findByFechaProximaDosisBetween(fechaReferencia, limite);
         for (HistorialVacunacion hist : vacunasProximas) {
             Mascota mascota = hist.getMascota();
             Vacuna vacuna = hist.getVacuna();
@@ -69,10 +69,9 @@ public class TareaProgramadaServicio {
 
             // Evitar duplicados
             boolean existe = recordatorioRepositorio.existsByMascotaIdAndFechaRecordatorioAndTitulo(
-                    mascota.getId(), 
-                    fechaVenc, 
-                    titulo
-            );
+                    mascota.getId(),
+                    fechaVenc,
+                    titulo);
 
             if (!existe) {
                 Recordatorio rec = new Recordatorio();
@@ -83,11 +82,10 @@ public class TareaProgramadaServicio {
                 rec.setFechaCreacion(LocalDateTime.now());
                 rec.setMensaje(String.format(
                         "Su mascota %s tiene programada la vacuna %s (%s) para el %s.",
-                        mascota.getNombre(), 
-                        vacuna.getNombre(), 
-                        hist.getDosis(), 
-                        fechaVenc
-                ));
+                        mascota.getNombre(),
+                        vacuna.getNombre(),
+                        hist.getDosis(),
+                        fechaVenc));
 
                 recordatorioRepositorio.save(rec);
                 totalCreados++;
@@ -96,7 +94,8 @@ public class TareaProgramadaServicio {
         }
 
         // 2. Escanear desparasitaciones
-        List<Desparasitacion> desparasitacionesProximas = desparasitacionRepositorio.findByFechaProximaAplicacionBetween(fechaReferencia, limite);
+        List<Desparasitacion> desparasitacionesProximas = desparasitacionRepositorio
+                .findByFechaProximaAplicacionBetween(fechaReferencia, limite);
         for (Desparasitacion desp : desparasitacionesProximas) {
             Mascota mascota = desp.getMascota();
             LocalDate fechaVenc = desp.getFechaProximaAplicacion();
@@ -104,10 +103,9 @@ public class TareaProgramadaServicio {
 
             // Evitar duplicados
             boolean existe = recordatorioRepositorio.existsByMascotaIdAndFechaRecordatorioAndTitulo(
-                    mascota.getId(), 
-                    fechaVenc, 
-                    titulo
-            );
+                    mascota.getId(),
+                    fechaVenc,
+                    titulo);
 
             if (!existe) {
                 Recordatorio rec = new Recordatorio();
@@ -118,15 +116,15 @@ public class TareaProgramadaServicio {
                 rec.setFechaCreacion(LocalDateTime.now());
                 rec.setMensaje(String.format(
                         "Su mascota %s tiene programada su desparasitación %s con el producto %s para el %s.",
-                        mascota.getNombre(), 
-                        desp.getTipo().toLowerCase(), 
-                        desp.getProducto(), 
-                        fechaVenc
-                ));
+                        mascota.getNombre(),
+                        desp.getTipo().toLowerCase(),
+                        desp.getProducto(),
+                        fechaVenc));
 
                 recordatorioRepositorio.save(rec);
                 totalCreados++;
-                log.info("Recordatorio de desparasitación creado para mascota: {} (Fecha: {})", mascota.getNombre(), fechaVenc);
+                log.info("Recordatorio de desparasitación creado para mascota: {} (Fecha: {})", mascota.getNombre(),
+                        fechaVenc);
             }
         }
 

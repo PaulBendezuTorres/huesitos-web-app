@@ -1,7 +1,5 @@
 package huesitos_backend.dominios.usuario.controladores;
 
-import huesitos_backend.dominios.usuario.entidades.Usuario;
-
 import huesitos_backend.dominios.usuario.entidades.HorarioPersonal;
 import huesitos_backend.dominios.usuario.servicios.HorarioPersonalServicio;
 import lombok.RequiredArgsConstructor;
@@ -30,10 +28,12 @@ public class HorarioPersonalControlador {
     }
 
     /**
-     * Endpoint para configurar/actualizar un día específico del horario del personal.
+     * Endpoint para configurar/actualizar un día específico del horario del
+     * personal.
      */
     @PostMapping
-    public ResponseEntity<?> configurarHorario(@PathVariable Long usuarioId, @RequestBody HorarioPersonal nuevoHorario) {
+    public ResponseEntity<?> configurarHorario(@PathVariable Long usuarioId,
+            @RequestBody HorarioPersonal nuevoHorario) {
         try {
             HorarioPersonal guardado = horarioPersonalServicio.guardarOActualizarHorario(usuarioId, nuevoHorario);
             return ResponseEntity.ok(guardado);

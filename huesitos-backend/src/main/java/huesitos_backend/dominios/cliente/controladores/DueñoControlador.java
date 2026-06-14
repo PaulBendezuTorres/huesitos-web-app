@@ -1,7 +1,5 @@
 package huesitos_backend.dominios.cliente.controladores;
 
-import huesitos_backend.dominios.usuario.entidades.Usuario;
-
 import huesitos_backend.dominios.cliente.servicios.DueñoServicio;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

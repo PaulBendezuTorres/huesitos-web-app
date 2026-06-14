@@ -1,7 +1,5 @@
 package huesitos_backend.dominios.tienda.repositorios;
 
-import huesitos_backend.dominios.tienda.entidades.Inventario;
-
 import huesitos_backend.dominios.tienda.entidades.Producto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;

@@ -1,7 +1,5 @@
 package huesitos_backend.dominios.dashboard.controladores;
 
-import huesitos_backend.dominios.veterinaria_servicio.entidades.Servicio;
-
 import huesitos_backend.dominios.dashboard.entidades.ConfiguracionNegocio;
 import huesitos_backend.dominios.dashboard.servicios.ConfiguracionNegocioServicio;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +15,8 @@ public class ConfiguracionNegocioControlador {
     private final ConfiguracionNegocioServicio servicio;
 
     /**
-     * Endpoint público para que la Landing Page y el panel lean los datos sin restricciones.
+     * Endpoint público para que la Landing Page y el panel lean los datos sin
+     * restricciones.
      */
     @GetMapping
     public ResponseEntity<ConfiguracionNegocio> obtener() {
@@ -25,7 +24,8 @@ public class ConfiguracionNegocioControlador {
     }
 
     /**
-     * Endpoint restringido para guardar las modificaciones desde el panel administrativo.
+     * Endpoint restringido para guardar las modificaciones desde el panel
+     * administrativo.
      */
     @PutMapping
     @PreAuthorize("hasRole('ADMINISTRADOR')")

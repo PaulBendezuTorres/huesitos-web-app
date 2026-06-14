@@ -1,7 +1,5 @@
 package huesitos_backend.dominios.clinico.repositorios;
 
-import huesitos_backend.dominios.mascota.entidades.Mascota;
-
 import huesitos_backend.dominios.clinico.entidades.ConsultaMedica;
 import org.springframework.data.jpa.repository.JpaRepository;
 

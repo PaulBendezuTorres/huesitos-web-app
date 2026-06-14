@@ -1,7 +1,5 @@
 package huesitos_backend.dominios.finanzas.servicios;
 
-import huesitos_backend.dominios.veterinaria_servicio.entidades.Servicio;
-
 import huesitos_backend.dominios.finanzas.dto.ReporteFinanciero;
 import huesitos_backend.dominios.cita.entidades.Cita;
 import huesitos_backend.dominios.finanzas.entidades.EstadoPago;
@@ -36,18 +34,20 @@ public class TransaccionServicio {
         LocalDateTime finDia = fecha.atTime(LocalTime.MAX);
 
         BigDecimal total = transaccionRepositorio.sumarIngresosPorRangoFecha(inicioDia, finDia);
-        
-        BigDecimal efectivo = transaccionRepositorio.sumarIngresosPorMediosYFecha(
-            Arrays.asList(MedioPago.EFECTIVO), inicioDia, finDia);
-            
-        BigDecimal tarjetas = transaccionRepositorio.sumarIngresosPorMediosYFecha(
-            Arrays.asList(MedioPago.TARJETA_CREDITO, MedioPago.TARJETA_DEBITO), inicioDia, finDia);
-            
-        BigDecimal transferencia = transaccionRepositorio.sumarIngresosPorMediosYFecha(
-            Arrays.asList(MedioPago.TRANSFERENCIA, MedioPago.YAPE, MedioPago.PLIN), inicioDia, finDia);
 
-        long completadas = transaccionRepositorio.countByEstadoPagoAndFechaCreacionBetween(EstadoPago.APROBADO, inicioDia, finDia);
-        long pendientes = transaccionRepositorio.countByEstadoPagoAndFechaCreacionBetween(EstadoPago.PENDIENTE, inicioDia, finDia);
+        BigDecimal efectivo = transaccionRepositorio.sumarIngresosPorMediosYFecha(
+                Arrays.asList(MedioPago.EFECTIVO), inicioDia, finDia);
+
+        BigDecimal tarjetas = transaccionRepositorio.sumarIngresosPorMediosYFecha(
+                Arrays.asList(MedioPago.TARJETA_CREDITO, MedioPago.TARJETA_DEBITO), inicioDia, finDia);
+
+        BigDecimal transferencia = transaccionRepositorio.sumarIngresosPorMediosYFecha(
+                Arrays.asList(MedioPago.TRANSFERENCIA, MedioPago.YAPE, MedioPago.PLIN), inicioDia, finDia);
+
+        long completadas = transaccionRepositorio.countByEstadoPagoAndFechaCreacionBetween(EstadoPago.APROBADO,
+                inicioDia, finDia);
+        long pendientes = transaccionRepositorio.countByEstadoPagoAndFechaCreacionBetween(EstadoPago.PENDIENTE,
+                inicioDia, finDia);
 
         ReporteFinanciero reporte = new ReporteFinanciero();
         reporte.setTotalIngresos(total != null ? total : BigDecimal.ZERO);
@@ -64,11 +64,11 @@ public class TransaccionServicio {
     public Transaccion procesarPagoCaja(Long id, MedioPago medio, String referencia) {
         Transaccion t = transaccionRepositorio.findById(id)
                 .orElseThrow(() -> new RuntimeException("Transacción no encontrada"));
-        
+
         t.setMedioPago(medio);
         t.setEstadoPago(EstadoPago.APROBADO);
         t.setReferenciaPago(referencia);
-        
+
         return transaccionRepositorio.save(t);
     }
 
@@ -81,14 +81,14 @@ public class TransaccionServicio {
         transaccion.setCita(cita);
         transaccion.setEstadoPago(EstadoPago.PENDIENTE);
         transaccion.setReferenciaPago("SISTEMA_CITA");
-        
+
         // Verifica si el servicio tiene un precio asignado, sino le pone 0
         if (cita.getServicio() != null && cita.getServicio().getPrecio() != null) {
             transaccion.setMonto(cita.getServicio().getPrecio());
         } else {
             transaccion.setMonto(BigDecimal.ZERO);
         }
-        
+
         transaccionRepositorio.save(transaccion);
     }
 }

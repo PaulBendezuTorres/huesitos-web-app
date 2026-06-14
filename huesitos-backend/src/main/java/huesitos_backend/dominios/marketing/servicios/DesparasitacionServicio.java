@@ -1,7 +1,5 @@
 package huesitos_backend.dominios.marketing.servicios;
 
-import huesitos_backend.dominios.tienda.entidades.Producto;
-
 import huesitos_backend.dominios.marketing.entidades.Desparasitacion;
 import huesitos_backend.dominios.mascota.entidades.Mascota;
 import huesitos_backend.dominios.marketing.repositorios.DesparasitacionRepositorio;

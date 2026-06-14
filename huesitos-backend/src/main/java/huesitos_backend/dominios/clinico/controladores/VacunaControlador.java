@@ -1,7 +1,5 @@
 package huesitos_backend.dominios.clinico.controladores;
 
-import huesitos_backend.dominios.mascota.entidades.Mascota;
-
 import huesitos_backend.dominios.clinico.entidades.HistorialVacunacion;
 import huesitos_backend.dominios.clinico.entidades.Vacuna;
 import huesitos_backend.dominios.clinico.servicios.VacunaServicio;
