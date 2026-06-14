@@ -23,7 +23,7 @@ const ContenedorAutenticacion = ({
         className="absolute top-4 right-4 p-2.5 rounded-xl border border-slate-200 dark:border-oscuro-borde bg-white dark:bg-oscuro-tarjeta text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-oscuro-borde transition-all shadow-sm z-50"
         title={tema === 'claro' ? 'Cambiar a modo oscuro' : 'Cambiar a modo oscuro'}
       >
-        {tema === 'claro' ? <Moon size={18} /> : <Sun size={18} />}
+        {tema === 'claro' ? <Sun size={18} className="text-amber-500" /> : <Moon size={18} className="text-sky-300" />}
       </button>
 
       <div className="auth-card bg-white dark:bg-oscuro-secundario border border-slate-200 dark:border-oscuro-borde shadow-2xl dark:shadow-oscuro-base/40 transition-colors duration-200 animate-in fade-in duration-200">

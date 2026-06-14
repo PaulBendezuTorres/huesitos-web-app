@@ -1,8 +1,12 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-14 (Mejoras y Modularización de Inventario y Servicios)
+Última actualización: 2026-06-14 (Mejoras y Modularización de Inventario, Servicios y Ajuste de Temas)
 
 ## 🚀 Logros Recientes
+- [x] **Ajuste de Sincronización de Temas**: Corregida la contradicción visual del alternador de tema en `PlantillaTablero.jsx`, `EncabezadoPortada.jsx` y `ContenedorAutenticacion.jsx`, mostrando ahora la Luna (`Moon`) en modo oscuro y el Sol (`Sun`) en modo claro para representar el estado actual y no el siguiente.
+- [x] **Corrección de Tema Oscuro en Inventario**:
+  - Añadidas clases de tema oscuro (`dark:bg-sky-950/30`, etc.) a las tarjetas de alertas seleccionadas en `TarjetasAlertasInventario.jsx` para evitar fondos claros e ilegibles.
+  - Modificado el botón principal "Ingresar Lote" en `PaginaInventario.jsx` para integrarse con la paleta semántica oscura (`dark:bg-sky-500` y `dark:text-slate-950`) en lugar de usar `dark:bg-slate-100` (que se veía blanco/gris muy claro).
 - [x] **Modularización del Catálogo de Servicios**: Extraído el modal de edición de servicios médicos de `PaginaServicios.jsx` al nuevo subcomponente [ModalEditarServicio.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/servicio/ModalEditarServicio.jsx), simplificando la vista del catálogo.
 - [x] **Modularización del Módulo de Inventario**: Separada la lógica de `PaginaInventario.jsx` en componentes atómicos independientes en `src/componentes/tienda/` (`TarjetasAlertasInventario.jsx`, `TablaInventario.jsx`, `ModalIngresoLote.jsx` y `ModalAjusteStockLote.jsx`), reduciendo drásticamente el tamaño del archivo principal.
 - [x] **Rediseño del Ancho Completo en Registro de Productos**: Modificada la vista `RegistrarProductoNuevo.jsx` para ocupar todo el ancho de la pantalla alineada a la izquierda (evitando que se centre y achique) y agrupando el título junto al botón de volver.

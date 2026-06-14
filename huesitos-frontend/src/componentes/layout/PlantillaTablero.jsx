@@ -78,9 +78,9 @@ const PlantillaTablero = ({
             >
               <div className="relative z-10 flex items-center justify-center">
                 {tema === 'oscuro' ? (
-                  <Sun size={18} className="text-amber-400 group-hover:rotate-45 transition-transform duration-500" />
-                ) : (
                   <Moon size={18} className="text-sky-300 group-hover:-rotate-12 transition-transform duration-500" />
+                ) : (
+                  <Sun size={18} className="text-amber-400 group-hover:rotate-45 transition-transform duration-500" />
                 )}
               </div>
             </button>

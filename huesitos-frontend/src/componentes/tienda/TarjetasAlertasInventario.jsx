@@ -14,7 +14,7 @@ const TarjetasAlertasInventario = ({
         onClick={() => setFiltroAlerta('TODOS')}
         className={`p-4 rounded-xl border transition-all duration-200 cursor-pointer ${
           filtroAlerta === 'TODOS'
-            ? 'bg-sky-50/50 border-sky-200 shadow-sm'
+            ? 'bg-sky-50/50 border-sky-200 shadow-sm dark:bg-sky-950/30 dark:border-sky-800'
             : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-sky-200'
         }`}
       >
@@ -38,7 +38,7 @@ const TarjetasAlertasInventario = ({
         onClick={() => setFiltroAlerta('BAJO_STOCK')}
         className={`p-4 rounded-xl border transition-all duration-200 cursor-pointer ${
           filtroAlerta === 'BAJO_STOCK'
-            ? 'bg-amber-50/50 border-amber-250 shadow-sm'
+            ? 'bg-amber-50/50 border-amber-250 shadow-sm dark:bg-amber-950/30 dark:border-amber-800/80'
             : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-amber-200'
         }`}
       >
@@ -62,7 +62,7 @@ const TarjetasAlertasInventario = ({
         onClick={() => setFiltroAlerta('VENCIMIENTOS')}
         className={`p-4 rounded-xl border transition-all duration-200 cursor-pointer ${
           filtroAlerta === 'VENCIMIENTOS'
-            ? 'bg-rose-50/55 border-rose-250 shadow-sm'
+            ? 'bg-rose-50/55 border-rose-250 shadow-sm dark:bg-rose-950/30 dark:border-rose-800/80'
             : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-rose-250'
         }`}
       >

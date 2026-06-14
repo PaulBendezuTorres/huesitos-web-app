@@ -211,7 +211,7 @@ const PaginaInventario = () => {
           </button>
           <button
             onClick={() => setModalLote(true)}
-            className="w-full sm:w-auto px-4 py-2.5 bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-slate-900 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm"
+            className="w-full sm:w-auto px-4 py-2.5 bg-slate-900 dark:bg-sky-500 hover:bg-slate-850 dark:hover:bg-sky-400 text-white dark:text-slate-950 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95 duration-200"
           >
             <Plus size={14} /> Ingresar Lote
           </button>
