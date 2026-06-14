@@ -1,8 +1,12 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-12 (Integración de Dark Mode global y merge a la rama main)
+Última actualización: 2026-06-14 (Modularización de Autenticación, Portada y Automatización de Memoria)
 
 ## 🚀 Logros Recientes
+- [x] **Modularización del Flujo de Autenticación**: Separado en subcomponentes atómicos (`ContenedorAutenticacion`, `CampoFormulario`, `CasillerosCodigo`).
+- [x] **Modularización de la Portada**: Dividida la landing page `Portada.jsx` en componentes autónomos en `/src/componentes/portada/` (Hero, Nosotros, Servicios, etc.).
+- [x] **Tema Oscuro Semántico y Legibilidad**: Integrada la paleta semántica oscura basada en el color azul marino profundo del usuario (`#0B1A30` como `oscuro-base`) en `tailwind.config.js` y documentada en `frontend.md`.
+- [x] **Automatización del Workflow de Memoria**: Modificados el workflow `actualizar_memoria.md` y las reglas generales `general.md` para actualizar la memoria de forma directa y automática.
 - [x] **Implementación de Dark Mode en toda la aplicación**:
   - Configurado Tailwind CSS con la directiva `darkMode: 'class'`.
   - Creado e integrado `huesitos-frontend/src/contextos/ContextoTema.jsx` para proveer un estado global reactivo de tema claro/oscuro.

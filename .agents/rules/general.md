@@ -20,7 +20,7 @@ description: Reglas generales del proyecto Huesitos, incluyendo flujo de git, do
 - **Base de Datos**: MySQL 8.4.
 
 ## Estándares del Proyecto
-- **Idioma y Comunicación**: El asistente debe responder SIEMPRE en español. Todo el código nuevo (nombres de variables, clases, métodos) y la documentación técnica deben escribirse preferentemente en español. **Las explicaciones y respuestas del asistente deben ser obligatoriamente muy breves, concisas y directas al grano, sin rodeos ni explicaciones redundantes.**
+- **Idioma y Comunicación**: El asistente debe responder SIEMPRE en español, iniciando obligatoriamente su mensaje saludando a "Paul" (ej. "Paul, ..."). Todo el código nuevo (nombres de variables, clases, métodos) y la documentación técnica deben escribirse preferentemente en español. **Las explicaciones y respuestas del asistente deben ser obligatoriamente muy breves, concisas y directas al grano, sin rodeos ni explicaciones redundantes.**
 - **Seguridad**:
   - Nunca expongas credenciales, llaves API, tokens o información sensible en el código ni en repositorios. Usa archivos de propiedades configurados adecuadamente o variables de entorno.
   - Asegurar la validación estricta de datos de entrada (DTOs, anotaciones `@Valid` en Spring Boot).
@@ -36,6 +36,6 @@ description: Reglas generales del proyecto Huesitos, incluyendo flujo de git, do
     * Corregir z-index para superponer sobre el sidebar
     * Eliminar animación de desplazamiento vertical heredada
     ```
-- **Frecuencia**: Realizar obligatoriamente un commit al finalizar cada tarea (sea una tarea pequeña e individual o un paso de un plan de trabajo), antes de proceder con el siguiente cambio.
+- **Frecuencia y Ejecución**: El agente tiene **prohibido** realizar commits de forma automática o ejecutar el comando `git commit`. Al finalizar cada tarea o plan de implementación completado, el agente debe dejar redactado el mensaje de commit estructurado en español al final de su respuesta, para que el usuario realice el commit de forma manual.
 - **Archivos Locales Excluidos**: Nunca se deben agregar, hacer commit o subir al repositorio remoto el archivo `memoria.md`. Este archivo es estrictamente de uso local y contexto para los agentes en el entorno de desarrollo.
 - **Archivos Ignorados**: Está estrictamente prohibido forzar la adición (`git add -f`) de archivos o directorios que estén excluidos en el archivo `.gitignore` del proyecto.
