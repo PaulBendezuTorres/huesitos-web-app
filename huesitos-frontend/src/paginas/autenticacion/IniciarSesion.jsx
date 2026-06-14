@@ -4,6 +4,7 @@ import { Mail, Lock } from 'lucide-react';
 import ContenedorAutenticacion from '@/componentes/autenticacion/ContenedorAutenticacion';
 import CampoFormulario from '@/componentes/autenticacion/CampoFormulario';
 import BotonVolver from '@/componentes/comun/BotonVolver';
+import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
 import { useTema } from '@/contextos/ContextoTema';
 
 const IniciarSesion = () => {
@@ -11,12 +12,14 @@ const IniciarSesion = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [cargando, setCargando] = useState(false);
   
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
+    setCargando(true);
 
     try {
       const response = await fetch('http://localhost:8080/api/autenticacion/login', {
@@ -63,8 +66,11 @@ const IniciarSesion = () => {
     } catch (error) {
       console.error('Error de red:', error);
       setErrorMsg('Error de conexión con el servidor.');
+    } finally {
+      setCargando(false);
     }
   };
+
 
   return (
     <ContenedorAutenticacion
@@ -134,9 +140,17 @@ const IniciarSesion = () => {
 
         <button
           type="submit"
-          className="w-full py-3 bg-sky-500 hover:bg-sky-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-sky-500/20 transition-all flex items-center justify-center gap-2"
+          disabled={cargando}
+          className="w-full py-3 bg-sky-500 hover:bg-sky-600 disabled:bg-sky-400 text-white text-sm font-bold rounded-xl shadow-lg shadow-sky-500/20 disabled:shadow-none transition-all flex items-center justify-center gap-2"
         >
-          Ingresar
+          {cargando ? (
+            <>
+              <CargadorSpinner size="xs" color="text-white" />
+              <span>Procesando...</span>
+            </>
+          ) : (
+            'Ingresar'
+          )}
         </button>
       </form>
 

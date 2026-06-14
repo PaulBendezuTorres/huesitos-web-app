@@ -5,6 +5,8 @@ import ContenedorAutenticacion from '@/componentes/autenticacion/ContenedorAuten
 import CampoFormulario from '@/componentes/autenticacion/CampoFormulario';
 import CasillerosCodigo from '@/componentes/autenticacion/CasillerosCodigo';
 import BotonVolver from '@/componentes/comun/BotonVolver';
+import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
+
 
 const RestablecerContrasena = () => {
   const [codigo, setCodigo] = useState(['', '', '', '', '', '']);
@@ -187,9 +189,16 @@ const RestablecerContrasena = () => {
         <button
           type="submit"
           disabled={loading || timeLeft <= 0}
-          className="w-full py-3 bg-sky-500 hover:bg-sky-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-sky-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+          className="w-full py-3 bg-sky-500 hover:bg-sky-600 disabled:bg-sky-400 text-white text-sm font-bold rounded-xl shadow-lg shadow-sky-500/20 disabled:shadow-none transition-all flex items-center justify-center gap-2"
         >
-          {loading ? 'Restableciendo...' : 'Restablecer contraseña'}
+          {loading ? (
+            <>
+              <CargadorSpinner size="xs" color="text-white" />
+              <span>Restableciendo...</span>
+            </>
+          ) : (
+            'Restablecer contraseña'
+          )}
         </button>
       </form>
     </ContenedorAutenticacion>

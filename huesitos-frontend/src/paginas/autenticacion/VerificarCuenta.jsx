@@ -4,6 +4,8 @@ import { RefreshCw } from 'lucide-react';
 import ContenedorAutenticacion from '@/componentes/autenticacion/ContenedorAutenticacion';
 import CasillerosCodigo from '@/componentes/autenticacion/CasillerosCodigo';
 import BotonVolver from '@/componentes/comun/BotonVolver';
+import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
+
 
 const VerificarCuenta = () => {
   const [codigo, setCodigo] = useState(['', '', '', '', '', '']);
@@ -194,9 +196,16 @@ const VerificarCuenta = () => {
         <button
           type="submit"
           disabled={loading || timeLeft <= 0}
-          className="w-full py-3 bg-sky-500 hover:bg-sky-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-sky-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+          className="w-full py-3 bg-sky-500 hover:bg-sky-600 disabled:bg-sky-400 text-white text-sm font-bold rounded-xl shadow-lg shadow-sky-500/20 disabled:shadow-none transition-all flex items-center justify-center gap-2"
         >
-          {loading ? 'Verificando...' : 'Activar cuenta'}
+          {loading ? (
+            <>
+              <CargadorSpinner size="xs" color="text-white" />
+              <span>Verificando...</span>
+            </>
+          ) : (
+            'Activar cuenta'
+          )}
         </button>
       </form>
 

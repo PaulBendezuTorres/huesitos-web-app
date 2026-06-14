@@ -4,6 +4,7 @@ import { User, Mail, Lock } from 'lucide-react';
 import ContenedorAutenticacion from '@/componentes/autenticacion/ContenedorAutenticacion';
 import CampoFormulario from '@/componentes/autenticacion/CampoFormulario';
 import BotonVolver from '@/componentes/comun/BotonVolver';
+import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
 
 const Registro = () => {
   const [nombre, setNombre] = useState('');
@@ -14,6 +15,8 @@ const Registro = () => {
   const [aceptaTerminos, setAceptaTerminos] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const [cargando, setCargando] = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -36,6 +39,8 @@ const Registro = () => {
       setErrorMsg('Debes aceptar los términos y condiciones');
       return;
     }
+
+    setCargando(true);
 
     try {
       const response = await fetch('http://localhost:8080/api/autenticacion/registro', {
@@ -68,6 +73,8 @@ const Registro = () => {
     } catch (error) {
       console.error('Error de red:', error);
       setErrorMsg('Error de conexión con el servidor.');
+    } finally {
+      setCargando(false);
     }
   };
 
@@ -186,9 +193,17 @@ const Registro = () => {
 
         <button
           type="submit"
-          className="w-full py-3 bg-sky-500 hover:bg-sky-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-sky-500/20 transition-all flex items-center justify-center gap-2"
+          disabled={cargando}
+          className="w-full py-3 bg-sky-500 hover:bg-sky-600 disabled:bg-sky-400 text-white text-sm font-bold rounded-xl shadow-lg shadow-sky-500/20 disabled:shadow-none transition-all flex items-center justify-center gap-2"
         >
-          Crear cuenta
+          {cargando ? (
+            <>
+              <CargadorSpinner size="xs" color="text-white" />
+              <span>Creando cuenta...</span>
+            </>
+          ) : (
+            'Crear cuenta'
+          )}
         </button>
       </form>
     </ContenedorAutenticacion>

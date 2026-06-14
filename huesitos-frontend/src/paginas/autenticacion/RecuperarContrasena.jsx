@@ -4,6 +4,8 @@ import { Mail } from 'lucide-react';
 import ContenedorAutenticacion from '@/componentes/autenticacion/ContenedorAutenticacion';
 import CampoFormulario from '@/componentes/autenticacion/CampoFormulario';
 import BotonVolver from '@/componentes/comun/BotonVolver';
+import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
+
 
 const RecuperarContrasena = () => {
   const [email, setEmail] = useState('');
@@ -101,9 +103,16 @@ const RecuperarContrasena = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 bg-sky-500 hover:bg-sky-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-sky-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+          className="w-full py-3 bg-sky-500 hover:bg-sky-600 disabled:bg-sky-400 text-white text-sm font-bold rounded-xl shadow-lg shadow-sky-500/20 disabled:shadow-none transition-all flex items-center justify-center gap-2"
         >
-          {loading ? 'Enviando...' : 'Enviar código de verificación'}
+          {loading ? (
+            <>
+              <CargadorSpinner size="xs" color="text-white" />
+              <span>Enviando código...</span>
+            </>
+          ) : (
+            'Enviar código de verificación'
+          )}
         </button>
       </form>
     </ContenedorAutenticacion>
