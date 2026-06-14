@@ -13,7 +13,7 @@ const SeccionHero = ({
       variants={fadeUp}
       style={{ backgroundImage: `url(${portada})` }}
     >
-      <div className="absolute inset-0 bg-[#0B132B]/75 z-0"></div>
+      <div className="absolute inset-0 bg-[#0B1A30]/75 z-0"></div>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-6 sm:space-y-10 relative z-10 text-white animate-in fade-in zoom-in-95 duration-700">
         <div className="inline-flex items-center gap-2 py-1.5 px-3 sm:py-2 sm:px-4 rounded-full bg-blue-500/20 text-blue-300 text-xs sm:text-sm font-bold tracking-wide border border-blue-500/30 backdrop-blur-md shadow-sm">

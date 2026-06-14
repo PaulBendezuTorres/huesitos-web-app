@@ -8,7 +8,7 @@ const SeccionUbicacion = ({
   return (
     <motion.section
       id="ubicacion"
-      className="py-24 bg-white dark:bg-[#0B132B] border-t border-slate-200 dark:border-[#182854]/40 transition-colors duration-300"
+      className="py-24 bg-white dark:bg-[#0B1A30] border-t border-slate-200 dark:border-[#1D3E70]/40 transition-colors duration-300"
       variants={staggerContainer}
       initial="hidden"
       whileInView="visible"
@@ -26,11 +26,11 @@ const SeccionUbicacion = ({
                 Nuestra Ubicación
               </h3>
             </div>
-            <p className="text-lg text-slate-650 dark:text-slate-300 transition-colors">
+            <p className="text-lg text-slate-655 dark:text-slate-300 transition-colors">
               Estamos estratégicamente ubicados para atender cualquier emergencia con rapidez y brindar el mejor cuidado médico a tu engreído en instalaciones de primer nivel.
             </p>
             
-            <div className="space-y-6 bg-slate-50 dark:bg-[#16224F] p-8 rounded-3xl border border-slate-100 dark:border-[#1E2F6C]/30 transition-colors duration-200">
+            <div className="space-y-6 bg-slate-50 dark:bg-[#152E54] p-8 rounded-3xl border border-slate-100 dark:border-[#1D3E70]/30 transition-colors duration-200">
               <div className="flex items-start gap-4">
                 <MapPin className="text-blue-600 dark:text-sky-400 mt-1 shrink-0" size={24} />
                 <div>
@@ -60,7 +60,7 @@ const SeccionUbicacion = ({
           </div>
 
           {/* Mapa de Google Maps Integrado */}
-          <div className="w-full h-[450px] rounded-3xl shadow-lg overflow-hidden relative border border-slate-200 dark:border-[#1E2F6C]/40">
+          <div className="w-full h-[450px] rounded-3xl shadow-lg overflow-hidden relative border border-slate-200 dark:border-[#1D3E70]/40">
             <iframe 
               title="Ubicación Clínica Veterinaria"
               src="https://maps.google.com/maps?q=Santo%20Domingo%20De%20Marcona%20C-22,%20Ica,%20Peru&t=&z=16&ie=UTF8&iwloc=&output=embed" 
