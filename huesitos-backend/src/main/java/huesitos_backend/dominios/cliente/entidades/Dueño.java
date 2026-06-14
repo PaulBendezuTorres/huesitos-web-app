@@ -1,0 +1,35 @@
+package huesitos_backend.dominios.cliente.entidades;
+
+import huesitos_backend.dominios.usuario.entidades.Usuario;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
+@Entity
+@Table(name = "duenos")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Dueño {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nombre_completo", nullable = false, length = 100)
+    private String nombreCompleto;
+
+    @Column(length = 20)
+    private String telefono;
+
+    @Column(length = 150)
+    private String direccion;
+
+    @OneToOne
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable = false)
+    private Usuario usuario;
+}

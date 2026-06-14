@@ -1,5 +1,7 @@
 package huesitos_backend.seguridad;
 
+import huesitos_backend.dominios.usuario.entidades.Rol;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,0 +1,12 @@
+package huesitos_backend.dominios.marketing.repositorios;
+
+import huesitos_backend.dominios.marketing.entidades.Campana;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.time.LocalDate;
+import java.util.List;
+
+public interface CampanaRepositorio extends JpaRepository<Campana, Long> {
+    List<Campana> findByActivoTrue();
+
+    List<Campana> findByActivoTrueAndFechaFinBefore(LocalDate fecha);
+}

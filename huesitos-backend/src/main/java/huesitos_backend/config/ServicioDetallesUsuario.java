@@ -1,5 +1,7 @@
 package huesitos_backend.config;
 
+import huesitos_backend.dominios.usuario.entidades.Usuario;
+
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
