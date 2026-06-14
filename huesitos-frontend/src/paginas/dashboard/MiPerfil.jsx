@@ -221,7 +221,7 @@ const MiPerfil = ({ sinPlantilla = false }) => {
               <span className={`text-xs font-bold px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 mt-1.5 uppercase tracking-wide`}>
                 {rol.replace('_', ' ')}
               </span>
-              <p className="text-xs text-slate-400 dark:text-slate-400 mt-4 leading-relaxed">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-4 leading-relaxed">
                 {subiendoFoto ? (
                   <span className="flex items-center justify-center gap-1.5 text-sky-600 dark:text-sky-400 font-semibold animate-pulse">
                     <CargadorSpinner size="xs" /> Cargando imagen...
@@ -272,7 +272,7 @@ const MiPerfil = ({ sinPlantilla = false }) => {
                     type="email"
                     value={correo}
                     disabled
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-400 text-sm font-semibold bg-slate-100 dark:bg-slate-900 cursor-not-allowed outline-none transition-all"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 text-sm font-semibold bg-slate-100 dark:bg-slate-900 cursor-not-allowed outline-none transition-all"
                   />
                 </div>
               </div>
@@ -317,7 +317,7 @@ const MiPerfil = ({ sinPlantilla = false }) => {
             <h3 className="text-base font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-700 pb-3 flex items-center gap-2">
               <Lock size={18} className={colorTexto} /> Contraseña y Seguridad
             </h3>
-            <p className="text-xs text-slate-400 dark:text-slate-400">Deja estos campos vacíos si no deseas cambiar tu contraseña actual.</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Deja estos campos vacíos si no deseas cambiar tu contraseña actual.</p>
             
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
@@ -358,7 +358,7 @@ const MiPerfil = ({ sinPlantilla = false }) => {
             <h3 className="text-base font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-700 pb-3 flex items-center gap-2">
               <span className="text-sky-600 dark:text-sky-400 font-bold">🎨</span> Apariencia y Visualización
             </h3>
-            <p className="text-xs text-slate-400 dark:text-slate-300">Selecciona el tema visual de tu preferencia para la aplicación.</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Selecciona el tema visual de tu preferencia para la aplicación.</p>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <button
