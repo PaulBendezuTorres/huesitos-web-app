@@ -26,3 +26,7 @@
   * Bordes y líneas divisoras -> `dark:border-oscuro-borde` (color `#1D3E70`)
 - **Legibilidad de Texto**: Asegurar el contraste de los textos sobre fondos marinos. Usar `dark:text-slate-100` para títulos principales, `dark:text-slate-300` para descripciones generales y evitar el uso de clases no estándar o inventadas (como `slate-355` o `slate-655`).
 
+## Modularización y Estructura por Características
+- **Estructura Atómica de Componentes**: Separar las páginas y flujos complejos en subcomponentes atómicos e independientes ubicados en subdirectorios por feature (ej. `/src/componentes/portada/`, `/src/componentes/autenticacion/`) para evitar archivos gigantes.
+- **Uso de Alias de Ruta**: Emplear siempre el alias `@` configurado para la carpeta `/src` (ej. `import BotonVolver from '@/componentes/autenticacion/BotonVolver'`) para evitar rutas relativas largas y confusas.
+- **Desacoplamiento de Lógica**: Desacoplar la lógica de negocio y las llamadas de API de las vistas de presentación, centralizando llamadas de API en helpers específicos (`src/servicios/`).

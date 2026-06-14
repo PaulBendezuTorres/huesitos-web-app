@@ -38,16 +38,20 @@ El archivo `memoria.md` debe mantener la siguiente estructura limpia en español
 Última actualización: [Fecha y Hora actual]
 
 ## 🚀 Logros Recientes
-- [ ] Breve lista de características terminadas y subidas a producción o rama develop.
+- [ ] Breve lista de características terminadas en la tarea o sesión actual (máximo 5-10 puntos).
 
 ## 📌 Estado Actual de los Componentes
-- **Backend (Spring Boot)**: Estado actual de la API, endpoints creados, dependencias configuradas.
-- **Frontend (React)**: Componentes creados, vistas implementadas, diseño y Tailwind.
-- **Base de Datos (MySQL)**: Tablas creadas, migraciones ejecutadas, conexiones activas.
+- **Backend (Spring Boot)**: Resumen conciso del estado de la API.
+- **Frontend (React)**: Componentes y diseño del tema.
+- **Base de Datos (MySQL)**: Estado de tablas principales.
 
 ## 🛠️ Próximos Pasos (Pendientes)
 - [ ] Lista ordenada de prioridades para el siguiente paso del desarrollo.
 
 ## 🧠 Decisiones Clave y Notas
-- Registro de decisiones técnicas o de arquitectura tomadas en el camino.
+- Registro de decisiones técnicas o de arquitectura tomadas recientemente.
 ```
+
+## Directrices de Extensión y Concisión
+- **Límite de Tamaño**: El archivo `memoria.md` debe mantenerse siempre corto y conciso (máximo 100-150 líneas).
+- **Control de Historial**: NO acumular logros históricos de todo el proyecto. La sección "🚀 Logros Recientes" debe mostrar únicamente los cambios de la sesión o tarea actual. Los logros antiguos deben ser consolidados en un breve párrafo de "Hitos Históricos" o eliminados del archivo para evitar redundancia y consumo excesivo de tokens.

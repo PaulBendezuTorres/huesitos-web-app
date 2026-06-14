@@ -12,7 +12,7 @@ description: Reglas generales del proyecto Huesitos, incluyendo flujo de git, do
 - **Planes de Trabajo e Implementación**: El agente solo debe crear o escribir planes de trabajo, planes de implementación (`implementation_plan.md`) o definición de tareas (`task.md`) para tareas grandes o cambios complejos, o cuando el usuario lo solicite de forma explícita. Para cambios o tareas pequeñas, no se debe requerir un plan.
 - **Seguimiento del Proyecto & Documentación**:
   - **Uso de Pruebas de Navegador**: Para optimizar el tiempo de ejecución y ahorrar tokens, el agente tiene **prohibido** utilizar el subagente de navegación web (`browser_subagent`) de forma autónoma o automática. La validación visual y funcional en el navegador la realizará manualmente el usuario. El agente solo debe verificar la compilación local y pruebas de terminal.
-  - **Actualización de Memoria y Docs**: El agente **NO debe realizar** actualizaciones automáticas en `memoria.md` ni en `docs/`. La actualización y creación de estos archivos **será realizada única y exclusivamente por el usuario**. El agente no debe sugerir actualizarlos automáticamente ni realizar modificaciones en ellos a menos que el usuario lo ordene de forma directa y explícita.
+  - **Actualización de Memoria y Docs**: El agente debe realizar la actualización de `memoria.md` de forma directa y automática (sin preguntar, pedir confirmación o aprobación previa al usuario) cuando ejecute el workflow `/actualizar_memoria` o cuando se requiera registrar el avance. Las modificaciones en `docs/` siguen estando restringidas y solo se realizarán bajo indicación del usuario.
 
 ## Tecnologías Principales (Monolito)
 - **Backend**: Java 26 / Spring Boot 4.

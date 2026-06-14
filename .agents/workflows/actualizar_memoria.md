@@ -25,6 +25,7 @@ Este workflow permite actualizar el progreso y estado de la base de código en e
   * Próximos pasos pendientes.
   * Decisiones clave tomadas en las últimas tareas.
 
-### 5. Confirmación y Escritura
-* El agente presentará la propuesta al usuario en el chat.
-* Tras la aprobación del usuario, el agente modificará y guardará el archivo `memoria.md` en la raíz de forma definitiva.
+### 5. Escritura Directa y Automática (Sin Confirmación)
+* El agente escribirá y guardará la actualización directamente en el archivo `memoria.md` en la raíz del proyecto de forma automática.
+* **CRÍTICO**: El agente NO debe realizar preguntas, presentar una propuesta previa en el chat, ni solicitar confirmación o aprobación antes de escribir. Debe guardar los cambios directamente.
+* Posteriormente, presentará un resumen extremadamente conciso de la actualización realizada al usuario en el chat.
