@@ -7,6 +7,8 @@ import huesitos_backend.dominios.tienda.repositorios.CategoriaRepositorio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import huesitos_backend.servicios.StorageService;
+import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @Service
@@ -16,6 +18,7 @@ public class ProductoServicio {
     private final ProductoRepositorio productoRepositorio;
     private final InventarioRepositorio inventarioRepositorio;
     private final CategoriaRepositorio categoriaRepositorio;
+    private final StorageService storageService;
 
     @Transactional
     public Producto guardarProducto(Producto producto) {
@@ -86,5 +89,17 @@ public class ProductoServicio {
         List<Producto> productos = productoRepositorio.findByNombreContainingIgnoreCaseAndActivoTrue(nombre.trim());
         productos.forEach(p -> p.setStockDisponible(inventarioRepositorio.obtenerStockDisponible(p.getId())));
         return productos;
+    }
+
+    @Transactional
+    public String subirFotoProducto(Long id, MultipartFile archivo) {
+        Producto producto = productoRepositorio.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
+        String fotoAnterior = producto.getFotoUrl();
+        String urlFoto = storageService.comprimirYGuardarFoto(archivo, "producto");
+        producto.setFotoUrl(urlFoto);
+        productoRepositorio.save(producto);
+        storageService.borrarFoto(fotoAnterior);
+        return urlFoto;
     }
 }

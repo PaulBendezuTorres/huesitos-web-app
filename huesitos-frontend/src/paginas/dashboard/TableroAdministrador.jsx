@@ -12,6 +12,7 @@ import RegistrarClienteNuevo from '@/paginas/cliente/RegistrarClienteNuevo';
 import AgendaSemanal from '@/paginas/cita/AgendaSemanal';
 import ConfiguracionHorarios from '@/paginas/cita/ConfiguracionHorarios';
 import PaginaInventario from '@/paginas/tienda/PaginaInventario';
+import RegistrarProductoNuevo from '@/paginas/tienda/RegistrarProductoNuevo';
 import PaginaCampanas from '@/paginas/marketing/PaginaCampanas';
 import GestionPedidos from '@/paginas/tienda/GestionPedidos';
 import PlantillaTablero from '@/componentes/layout/PlantillaTablero';
@@ -69,6 +70,7 @@ const TableroAdministrador = () => {
         <Route path="agenda" element={<AgendaSemanal />} />
         <Route path="horarios" element={<ConfiguracionHorarios />} />
         <Route path="inventario" element={<PaginaInventario />} />
+        <Route path="inventario/registrar-producto" element={<RegistrarProductoNuevo />} />
         <Route path="finanzas" element={<PaginaFinanzas />} />
         <Route path="campanas" element={<PaginaCampanas />} />
         <Route path="configuracion" element={<ConfiguracionDinamica />} />

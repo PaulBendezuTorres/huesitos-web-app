@@ -5,7 +5,10 @@ import huesitos_backend.dominios.tienda.servicios.ProductoServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/productos")
@@ -53,6 +56,18 @@ public class ProductoControlador {
         try {
             productoServicio.desactivarProducto(id);
             return ResponseEntity.ok("Producto desactivado con éxito");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/{id}/foto")
+    public ResponseEntity<?> subirFotoProducto(@PathVariable Long id, @RequestParam("archivo") MultipartFile archivo) {
+        try {
+            String urlFoto = productoServicio.subirFotoProducto(id, archivo);
+            Map<String, String> respuesta = new HashMap<>();
+            respuesta.put("fotoUrl", urlFoto);
+            return ResponseEntity.ok(respuesta);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

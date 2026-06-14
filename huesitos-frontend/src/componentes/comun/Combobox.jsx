@@ -6,7 +6,8 @@ const Combobox = ({
   onChange, 
   opciones = [], 
   placeholder = "Escribe o selecciona...", 
-  required = false 
+  required = false,
+  icono: Icono = Stethoscope
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [filtro, setFiltro] = useState(value || '');
@@ -46,7 +47,7 @@ const Combobox = ({
   };
 
   const handleSeleccionar = (opc) => {
-    onChange(opc.label, opc.precio); // Devuelve el nombre y el precio opcional
+    onChange(opc.label, opc.precio, opc); // Devuelve el nombre, el precio opcional y el objeto completo
     setFiltro(opc.label);
     setIsOpen(false);
   };
@@ -54,7 +55,7 @@ const Combobox = ({
   return (
     <div ref={containerRef} className="relative w-full">
       <div className="relative">
-        <Stethoscope className="absolute left-3.5 top-3.5 text-slate-400 pointer-events-none" size={16} />
+        <Icono className="absolute left-3.5 top-3.5 text-slate-400 pointer-events-none" size={16} />
         <input
           type="text"
           value={filtro}

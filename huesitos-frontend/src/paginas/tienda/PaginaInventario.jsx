@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Package,
   AlertTriangle,
@@ -11,12 +12,11 @@ import {
   ChevronUp,
   Save,
   X,
-  FileText,
-  TrendingDown,
   FolderOpen
 } from 'lucide-react';
 import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
 import Buscador from '@/componentes/comun/Buscador';
+import Paginacion from '@/componentes/comun/Paginacion';
 import {
   obtenerProductos,
   obtenerCategorias,
@@ -24,7 +24,6 @@ import {
   registrarLote,
   ajustarStockLote,
   desactivarLote,
-  registrarProducto,
   desactivarProducto
 } from '@/api/tiendaApi';
 import {
@@ -33,6 +32,8 @@ import {
 } from '@/servicios/finanzasServicio';
 
 const PaginaInventario = () => {
+  const navigate = useNavigate();
+
   // Datos
   const [productos, setProductos] = useState([]);
   const [categorias, setCategorias] = useState([]);
@@ -40,26 +41,22 @@ const PaginaInventario = () => {
   const [alertasBajoStock, setAlertasBajoStock] = useState([]);
   const [alertasVencimiento, setAlertasVencimiento] = useState([]);
 
-  // UI
+  // UI y Carga
   const [loading, setLoading] = useState(true);
   const [busqueda, setBusqueda] = useState('');
   const [filtroCategoria, setFiltroCategoria] = useState('');
   const [filtroAlerta, setFiltroAlerta] = useState('TODOS'); // 'TODOS', 'BAJO_STOCK', 'VENCIMIENTOS'
   const [productoExpandido, setProductoExpandido] = useState(null);
 
-  // Modales
-  const [modalProducto, setModalProducto] = useState(false);
+  // Estados de Paginación
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [itemsPorPagina, setItemsPorPagina] = useState(10);
+
+  // Modales Lotes e Inventario
   const [modalLote, setModalLote] = useState(false);
   const [modalAjuste, setModalAjuste] = useState(null); // Contendrá el lote a ajustar
 
   // Formularios
-  const [formProducto, setFormProducto] = useState({
-    nombre: '',
-    descripcion: '',
-    precio: '',
-    categoriaId: '',
-    stockMinimo: 5
-  });
   const [formLote, setFormLote] = useState({
     productoId: '',
     codigoLote: '',
@@ -71,7 +68,12 @@ const PaginaInventario = () => {
   const [procesando, setProcesando] = useState(false);
   const [errorForm, setErrorForm] = useState('');
 
-  // Cargar datos
+  // Resetear paginación al cambiar filtros
+  useEffect(() => {
+    setPaginaActual(1);
+  }, [busqueda, filtroCategoria, filtroAlerta]);
+
+  // Cargar datos del backend
   const cargarDatos = useCallback(async () => {
     setLoading(true);
     try {
@@ -108,7 +110,7 @@ const PaginaInventario = () => {
     // Filtro de categoría
     const matchesCategory = filtroCategoria === '' || p.categoria?.id === Number(filtroCategoria);
 
-    // Filtro de alerta táctil
+    // Filtro de alertas
     let matchesAlerta = true;
     if (filtroAlerta === 'BAJO_STOCK') {
       matchesAlerta = alertasBajoStock.some((b) => b.id === p.id);
@@ -147,36 +149,6 @@ const PaginaInventario = () => {
       cargarDatos();
     } catch (err) {
       alert('Error al desactivar el lote: ' + (err.response?.data || err.message));
-    }
-  };
-
-  // Crear Producto Submit
-  const handleProductoSubmit = async (e) => {
-    e.preventDefault();
-    setProcesando(true);
-    setErrorForm('');
-    try {
-      if (!formProducto.categoriaId) {
-        throw new Error('La categoría es obligatoria.');
-      }
-      const payload = {
-        nombre: formProducto.nombre,
-        descripcion: formProducto.descripcion,
-        precio: Number(formProducto.precio),
-        stockMinimo: Number(formProducto.stockMinimo),
-        categoria: { id: Number(formProducto.categoriaId) }
-      };
-
-      await registrarProducto(payload);
-      alert('Producto registrado con éxito.');
-      setModalProducto(false);
-      setFormProducto({ nombre: '', descripcion: '', precio: '', categoriaId: '', stockMinimo: 5 });
-      cargarDatos();
-    } catch (err) {
-      const msg = err.response?.data || err.message || 'Error al guardar el producto.';
-      setErrorForm(typeof msg === 'string' ? msg : JSON.stringify(msg));
-    } finally {
-      setProcesando(false);
     }
   };
 
@@ -251,7 +223,7 @@ const PaginaInventario = () => {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffDays <= 0) {
-      return 'bg-red-100 text-red-800 border-red-200 font-extrabold';
+      return 'bg-red-105 text-red-800 border-red-200 font-extrabold';
     } else if (diffDays <= 30) {
       return 'bg-amber-100 text-amber-800 border-amber-200 font-bold';
     } else {
@@ -259,10 +231,17 @@ const PaginaInventario = () => {
     }
   };
 
+  // Paginación lógica
+  const totalItems = productosFiltrados.length;
+  const productosPaginados = productosFiltrados.slice(
+    (paginaActual - 1) * itemsPorPagina,
+    paginaActual * itemsPorPagina
+  );
+
   return (
-    <div className="space-y-6 animate-in fade-in duration-300 font-sans text-slate-700">
+    <div className="space-y-6 animate-in fade-in duration-300 font-sans text-slate-700 pb-10">
       
-      {/* ─── TARJETAS DE ALERTAS CRÍTICAS (FEFO) ─── */}
+      {/* ─── TARJETAS DE ALERTAS CRÍTICAS ─── */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {/* Total Productos */}
         <div 
@@ -356,28 +335,28 @@ const PaginaInventario = () => {
         {/* Botones de creación */}
         <div className="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
           <button
-            onClick={() => setModalProducto(true)}
-            className="w-full sm:w-auto px-4 py-2 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-200 rounded-lg border border-slate-250/65 dark:border-slate-600 text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm"
+            onClick={() => navigate('/admin/inventario/registrar-producto')}
+            className="w-full sm:w-auto px-4 py-2.5 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-200 rounded-lg border border-slate-250/65 dark:border-slate-600 text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm"
           >
             <Plus size={14} /> Registrar Producto
           </button>
           <button
             onClick={() => setModalLote(true)}
-            className="w-full sm:w-auto px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm"
+            className="w-full sm:w-auto px-4 py-2.5 bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-slate-900 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm"
           >
-            <Plus size={14} /> Ingresar Lote (FEFO)
+            <Plus size={14} /> Ingresar Lote
           </button>
         </div>
       </div>
 
       {/* ─── TABLA PRINCIPAL Y LOTES EXPANDIBLES ─── */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm gap-3">
+        <div className="flex flex-col items-center justify-center min-h-[400px] bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm gap-3">
           <CargadorSpinner size="lg" />
           <span className="text-sm font-bold text-slate-400 dark:text-slate-500">Consultando stock e inventarios...</span>
         </div>
       ) : (
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200/50 dark:border-slate-700/50 shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200/50 dark:border-slate-700/50 shadow-sm overflow-hidden flex flex-col justify-between">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs md:text-sm">
               <thead>
@@ -394,14 +373,14 @@ const PaginaInventario = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
-                {productosFiltrados.length === 0 ? (
+                {productosPaginados.length === 0 ? (
                   <tr>
                     <td colSpan="9" className="text-center py-10 text-slate-450 font-bold">
                       No se encontraron productos registrados.
                     </td>
                   </tr>
                 ) : (
-                  productosFiltrados.map((p) => {
+                  productosPaginados.map((p) => {
                     const stockTotal = calcularStockProducto(p.id);
                     const esBajoStock = stockTotal <= (p.stockMinimo || 5);
                     const expandido = productoExpandido === p.id;
@@ -425,17 +404,32 @@ const PaginaInventario = () => {
                           </td>
                           <td className="p-3.5 font-bold text-slate-400 dark:text-slate-500">#{p.id}</td>
                           <td className="p-3.5">
-                             <div className="font-bold text-slate-800 dark:text-slate-100 text-xs md:text-sm">{p.nombre}</div>
-                             {p.descripcion && <div className="text-[10px] text-slate-400 dark:text-slate-500 truncate max-w-xs mt-0.5">{p.descripcion}</div>}
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 overflow-hidden flex items-center justify-center text-slate-300 shadow-inner shrink-0">
+                                {p.fotoUrl ? (
+                                  <img 
+                                    src={`http://localhost:8080${p.fotoUrl}`} 
+                                    alt={p.nombre} 
+                                    className="w-full h-full object-cover" 
+                                  />
+                                ) : (
+                                  <Package size={16} className="text-slate-400" />
+                                )}
+                              </div>
+                              <div className="overflow-hidden">
+                                <div className="font-bold text-slate-800 dark:text-slate-100 text-xs md:text-sm truncate max-w-xs">{p.nombre}</div>
+                                {p.descripcion && <div className="text-[10px] text-slate-400 dark:text-slate-500 truncate max-w-xs mt-0.5">{p.descripcion}</div>}
+                              </div>
+                            </div>
                           </td>
                           <td className="p-3.5">
-                             <span className="bg-slate-100 dark:bg-slate-700 text-slate-650 dark:text-slate-300 px-2 py-0.5 rounded text-[10px] border border-slate-200/50 dark:border-slate-600 font-semibold">
+                            <span className="bg-slate-100 dark:bg-slate-700 text-slate-650 dark:text-slate-300 px-2 py-0.5 rounded text-[10px] border border-slate-200/50 dark:border-slate-600 font-semibold">
                               {p.categoria?.nombre || 'General'}
                             </span>
                           </td>
-                           <td className="p-3.5 text-right font-bold text-slate-700 dark:text-slate-300">S/ {p.precio?.toFixed(2)}</td>
-                           <td className="p-3.5 text-center font-semibold text-slate-500 dark:text-slate-400">{p.stockMinimo} unds.</td>
-                           <td className="p-3.5 text-center font-bold text-slate-800 dark:text-slate-100">{stockTotal} unds.</td>
+                          <td className="p-3.5 text-right font-bold text-slate-700 dark:text-slate-300">S/ {p.precio?.toFixed(2)}</td>
+                          <td className="p-3.5 text-center font-semibold text-slate-500 dark:text-slate-400">{p.stockMinimo} unds.</td>
+                          <td className="p-3.5 text-center font-bold text-slate-800 dark:text-slate-100">{stockTotal} unds.</td>
                           <td className="p-3.5 text-center">
                             {esBajoStock ? (
                               <span className="bg-red-50 text-red-650 border-red-200/50 text-[9px] font-bold px-2 py-0.5 rounded border">
@@ -450,7 +444,7 @@ const PaginaInventario = () => {
                           <td className="p-3.5 text-center">
                             <button
                               onClick={() => handleDesactivarProducto(p.id)}
-                              className="p-1.5 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white rounded-lg border border-red-100/50 transition-all"
+                              className="p-1.5 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white rounded-lg border border-red-100/50 transition-all shadow-sm active:scale-95"
                               title="Desactivar producto"
                             >
                               <Trash2 size={13} />
@@ -458,43 +452,43 @@ const PaginaInventario = () => {
                           </td>
                         </tr>
 
-                        {/* Fila expandida de lotes FEFO */}
+                        {/* Fila expandida de lotes */}
                         {expandido && (
-                           <tr className="bg-slate-50/30 dark:bg-slate-900/30">
+                          <tr className="bg-slate-50/30 dark:bg-slate-900/30">
                             <td colSpan="9" className="p-3.5">
                               <div className="pl-6 md:pl-12 pr-2 py-1.5 space-y-2.5">
                                 <div className="flex justify-between items-center">
                                   <h4 className="font-bold text-slate-750 dark:text-slate-300 text-xs flex items-center gap-1.5">
                                     <FolderOpen size={13} className="text-sky-500" />
-                                    Lotes Activos (FEFO: Lotes con fecha crítica de caducidad)
+                                    Lotes Activos (Lotes con fecha crítica de caducidad)
                                   </h4>
                                 </div>
 
                                 {lotesDelProducto.length === 0 ? (
-                                   <div className="p-4 text-center text-slate-400 dark:text-slate-500 font-semibold border border-dashed border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-xs">
+                                  <div className="p-4 text-center text-slate-400 dark:text-slate-500 font-semibold border border-dashed border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-xs">
                                     No hay lotes de stock registrados para este producto. Registra uno nuevo.
                                   </div>
                                 ) : (
-                                   <div className="bg-white dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700 rounded-lg overflow-hidden shadow-sm">
+                                  <div className="bg-white dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700 rounded-lg overflow-hidden shadow-sm">
                                     <table className="w-full text-left text-xs border-collapse">
                                       <thead>
-                                         <tr className="bg-slate-50/50 dark:bg-slate-900/40 border-b border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider text-[9px]">
+                                        <tr className="bg-slate-50/50 dark:bg-slate-900/40 border-b border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider text-[9px]">
                                           <th className="p-2.5">Código de Lote</th>
                                           <th className="p-2.5">Stock</th>
                                           <th className="p-2.5">Ingreso</th>
                                           <th className="p-2.5">Vencimiento</th>
-                                          <th className="p-2.5 text-center">Estado FEFO</th>
+                                          <th className="p-2.5 text-center">Estado</th>
                                           <th className="p-2.5 text-center">Acciones</th>
                                         </tr>
                                       </thead>
-                                       <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
+                                      <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
                                         {lotesDelProducto.map((lote) => {
                                           return (
-                                             <tr key={lote.id} className="hover:bg-slate-50/30 dark:hover:bg-slate-700/30 transition-colors">
-                                               <td className="p-2.5 font-mono font-bold text-slate-750 dark:text-slate-300">{lote.codigoLote}</td>
-                                               <td className="p-2.5 font-semibold text-slate-800 dark:text-slate-100">{lote.stock} unds.</td>
-                                               <td className="p-2.5 text-slate-400 dark:text-slate-500">{formatarFecha(lote.fechaIngreso)}</td>
-                                               <td className="p-2.5 text-slate-600 dark:text-slate-300 font-bold">{formatarFecha(lote.fechaVencimiento)}</td>
+                                            <tr key={lote.id} className="hover:bg-slate-50/30 dark:hover:bg-slate-700/30 transition-colors">
+                                              <td className="p-2.5 font-mono font-bold text-slate-750 dark:text-slate-300">{lote.codigoLote}</td>
+                                              <td className="p-2.5 font-semibold text-slate-800 dark:text-slate-100">{lote.stock} unds.</td>
+                                              <td className="p-2.5 text-slate-400 dark:text-slate-500">{formatarFecha(lote.fechaIngreso)}</td>
+                                              <td className="p-2.5 text-slate-600 dark:text-slate-300 font-bold">{formatarFecha(lote.fechaVencimiento)}</td>
                                               <td className="p-2.5 text-center">
                                                 <span className={`text-[8.5px] font-bold px-2 py-0.5 rounded border ${obtenerBadgeVencimiento(lote)}`}>
                                                   {lote.fechaVencimiento ? (
@@ -541,122 +535,26 @@ const PaginaInventario = () => {
               </tbody>
             </table>
           </div>
-        </div>
-      )}
 
-      {/* ─── MODAL REGISTRAR PRODUCTO ─── */}
-      {modalProducto && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden">
-            <div className="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/40">
-              <h3 className="font-black text-slate-800 dark:text-slate-100 text-sm uppercase tracking-wide">Registrar Nuevo Producto</h3>
-              <button onClick={() => setModalProducto(false)} className="p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-400 transition-all">
-                <X size={18} />
-              </button>
-            </div>
-
-            <form onSubmit={handleProductoSubmit} className="p-5 space-y-4 text-xs font-semibold">
-              <div className="space-y-1">
-                <label className="block text-slate-500 dark:text-slate-400 uppercase">Nombre del Producto</label>
-                <input
-                  type="text"
-                  required
-                  value={formProducto.nombre}
-                  onChange={(e) => setFormProducto({ ...formProducto, nombre: e.target.value })}
-                  placeholder="Ej: Amoxicilina 250mg"
-                  className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all bg-white dark:bg-slate-700"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="block text-slate-500 dark:text-slate-400 uppercase">Descripción</label>
-                <textarea
-                  value={formProducto.descripcion}
-                  onChange={(e) => setFormProducto({ ...formProducto, descripcion: e.target.value })}
-                  placeholder="Descripción comercial o posología..."
-                  className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all h-20 bg-white dark:bg-slate-700"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="block text-slate-500 dark:text-slate-400 uppercase">Precio Unitario (S/)</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    required
-                    value={formProducto.precio}
-                    onChange={(e) => setFormProducto({ ...formProducto, precio: e.target.value })}
-                    placeholder="0.00"
-                    className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all bg-white dark:bg-slate-700"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="block text-slate-500 dark:text-slate-400 uppercase">Stock Mínimo</label>
-                  <input
-                    type="number"
-                    required
-                    value={formProducto.stockMinimo}
-                    onChange={(e) => setFormProducto({ ...formProducto, stockMinimo: e.target.value })}
-                    placeholder="5"
-                    className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all bg-white dark:bg-slate-700"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <label className="block text-slate-500 dark:text-slate-400 uppercase">Categoría</label>
-                <select
-                  required
-                  value={formProducto.categoriaId}
-                  onChange={(e) => setFormProducto({ ...formProducto, categoriaId: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all bg-white dark:bg-slate-700"
-                >
-                  <option value="">Seleccionar Categoría</option>
-                  {categorias.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.nombre}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {errorForm && (
-                <div className="bg-red-50 border border-red-200 rounded-xl p-3 flex items-center gap-2 text-[11px] text-red-700">
-                  <AlertTriangle size={14} className="shrink-0" />
-                  <p>{errorForm}</p>
-                </div>
-              )}
-
-              <div className="pt-3 border-t border-slate-100 dark:border-slate-700 flex justify-end gap-2.5">
-                <button
-                  type="button"
-                  onClick={() => setModalProducto(false)}
-                  className="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  disabled={procesando}
-                  className="px-5 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50"
-                >
-                  {procesando ? <CargadorSpinner size="xs" color="border-white" /> : <Save size={12} />}
-                  Registrar Producto
-                </button>
-              </div>
-            </form>
-          </div>
+          {/* Componente Paginacion */}
+          <Paginacion
+            paginaActual={paginaActual}
+            totalItems={totalItems}
+            itemsPorPagina={itemsPorPagina}
+            onPaginaChange={setPaginaActual}
+            onItemsPorPaginaChange={setItemsPorPagina}
+            singularLabel="producto"
+            pluralLabel="productos"
+          />
         </div>
       )}
 
       {/* ─── MODAL REGISTRAR LOTE ─── */}
       {modalLote && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden animate-in slide-in-from-bottom-4 duration-350">
             <div className="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/40">
-              <h3 className="font-black text-slate-800 dark:text-slate-100 text-sm uppercase tracking-wide">Ingresar Lote de Stock (FEFO)</h3>
+              <h3 className="font-black text-slate-800 dark:text-slate-100 text-sm uppercase tracking-wide">Ingresar Lote de Stock</h3>
               <button onClick={() => setModalLote(false)} className="p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-400 transition-all">
                 <X size={18} />
               </button>
@@ -749,7 +647,7 @@ const PaginaInventario = () => {
       {/* ─── MODAL AJUSTAR STOCK DE LOTE ─── */}
       {modalAjuste && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-sm w-full border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-sm w-full border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden animate-in slide-in-from-bottom-4 duration-350">
             <div className="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/40">
               <h3 className="font-black text-slate-800 dark:text-slate-100 text-sm uppercase tracking-wide">Ajustar Stock de Lote</h3>
               <button onClick={() => setModalAjuste(null)} className="p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-400 transition-all">
@@ -794,7 +692,7 @@ const PaginaInventario = () => {
                 <button
                   type="submit"
                   disabled={procesando}
-                  className="px-5 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50"
+                  className="px-5 py-2 bg-sky-500 hover:bg-sky-650 text-white rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50"
                 >
                   {procesando ? <CargadorSpinner size="xs" color="border-white" /> : <Save size={12} />}
                   Guardar Ajuste

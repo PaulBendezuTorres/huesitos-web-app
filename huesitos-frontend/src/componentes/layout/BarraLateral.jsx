@@ -36,7 +36,7 @@ const configsRoles = {
       { id: 'servicios', label: 'Servicios Médicos', icon: Stethoscope, seccion: 'Gestión Clínica' },
       { id: 'clientes', label: 'Directorio Clientes', icon: Users },
       { id: 'agenda', label: 'Agenda Semanal', icon: Calendar },
-      { id: 'inventario', label: 'Inventario FEFO', icon: Package },
+      { id: 'inventario', label: 'Inventario', icon: Package },
       { id: 'finanzas', label: 'Caja y Finanzas', icon: Wallet, seccion: 'Administración' },
       { id: 'pedidos', label: 'Gestión de Pedidos', icon: ShoppingBag },
       { id: 'usuarios', label: 'Usuarios y Roles', icon: ShieldCheck },
