@@ -8,6 +8,7 @@ import ConfiguracionDinamica from '@/paginas/dashboard/ConfiguracionDinamica';
 import PaginaUsuarios from '@/paginas/dashboard/PaginaUsuarios';
 import PaginaFinanzas from '@/paginas/finanzas/PaginaFinanzas';
 import PaginaDuenos from '@/paginas/cliente/PaginaDuenos';
+import RegistrarClienteNuevo from '@/paginas/cliente/RegistrarClienteNuevo';
 import AgendaSemanal from '@/paginas/cita/AgendaSemanal';
 import ConfiguracionHorarios from '@/paginas/cita/ConfiguracionHorarios';
 import PaginaInventario from '@/paginas/tienda/PaginaInventario';
@@ -63,6 +64,8 @@ const TableroAdministrador = () => {
         <Route path="servicios/*" element={<PaginaServicios />} />
         <Route path="usuarios" element={<PaginaUsuarios />} />
         <Route path="clientes" element={<PaginaDuenos />} />
+        <Route path="clientes/nuevo" element={<RegistrarClienteNuevo />} />
+        <Route path="clientes/editar/:id" element={<RegistrarClienteNuevo />} />
         <Route path="agenda" element={<AgendaSemanal />} />
         <Route path="horarios" element={<ConfiguracionHorarios />} />
         <Route path="inventario" element={<PaginaInventario />} />
