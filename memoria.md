@@ -1,8 +1,15 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-15 (Carrusel de Campañas 16:9, Layout de Servicios Lado a Lado, Consistencia Aspect Ratio)
+Última actualización: 2026-06-15 (Direcciones de Marketing Separadas, Carrusel 16:9, Layout de Servicios Lado a Lado)
 
 ## 🚀 Logros Recientes
+- [x] **Separación de Direcciones de Marketing (Campañas vs Ofertas)**:
+  - Desacoplada la ruta única de administración `/admin/campanas` para ofertas. Ahora las campañas de salud residen exclusivamente en `/admin/campanas` y las ofertas de farmacia en `/admin/ofertas`.
+  - Creada la página independiente [PaginaOfertas.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/PaginaOfertas.jsx) exclusiva para la administración y listado de ofertas de productos.
+  - Simplificada la página [PaginaCampanas.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/PaginaCampanas.jsx) eliminando la barra de pestañas (tabs) y los botones de ofertas para dejarla de uso único para campañas.
+  - Modificado el ruteo interno en [TableroAdministrador.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/dashboard/TableroAdministrador.jsx) agregando las nuevas subrutas de listado, registro y edición para `/admin/ofertas`.
+  - Modificado [RegistrarOferta.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx) para redirigir de forma correcta a `/admin/ofertas` tras guardar o cancelar.
+  - Separado el menú de la barra lateral en [BarraLateral.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/layout/BarraLateral.jsx) en dos botones independientes: "Campañas de Salud" (icono Megaphone) y "Ofertas de Descuento" (icono Percent).
 - [x] **Carrusel / Ruleta de Campañas (16:9) e Integración en Portada y Cliente**:
   - Desarrollado el componente modular [SeccionCampanas.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/portada/SeccionCampanas.jsx) con un carrusel dinámico en 16:9 (`aspect-[16/9]` o `aspect-[21/9]`), soporte de rotación automática (cada 6 segundos), flechas de navegación, puntos indicadores y overlay de gradiente oscuro para legibilidad de textos.
   - Integrado el carrusel de campañas activas en la página de inicio pública [Portada.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/dashboard/Portada.jsx) obteniendo los datos desde la API pública.

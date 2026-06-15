@@ -133,7 +133,7 @@ const RegistrarOferta = () => {
       }
 
       alert(esEdicion ? 'Oferta de descuento actualizada con éxito.' : 'Oferta de descuento creada con éxito.');
-      navigate('/admin/campanas');
+      navigate('/admin/ofertas');
     } catch (err) {
       const msg = err.response?.data || err.message || 'Error al guardar la oferta.';
       setErrorMsg(typeof msg === 'string' ? msg : JSON.stringify(msg));
@@ -176,7 +176,7 @@ const RegistrarOferta = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
         <div className="flex items-center gap-3">
           <Link
-            to="/admin/campanas"
+            to="/admin/ofertas"
             className="p-2.5 bg-slate-50 hover:bg-slate-100 dark:bg-slate-900/60 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl transition-all border border-slate-200/60 dark:border-slate-700/60"
           >
             <ArrowLeft size={18} />
@@ -375,7 +375,7 @@ const RegistrarOferta = () => {
           {/* Botones de acción */}
           <div className="flex justify-end gap-3 pt-2">
             <Link
-              to="/admin/campanas"
+              to="/admin/ofertas"
               className="px-6 py-3 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-750 text-slate-600 dark:text-slate-300 text-sm font-bold rounded-xl transition-all"
             >
               Cancelar

@@ -19,7 +19,8 @@ import {
   PawPrint,
   CalendarPlus,
   FileText,
-  Receipt
+  Receipt,
+  Megaphone
 } from 'lucide-react';
 import logo from '@/assets/Logo Huesitos.png';
 import { useNavigate } from 'react-router-dom';
@@ -40,7 +41,8 @@ const configsRoles = {
       { id: 'finanzas', label: 'Caja y Finanzas', icon: Wallet, seccion: 'Administración' },
       { id: 'pedidos', label: 'Gestión de Pedidos', icon: ShoppingBag },
       { id: 'usuarios', label: 'Usuarios y Roles', icon: ShieldCheck },
-      { id: 'campanas', label: 'Campañas y Ofertas', icon: Percent },
+      { id: 'campanas', label: 'Campañas de Salud', icon: Megaphone },
+      { id: 'ofertas', label: 'Ofertas de Descuento', icon: Percent },
       { id: 'horarios', label: 'Horarios del Personal', icon: Clock },
       { id: 'configuracion', label: 'Configuración Global', icon: Settings }
     ]
