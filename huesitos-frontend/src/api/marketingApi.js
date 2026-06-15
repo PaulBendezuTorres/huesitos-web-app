@@ -62,6 +62,12 @@ export const registrarOferta = async (ofertaData) => {
   return respuesta.data;
 };
 
+/** Registrar ofertas de forma masiva por categoría */
+export const registrarOfertaPorCategoria = async (ofertaCategoriaData) => {
+  const respuesta = await axios.post(`${API_BASE}/ofertas/categoria`, ofertaCategoriaData, obtenerHeaders());
+  return respuesta.data;
+};
+
 /** Actualizar una oferta */
 export const actualizarOferta = async (id, ofertaData) => {
   const respuesta = await axios.put(`${API_BASE}/ofertas/${id}`, ofertaData, obtenerHeaders());

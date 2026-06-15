@@ -110,6 +110,31 @@ public class CampanaOfertaControlador {
         }
     }
 
+    @PostMapping("/ofertas/categoria")
+    public ResponseEntity<?> registrarOfertasPorCategoria(@RequestBody SolicitudOfertaCategoria solicitud) {
+        try {
+            List<Oferta> resultados = campanaOfertaServicio.guardarOfertasPorCategoria(
+                    solicitud.getCategoriaId(),
+                    solicitud.getDescuentoPorcentaje(),
+                    solicitud.getFechaInicio(),
+                    solicitud.getFechaFin()
+            );
+            return ResponseEntity.ok(resultados);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @lombok.Getter
+    @lombok.Setter
+    @lombok.NoArgsConstructor
+    public static class SolicitudOfertaCategoria {
+        private Long categoriaId;
+        private java.math.BigDecimal descuentoPorcentaje;
+        private java.time.LocalDate fechaInicio;
+        private java.time.LocalDate fechaFin;
+    }
+
     @PutMapping("/ofertas/{id}")
     public ResponseEntity<?> actualizarOferta(@PathVariable Long id, @RequestBody Oferta oferta) {
         try {

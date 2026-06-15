@@ -1,10 +1,11 @@
-﻿# Memoria de Desarrollo - Huesitos
+# Memoria de Desarrollo - Huesitos
 
 Última actualización: 2026-06-15 (Direcciones de Marketing Separadas, Carrusel 16:9, Layout de Servicios Lado a Lado)
 
 ## 🚀 Logros Recientes
 - [x] **Rediseño, Simplificación de Ofertas de Productos e Interactividad Financiera**:
   - Rediseñado y simplificado el formulario [RegistrarOferta.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx) para enfocarse exclusivamente en productos del inventario y farmacia, removiendo banners, títulos manuales, descripciones y relaciones a campañas.
+  - Añadido soporte para registrar descuentos por **Categoría Completa** en [RegistrarOferta.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx), permitiendo que el usuario ingrese un porcentaje de descuento y cree ofertas individuales de forma masiva para todos los productos de la categoría mediante el endpoint `POST /api/ofertas/categoria`.
   - Autogeneración transparente del título (`Oferta: [Nombre del Producto]`) y descripción en el submit de la oferta, garantizando compatibilidad con el backend sin forzar al usuario a ingresarlos manualmente.
   - Implementado el cálculo reactivo del porcentaje de descuento y el ahorro neto en [RegistrarOferta.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx) basado en el precio original y el precio de oferta.
   - Integrado un panel de resumen financiero reactivo en [RegistrarCampana.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarCampana.jsx) debajo del listado de servicios seleccionados que calcula y muestra la suma del **Precio Inicial** (suma de precios de los servicios), el **Descuento (%)** frente al **Precio Promocional** de campaña, y el **Ahorro para el Cliente**.

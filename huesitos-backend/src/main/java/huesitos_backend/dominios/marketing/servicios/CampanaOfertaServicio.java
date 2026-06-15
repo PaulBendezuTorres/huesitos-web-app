@@ -172,6 +172,51 @@ public class CampanaOfertaServicio {
         return ofertaRepositorio.save(oferta);
     }
 
+    @Transactional
+    public List<Oferta> guardarOfertasPorCategoria(Long categoriaId, BigDecimal descuentoPorcentaje, LocalDate fechaInicio, LocalDate fechaFin) {
+        if (categoriaId == null) {
+            throw new RuntimeException("La categoría es obligatoria");
+        }
+        if (descuentoPorcentaje == null || descuentoPorcentaje.compareTo(BigDecimal.ZERO) <= 0 || descuentoPorcentaje.compareTo(BigDecimal.valueOf(100)) >= 0) {
+            throw new RuntimeException("El porcentaje de descuento debe estar entre 0.01 y 99.99");
+        }
+        if (fechaInicio == null || fechaFin == null) {
+            throw new RuntimeException("Las fechas de inicio y fin son obligatorias");
+        }
+        if (fechaFin.isBefore(fechaInicio)) {
+            throw new RuntimeException("La fecha de fin no puede ser anterior a la de inicio");
+        }
+
+        List<Producto> productos = productoRepositorio.findByCategoriaIdAndActivoTrue(categoriaId);
+        if (productos.isEmpty()) {
+            throw new RuntimeException("No hay productos activos en la categoría seleccionada");
+        }
+
+        List<Oferta> ofertasCreadas = new ArrayList<>();
+        for (Producto producto : productos) {
+            Oferta oferta = new Oferta();
+            oferta.setTitulo("Oferta: " + producto.getNombre());
+            oferta.setDescripcion("Descuento especial en " + producto.getNombre());
+            oferta.setDescuentoPorcentaje(descuentoPorcentaje);
+            oferta.setProducto(producto);
+            oferta.setFechaInicio(fechaInicio);
+            oferta.setFechaFin(fechaFin);
+            oferta.setActivo(true);
+            
+            BigDecimal precioBase = producto.getPrecio();
+            BigDecimal factor = BigDecimal.ONE.subtract(descuentoPorcentaje.divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP));
+            oferta.setPrecioOferta(precioBase.multiply(factor).setScale(2, RoundingMode.HALF_UP));
+
+            if (fechaFin.isBefore(LocalDate.now())) {
+                oferta.setActivo(false);
+            }
+
+            ofertasCreadas.add(ofertaRepositorio.save(oferta));
+        }
+
+        return ofertasCreadas;
+    }
+
     @Transactional(readOnly = true)
     public List<Oferta> listarTodasOfertas() {
         return ofertaRepositorio.findAll();
