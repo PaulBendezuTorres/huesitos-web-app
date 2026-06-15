@@ -1,6 +1,6 @@
 import { useTablero } from '@/hooks/useTablero';
-import { Activity, Users, Stethoscope, Wallet, RefreshCw, Clock } from 'lucide-react';
-import WidgetInventarioCritico from '@/componentes/tienda/WidgetInventarioCritico';
+import { Activity, Users, Stethoscope, Wallet, RefreshCw } from 'lucide-react';
+import AuditoriaSistema from '@/componentes/dashboard/AuditoriaSistema';
 
 const TableroAnaliticas = () => {
   const { stats, loading, refetch } = useTablero();
@@ -14,14 +14,7 @@ const TableroAnaliticas = () => {
     );
   }
 
-  const colorPorTipo = (tipo) => {
-    switch (tipo) {
-      case "SERVICIO": return "bg-sky-100 text-sky-700 border-sky-200";
-      case "USUARIO": return "bg-indigo-100 text-indigo-700 border-indigo-200";
-      case "CONFIGURACION": return "bg-slate-800 text-slate-100 border-slate-700";
-      default: return "bg-slate-100 text-slate-700 border-slate-200";
-    }
-  };
+
 
   return (
     <div className="space-y-6">
@@ -81,43 +74,8 @@ const TableroAnaliticas = () => {
         </div>
       </div>
 
-      {/* INVENTARIO CRÍTICO */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm overflow-hidden flex flex-col h-[380px]">
-        <WidgetInventarioCritico />
-      </div>
-
-      {/* ACTIVIDAD RECIENTE */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200/60 dark:border-slate-700/60 overflow-hidden">
-        <div className="border-b border-slate-100 dark:border-slate-700 px-6 py-5 bg-slate-50/50 dark:bg-slate-900/40 flex items-center gap-3">
-          <Clock className="text-sky-500" size={20} />
-          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">Auditoría del Sistema</h3>
-        </div>
-        
-        <div className="p-6">
-          {stats.actividades && stats.actividades.length > 0 ? (
-            <div className="divide-y divide-slate-100 dark:divide-slate-700">
-              {stats.actividades.map((actividad) => (
-                <div key={actividad.id} className="flex items-start gap-4 py-4 first:pt-0 last:pb-0 hover:bg-slate-50/50 dark:hover:bg-slate-700/30 rounded-xl transition-colors px-3">
-                  <div className={`mt-1 px-3 py-1 rounded-lg text-[10px] font-black tracking-widest border ${colorPorTipo(actividad.tipo)}`}>
-                    {actividad.tipo}
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-slate-700 dark:text-slate-300 font-medium text-sm leading-relaxed">{actividad.mensaje}</p>
-                    <p className="text-slate-400 dark:text-slate-500 text-xs mt-1.5 font-medium flex items-center gap-1.5">
-                      <Clock size={12} />
-                      {new Date(actividad.fecha).toLocaleString('es-PE', { dateStyle: 'medium', timeStyle: 'short' })}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-10 text-slate-400 dark:text-slate-500 text-sm font-medium">
-              No hay actividad reciente registrada en la base de datos.
-            </div>
-          )}
-        </div>
-      </div>
+      {/* AUDITORÍA DEL SISTEMA */}
+      <AuditoriaSistema actividades={stats.actividades} />
     </div>
   );
 };

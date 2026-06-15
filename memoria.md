@@ -1,8 +1,14 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-15 (Paginación e Historial de Transacciones, Desacoplamiento de Agenda Semanal y Filtros Combobox)
+Última actualización: 2026-06-15 (Paginación de Auditoría, Desacoplamiento de Resumen Estadístico y Caja/Finanzas)
 
 ## 🚀 Logros Recientes
+- [x] **Desacoplamiento y Paginación en Resumen Estadístico**:
+  - Eliminado el widget de "Inventario Crítico (FEFO)" del dashboard de analíticas del administrador.
+  - Extraído el módulo de logs al componente modular independiente [AuditoriaSistema.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/dashboard/AuditoriaSistema.jsx).
+  - Integrado el componente reutilizable `<Paginacion />` para paginar localmente las actividades de auditoría con opciones de filas configurables (`5, 10, 15, 20`).
+  - Rediseñado [TableroAnaliticas.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/dashboard/TableroAnaliticas.jsx) para utilizar el nuevo componente, simplificando la vista principal.
+  - Validada la correcta compilación del frontend mediante `npm run build` sin errores.
 - [x] **Desacoplamiento y Paginación en Caja y Finanzas**:
   - Extraído el historial global de transacciones al componente modular e independiente [TablaTransacciones.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/finanzas/TablaTransacciones.jsx).
   - Integrado el componente reutilizable `<Paginacion />` en la tabla para paginar localmente el historial de cobros con opciones de visualización configurable (`5, 10, 20, 50` filas por página).
