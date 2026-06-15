@@ -58,6 +58,7 @@ const TableroAdministrador = () => {
       setVistaActual={setVistaActual}
       handleLogout={handleLogout}
       tituloHeader="Centro de Administración"
+      sinPadding={vistaActual === 'pedidos' || vistaActual === 'agenda'}
     >
       <Routes>
         <Route path="/" element={<Navigate to="dashboard" replace />} />

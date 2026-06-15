@@ -7,6 +7,7 @@
   - Extraído el listado de compras al componente modular independiente [ListaPedidosDespacho.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/tienda/ListaPedidosDespacho.jsx), incorporando paginación integrada (`6` pedidos por página).
   - Extraído el detalle de despacho al componente independiente [DetallePedidoDespacho.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/tienda/DetallePedidoDespacho.jsx).
   - Rediseñada la maquetación de [GestionPedidos.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/tienda/GestionPedidos.jsx) para utilizar una estructura premium flotante tipo canvas (espaciado `gap-6` y padding `p-6` alineado con el estilo de registro de producto).
+  - Configurada la propiedad `sinPadding` dinámicamente en el [TableroAdministrador.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/dashboard/TableroAdministrador.jsx) para las subvistas de pedidos y agenda semanal, logrando que las tarjetas del módulo de despacho se estiren uniformemente al 100% de la altura de la pantalla de forma simétrica.
   - Validada la correcta compilación del frontend mediante `npm run build` sin errores.
 - [x] **Seguridad y Simplificación en la Gestión de Usuarios**:
   - Removida la funcionalidad redundante de creación de "Nuevo Personal" en el panel de usuarios para evitar duplicidad de flujos.
