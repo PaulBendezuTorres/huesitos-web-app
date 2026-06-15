@@ -57,7 +57,7 @@ const SeccionCampanas = ({ campanas, fadeUp }) => {
                   {tieneImagen ? (
                     <>
                       {/* Banner de imagen */}
-                      <div className="w-full md:w-3/5 aspect-video md:aspect-auto md:h-full relative overflow-hidden shrink-0 bg-slate-950">
+                      <div className="w-full md:w-[75%] aspect-video md:aspect-auto md:h-full relative overflow-hidden shrink-0 bg-slate-950">
                         <img
                           src={urlImagen}
                           alt={campana.nombre}
@@ -66,7 +66,7 @@ const SeccionCampanas = ({ campanas, fadeUp }) => {
                       </div>
 
                       {/* Detalle informativo al costado */}
-                      <div className="flex-1 bg-slate-900 dark:bg-slate-950 p-5 md:p-6 flex flex-col justify-between text-white md:border-l md:border-slate-800/80 overflow-y-auto h-full">
+                      <div className="w-full md:w-[25%] bg-slate-900 dark:bg-slate-950 p-5 md:p-6 flex flex-col justify-between text-white md:border-l md:border-slate-800/80 overflow-y-auto h-full shrink-0">
                         <div className="space-y-2.5">
                           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 text-[9px] font-black uppercase tracking-wider border border-sky-400/30 w-fit">
                             <Megaphone size={9} className="animate-pulse" /> Campaña Activa
@@ -102,7 +102,7 @@ const SeccionCampanas = ({ campanas, fadeUp }) => {
                             onClick={() => navigate('/iniciar-sesion')}
                             className="w-full py-2.5 bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white rounded-xl text-xs font-bold transition-all duration-300 shadow-md shadow-sky-500/10 flex items-center justify-center gap-1.5 hover:shadow-lg hover:shadow-sky-500/20"
                           >
-                            <Calendar size={13} /> Reservar Cita Promo
+                            <Calendar size={13} /> Adquiere tu Promo
                           </button>
                         </div>
                       </div>
