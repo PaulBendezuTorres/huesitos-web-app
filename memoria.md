@@ -1,8 +1,13 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-15 (Rediseño y Desacoplamiento de Configuración Global, Pedidos, Seguridad de Roles, Paginación y Finanzas)
+Última actualización: 2026-06-15 (Desacoplamiento de Personal de Clínica, Rediseño y Desacoplamiento de Configuración Global, Pedidos, Seguridad de Roles, Paginación y Finanzas)
 
 ## 🚀 Logros Recientes
+- [x] **Desacoplamiento y Estilizado de Personal de la Clínica (Horarios)**:
+  - Extraído el listado de personal de [ConfiguracionHorarios.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/cita/ConfiguracionHorarios.jsx) a su propio componente [ListaPersonalClinica.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/cita/ListaPersonalClinica.jsx).
+  - Mejorado el estilo del listado con avatares con gradiente dinámico, badges coloridos y limpios según rol (Veterinario/Recepcionista), buscador integrado, bordes y transiciones activas de selección suaves.
+  - Limpiados el estado y funciones de búsqueda de la página de horarios al estar ahora encapsulados.
+  - Validada la correcta compilación y construcción del frontend mediante `npm run build` sin errores.
 - [x] **Desacoplamiento y Rediseño de Configuración Global**:
   - Creado el servicio API de configuración en [configuracionApi.js](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/api/configuracionApi.js) para independizar el controlador.
   - Extraídas las secciones de la página en tres subcomponentes atómicos e independientes en `src/componentes/dashboard/`: [FormularioInfoNegocio.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/dashboard/FormularioInfoNegocio.jsx), [FormularioContacto.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/dashboard/FormularioContacto.jsx) y [FormularioFinanciero.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/dashboard/FormularioFinanciero.jsx).

@@ -11,8 +11,9 @@ import {
   HelpCircle
 } from 'lucide-react';
 import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
-import Buscador from '@/componentes/comun/Buscador';
 import { obtenerUsuarios, obtenerHorariosVeterinario, guardarHorarioPersonal } from '@/api/citaApi';
+import ListaPersonalClinica from '@/componentes/cita/ListaPersonalClinica';
+
 
 const DIAS_MAP = [
   { key: 'MONDAY', label: 'Lunes' },
@@ -27,9 +28,9 @@ const DIAS_MAP = [
 const ConfiguracionHorarios = () => {
   // Personal
   const [personal, setPersonal] = useState([]);
-  const [busqueda, setBusqueda] = useState('');
   const [empleadoSeleccionado, setEmpleadoSeleccionado] = useState(null);
   const [cargandoPersonal, setCargandoPersonal] = useState(true);
+
 
   // Horario del empleado seleccionado
   const [horarios, setHorarios] = useState({});
@@ -106,13 +107,6 @@ const ConfiguracionHorarios = () => {
     }
   }, [empleadoSeleccionado]);
 
-  // Filtrar personal por búsqueda
-  const personalFiltrado = personal.filter((p) => {
-    const term = busqueda.toLowerCase();
-    const nombre = (p.nombre || '').toLowerCase();
-    const correo = (p.correo || '').toLowerCase();
-    return nombre.includes(term) || correo.includes(term);
-  });
 
   // Manejar cambio en los campos de horario de un día
   const handleHorarioChange = (dia, campo, valor) => {
@@ -221,72 +215,14 @@ const ConfiguracionHorarios = () => {
   return (
     <div className="flex flex-col md:flex-row gap-6 h-[calc(100vh-140px)] overflow-hidden">
       
-      {/* PANEL IZQUIERDO: LISTADO DE PERSONAL (30%) */}
-      <aside className="w-full md:w-[30%] bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 flex flex-col overflow-hidden shadow-sm shrink-0">
-        <div className="p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 shrink-0">
-          <h3 className="font-black text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase flex items-center gap-2">
-            <User size={16} className="text-sky-500" />
-            Personal de la Clínica
-          </h3>
-          <p className="text-[11px] text-slate-400 dark:text-slate-500 font-bold mt-0.5">
-            Selecciona para administrar su horario.
-          </p>
-          
-          <div className="mt-3">
-            <Buscador 
-              value={busqueda} 
-              onChange={setBusqueda} 
-              placeholder="Buscar por nombre o correo..." 
-              sinContenedor={true} 
-            />
-          </div>
-        </div>
+      {/* PANEL IZQUIERDO: LISTADO DE PERSONAL (32%) */}
+      <ListaPersonalClinica
+        personal={personal}
+        empleadoSeleccionado={empleadoSeleccionado}
+        onSelectEmpleado={setEmpleadoSeleccionado}
+        cargando={cargandoPersonal}
+      />
 
-        <div className="flex-1 overflow-y-auto p-3 space-y-2">
-          {cargandoPersonal ? (
-            <div className="flex flex-col items-center justify-center py-10 gap-2">
-              <CargadorSpinner size="sm" />
-              <span className="text-xs font-bold text-slate-400">Cargando personal...</span>
-            </div>
-          ) : personalFiltrado.length === 0 ? (
-            <div className="text-center py-10 text-slate-400 text-xs font-semibold">
-              No se encontraron empleados.
-            </div>
-          ) : (
-            personalFiltrado.map((emp) => {
-              const seleccionado = empleadoSeleccionado?.id === emp.id;
-              const colorRol = emp.rol === 'VETERINARIO' ? 'bg-violet-100 text-violet-800 border-violet-200' : 'bg-blue-100 text-blue-800 border-blue-200';
-              
-              return (
-                <button
-                  key={emp.id}
-                  onClick={() => setEmpleadoSeleccionado(emp)}
-                  className={`w-full flex items-center gap-3 p-3 rounded-xl border text-left transition-all duration-300 ${
-                    seleccionado
-                      ? 'border-sky-500 bg-sky-50/40 dark:bg-sky-900/20 shadow-sm shadow-sky-500/5'
-                      : 'border-slate-100 dark:border-slate-700 hover:border-sky-200 hover:bg-slate-50 dark:hover:bg-slate-700/40'
-                  }`}
-                >
-                  <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center font-black text-slate-500 dark:text-slate-300 text-sm border border-slate-200 dark:border-slate-600">
-                    {emp.nombre?.charAt(0).toUpperCase() || emp.correo?.charAt(0).toUpperCase() || 'U'}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h4 className="font-bold text-slate-800 dark:text-slate-100 text-xs truncate">
-                      {emp.nombre || emp.correo}
-                    </h4>
-                    <p className="text-[10px] text-slate-400 dark:text-slate-500 truncate mt-0.5">{emp.correo}</p>
-                    <div className="flex gap-1.5 mt-1.5">
-                      <span className={`text-[9px] font-black px-2 py-0.5 rounded-full border ${colorRol}`}>
-                        {emp.rol}
-                      </span>
-                    </div>
-                  </div>
-                </button>
-              );
-            })
-          )}
-        </div>
-      </aside>
 
       {/* PANEL DERECHO: FORMULARIO DE CONFIGURACIÓN (70%) */}
       <main className="flex-1 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 flex flex-col overflow-hidden shadow-sm">
