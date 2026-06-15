@@ -16,22 +16,24 @@ const TarjetasMascotasCliente = ({ mascotas, recargar }) => {
             Gestiona la salud de tus compañeros
           </p>
         </div>
-        <div className="flex items-center gap-3 self-start sm:self-auto">
-          <button
-            onClick={recargar}
-            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 hover:border-sky-300 dark:hover:border-sky-500 hover:shadow-md hover:shadow-sky-500/10 dark:hover:shadow-sky-500/5 transition-all duration-300"
-          >
-            <RefreshCw size={16} />
-            Actualizar
-          </button>
-          <button
-            onClick={() => navigate('/cliente/mascotas/nueva')}
-            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white rounded-xl text-sm font-bold transition-all duration-300 shadow-md shadow-sky-500/10"
-          >
-            <Plus size={16} />
-            Registrar mascota
-          </button>
-        </div>
+        {mascotas.length > 0 && (
+          <div className="flex items-center gap-3 self-start sm:self-auto">
+            <button
+              onClick={recargar}
+              className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 hover:border-sky-300 dark:hover:border-sky-500 hover:shadow-md hover:shadow-sky-500/10 dark:hover:shadow-sky-500/5 transition-all duration-300"
+            >
+              <RefreshCw size={16} />
+              Actualizar
+            </button>
+            <button
+              onClick={() => navigate('/cliente/mascotas/nueva')}
+              className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white rounded-xl text-sm font-bold transition-all duration-300 shadow-md shadow-sky-500/10"
+            >
+              <Plus size={16} />
+              Registrar mascota
+            </button>
+          </div>
+        )}
       </div>
 
       {/* GRID DE MASCOTAS */}

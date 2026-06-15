@@ -1,6 +1,6 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-15 (Estructuración en 4 cuadrantes y mejoras en Combobox)
+Última actualización: 2026-06-15 (Eliminación de redundancia de botones en panel vacío)
 
 ## 🚀 Logros por Módulo
 
@@ -23,6 +23,7 @@
 - [x] Entidad `Mascota` con `@JsonAlias({"dueño", "dueno"})` para compatibilidad UTF-8/ASCII.
 - [x] CRUD completo: `MascotaRepositorio`, `MascotaServicio`, `MascotaControlador`. QA completado.
 - [x] Nueva página física `RegistrarMascotaCliente.jsx` (`/cliente/mascotas/nueva`) desacoplada con el subcomponente `FormularioRegistroMascota.jsx` estructurado en 4 cuadrantes independientes (grilla de 2 columnas), alineado a la izquierda (`w-full`), con subida de fotos (máximo 2 MB), previsualización interactiva y límite de 350 caracteres con contador en tiempo real para las alertas médicas.
+- [x] Resuelta la redundancia visual de los botones "Actualizar" y "Registrar mascota" en la cabecera cuando la lista de mascotas del cliente está vacía (ahora solo se muestra el botón central del estado vacío).
 
 ### Citas y Agenda
 - [x] Entidad `Cita` con estados: `PENDIENTE`, `CONFIRMADA`, `COMPLETADA`, `CANCELADA`, `EN_ESPERA`.
@@ -68,7 +69,7 @@
 
 ### Dashboard y Analíticas
 - [x] `TableroAnaliticas` con `AuditoriaSistema` modular (paginación configurable 5/10/15/20 filas).
-- [x] `InventarioCriticoWidget` renombrado (sin "FEFO") con paginación integrada (5 items/página) in ambas columnas.
+- [x] `InventarioCriticoWidget` renombrado (sin "FEFO") con paginación integrada (5 items/página) en ambas columnas.
 
 ### Configuración Global
 - [x] `ConfiguracionDinamica` con subcomponentes: `FormularioInfoNegocio`, `FormularioContacto`, `FormularioFinanciero`.
