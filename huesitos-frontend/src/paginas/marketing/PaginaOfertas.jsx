@@ -88,20 +88,16 @@ const PaginaOfertas = () => {
   };
 
   // --- CRUD OFERTAS ---
-  const handleToggleActivoOferta = async (oferta) => {
-    const confirm = window.confirm(`¿Estás seguro de que deseas ${oferta.activo ? 'desactivar' : 'activar'} esta oferta de descuento?`);
+  const handleEliminarOferta = async (oferta) => {
+    const confirm = window.confirm(`¿Estás seguro de que deseas eliminar permanentemente la oferta "${oferta.titulo}"? Esta acción no se puede deshacer.`);
     if (!confirm) return;
 
     try {
-      if (oferta.activo) {
-        await eliminarOferta(oferta.id);
-      } else {
-        await actualizarOferta(oferta.id, { ...oferta, activo: true });
-      }
-      setMensajeExito('Estado de la oferta modificado con éxito.');
+      await eliminarOferta(oferta.id);
+      setMensajeExito('Oferta eliminada con éxito.');
       cargarDatos();
     } catch (err) {
-      setMensajeError('Error al modificar el estado de la oferta: ' + (err.response?.data || err.message));
+      setMensajeError('Error al eliminar la oferta: ' + (err.response?.data || err.message));
     }
   };
 
@@ -157,7 +153,7 @@ const PaginaOfertas = () => {
       ) : (
         <ListaOfertasProductos
           ofertas={ofertas}
-          onToggleActivo={handleToggleActivoOferta}
+          onToggleActivo={handleEliminarOferta}
           calcularExpiracion={calcularExpiracion}
           formatarFecha={formatarFecha}
         />

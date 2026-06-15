@@ -106,9 +106,10 @@ public class CampanaOfertaServicio {
     @Transactional
     public void eliminarCampana(Long id) {
         Campana campana = buscarCampanaPorId(id);
-        // Hacemos desactivación lógica para no borrar registros históricos
-        campana.setActivo(false);
-        campanaRepositorio.save(campana);
+        // Desvincular ofertas asociadas para evitar restricción de FK
+        ofertaRepositorio.desvincularCampana(id);
+        // Eliminar físicamente la campaña de la base de datos
+        campanaRepositorio.delete(campana);
     }
 
     // --- SERVICIOS DE OFERTAS ---
@@ -236,8 +237,7 @@ public class CampanaOfertaServicio {
     @Transactional
     public void eliminarOferta(Long id) {
         Oferta oferta = buscarOfertaPorId(id);
-        oferta.setActivo(false);
-        ofertaRepositorio.save(oferta);
+        ofertaRepositorio.delete(oferta);
     }
 
     // --- PROCESO PROGRAMADO DE INACTIVACIÓN ---

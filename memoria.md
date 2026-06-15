@@ -10,6 +10,10 @@
   - Implementado el cálculo reactivo del porcentaje de descuento y el ahorro neto en [RegistrarOferta.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx) basado en el precio original y el precio de oferta.
   - Integrado un panel de resumen financiero reactivo en [RegistrarCampana.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarCampana.jsx) debajo del listado de servicios seleccionados que calcula y muestra la suma del **Precio Inicial** (suma de precios de los servicios), el **Descuento (%)** frente al **Precio Promocional** de campaña, y el **Ahorro para el Cliente**.
   - Añadida validación interactiva que alerta al usuario si el precio promocional de la campaña supera o iguala la suma de precios originales de los servicios incluidos.
+- [x] **Eliminación Física de Campañas y Ofertas**:
+  - Cambiada la deactivación lógica por eliminación física real de la base de datos para campañas y ofertas de productos.
+  - Añadido el método `desvincularCampana` en `OfertaRepositorio.java` para desligar ofertas de campañas antes de eliminarlas físicamente, previniendo errores de restricción de clave foránea.
+  - Modificados los manejadores y advertencias en las páginas [PaginaCampanas.jsx](./huesitos-frontend/src/paginas/marketing/PaginaCampanas.jsx) y [PaginaOfertas.jsx](./huesitos-frontend/src/paginas/marketing/PaginaOfertas.jsx) para confirmar y realizar la eliminación completa.
 - [x] **Separación de Direcciones de Marketing (Campañas vs Ofertas)**:
   - Desacoplada la ruta única de administración `/admin/campanas` para ofertas. Ahora las campañas de salud residen exclusivamente en `/admin/campanas` y las ofertas de farmacia en `/admin/ofertas`.
   - Creada la página independiente [PaginaOfertas.jsx](./huesitos-frontend/src/paginas/marketing/PaginaOfertas.jsx) exclusiva para la administración y listado de ofertas de productos.

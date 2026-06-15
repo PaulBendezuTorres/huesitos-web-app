@@ -88,20 +88,16 @@ const PaginaCampanas = () => {
   };
 
   // --- CRUD CAMPAÑAS ---
-  const handleToggleActivoCampana = async (campana) => {
-    const confirm = window.confirm(`¿Estás seguro de que deseas ${campana.activo ? 'desactivar' : 'activar'} esta campaña?`);
+  const handleEliminarCampana = async (campana) => {
+    const confirm = window.confirm(`¿Estás seguro de que deseas eliminar permanentemente la campaña "${campana.nombre}"? Esta acción no se puede deshacer.`);
     if (!confirm) return;
 
     try {
-      if (campana.activo) {
-        await eliminarCampana(campana.id);
-      } else {
-        await actualizarCampana(campana.id, { ...campana, activo: true });
-      }
-      setMensajeExito('Estado de la campaña modificado con éxito.');
+      await eliminarCampana(campana.id);
+      setMensajeExito('Campaña eliminada con éxito.');
       cargarDatos();
     } catch (err) {
-      setMensajeError('Error al modificar el estado: ' + (err.response?.data || err.message));
+      setMensajeError('Error al eliminar la campaña: ' + (err.response?.data || err.message));
     }
   };
 
@@ -157,7 +153,7 @@ const PaginaCampanas = () => {
       ) : (
         <ListaCampanasPublicitarias
           campanas={campanas}
-          onToggleActivo={handleToggleActivoCampana}
+          onToggleActivo={handleEliminarCampana}
           calcularExpiracion={calcularExpiracion}
           formatarFecha={formatarFecha}
         />
