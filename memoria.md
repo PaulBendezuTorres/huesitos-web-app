@@ -1,6 +1,6 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-15 (Estructuración en bloques y subida de foto de mascota)
+Última actualización: 2026-06-15 (Estructuración en 4 cuadrantes y mejoras en Combobox)
 
 ## 🚀 Logros por Módulo
 
@@ -22,7 +22,7 @@
 ### Mascotas
 - [x] Entidad `Mascota` con `@JsonAlias({"dueño", "dueno"})` para compatibilidad UTF-8/ASCII.
 - [x] CRUD completo: `MascotaRepositorio`, `MascotaServicio`, `MascotaControlador`. QA completado.
-- [x] Nueva página física `RegistrarMascotaCliente.jsx` (`/cliente/mascotas/nueva`) desacoplada con el subcomponente `FormularioRegistroMascota.jsx` estructurado en bloques de tarjetas independientes, alineado a la izquierda (`w-full`), con subida de fotos (máximo 2 MB) y previsualización interactiva.
+- [x] Nueva página física `RegistrarMascotaCliente.jsx` (`/cliente/mascotas/nueva`) desacoplada con el subcomponente `FormularioRegistroMascota.jsx` estructurado en 4 cuadrantes independientes (grilla de 2 columnas), alineado a la izquierda (`w-full`), con subida de fotos (máximo 2 MB), previsualización interactiva y límite de 350 caracteres con contador en tiempo real para las alertas médicas.
 
 ### Citas y Agenda
 - [x] Entidad `Cita` con estados: `PENDIENTE`, `CONFIRMADA`, `COMPLETADA`, `CANCELADA`, `EN_ESPERA`.
@@ -68,7 +68,7 @@
 
 ### Dashboard y Analíticas
 - [x] `TableroAnaliticas` con `AuditoriaSistema` modular (paginación configurable 5/10/15/20 filas).
-- [x] `InventarioCriticoWidget` renombrado (sin "FEFO") con paginación integrada (5 items/página) en ambas columnas.
+- [x] `InventarioCriticoWidget` renombrado (sin "FEFO") con paginación integrada (5 items/página) in ambas columnas.
 
 ### Configuración Global
 - [x] `ConfiguracionDinamica` con subcomponentes: `FormularioInfoNegocio`, `FormularioContacto`, `FormularioFinanciero`.
@@ -86,7 +86,8 @@
 - [x] Corrección de desbordamientos en headers/celdas de tablas. Responsividad consistente en todos los tableros.
 - [x] Desacoplamiento de `ClienteInicio` en componentes atómicos (`CarruselCampanas`, `TarjetasMascotasCliente` y `TablaCitasProximas`) con soporte adaptativo completo de tema claro y oscuro.
 - [x] Migración de subvistas del portal de clientes a rutas físicas reales de React Router (`/cliente/*`), garantizando la persistencia tras recargas (F5).
-- [x] Incorporación de reglas de Maquetación y Layout General en `frontend.md` para evitar centrado estrecho (`max-w-2xl mx-auto`) y alinear todo a la izquierda (`w-full`).
+- [x] Incorporación de reglas de Maquetación y Layout General en `frontend.md` para alinear el panel a la izquierda ocupando todo el ancho (`w-full`).
+- [x] Componente `Combobox.jsx` optimizado y accesible con soporte completo de navegación por teclado.
 
 ### Renombrado y Organización
 - [x] Frontend renombrado a español: `components` → `componentes`, `pages` → `paginas`, `services` → `servicios`, `Modules` → `modulos`. Script automático de refactorización ejecutado.
