@@ -2,16 +2,17 @@ import { useState, useEffect } from "react";
 import { 
   obtenerListaUsuarios, 
   modificarRolUsuario, 
-  modificarEstadoUsuario, 
-  obtenerDetallesDueño, 
-  actualizarCredencialesUsuario,
-  registrarNuevoPersonal,
-  eliminarCuentaUsuario
+  modificarEstadoUsuario
 } from '@/servicios/usuarioServicio';
-import { UserPlus, ShieldAlert, ShieldCheck, Edit, Mail, Lock, X, Info, Trash2, AlertTriangle } from 'lucide-react';
+import { UserPlus, ShieldAlert, ShieldCheck, Edit, Trash2 } from 'lucide-react';
 import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
 import Buscador from '@/componentes/comun/Buscador';
 import Avatar from '@/componentes/comun/Avatar';
+
+// Nuevos componentes desacoplados
+import ModalCrearPersonal from "@/componentes/usuario/ModalCrearPersonal";
+import ModalDetallesUsuario from "@/componentes/usuario/ModalDetallesUsuario";
+import ModalEliminarUsuario from "@/componentes/usuario/ModalEliminarUsuario";
 
 const PaginaUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -19,24 +20,14 @@ const PaginaUsuarios = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [busqueda, setBusqueda] = useState('');
 
-  // Estados Modal DETALLES/EDICIÓN
-  const [modalOpen, setModalOpen] = useState(false);
-  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
-  const [datosDueño, setDatosDueño] = useState(null);
-  const [loadingDueño, setLoadingDueño] = useState(false);
-  const [editForm, setEditForm] = useState({ correo: "", contrasena: "" });
-  const [procesandoForm, setProcesandoForm] = useState(false);
-
-  // Estados Modal CREACIÓN DE PERSONAL
+  // Controladores de Modales
   const [modalCrearOpen, setModalCrearOpen] = useState(false);
-  const [crearForm, setCrearForm] = useState({ correo: "", contrasena: "", rol: "RECEPCIONISTA" });
-  const [procesandoCreacion, setProcesandoCreacion] = useState(false);
-
-  // Estados Modal ELIMINACIÓN CRÍTICA
+  const [modalDetallesOpen, setModalDetallesOpen] = useState(false);
   const [modalEliminarOpen, setModalEliminarOpen] = useState(false);
+
+  // Datos para modales
+  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
   const [usuarioAEliminar, setUsuarioAEliminar] = useState(null);
-  const [confirmadoEliminar, setConfirmadoEliminar] = useState(false);
-  const [procesandoEliminacion, setProcesandoEliminacion] = useState(false);
 
   // Estado para bloquear la fila de un usuario en acción
   const [usuarioEnAccionId, setUsuarioEnAccionId] = useState(null);
@@ -84,93 +75,19 @@ const PaginaUsuarios = () => {
     }
   };
 
-  // Funciones para Edición
-  const abrirDetallesModal = async (usuario) => {
+  const abrirDetallesModal = (usuario) => {
     setUsuarioSeleccionado(usuario);
-    setEditForm({ correo: usuario.correo, contrasena: "" });
-    setDatosDueño(null);
-    setModalOpen(true);
-
-    if (usuario.rol === "CLIENTE") {
-      setLoadingDueño(true);
-      try {
-        const data = await obtenerDetallesDueño(usuario.id);
-        setDatosDueño(data);
-      } catch (error) {
-        console.error("Este cliente no cuenta con datos de dueño registrados aún:", error);
-      } finally {
-        setLoadingDueño(false);
-      }
-    }
-  };
-
-  const handleFormChange = (e) => {
-    setEditForm({ ...editForm, [e.target.name]: e.target.value });
-  };
-
-  const ejecutarGuardadoCredenciales = async (e) => {
-    e.preventDefault();
-    setProcesandoForm(true);
-    try {
-      await actualizarCredencialesUsuario(usuarioSeleccionado.id, editForm);
-      setModalOpen(false);
-      setRefreshTrigger(prev => prev + 1);
-      alert("Credenciales actualizadas de manera exitosa.");
-    } catch (error) {
-      console.error(error);
-      alert(error.response?.data || "Error de red al intentar actualizar los accesos.");
-    } finally {
-      setProcesandoForm(false);
-    }
-  };
-
-  // Funciones para Creación
-  const handleCrearFormChange = (e) => {
-    setCrearForm({ ...crearForm, [e.target.name]: e.target.value });
-  };
-
-  const ejecutarCreacionPersonal = async (e) => {
-    e.preventDefault();
-    setProcesandoCreacion(true);
-    try {
-      await registrarNuevoPersonal(crearForm);
-      setModalCrearOpen(false);
-      setCrearForm({ correo: "", contrasena: "", rol: "RECEPCIONISTA" }); // Limpiar
-      setRefreshTrigger(prev => prev + 1);
-      alert("Personal registrado exitosamente.");
-    } catch (error) {
-      console.error(error);
-      alert(error.response?.data || "Error al intentar crear la cuenta.");
-    } finally {
-      setProcesandoCreacion(false);
-    }
+    setModalDetallesOpen(true);
   };
 
   const abrirModalEliminar = (usuario) => {
     setUsuarioAEliminar(usuario);
-    setConfirmadoEliminar(false);
     setModalEliminarOpen(true);
   };
 
-  const ejecutarEliminacionUsuario = async () => {
-    if (!confirmadoEliminar || !usuarioAEliminar) return;
-    setProcesandoEliminacion(true);
-    try {
-      await eliminarCuentaUsuario(usuarioAEliminar.id);
-      setModalEliminarOpen(false);
-      setRefreshTrigger(prev => prev + 1);
-      alert("Usuario eliminado exitosamente.");
-    } catch (error) {
-      console.error(error);
-      const mensaje = typeof error.response?.data === "string"
-        ? error.response.data
-        : (error.response?.data?.mensaje || "Ocurrió un error al intentar eliminar el usuario.");
-      alert(mensaje);
-    } finally {
-      setProcesandoEliminacion(false);
-    }
+  const recargarUsuarios = () => {
+    setRefreshTrigger(prev => prev + 1);
   };
-
 
   if (loading && usuarios.length === 0) {
     return (
@@ -302,290 +219,32 @@ const PaginaUsuarios = () => {
         </div>
       </div>
 
-      {/* ========================================== */}
-      {/* MODAL: CREACIÓN DE NUEVO PERSONAL          */}
-      {/* ========================================== */}
-      {modalCrearOpen && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 max-w-md w-full overflow-hidden flex flex-col">
-            <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/40">
-              <h3 className="text-lg font-black text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                <UserPlus className="text-sky-500" size={20} /> Alta de Nuevo Personal
-              </h3>
-              <button onClick={() => setModalCrearOpen(false)} className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
-                <X size={20}/>
-              </button>
-            </div>
+      {/* Componentes modales desacoplados */}
+      <ModalCrearPersonal 
+        isOpen={modalCrearOpen} 
+        onClose={() => setModalCrearOpen(false)} 
+        onCreated={recargarUsuarios} 
+      />
 
-            <form onSubmit={ejecutarCreacionPersonal} className="p-6 space-y-5">
-              <p className="text-sm text-slate-500 dark:text-slate-400 flex items-start gap-2 bg-slate-50 dark:bg-slate-900/40 p-3 rounded-xl border border-slate-100 dark:border-slate-700">
-                <Info className="text-sky-500 shrink-0 mt-0.5" size={16} />
-                Crea credenciales seguras para los colaboradores de la clínica.
-              </p>
-              
-              <div>
-                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Correo Electrónico</label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 text-slate-400" size={18} />
-                  <input
-                    type="email"
-                    name="correo"
-                    value={crearForm.correo}
-                    onChange={handleCrearFormChange}
-                    required
-                    placeholder="ejemplo@huesitos.com"
-                    className="w-full pl-10 border border-slate-300 dark:border-slate-600 p-2.5 rounded-xl text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all bg-slate-50 dark:bg-slate-700 focus:bg-white dark:focus:bg-slate-600"
-                  />
-                </div>
-              </div>
+      <ModalDetallesUsuario 
+        isOpen={modalDetallesOpen} 
+        onClose={() => {
+          setModalDetallesOpen(false);
+          setUsuarioSeleccionado(null);
+        }} 
+        usuario={usuarioSeleccionado}
+        onUpdated={recargarUsuarios}
+      />
 
-              <div>
-                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Contraseña Inicial</label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 text-slate-400" size={18} />
-                  <input
-                    type="password"
-                    name="contrasena"
-                    value={crearForm.contrasena}
-                    onChange={handleCrearFormChange}
-                    required
-                    placeholder="Mínimo 6 caracteres"
-                    minLength="6"
-                    className="w-full pl-10 border border-slate-300 dark:border-slate-600 p-2.5 rounded-xl text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all bg-slate-50 dark:bg-slate-700 focus:bg-white dark:focus:bg-slate-600"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Asignar Rol</label>
-                <select
-                  name="rol"
-                  value={crearForm.rol}
-                  onChange={handleCrearFormChange}
-                  className="w-full border border-slate-300 dark:border-slate-600 p-2.5 rounded-xl text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-sky-500 font-bold bg-slate-50 dark:bg-slate-700 focus:bg-white dark:focus:bg-slate-600 cursor-pointer"
-                >
-                  <option value="RECEPCIONISTA">RECEPCIONISTA</option>
-                  <option value="VETERINARIO">VETERINARIO</option>
-                  <option value="ADMINISTRADOR">ADMINISTRADOR</option>
-                </select>
-              </div>
-
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-700">
-                <button
-                  type="button"
-                  onClick={() => setModalCrearOpen(false)}
-                  className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  disabled={procesandoCreacion}
-                  className="px-5 py-2.5 bg-gradient-to-r from-sky-500 to-cyan-400 hover:from-sky-600 hover:to-cyan-500 text-white text-sm font-bold rounded-xl shadow-lg shadow-sky-500/30 transition-all disabled:opacity-50"
-                >
-                  {procesandoCreacion ? "Creando..." : "Crear Personal"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* ========================================== */}
-      {/* MODAL: DETALLES Y EDICIÓN EXISTENTE        */}
-      {/* ========================================== */}
-      {modalOpen && usuarioSeleccionado && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 max-w-2xl w-full overflow-hidden flex flex-col max-h-[90vh]">
-            <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 flex justify-between items-center">
-              <h3 className="text-lg font-black text-slate-800 dark:text-slate-100">Detalles de Cuenta de Usuario</h3>
-              <button onClick={() => setModalOpen(false)} className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
-                <X size={20}/>
-              </button>
-            </div>
-
-            <div className="p-6 overflow-y-auto space-y-6">
-              <div className="flex flex-col sm:flex-row items-center gap-6 bg-slate-50 dark:bg-slate-900/40 p-5 rounded-2xl border border-slate-100 dark:border-slate-700">
-                 <Avatar url={usuarioSeleccionado.fotoPerfilUrl} size="w-20 h-20" className="border-2 border-slate-200" />
-                <div className="space-y-1 text-center sm:text-left">
-                  <p className="text-sm font-bold text-slate-500 dark:text-slate-400">Rol del Sistema: <span className="text-sky-600 dark:text-sky-400 font-black tracking-wide">{usuarioSeleccionado.rol}</span></p>
-                  <p className="text-slate-800 dark:text-slate-100 font-bold text-lg tracking-tight">{usuarioSeleccionado.correo}</p>
-                  <p className="text-xs text-slate-400 dark:text-slate-500 font-mono flex items-center justify-center sm:justify-start gap-1 mt-1">
-                    <Lock size={12} /> Contraseña: •••••••• 
-                  </p>
-                </div>
-              </div>
-
-              {usuarioSeleccionado.rol === "CLIENTE" && (
-                <div className="border-t border-slate-100 dark:border-slate-700 pt-5 space-y-4">
-                  <h4 className="font-black text-slate-800 dark:text-slate-100 text-sm tracking-widest uppercase">Información de Dueño Asociada</h4>
-                  {loadingDueño ? (
-                    <p className="text-xs text-sky-600 dark:text-sky-400 animate-pulse font-medium">Cargando datos de contacto desde la tabla dueño...</p>
-                  ) : datosDueño ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-sky-50/50 dark:bg-sky-900/20 p-5 rounded-2xl border border-sky-100/50 dark:border-sky-800/50 text-sm">
-                      <div>
-                        <span className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Nombre Completo</span>
-                        <p className="font-bold text-slate-800 dark:text-slate-100">{datosDueño.nombreCompleto}</p>
-                      </div>
-                      <div>
-                        <span className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Teléfono / Celular</span>
-                        <p className="font-bold text-slate-800 dark:text-slate-100">{datosDueño.telefono}</p>
-                      </div>
-                      <div className="sm:col-span-2">
-                        <span className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Dirección de Domicilio</span>
-                        <p className="font-bold text-slate-800 dark:text-slate-100">{datosDueño.direccion}</p>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2 text-xs text-amber-600 bg-amber-50 p-4 rounded-xl border border-amber-200 font-medium">
-                      <Info size={16} /> Este cliente no ha completado el registro de sus datos de contacto físicos.
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {usuarioSeleccionado.rol !== "CLIENTE" && (
-                <form onSubmit={ejecutarGuardadoCredenciales} className="border-t border-slate-100 dark:border-slate-700 pt-5 space-y-5">
-                  <div>
-                    <h4 className="font-black text-slate-800 dark:text-slate-100 text-sm tracking-widest uppercase">Modificación de Credenciales</h4>
-                    <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">Puedes modificar uno o ambos campos. Deja la contraseña en blanco si no deseas cambiarla.</p>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Correo Electrónico</label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-3 text-slate-400" size={18} />
-                        <input
-                          type="email"
-                          name="correo"
-                          value={editForm.correo}
-                          onChange={handleFormChange}
-                          required
-                          className="w-full pl-10 border border-slate-300 dark:border-slate-600 p-2.5 rounded-xl text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all bg-slate-50 dark:bg-slate-700 focus:bg-white dark:focus:bg-slate-600"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Nueva Contraseña</label>
-                      <div className="relative">
-                        <Lock className="absolute left-3 top-3 text-slate-400" size={18} />
-                        <input
-                          type="password"
-                          name="contrasena"
-                          value={editForm.contrasena}
-                          onChange={handleFormChange}
-                          placeholder="Dejar en blanco para conservar"
-                          className="w-full pl-10 border border-slate-300 dark:border-slate-600 p-2.5 rounded-xl text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all bg-slate-50 dark:bg-slate-700 focus:bg-white dark:focus:bg-slate-600"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-700">
-                    <button
-                      type="button"
-                      onClick={() => setModalOpen(false)}
-                      className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-                    >
-                      Cancelar
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={procesandoForm}
-                      className="px-5 py-2.5 bg-gradient-to-r from-sky-500 to-cyan-400 hover:from-sky-600 hover:to-cyan-500 text-white text-sm font-bold rounded-xl shadow-lg shadow-sky-500/30 transition-all disabled:opacity-50"
-                    >
-                      {procesandoForm ? "Guardando..." : "Guardar Cambios"}
-                    </button>
-                  </div>
-                </form>
-              )}
-            </div>
-
-            {usuarioSeleccionado.rol === "CLIENTE" && (
-              <div className="p-5 border-t border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 flex justify-end">
-                <button
-                  onClick={() => setModalOpen(false)}
-                  className="px-6 py-2.5 bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 dark:hover:bg-slate-600 text-white rounded-xl text-sm font-bold shadow-md transition-colors"
-                >
-                  Cerrar Vista
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* ========================================== */}
-      {/* MODAL: CONFIRMACIÓN DE ELIMINACIÓN CRÍTICA */}
-      {/* ========================================== */}
-      {modalEliminarOpen && usuarioAEliminar && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-red-100 dark:border-red-900/50 max-w-md w-full overflow-hidden flex flex-col">
-            <div className="px-6 py-5 border-b border-red-50 dark:border-red-900/50 flex justify-between items-center bg-red-50/30 dark:bg-red-900/20">
-              <h3 className="text-lg font-black text-red-700 dark:text-red-400 flex items-center gap-2">
-                <AlertTriangle className="text-red-600 animate-bounce" size={22} /> Advertencia Crítica
-              </h3>
-              <button 
-                onClick={() => setModalEliminarOpen(false)} 
-                className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
-                disabled={procesandoEliminacion}
-              >
-                <X size={20}/>
-              </button>
-            </div>
-
-            <div className="p-6 space-y-6">
-              <div className="bg-red-50/50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/50 p-4 rounded-2xl space-y-3">
-                <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                  ¿Estás seguro de que deseas eliminar permanentemente esta cuenta? Esta acción no se puede deshacer.
-                </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Se eliminarán o desvincularán todos los registros asociados a este usuario respetando las reglas de integridad de datos.
-                </p>
-              </div>
-
-              <div className="bg-slate-50 dark:bg-slate-900/40 p-4 rounded-xl border border-slate-100 dark:border-slate-700 text-sm">
-                <span className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Usuario a eliminar</span>
-                <p className="font-bold text-slate-800 dark:text-slate-100 break-all">{usuarioAEliminar.correo}</p>
-                <p className="text-xs text-sky-600 dark:text-sky-400 font-bold mt-1">Rol: {usuarioAEliminar.rol}</p>
-              </div>
-
-              <label className="flex items-start gap-3 cursor-pointer select-none group">
-                <input 
-                  type="checkbox"
-                  checked={confirmadoEliminar}
-                  onChange={(e) => setConfirmadoEliminar(e.target.checked)}
-                  disabled={procesandoEliminacion}
-                  className="mt-1 h-4.5 w-4.5 rounded border-slate-300 text-red-600 focus:ring-red-500 cursor-pointer"
-                />
-                <span className="text-xs font-bold text-slate-600 dark:text-slate-400 group-hover:text-slate-800 dark:group-hover:text-slate-200 transition-colors leading-tight">
-                  Confirmo que deseo eliminar definitivamente esta cuenta de usuario del sistema.
-                </span>
-              </label>
-
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-700">
-                <button
-                  type="button"
-                  onClick={() => setModalEliminarOpen(false)}
-                  disabled={procesandoEliminacion}
-                  className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors disabled:opacity-50"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="button"
-                  onClick={ejecutarEliminacionUsuario}
-                  disabled={!confirmadoEliminar || procesandoEliminacion}
-                  className="px-5 py-2.5 bg-red-600 hover:bg-red-700 disabled:bg-slate-200 dark:disabled:bg-slate-700 text-white disabled:text-slate-400 text-sm font-bold rounded-xl shadow-lg shadow-red-600/20 disabled:shadow-none transition-all cursor-pointer disabled:cursor-not-allowed"
-                >
-                  {procesandoEliminacion ? "Eliminando..." : "Eliminar cuenta"}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <ModalEliminarUsuario 
+        isOpen={modalEliminarOpen} 
+        onClose={() => {
+          setModalEliminarOpen(false);
+          setUsuarioAEliminar(null);
+        }} 
+        usuario={usuarioAEliminar}
+        onDeleted={recargarUsuarios}
+      />
     </div>
   );
 };

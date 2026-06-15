@@ -1,8 +1,15 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-14 (Mejoras y Modularización de Inventario, Servicios y Ajuste de Temas)
+Última actualización: 2026-06-14 (Desacoplamiento de Usuarios, Mejoras y Modularización de Inventario, Servicios y Ajuste de Temas)
 
 ## 🚀 Logros Recientes
+- [x] **Desacoplamiento de la Gestión de Usuarios**:
+  - Extraído el modal de alta de personal al subcomponente [ModalCrearPersonal.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/usuario/ModalCrearPersonal.jsx).
+  - Extraído el modal de detalles y edición de credenciales al subcomponente [ModalDetallesUsuario.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/usuario/ModalDetallesUsuario.jsx).
+  - Extraído el modal de advertencia de borrado de cuenta al subcomponente [ModalEliminarUsuario.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/usuario/ModalEliminarUsuario.jsx).
+  - Rediseñado [PaginaUsuarios.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/dashboard/PaginaUsuarios.jsx) para utilizar los componentes desacoplados, reduciendo su tamaño de 593 a 250 líneas.
+- [x] **Validación de Compilación**:
+  - Ejecutada la compilación de producción del frontend (`npm run build`) verificando que se construye sin ningún error sintáctico o de importación.
 - [x] **Ajuste de Sincronización de Temas**: Corregida la contradicción visual del alternador de tema en `PlantillaTablero.jsx`, `EncabezadoPortada.jsx` y `ContenedorAutenticacion.jsx`, mostrando ahora la Luna (`Moon`) en modo oscuro y el Sol (`Sun`) en modo claro para representar el estado actual y no el siguiente.
 - [x] **Corrección de Tema Oscuro en Inventario**:
   - Añadidas clases de tema oscuro (`dark:bg-sky-950/30`, etc.) a las tarjetas de alertas seleccionadas en `TarjetasAlertasInventario.jsx` para evitar fondos claros e ilegibles.
@@ -13,7 +20,7 @@
 - [x] **Desacoplamiento de Registro de Productos**: Convertido el formulario de registro en una página dedicada (`RegistrarProductoNuevo.jsx`) ruteada en el panel del administrador, removiendo el modal interno de inventario.
 - [x] **Carga y Compresión de Imágenes a WebP (Tienda)**: Agregada subida de imágenes de productos con límite de 5MB en frontend y compresión automática a formato WebP (800px ancho, 75% calidad) inyectando `StorageService` en `ProductoServicio.java` en el backend.
 - [x] **Paginación e Imagen en Tabla de Inventario**: Integrado el componente reutilizable `<Paginacion />` al pie de la tabla de productos y añadidas miniaturas visuales de los productos en las filas.
-- [x] **Eliminación del Término FEFO**: Removido el término "FEFO" de la barra lateral, botones y toda la UI del inventario para mayor legibilidad y simplicidad.
+- [x] **Eliminación del Término FEFO**: Removido el término "FEFO" de la barra lateral, botones and toda la UI del inventario para mayor legibilidad y simplicidad.
 - [x] **Selección e Ingreso Rápido de Categorías**: Adaptado el componente `<Combobox />` para soportar iconos customizados y retornar el objeto seleccionado. Se agregó un modal rápido de creación de categorías en la misma vista de registro de productos.
 - [x] **Modularización del Flujo de Autenticación**: Separado en subcomponentes atómicos (`ContenedorAutenticacion`, `CampoFormulario`, `CasillerosCodigo`).
 - [x] **Modularización de la Portada**: Dividida la landing page `Portada.jsx` en componentes autónomos en `/src/componentes/portada/` (Hero, Nosotros, Servicios, etc.).
@@ -36,6 +43,7 @@
 - [x] **Unificación de BarraLateral Dinámica**: Diseñado y desarrollado el componente dinámico `BarraLateral.jsx` que unifica las barras laterales de todos los roles (Administrador, Veterinario, Recepcionista y Cliente). El componente adapta de forma automática el listado de navegación, colores (emerald para veterinario, sky para el resto), subtítulo superior, y credenciales/rol del usuario en la parte inferior, eliminando código duplicado en los 4 tableros principales.
 - [x] **Modularización del Menú Lateral de Administración**: Extraído el menú lateral del administrador al componente modular `BarraLateralAdmin.jsx` (luego integrado y mejorado en la BarraLateral global). Esto limpia los tableros delegando la lógica de navegación y responsividad al nuevo componente.
 - [x] **Hace que Caja y Finanzas y otros componentes de carga utilicen spinners**: Agregado control de estados de carga en vistas financieras y clínicas para evitar movimientos toscos de maquetación en red.
+- [x] **Conexión de base de datos y CRUDs**: Conexión MySQL, Seguridad JWT, Entidades Mascotas, Dueños, Citas, Servicios médicos, Transacciones, Consultas médicas, Roles, Horarios del Personal, Vacunas y Recetas PDF (Fases 1 a 11B completadas en backend y frontend).
 - [x] **Corrección de Desbordamiento en Encabezados y Celdas de Tablas**: 
   - Corregidos desbordamientos en los encabezados de los tableros administradores truncando de forma adaptativa el título y el correo del usuario (`correo`) en móviles (`max-w-[80px] sm:max-w-[120px]`).
   - Corregidas las celdas de tablas (`td`) que utilizaban directamente `flex`, lo cual rompía la alineación de columnas. Se encapsuló su contenido en un contenedor `div className="flex"` en `PaginaDuenos.jsx`, `PaginaUsuarios.jsx`, `PaginaInventario.jsx` y `TablaServicio.jsx`.
@@ -171,7 +179,7 @@
 - [x] **Frontend - Agenda Semanal de Citas y Reprogramación**:
   - Creada la vista interactiva `RecepcionistaAgenda.jsx` con visualización semanal (lunes a domingo), navegación interactiva de semanas, y filtros avanzados.
   - Diseñado un modal interactivo para reprogramar citas en tiempo real (`PUT /api/citas/{id}/reprogramar`) que verifica disponibilidad y horarios del veterinario.
-  - Integrada la agenda semanal como una sección activa en `RecepcionistaDashboard.jsx` and `AdminDashboard.jsx` para roles de Recepcionista y Administrador.
+  - Integrada la agenda semanal como una sección activa en `RecepcionistaDashboard.jsx` y `AdminDashboard.jsx` para roles de Recepcionista y Administrador.
 - [x] **Frontend - Configuración de Horarios del Personal**:
   - Corregido el endpoint de horarios del personal en `citaAPI.js` para usar `/api/usuarios/{usuarioId}/horarios` y agregada la función `guardarHorarioPersonal`.
   - Diseñada e implementada la vista `ConfiguracionHorarios.jsx` con selector de personal, switches por día de la semana y horas de entrada/salida.
@@ -220,7 +228,7 @@
 
 ## 🛠️ Próximos Pasos (Pendientes)
 - Realizar pruebas de flujo completo (registro de producto con foto, creación de categoría rápida y navegación paginada).
-- Evaluar si otros formularios de administración pueden ser desacoplados en páginas independientes similares.
+- Evaluar si otros formularios de administración pueden ser desacoplados en páginas o subcomponentes independientes.
 
 ## 🧠 Decisiones Clave y Notas
 - Se decidió reemplazar la inyección implícita de Lombok con constructores estándar Java en los componentes de seguridad para asegurar la máxima compatibilidad de compilación directa con Maven Compiler.
@@ -240,3 +248,4 @@
 - **Modularización de Vistas**: Se decidió migrar formularios complejos a páginas independientes en lugar de usar modales sobrecargados en la misma vista, mejorando el performance y responsividad.
 - **Tratamiento de Fotos**: Se adoptó el formato WebP comprimido al 75% en el storage del servidor y eliminación automática de fotos antiguas de productos/usuarios al ser reemplazadas para optimizar el disco.
 - **Consistencia en Modales y Formularios**: Uso de `<Combobox />` dinámico con soporte de iconos variables para garantizar coherencia en la interacción de campos autocompletables.
+- **Desacoplamiento de Usuarios**: Se extrajeron los modales de `PaginaUsuarios.jsx` a `src/componentes/usuario/` (`ModalCrearPersonal.jsx`, `ModalDetallesUsuario.jsx` y `ModalEliminarUsuario.jsx`) para reducir la complejidad ciclomatica y simplificar la mantenibilidad.

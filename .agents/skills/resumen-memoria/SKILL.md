@@ -53,5 +53,6 @@ El archivo `memoria.md` debe mantener la siguiente estructura limpia en español
 ```
 
 ## Directrices de Extensión y Concisión
-- **Límite de Tamaño**: El archivo `memoria.md` debe mantenerse siempre corto y conciso (máximo 100-150 líneas).
-- **Control de Historial**: NO acumular logros históricos de todo el proyecto. La sección "🚀 Logros Recientes" debe mostrar únicamente los cambios de la sesión o tarea actual. Los logros antiguos deben ser consolidados en un breve párrafo de "Hitos Históricos" o eliminados del archivo para evitar redundancia y consumo excesivo de tokens.
+- **Preservación del Historial**: El archivo `memoria.md` debe actuar como la bitácora acumulativa del desarrollo. **Está estrictamente prohibido borrar los logros históricos antiguos**. Se debe conservar toda la lista de logros (`🚀 Logros Recientes` o clasificados por fases/módulos) para que sirva como fuente completa de contexto e historial para futuras interacciones.
+- **Formato Acumulativo**: Al registrar nuevos logros, estos deben agregarse a la parte superior de la sección de logros recientes sin eliminar ni sobrescribir los logros anteriores.
+- **Tamaño Flexible**: Se remueve el límite estricto de líneas para permitir que el documento crezca de forma natural a medida que avanza el proyecto.
