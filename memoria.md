@@ -1,8 +1,13 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-15 (Desacoplamiento de Personal de Clínica, Rediseño y Desacoplamiento de Configuración Global, Pedidos, Seguridad de Roles, Paginación y Finanzas)
+Última actualización: 2026-06-15 (Corrección de error 403 y layout shift en Configuración Global, Desacoplamiento de Horarios e Integración de Personal)
 
 ## 🚀 Logros Recientes
+- [x] **Estabilización y Corrección de la Configuración Global**:
+  - Solucionado el error **403 (Forbidden)** en la obtención de parámetros globales desde el panel administrativo al actualizar el cliente API [configuracionApi.js](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/api/configuracionApi.js) para que envíe condicionalmente el token JWT de autorización si el usuario está autenticado.
+  - Eliminado por completo el molesto parpadeo y cambio de tamaño del contenedor principal ("se agranda y se achica") al introducir un componente de carga esqueleto `EsqueletoFormulario` en [ConfiguracionDinamica.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/dashboard/ConfiguracionDinamica.jsx) que simula las dimensiones tridimensionales del formulario real.
+  - Diseñada una interfaz interactiva de fallo de conexión con un botón de **Reintentar Carga** en lugar de renderizar formularios vacíos e inútiles ante errores de red o sesión.
+  - Validada la correcta compilación y construcción de producción del frontend con `npm run build` sin errores.
 - [x] **Desacoplamiento y Estilizado de Personal de la Clínica (Horarios)**:
   - Extraído el listado de personal de [ConfiguracionHorarios.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/cita/ConfiguracionHorarios.jsx) a su propio componente [ListaPersonalClinica.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/cita/ListaPersonalClinica.jsx).
   - Mejorado el estilo del listado con avatares con gradiente dinámico, badges coloridos y limpios según rol (Veterinario/Recepcionista), buscador integrado, bordes y transiciones activas de selección suaves.
