@@ -6,5 +6,6 @@ public enum MedioPago {
     TARJETA_DEBITO,
     TRANSFERENCIA,
     YAPE,
-    PLIN
+    PLIN,
+    MERCADO_PAGO
 }

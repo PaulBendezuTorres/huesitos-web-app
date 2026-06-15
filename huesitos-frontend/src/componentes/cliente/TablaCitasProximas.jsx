@@ -1,4 +1,149 @@
-import { Calendar, Stethoscope } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Calendar, Stethoscope, CreditCard, Loader2 } from 'lucide-react';
+import { obtenerTransaccionPorCita, crearPreferenciaPago } from '@/api/mercadoPagoApi';
+
+const FilaCita = ({ cita, badgeEstado, formatearEstado }) => {
+  const [transaccion, setTransaccion] = useState(null);
+  const [cargando, setCargando] = useState(true);
+  const [pagando, setPagando] = useState(false);
+
+  useEffect(() => {
+    let activo = true;
+    const fetchTransaccion = async () => {
+      try {
+        const data = await obtenerTransaccionPorCita(cita.id);
+        if (activo) {
+          setTransaccion(data);
+        }
+      } catch (err) {
+        console.error('Error al obtener la transacción para la cita:', cita.id, err);
+      } finally {
+        if (activo) {
+          setCargando(false);
+        }
+      }
+    };
+    fetchTransaccion();
+    return () => {
+      activo = false;
+    };
+  }, [cita.id]);
+
+  const handlePagar = async () => {
+    if (!transaccion) return;
+    try {
+      setPagando(true);
+      const res = await crearPreferenciaPago(transaccion.id);
+      if (res.initPoint) {
+        window.location.href = res.initPoint;
+      } else {
+        alert('No se recibió el enlace de pago de Mercado Pago');
+        setPagando(false);
+      }
+    } catch (err) {
+      console.error('Error al generar la preferencia de pago:', err);
+      alert('Hubo un error al procesar el pago con Mercado Pago. Por favor, inténtelo de nuevo.');
+      setPagando(false);
+    }
+  };
+
+  const fecha = cita.fechaHora
+    ? new Date(cita.fechaHora).toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric' })
+    : '—';
+  const hora = cita.fechaHora
+    ? new Date(cita.fechaHora).toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' })
+    : '';
+
+  const badgeEstadoPago = (estado) => {
+    const estilos = {
+      PENDIENTE: 'bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30',
+      APROBADO: 'bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/30',
+      RECHAZADO: 'bg-rose-50 text-rose-700 border-rose-100 dark:bg-rose-950/20 dark:text-rose-400 dark:border-rose-900/30',
+      REEMBOLSADO: 'bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-950/20 dark:text-blue-400 dark:border-blue-900/30',
+    };
+    return estilos[estado] || 'bg-slate-50 text-slate-500 border-slate-100 dark:bg-slate-800/30 dark:text-slate-400';
+  };
+
+  const formatearEstadoPago = (estado) => {
+    const nombres = {
+      PENDIENTE: 'Pendiente',
+      APROBADO: 'Pagado',
+      RECHAZADO: 'Rechazado',
+      REEMBOLSADO: 'Reembolsado',
+    };
+    return nombres[estado] || estado;
+  };
+
+  return (
+    <tr className="border-b border-slate-50 dark:border-slate-850 last:border-0 hover:bg-slate-50/60 dark:hover:bg-slate-850/40 transition-colors duration-200">
+      <td className="px-6 py-4">
+        <p className="text-sm font-bold text-slate-700 dark:text-slate-200 transition-colors duration-300">{fecha}</p>
+        <p className="text-xs text-slate-400 dark:text-slate-500 transition-colors duration-300">{hora}</p>
+      </td>
+      <td className="px-6 py-4">
+        <div className="flex items-center gap-2">
+          <Stethoscope size={16} className="text-sky-500 dark:text-sky-400 shrink-0" />
+          <span className="text-sm font-semibold text-slate-600 dark:text-slate-300 transition-colors duration-300">
+            {cita.servicio?.nombre || 'Consulta'}
+          </span>
+        </div>
+      </td>
+      <td className="px-6 py-4">
+        <span className="text-sm text-slate-600 dark:text-slate-300 transition-colors duration-300">
+          {cita.mascota?.nombre || '—'}
+        </span>
+      </td>
+      <td className="px-6 py-4">
+        <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[11px] font-semibold border ${badgeEstado(cita.estado)}`}>
+          {formatearEstado(cita.estado)}
+        </span>
+      </td>
+      <td className="px-6 py-4">
+        <span className="text-sm font-bold text-slate-700 dark:text-slate-200">
+          {cargando ? (
+            <span className="text-xs text-slate-400">...</span>
+          ) : transaccion ? (
+            `S/ ${parseFloat(transaccion.monto).toFixed(2)}`
+          ) : (
+            '—'
+          )}
+        </span>
+      </td>
+      <td className="px-6 py-4">
+        {cargando ? (
+          <span className="text-xs text-slate-400">Cargando...</span>
+        ) : transaccion ? (
+          <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[11px] font-semibold border ${badgeEstadoPago(transaccion.estadoPago)}`}>
+            {formatearEstadoPago(transaccion.estadoPago)}
+          </span>
+        ) : (
+          <span className="text-xs text-slate-400">—</span>
+        )}
+      </td>
+      <td className="px-6 py-4">
+        {!cargando && transaccion && cita.estado === 'PENDIENTE' && transaccion.estadoPago === 'PENDIENTE' && (
+          <button
+            onClick={handlePagar}
+            disabled={pagando}
+            className="bg-[#009EE3] hover:bg-[#0081bb] disabled:bg-slate-300 dark:disabled:bg-slate-800 disabled:text-slate-500 text-white font-bold py-1.5 px-3 rounded-lg flex items-center gap-1.5 text-xs transition-colors duration-200"
+          >
+            {pagando ? (
+              <>
+                <Loader2 size={13} className="animate-spin" />
+                <span>Procesando...</span>
+              </>
+            ) : (
+              <>
+                <CreditCard size={13} />
+                <span>Pagar con Mercado Pago</span>
+              </>
+            )}
+          </button>
+        )}
+      </td>
+    </tr>
+  );
+};
 
 const TablaCitasProximas = ({ citas }) => {
   // Filtrar citas pendientes/confirmadas/en espera (próximas)
@@ -58,48 +203,21 @@ const TablaCitasProximas = ({ citas }) => {
                   <th className="text-left px-6 py-3.5 text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">Fecha / hora</th>
                   <th className="text-left px-6 py-3.5 text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">Servicio</th>
                   <th className="text-left px-6 py-3.5 text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">Mascota</th>
-                  <th className="text-left px-6 py-3.5 text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">Estado</th>
+                  <th className="text-left px-6 py-3.5 text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">Estado Cita</th>
+                  <th className="text-left px-6 py-3.5 text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">Total</th>
+                  <th className="text-left px-6 py-3.5 text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">Estado Pago</th>
+                  <th className="text-left px-6 py-3.5 text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                {citasProximas.map((cita) => {
-                  const fecha = cita.fechaHora
-                    ? new Date(cita.fechaHora).toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric' })
-                    : '—';
-                  const hora = cita.fechaHora
-                    ? new Date(cita.fechaHora).toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' })
-                    : '';
-
-                  return (
-                    <tr
-                      key={cita.id}
-                      className="border-b border-slate-50 dark:border-slate-850 last:border-0 hover:bg-slate-50/60 dark:hover:bg-slate-850/40 transition-colors duration-200"
-                    >
-                      <td className="px-6 py-4">
-                        <p className="text-sm font-bold text-slate-700 dark:text-slate-200 transition-colors duration-300">{fecha}</p>
-                        <p className="text-xs text-slate-400 dark:text-slate-500 transition-colors duration-300">{hora}</p>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          <Stethoscope size={16} className="text-sky-500 dark:text-sky-400 shrink-0" />
-                          <span className="text-sm font-semibold text-slate-600 dark:text-slate-300 transition-colors duration-300">
-                            {cita.servicio?.nombre || 'Consulta'}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="text-sm text-slate-600 dark:text-slate-300 transition-colors duration-300">
-                          {cita.mascota?.nombre || '—'}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[11px] font-semibold border ${badgeEstado(cita.estado)}`}>
-                          {formatearEstado(cita.estado)}
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {citasProximas.map((cita) => (
+                  <FilaCita
+                    key={cita.id}
+                    cita={cita}
+                    badgeEstado={badgeEstado}
+                    formatearEstado={formatearEstado}
+                  />
+                ))}
               </tbody>
             </table>
           </div>
@@ -110,3 +228,4 @@ const TablaCitasProximas = ({ citas }) => {
 };
 
 export default TablaCitasProximas;
+

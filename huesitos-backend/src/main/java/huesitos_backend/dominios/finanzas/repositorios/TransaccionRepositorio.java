@@ -27,4 +27,6 @@ public interface TransaccionRepositorio extends JpaRepository<Transaccion, Long>
 
     // Corregido: countBy... debe coincidir con los nombres de campos de tu entidad
     long countByEstadoPagoAndFechaCreacionBetween(EstadoPago estado, LocalDateTime inicio, LocalDateTime fin);
+
+    java.util.Optional<Transaccion> findByCitaId(Long citaId);
 }

@@ -67,4 +67,15 @@ public class TransaccionControlador {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/cita/{citaId}")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'RECEPCIONISTA', 'CLIENTE')")
+    public ResponseEntity<?> obtenerTransaccionPorCita(@PathVariable Long citaId) {
+        try {
+            Transaccion transaccion = transaccionServicio.obtenerPorCitaId(citaId);
+            return ResponseEntity.ok(transaccion);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

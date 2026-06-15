@@ -48,6 +48,8 @@
 - [x] `BoletaPdfServicio`: boletas PDF tamaño A5. Endpoint `GET /api/pagos/{id}/boleta`.
 - [x] `ReporteFinanciero` DTO con estadísticas diarias/mensuales/globales. Endpoint `GET /reporte` (admin).
 - [x] Frontend: `CajaPOS` táctil con cálculo de vuelto, descarga/impresión de boleta. `TablaTransacciones` modular con paginación. `PaginaFinanzas` simplificada.
+- [x] Integración de Mercado Pago (Checkout Pro) para el pago en línea de citas pendientes con redirección a Sandbox y webhook `/api/pagos/webhook` asíncrono para cambiar el estado a `APROBADO` en base de datos.
+- [x] Frontend: Botón de pago en listado de próximas citas, consulta asíncrona de transacciones y página de retorno `/cliente/citas/retorno-pago` responsiva y compatible con modo oscuro.
 
 ### Inventario y Tienda
 - [x] Entidades: `Categoria`, `Producto` (con `stockMinimo`, foto WebP), `Inventario` (lotes stock/vencimiento FEFO).

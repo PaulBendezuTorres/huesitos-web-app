@@ -50,6 +50,7 @@ public class SeguridadConfig {
                     "/api/autenticacion/restablecer-contrasena",
                     "/api/autenticacion/activar",
                     "/api/autenticacion/reenviar-codigo",
+                    "/api/pagos/webhook",
                     "/uploads/**"
                 ).permitAll()
                 

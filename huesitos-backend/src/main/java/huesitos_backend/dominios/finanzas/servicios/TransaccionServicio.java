@@ -72,6 +72,26 @@ public class TransaccionServicio {
         return transaccionRepositorio.save(t);
     }
 
+    @Transactional
+    public Transaccion registrarPagoExitosoPasarela(Long transaccionId, String idTransaccionPasarela, String referencia) {
+        Transaccion t = transaccionRepositorio.findById(transaccionId)
+                .orElseThrow(() -> new RuntimeException("Transacción no encontrada con ID: " + transaccionId));
+
+        t.setMedioPago(MedioPago.MERCADO_PAGO);
+        t.setEstadoPago(EstadoPago.APROBADO);
+        t.setIdTransaccionPasarela(idTransaccionPasarela);
+        t.setReferenciaPago(referencia);
+        t.setFechaPago(LocalDateTime.now());
+
+        return transaccionRepositorio.save(t);
+    }
+
+    @Transactional(readOnly = true)
+    public Transaccion obtenerPorCitaId(Long citaId) {
+        return transaccionRepositorio.findByCitaId(citaId)
+                .orElseThrow(() -> new RuntimeException("Transacción no encontrada para la cita: " + citaId));
+    }
+
     // ====================================================================
     // NUEVO MÉTODO AÑADIDO: Para crear el pago automáticamente al agendar
     // ====================================================================

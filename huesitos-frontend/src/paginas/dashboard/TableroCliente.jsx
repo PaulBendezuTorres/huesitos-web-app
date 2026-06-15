@@ -5,6 +5,7 @@ import ClienteInicio from '@/paginas/cliente/ClienteInicio';
 import ClienteMascotas from '@/paginas/cliente/ClienteMascotas';
 import RegistrarMascotaCliente from '@/paginas/cliente/RegistrarMascotaCliente';
 import ClienteAgendarCita from '@/paginas/cita/ClienteAgendarCita';
+import PaginaRetornoPago from '@/paginas/cliente/PaginaRetornoPago';
 import ClienteTienda from '@/paginas/tienda/ClienteTienda';
 import PlantillaTablero from '@/componentes/layout/PlantillaTablero';
 
@@ -56,6 +57,7 @@ const TableroCliente = () => {
         <Route path="mascotas" element={<ClienteMascotas />} />
         <Route path="mascotas/nueva" element={<RegistrarMascotaCliente />} />
         <Route path="citas" element={<ClienteAgendarCita />} />
+        <Route path="citas/retorno-pago" element={<PaginaRetornoPago />} />
         <Route path="tienda" element={<ClienteTienda />} />
         <Route path="recetas" element={<PlaceholderVista titulo="Mis recetas" descripcion="Próximamente: descarga de recetas PDF." />} />
         <Route path="facturacion" element={<PlaceholderVista titulo="Facturación" descripcion="Próximamente: historial de pagos." />} />
