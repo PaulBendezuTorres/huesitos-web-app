@@ -65,7 +65,7 @@ const ConfiguracionDinamica = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 gap-3 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm max-w-4xl mx-auto animate-pulse">
+      <div className="flex flex-col items-center justify-center h-64 gap-3 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm animate-pulse">
         <CargadorSpinner size="lg" />
         <span className="text-slate-500 dark:text-slate-400 text-sm font-semibold">Cargando parámetros globales...</span>
       </div>
@@ -73,8 +73,9 @@ const ConfiguracionDinamica = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-500">
+    <div className="space-y-6 animate-in fade-in duration-500">
       {/* CABECERA */}
+
       <div className="flex items-center gap-3 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
         <div className="p-2.5 bg-sky-50 dark:bg-sky-950/50 text-sky-500 rounded-xl">
           <Settings size={24} />

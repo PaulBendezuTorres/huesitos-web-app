@@ -18,22 +18,28 @@ public class ConfiguracionNegocioServicio {
      */
     @Transactional
     public ConfiguracionNegocio obtenerConfiguracion() {
-    return repositorio.findById(1L).orElseGet(() -> {
-        ConfiguracionNegocio defecto = new ConfiguracionNegocio();
-        defecto.setId(1L);
-        defecto.setNombreNegocio("Huesitos");
-        defecto.setTelefono("(01) 628-2000");
-        defecto.setTelefonoEmergencia("+51 994 142 421");
-        defecto.setCorreo("VeterinariaHuesito@gmail.com");
-        defecto.setDireccion("Santo Domingo De Marcona C-22, Ica, Ica, 11001");
-        // Valores por defecto alineados con tu landing
-        defecto.setHorarioSemana("Lunes a Sábado: 08:00 AM - 08:00 PM");
-        defecto.setHorarioDomingo("Domingos: 09:00 AM - 02:00 PM");
-        defecto.setMoneda("Soles"); // Valor por defecto
-        defecto.setImpuesto(18.0);
-        return repositorio.save(defecto);
-    });
-}
+        try {
+            return repositorio.findById(1L).orElseGet(() -> {
+                ConfiguracionNegocio defecto = new ConfiguracionNegocio();
+                defecto.setId(1L);
+                defecto.setNombreNegocio("Huesitos");
+                defecto.setTelefono("(01) 628-2000");
+                defecto.setTelefonoEmergencia("+51 994 142 421");
+                defecto.setCorreo("VeterinariaHuesito@gmail.com");
+                defecto.setDireccion("Santo Domingo De Marcona C-22, Ica, Ica, 11001");
+                // Valores por defecto alineados con tu landing
+                defecto.setHorarioSemana("Lunes a Sábado: 08:00 AM - 08:00 PM");
+                defecto.setHorarioDomingo("Domingos: 09:00 AM - 02:00 PM");
+                defecto.setMoneda("Soles"); // Valor por defecto
+                defecto.setImpuesto(18.0);
+                return repositorio.save(defecto);
+            });
+        } catch (Exception ex) {
+            // Si otra transacción lo insertó concurrentemente, se recupera de base de datos
+            return repositorio.findById(1L).orElseThrow(() -> new RuntimeException(ex));
+        }
+    }
+
 
     /**
      * Sobrescribe los parámetros globales manteniendo el identificador único del sistema.
