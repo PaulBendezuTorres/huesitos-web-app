@@ -7,7 +7,8 @@ const Combobox = ({
   opciones = [], 
   placeholder = "Escribe o selecciona...", 
   required = false,
-  icono: Icono = Stethoscope
+  icono: Icono = Stethoscope,
+  compacto = false
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [filtro, setFiltro] = useState(value || '');
@@ -55,7 +56,7 @@ const Combobox = ({
   return (
     <div ref={containerRef} className="relative w-full">
       <div className="relative">
-        <Icono className="absolute left-3.5 top-3.5 text-slate-400 pointer-events-none" size={16} />
+        <Icono className={`absolute text-slate-400 pointer-events-none ${compacto ? 'left-3 top-2.5' : 'left-3.5 top-3.5'}`} size={compacto ? 14 : 16} />
         <input
           type="text"
           value={filtro}
@@ -63,14 +64,16 @@ const Combobox = ({
           onFocus={() => setIsOpen(true)}
           required={required}
           placeholder={placeholder}
-          className="w-full pl-10 pr-10 py-3 rounded-xl border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 text-sm font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 dark:bg-slate-700 focus:bg-white dark:focus:bg-slate-600 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+          className={`w-full pr-10 rounded-xl border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 font-semibold focus:ring-2 focus:ring-sky-100 focus:border-sky-400 outline-none transition-all bg-slate-50 dark:bg-slate-700 focus:bg-white dark:focus:bg-slate-600 placeholder:text-slate-400 dark:placeholder:text-slate-500 ${
+            compacto ? 'py-1.5 text-xs pl-9' : 'py-3 text-sm pl-10'
+          }`}
         />
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="absolute right-3 top-3.5 text-slate-400 hover:text-slate-600 transition-colors"
+          className={`absolute text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors ${compacto ? 'right-3 top-2' : 'right-3.5 top-3.5'}`}
         >
-          <ChevronDown size={18} className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+          <ChevronDown size={compacto ? 15 : 18} className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
         </button>
       </div>
 

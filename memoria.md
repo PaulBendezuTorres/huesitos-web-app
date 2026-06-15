@@ -1,19 +1,124 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-14 (Mejoras y Modularización de Inventario, Servicios y Ajuste de Temas)
+Última actualización: 2026-06-15 (Direcciones de Marketing Separadas, Carrusel 16:9, Layout de Servicios Lado a Lado)
 
 ## 🚀 Logros Recientes
+- [x] **Rediseño, Simplificación de Ofertas de Productos e Interactividad Financiera**:
+  - Rediseñado y simplificado el formulario [RegistrarOferta.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx) para enfocarse exclusivamente en productos del inventario y farmacia, removiendo banners, títulos manuales, descripciones y relaciones a campañas.
+  - Añadido soporte para registrar descuentos por **Categoría Completa** en [RegistrarOferta.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx), permitiendo que el usuario ingrese un porcentaje de descuento y cree ofertas individuales de forma masiva para todos los productos de la categoría mediante el endpoint `POST /api/ofertas/categoria`.
+  - Autogeneración transparente del título (`Oferta: [Nombre del Producto]`) y descripción en el submit de la oferta, garantizando compatibilidad con el backend sin forzar al usuario a ingresarlos manualmente.
+  - Implementado el cálculo reactivo del porcentaje de descuento y el ahorro neto en [RegistrarOferta.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx) basado en el precio original y el precio de oferta.
+  - Integrado un panel de resumen financiero reactivo en [RegistrarCampana.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarCampana.jsx) debajo del listado de servicios seleccionados que calcula y muestra la suma del **Precio Inicial** (suma de precios de los servicios), el **Descuento (%)** frente al **Precio Promocional** de campaña, y el **Ahorro para el Cliente**.
+  - Añadida validación interactiva que alerta al usuario si el precio promocional de la campaña supera o iguala la suma de precios originales de los servicios incluidos.
+- [x] **Separación de Direcciones de Marketing (Campañas vs Ofertas)**:
+  - Desacoplada la ruta única de administración `/admin/campanas` para ofertas. Ahora las campañas de salud residen exclusivamente en `/admin/campanas` y las ofertas de farmacia en `/admin/ofertas`.
+  - Creada la página independiente [PaginaOfertas.jsx](./huesitos-frontend/src/paginas/marketing/PaginaOfertas.jsx) exclusiva para la administración y listado de ofertas de productos.
+  - Simplificada la página [PaginaCampanas.jsx](./huesitos-frontend/src/paginas/marketing/PaginaCampanas.jsx) eliminando la barra de pestañas (tabs) y los botones de ofertas para dejarla de uso único para campañas.
+  - Modificado el ruteo interno en [TableroAdministrador.jsx](./huesitos-frontend/src/paginas/dashboard/TableroAdministrador.jsx) agregando las nuevas subrutas de listado, registro y edición para `/admin/ofertas`.
+  - Modificado [RegistrarOferta.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx) para redirigir de forma correcta a `/admin/ofertas` tras guardar o cancelar.
+  - Separado el menú de la barra lateral en [BarraLateral.jsx](./huesitos-frontend/src/componentes/layout/BarraLateral.jsx) en dos botones independientes: "Campañas de Salud" (icono Megaphone) y "Ofertas de Descuento" (icono Percent).
+- [x] **Carrusel / Ruleta de Campañas (16:9) e Integración en Portada y Cliente**:
+  - Desarrollado el componente modular [SeccionCampanas.jsx](./huesitos-frontend/src/componentes/portada/SeccionCampanas.jsx) con un carrusel dinámico en 16:9 (`aspect-[16/9]` o `aspect-[21/9]`), soporte de rotación automática (cada 6 segundos), flechas de navegación, puntos indicadores y overlay de gradiente oscuro para legibilidad de textos.
+  - Integrado el carrusel de campañas activas en la página de inicio pública [Portada.jsx](./huesitos-frontend/src/paginas/dashboard/Portada.jsx) obteniendo los datos desde la API pública.
+  - Reemplazado el banner estático del cliente en [ClienteInicio.jsx](./huesitos-frontend/src/paginas/cliente/ClienteInicio.jsx) por este mismo carrusel interactivo dinámico de campañas.
+  - Corregido el contenedor del banner en el catálogo administrativo de campañas [PaginaCampanas.jsx](./huesitos-frontend/src/paginas/marketing/PaginaCampanas.jsx) para usar `aspect-video` (16:9) en lugar de una altura fija `h-40`, logrando consistencia visual del banner.
+- [x] **Buscador de Servicios y Distribución de Panel en Nueva Campaña**:
+  - Rediseñada la vinculación de servicios en [RegistrarCampana.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarCampana.jsx): el buscador `<Combobox />` y el texto instructivo se ubican en el panel izquierdo (debajo de los parámetros comerciales), mientras que el contenedor de **Servicios Seleccionados** (con scroll y controles para remover con X) se sitúa en el panel derecho, ubicado de forma limpia debajo del contenedor del Banner de campaña.
+  - Reducido el tamaño de la previsualización del banner a `max-w-xs` en [RegistrarCampana.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarCampana.jsx) para un diseño compacto y simétrico, añadiendo la recomendación visual de relación de aspecto 16:9.
+- [x] **Precio Promocional y Ampliación de Descripción en Campañas**:
+  - Añadido el campo `precioPromocional` a la entidad `Campana` en el backend ([Campana.java](./huesitos-backend/src/main/java/huesitos_backend/dominios/marketing/entidades/Campana.java)) para definir precios fijos promocionales para paquetes de servicios.
+  - Incrementado el límite físico de la descripción de la campaña a **500 caracteres** en la base de datos (longitud de columna `descripcion`), en la validación del servicio del backend ([CampanaOfertaServicio.java](./huesitos-backend/src/main/java/huesitos_backend/dominios/marketing/servicios/CampanaOfertaServicio.java)) y en el frontend ([RegistrarCampana.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarCampana.jsx)).
+  - Integrada la entrada del precio promocional y el contador dinámico en tiempo real (`0/500`) en la vista de registro.
+  - Agregado el despliegue del precio promocional destacado en el listado de tarjetas de campañas en [PaginaCampanas.jsx](./huesitos-frontend/src/paginas/marketing/PaginaCampanas.jsx).
+  - Validada la compilación de producción exitosa del frontend (`npm run build`) y la compilación del backend (`.\mvnw compile`).
+- [x] **Desacoplamiento Completo del Módulo de Marketing**:
+  - Extraído el listado de campañas publicitarias al nuevo componente atómico [ListaCampanasPublicitarias.jsx](./huesitos-frontend/src/componentes/marketing/ListaCampanasPublicitarias.jsx), aislando la visualización de tarjetas.
+  - Extraído el listado de ofertas de descuento al nuevo componente atómico [ListaOfertasProductos.jsx](./huesitos-frontend/src/componentes/marketing/ListaOfertasProductos.jsx), aislando las tarjetas de ofertas de farmacia.
+  - Simplificada la vista general de [PaginaCampanas.jsx](./huesitos-frontend/src/paginas/marketing/PaginaCampanas.jsx), reduciéndola de 419 a 214 líneas delegando la renderización de listas a los nuevos componentes modulares.
+  - Extraído el formulario de creación/edición de Campañas de un modal en la vista principal a la página independiente [RegistrarCampana.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarCampana.jsx).
+  - Extraído el formulario de creación/edición de Ofertas a la página independiente [RegistrarOferta.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx).
+  - Integrado el componente buscador interactivo `<Combobox />` en [RegistrarOferta.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx) para buscar y autocompletar productos de farmacia de forma dinámica.
+  - Registradas las nuevas subrutas de creación y edición de marketing en [TableroAdministrador.jsx](./huesitos-frontend/src/paginas/dashboard/TableroAdministrador.jsx).
+  - Validada la compilación de producción exitosa del frontend (`npm run build`).
+- [x] **Refactorización de Campañas y Marketing de Servicios**:
+  - Implementada la vinculación de **uno o más servicios** a las Campañas en el backend ([Campana.java](./huesitos-backend/src/main/java/huesitos_backend/dominios/marketing/entidades/Campana.java)) mediante una relación Many-to-Many con [Servicio.java](./huesitos-backend/src/main/java/huesitos_backend/dominios/veterinaria_servicio/entidades/Servicio.java).
+  - Creado un endpoint multipart en el backend y el cliente API del frontend ([marketingApi.js](./huesitos-frontend/src/api/marketingApi.js)) para permitir la subida de un **Banner publicitario (Hero)** comprimido automáticamente a WebP.
+  - Implementada la validación estricta y límite físico de **350 caracteres** en la descripción de las campañas en backend y frontend, añadiendo un contador de caracteres interactivo en el modal.
+  - Rediseñadas las tarjetas (cards) en [PaginaCampanas.jsx](./huesitos-frontend/src/paginas/marketing/PaginaCampanas.jsx) para desplegar el banner superior de la campaña con estilo de evento y badges con los servicios incluidos en el paquete.
+  - Validada la correcta compilación y construcción exitosa del frontend (`npm run build`) y el backend (`.\mvnw compile`).
+- [x] **Estabilización y Corrección de la Configuración Global**:
+  - Solucionado el error **403 (Forbidden)** en la obtención de parámetros globales desde el panel administrativo al actualizar el cliente API [configuracionApi.js](./huesitos-frontend/src/api/configuracionApi.js) para que envíe condicionalmente el token JWT de autorización si el usuario está autenticado.
+  - Eliminado por completo el molesto parpadeo y cambio de tamaño del contenedor principal ("se agranda y se achica") al introducir un componente de carga esqueleto `EsqueletoFormulario` en [ConfiguracionDinamica.jsx](./huesitos-frontend/src/paginas/dashboard/ConfiguracionDinamica.jsx) que simula las dimensiones tridimensionales del formulario real.
+  - Diseñada una interfaz interactiva de fallo de conexión con un botón de **Reintentar Carga** en lugar de renderizar formularios vacíos e inútiles ante errores de red o sesión.
+  - Validada la correcta compilación y construcción de producción del frontend con `npm run build` sin errores.
+- [x] **Desacoplamiento y Estilizado de Personal de la Clínica (Horarios)**:
+  - Extraído el listado de personal de [ConfiguracionHorarios.jsx](./huesitos-frontend/src/paginas/cita/ConfiguracionHorarios.jsx) a su propio componente [ListaPersonalClinica.jsx](./huesitos-frontend/src/componentes/cita/ListaPersonalClinica.jsx).
+  - Mejorado el estilo del listado con avatares con gradiente dinámico, badges coloridos y limpios según rol (Veterinario/Recepcionista), buscador integrado, bordes y transiciones activas de selección suaves.
+  - Limpiados el estado y funciones de búsqueda de la página de horarios al estar ahora encapsulados.
+  - Validada la correcta compilación y construcción del frontend mediante `npm run build` sin errores.
+- [x] **Desacoplamiento y Rediseño de Configuración Global**:
+  - Creado el servicio API de configuración en [configuracionApi.js](./huesitos-frontend/src/api/configuracionApi.js) para independizar el controlador.
+  - Extraídas las secciones de la página en tres subcomponentes atómicos e independientes en `src/componentes/dashboard/`: [FormularioInfoNegocio.jsx](./huesitos-frontend/src/componentes/dashboard/FormularioInfoNegocio.jsx), [FormularioContacto.jsx](./huesitos-frontend/src/componentes/dashboard/FormularioContacto.jsx) y [FormularioFinanciero.jsx](./huesitos-frontend/src/componentes/dashboard/FormularioFinanciero.jsx).
+  - Rediseñada la página [ConfiguracionDinamica.jsx](./huesitos-frontend/src/paginas/dashboard/ConfiguracionDinamica.jsx) utilizando la nueva API y componentes, adoptando la estética premium flotante del dashboard (cards estructuradas, inputs estilizados, ring en focus, banners interactivos de éxito/error).
+  - Reemplazada la llamada directa a axios en [Portada.jsx](./huesitos-frontend/src/paginas/dashboard/Portada.jsx) para utilizar el nuevo servicio API configurado.
+  - Validada la correcta compilación y construcción del frontend mediante `npm run build` sin errores.
+- [x] **Desacoplamiento, Paginación y Rediseño de Gestión de Pedidos**:
+  - Extraído el listado de compras al componente modular independiente [ListaPedidosDespacho.jsx](./huesitos-frontend/src/componentes/tienda/ListaPedidosDespacho.jsx), incorporando paginación integrada (`6` pedidos por página).
+  - Extraído el detalle de despacho al componente independiente [DetallePedidoDespacho.jsx](./huesitos-frontend/src/componentes/tienda/DetallePedidoDespacho.jsx).
+  - Rediseñada la maquetación de [GestionPedidos.jsx](./huesitos-frontend/src/paginas/tienda/GestionPedidos.jsx) para utilizar una estructura premium flotante tipo canvas (espaciado `gap-6` y padding `p-6` alineado con el estilo de registro de producto).
+  - Configurada la propiedad `sinPadding` dinámicamente en el [TableroAdministrador.jsx](./huesitos-frontend/src/paginas/dashboard/TableroAdministrador.jsx) para las subvistas de pedidos y agenda semanal, logrando que las tarjetas del módulo de despacho se estiren uniformemente al 100% de la altura de la pantalla de forma simétrica.
+  - Validada la correcta compilación del frontend mediante `npm run build` sin errores.
+- [x] **Seguridad y Simplificación en la Gestión de Usuarios**:
+  - Removida la funcionalidad redundante de creación de "Nuevo Personal" en el panel de usuarios para evitar duplicidad de flujos.
+  - Implementada una validación de seguridad robusta tanto en backend ([UsuarioServicio.java](./huesitos-backend/src/main/java/huesitos_backend/dominios/usuario/servicios/UsuarioServicio.java) y [UsuarioControlador.java](./huesitos-backend/src/main/java/huesitos_backend/dominios/usuario/controladores/UsuarioControlador.java)) como en frontend ([PaginaUsuarios.jsx](./huesitos-frontend/src/paginas/dashboard/PaginaUsuarios.jsx)) que exige la confirmación mediante contraseña del administrador autenticado para promover a cualquier usuario al rol `ADMINISTRADOR`.
+  - Validada la correcta compilación de producción del frontend (`npm run build`) y del backend (`.\mvnw compile`) de forma exitosa.
+- [x] **Desacoplamiento y Paginación en Resumen Estadístico**:
+  - Conservado el widget de alertas de inventario en el dashboard, renombrándolo a `"Inventario Crítico"` para remover la abreviatura "(FEFO)".
+  - Agregada paginación integrada con `<Paginacion />` para ambas columnas del widget (`Stock crítico` y `Próximos a vencer`), limitando la visualización a un máximo de 5 elementos por página.
+  - Extraído el módulo de logs al componente modular independiente [AuditoriaSistema.jsx](./huesitos-frontend/src/componentes/dashboard/AuditoriaSistema.jsx).
+  - Integrado el componente reutilizable `<Paginacion />` para paginar localmente las actividades de auditoría con opciones de filas configurables (`5, 10, 15, 20`).
+  - Rediseñado [TableroAnaliticas.jsx](./huesitos-frontend/src/paginas/dashboard/TableroAnaliticas.jsx) para utilizar el nuevo componente de auditoría, simplificando la vista principal.
+  - Validada la correcta compilación del frontend mediante `npm run build` sin errores.
+- [x] **Desacoplamiento y Paginación en Caja y Finanzas**:
+  - Extraído el historial global de transacciones al componente modular e independiente [TablaTransacciones.jsx](./huesitos-frontend/src/componentes/finanzas/TablaTransacciones.jsx).
+  - Integrado el componente reutilizable `<Paginacion />` en la tabla para paginar localmente el historial de cobros con opciones de visualización configurable (`5, 10, 20, 50` filas por página).
+  - Rediseñado [PaginaFinanzas.jsx](./huesitos-frontend/src/paginas/finanzas/PaginaFinanzas.jsx) para utilizar el nuevo componente, reduciendo su complejidad y limpiando el archivo principal.
+  - Validada la correcta compilación del frontend mediante `npm run build` sin errores.
+- [x] **Desacoplamiento y Rediseño de la Agenda Semanal**:
+  - Extraído el modal de reprogramación de citas al componente independiente [ModalReprogramarCita.jsx](./huesitos-frontend/src/componentes/cita/ModalReprogramarCita.jsx), centralizando la verificación de disponibilidad horaria del veterinario, excepciones de fechas y llamadas API (`reprogramarCita`, `obtenerCitasPorDia`, `obtenerHorariosVeterinario`).
+  - Rediseñado el componente principal [AgendaSemanal.jsx](./huesitos-frontend/src/paginas/cita/AgendaSemanal.jsx) para utilizar el modal modular, reduciendo su complejidad y eliminando estados y efectos locales innecesarios de reprogramación.
+  - Reemplazados los selectores de dropdown nativos y toscos de filtros de Veterinario y Estado por el componente interactivo y moderno `<Combobox compacto={true} />`.
+  - Validada la correcta compilación del frontend mediante `npm run build` sin errores.
+- [x] **Filtro Combobox de Categorías en Inventario**:
+  - Implementada la prop `compacto` en [Combobox.jsx](./huesitos-frontend/src/componentes/comun/Combobox.jsx) para reducir la altura (`py-1.5 text-xs`), el padding y el tamaño de los iconos en el componente reutilizable.
+  - Reemplazado el selector nativo y tosco en [PaginaInventario.jsx](./huesitos-frontend/src/paginas/tienda/PaginaInventario.jsx) por una instancia del Combobox en modo compacto, permitiendo filtrar interactivamente por categoría con un buscador y diseño premium.
+- [x] **Desacoplamiento en Registro de Productos**:
+  - Extraído el modal de creación rápida de categorías a su propio componente independiente [ModalCrearCategoria.jsx](./huesitos-frontend/src/componentes/tienda/ModalCrearCategoria.jsx).
+  - Rediseñada la página [RegistrarProductoNuevo.jsx](./huesitos-frontend/src/paginas/tienda/RegistrarProductoNuevo.jsx) para importar y utilizar el modal modular, simplificando la vista del formulario.
+- [x] **Límite de Caracteres en Descripción del Producto**:
+  - Implementada la validación en el cliente ([RegistrarProductoNuevo.jsx](./huesitos-frontend/src/paginas/tienda/RegistrarProductoNuevo.jsx)) añadiendo un atributo `maxLength={350}`, un contador visual de caracteres en tiempo real y bloqueo en `handleSubmit`.
+  - Implementada la validación en el servidor ([ProductoServicio.java](./huesitos-backend/src/main/java/huesitos_backend/dominios/tienda/servicios/ProductoServicio.java)) verificando que el largo de la descripción sea menor o igual a 350 caracteres antes de guardar.
+- [x] **Rediseño Estético de Lotes de Stock**:
+  - Mejorada la interfaz visual de [ModalIngresoLote.jsx](./huesitos-frontend/src/componentes/tienda/ModalIngresoLote.jsx) aplicando la paleta de diseño Tailwind de Huesitos (gradiente de botones, inputs estructurados con focos ring, bordes redondeados amplios y soporte robusto para tema oscuro en mensajes de error).
+  - Corregidas las importaciones de Lucide en el componente, reemplazando iconos inexistentes por `Plus` y `Calendar` asegurando la estabilidad.
+- [x] **Desacoplamiento de la Gestión de Usuarios**:
+  - Extraído el modal de alta de personal al subcomponente [ModalCrearPersonal.jsx](./huesitos-frontend/src/componentes/usuario/ModalCrearPersonal.jsx).
+  - Extraído el modal de detalles y edición de credenciales al subcomponente [ModalDetallesUsuario.jsx](./huesitos-frontend/src/componentes/usuario/ModalDetallesUsuario.jsx).
+  - Extraído el modal de advertencia de borrado de cuenta al subcomponente [ModalEliminarUsuario.jsx](./huesitos-frontend/src/componentes/usuario/ModalEliminarUsuario.jsx).
+  - Rediseñado [PaginaUsuarios.jsx](./huesitos-frontend/src/paginas/dashboard/PaginaUsuarios.jsx) para utilizar los componentes desacoplados, reduciendo su tamaño de 593 a 250 líneas.
+- [x] **Validación de Compilación**:
+  - Ejecutada la compilación de producción del frontend (`npm run build`) verificando que se construye sin ningún error sintáctico o de importación.
 - [x] **Ajuste de Sincronización de Temas**: Corregida la contradicción visual del alternador de tema en `PlantillaTablero.jsx`, `EncabezadoPortada.jsx` y `ContenedorAutenticacion.jsx`, mostrando ahora la Luna (`Moon`) en modo oscuro y el Sol (`Sun`) en modo claro para representar el estado actual y no el siguiente.
 - [x] **Corrección de Tema Oscuro en Inventario**:
   - Añadidas clases de tema oscuro (`dark:bg-sky-950/30`, etc.) a las tarjetas de alertas seleccionadas en `TarjetasAlertasInventario.jsx` para evitar fondos claros e ilegibles.
   - Modificado el botón principal "Ingresar Lote" en `PaginaInventario.jsx` para integrarse con la paleta semántica oscura (`dark:bg-sky-500` y `dark:text-slate-950`) en lugar de usar `dark:bg-slate-100` (que se veía blanco/gris muy claro).
-- [x] **Modularización del Catálogo de Servicios**: Extraído el modal de edición de servicios médicos de `PaginaServicios.jsx` al nuevo subcomponente [ModalEditarServicio.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/servicio/ModalEditarServicio.jsx), simplificando la vista del catálogo.
+- [x] **Modularización del Catálogo de Servicios**: Extraído el modal de edición de servicios médicos de `PaginaServicios.jsx` al nuevo subcomponente [ModalEditarServicio.jsx](./huesitos-frontend/src/componentes/servicio/ModalEditarServicio.jsx), simplificando la vista del catálogo.
 - [x] **Modularización del Módulo de Inventario**: Separada la lógica de `PaginaInventario.jsx` en componentes atómicos independientes en `src/componentes/tienda/` (`TarjetasAlertasInventario.jsx`, `TablaInventario.jsx`, `ModalIngresoLote.jsx` y `ModalAjusteStockLote.jsx`), reduciendo drásticamente el tamaño del archivo principal.
 - [x] **Rediseño del Ancho Completo en Registro de Productos**: Modificada la vista `RegistrarProductoNuevo.jsx` para ocupar todo el ancho de la pantalla alineada a la izquierda (evitando que se centre y achique) y agrupando el título junto al botón de volver.
 - [x] **Desacoplamiento de Registro de Productos**: Convertido el formulario de registro en una página dedicada (`RegistrarProductoNuevo.jsx`) ruteada en el panel del administrador, removiendo el modal interno de inventario.
 - [x] **Carga y Compresión de Imágenes a WebP (Tienda)**: Agregada subida de imágenes de productos con límite de 5MB en frontend y compresión automática a formato WebP (800px ancho, 75% calidad) inyectando `StorageService` en `ProductoServicio.java` en el backend.
 - [x] **Paginación e Imagen en Tabla de Inventario**: Integrado el componente reutilizable `<Paginacion />` al pie de la tabla de productos y añadidas miniaturas visuales de los productos en las filas.
-- [x] **Eliminación del Término FEFO**: Removido el término "FEFO" de la barra lateral, botones y toda la UI del inventario para mayor legibilidad y simplicidad.
+- [x] **Eliminación del Término FEFO**: Removido el término "FEFO" de la barra lateral, botones and toda la UI del inventario para mayor legibilidad y simplicidad.
 - [x] **Selección e Ingreso Rápido de Categorías**: Adaptado el componente `<Combobox />` para soportar iconos customizados y retornar el objeto seleccionado. Se agregó un modal rápido de creación de categorías en la misma vista de registro de productos.
 - [x] **Modularización del Flujo de Autenticación**: Separado en subcomponentes atómicos (`ContenedorAutenticacion`, `CampoFormulario`, `CasillerosCodigo`).
 - [x] **Modularización de la Portada**: Dividida la landing page `Portada.jsx` en componentes autónomos en `/src/componentes/portada/` (Hero, Nosotros, Servicios, etc.).
@@ -36,6 +141,7 @@
 - [x] **Unificación de BarraLateral Dinámica**: Diseñado y desarrollado el componente dinámico `BarraLateral.jsx` que unifica las barras laterales de todos los roles (Administrador, Veterinario, Recepcionista y Cliente). El componente adapta de forma automática el listado de navegación, colores (emerald para veterinario, sky para el resto), subtítulo superior, y credenciales/rol del usuario en la parte inferior, eliminando código duplicado en los 4 tableros principales.
 - [x] **Modularización del Menú Lateral de Administración**: Extraído el menú lateral del administrador al componente modular `BarraLateralAdmin.jsx` (luego integrado y mejorado en la BarraLateral global). Esto limpia los tableros delegando la lógica de navegación y responsividad al nuevo componente.
 - [x] **Hace que Caja y Finanzas y otros componentes de carga utilicen spinners**: Agregado control de estados de carga en vistas financieras y clínicas para evitar movimientos toscos de maquetación en red.
+- [x] **Conexión de base de datos y CRUDs**: Conexión MySQL, Seguridad JWT, Entidades Mascotas, Dueños, Citas, Servicios médicos, Transacciones, Consultas médicas, Roles, Horarios del Personal, Vacunas y Recetas PDF (Fases 1 a 11B completadas en backend y frontend).
 - [x] **Corrección de Desbordamiento en Encabezados y Celdas de Tablas**: 
   - Corregidos desbordamientos en los encabezados de los tableros administradores truncando de forma adaptativa el título y el correo del usuario (`correo`) en móviles (`max-w-[80px] sm:max-w-[120px]`).
   - Corregidas las celdas de tablas (`td`) que utilizaban directamente `flex`, lo cual rompía la alineación de columnas. Se encapsuló su contenido en un contenedor `div className="flex"` en `PaginaDuenos.jsx`, `PaginaUsuarios.jsx`, `PaginaInventario.jsx` y `TablaServicio.jsx`.
@@ -171,7 +277,7 @@
 - [x] **Frontend - Agenda Semanal de Citas y Reprogramación**:
   - Creada la vista interactiva `RecepcionistaAgenda.jsx` con visualización semanal (lunes a domingo), navegación interactiva de semanas, y filtros avanzados.
   - Diseñado un modal interactivo para reprogramar citas en tiempo real (`PUT /api/citas/{id}/reprogramar`) que verifica disponibilidad y horarios del veterinario.
-  - Integrada la agenda semanal como una sección activa en `RecepcionistaDashboard.jsx` and `AdminDashboard.jsx` para roles de Recepcionista y Administrador.
+  - Integrada la agenda semanal como una sección activa en `RecepcionistaDashboard.jsx` y `AdminDashboard.jsx` para roles de Recepcionista y Administrador.
 - [x] **Frontend - Configuración de Horarios del Personal**:
   - Corregido el endpoint de horarios del personal en `citaAPI.js` para usar `/api/usuarios/{usuarioId}/horarios` y agregada la función `guardarHorarioPersonal`.
   - Diseñada e implementada la vista `ConfiguracionHorarios.jsx` con selector de personal, switches por día de la semana y horas de entrada/salida.
@@ -220,7 +326,7 @@
 
 ## 🛠️ Próximos Pasos (Pendientes)
 - Realizar pruebas de flujo completo (registro de producto con foto, creación de categoría rápida y navegación paginada).
-- Evaluar si otros formularios de administración pueden ser desacoplados en páginas independientes similares.
+- Evaluar si otros formularios de administración pueden ser desacoplados en páginas o subcomponentes independientes.
 
 ## 🧠 Decisiones Clave y Notas
 - Se decidió reemplazar la inyección implícita de Lombok con constructores estándar Java en los componentes de seguridad para asegurar la máxima compatibilidad de compilación directa con Maven Compiler.
@@ -240,3 +346,4 @@
 - **Modularización de Vistas**: Se decidió migrar formularios complejos a páginas independientes en lugar de usar modales sobrecargados en la misma vista, mejorando el performance y responsividad.
 - **Tratamiento de Fotos**: Se adoptó el formato WebP comprimido al 75% en el storage del servidor y eliminación automática de fotos antiguas de productos/usuarios al ser reemplazadas para optimizar el disco.
 - **Consistencia en Modales y Formularios**: Uso de `<Combobox />` dinámico con soporte de iconos variables para garantizar coherencia en la interacción de campos autocompletables.
+- **Desacoplamiento de Usuarios**: Se extrajeron los modales de `PaginaUsuarios.jsx` a `src/componentes/usuario/` (`ModalCrearPersonal.jsx`, `ModalDetallesUsuario.jsx` y `ModalEliminarUsuario.jsx`) para reducir la complejidad ciclomatica y simplificar la mantenibilidad.

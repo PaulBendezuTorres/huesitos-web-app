@@ -14,6 +14,9 @@ import ConfiguracionHorarios from '@/paginas/cita/ConfiguracionHorarios';
 import PaginaInventario from '@/paginas/tienda/PaginaInventario';
 import RegistrarProductoNuevo from '@/paginas/tienda/RegistrarProductoNuevo';
 import PaginaCampanas from '@/paginas/marketing/PaginaCampanas';
+import PaginaOfertas from '@/paginas/marketing/PaginaOfertas';
+import RegistrarCampana from '@/paginas/marketing/RegistrarCampana';
+import RegistrarOferta from '@/paginas/marketing/RegistrarOferta';
 import GestionPedidos from '@/paginas/tienda/GestionPedidos';
 import PlantillaTablero from '@/componentes/layout/PlantillaTablero';
 
@@ -58,6 +61,7 @@ const TableroAdministrador = () => {
       setVistaActual={setVistaActual}
       handleLogout={handleLogout}
       tituloHeader="Centro de Administración"
+      sinPadding={vistaActual === 'pedidos' || vistaActual === 'agenda'}
     >
       <Routes>
         <Route path="/" element={<Navigate to="dashboard" replace />} />
@@ -73,6 +77,11 @@ const TableroAdministrador = () => {
         <Route path="inventario/registrar-producto" element={<RegistrarProductoNuevo />} />
         <Route path="finanzas" element={<PaginaFinanzas />} />
         <Route path="campanas" element={<PaginaCampanas />} />
+        <Route path="campanas/nueva" element={<RegistrarCampana />} />
+        <Route path="campanas/editar/:id" element={<RegistrarCampana />} />
+        <Route path="ofertas" element={<PaginaOfertas />} />
+        <Route path="ofertas/nueva" element={<RegistrarOferta />} />
+        <Route path="ofertas/editar/:id" element={<RegistrarOferta />} />
         <Route path="configuracion" element={<ConfiguracionDinamica />} />
         <Route path="pedidos" element={<GestionPedidos />} />
         <Route path="perfil" element={<MiPerfil sinPlantilla={true} />} />

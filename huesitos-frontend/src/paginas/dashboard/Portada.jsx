@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useTema } from '@/contextos/ContextoTema';
+import { obtenerConfiguracionNegocio } from '@/api/configuracionApi';
 
 // === COMPONENTES MODULARES ===
 import EncabezadoPortada from '@/componentes/portada/EncabezadoPortada';
 import SeccionHero from '@/componentes/portada/SeccionHero';
+import SeccionCampanas from '@/componentes/portada/SeccionCampanas';
 import SeccionNosotros from '@/componentes/portada/SeccionNosotros';
 import SeccionServicios from '@/componentes/portada/SeccionServicios';
 import SeccionUbicacion from '@/componentes/portada/SeccionUbicacion';
 import SeccionEmergencias from '@/componentes/portada/SeccionEmergencias';
 import PiePaginaPortada from '@/componentes/portada/PiePaginaPortada';
+import { obtenerCampanasActivas } from '@/api/clienteApi';
 
 // === ASSETS LOCALES ===
 import imagenNosotros from '@/assets/veterinario.jpg';
@@ -35,7 +37,7 @@ const Portada = () => {
     visible: { transition: { staggerChildren: 0.2 } }
   };
 
-  // === ESTADO DINÁMICO DE CONFIGURACIÓN ===
+  // === ESTADO DINÁMICO DE CONFIGURACIÓN Y CAMPAÑAS ===
   const [config, setConfig] = useState({
     nombreNegocio: "Huesitos",
     telefono: "(01) 628-2000",
@@ -45,15 +47,23 @@ const Portada = () => {
     horarioSemana: "Lunes a Sábado: 08:00 AM - 08:00 PM",
     horarioDomingo: "Domingos: 09:00 AM - 02:00 PM"
   });
+  const [campanas, setCampanas] = useState([]);
 
   // === EFECTO PARA TRAER DATOS REALES DEL BACKEND ===
   useEffect(() => {
-    axios.get("http://localhost:8080/api/configuracion-negocio")
-      .then((res) => {
-        if (res.data) setConfig(res.data);
+    obtenerConfiguracionNegocio()
+      .then((data) => {
+        if (data) setConfig(data);
       })
       .catch((err) => console.warn("Usando datos estáticos de respaldo:", err));
+
+    obtenerCampanasActivas()
+      .then((data) => {
+        setCampanas(data || []);
+      })
+      .catch((err) => console.error("Error al obtener campañas para la portada:", err));
   }, []);
+
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-oscuro-base text-slate-800 dark:text-slate-100 font-sans scroll-smooth selection:bg-blue-600 selection:text-white transition-colors duration-300">
@@ -73,6 +83,12 @@ const Portada = () => {
         fadeUp={fadeUp}
         portada={portada}
         config={config}
+      />
+
+      {/* 2.5 RULETA DE CAMPAÑAS */}
+      <SeccionCampanas
+        campanas={campanas}
+        fadeUp={fadeUp}
       />
 
       {/* 3. NOSOTROS */}

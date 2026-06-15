@@ -1,17 +1,17 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Megaphone, Plus, AlertTriangle, CheckCircle, ArrowLeft } from 'lucide-react';
+import { Percent, Plus, AlertTriangle, CheckCircle, ArrowLeft } from 'lucide-react';
 import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
 import {
-  obtenerTodasCampanas,
-  eliminarCampana,
-  actualizarCampana
+  obtenerTodasOfertas,
+  eliminarOferta,
+  actualizarOferta
 } from '@/api/marketingApi';
-import ListaCampanasPublicitarias from '@/componentes/marketing/ListaCampanasPublicitarias';
+import ListaOfertasProductos from '@/componentes/marketing/ListaOfertasProductos';
 
-const PaginaCampanas = () => {
+const PaginaOfertas = () => {
   const navigate = useNavigate();
-  const [campanas, setCampanas] = useState([]);
+  const [ofertas, setOfertas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [mensajeExito, setMensajeExito] = useState('');
   const [mensajeError, setMensajeError] = useState('');
@@ -22,11 +22,11 @@ const PaginaCampanas = () => {
     setMensajeExito('');
     setMensajeError('');
     try {
-      const campRes = await obtenerTodasCampanas();
-      setCampanas(campRes || []);
+      const ofRes = await obtenerTodasOfertas();
+      setOfertas(ofRes || []);
     } catch (err) {
-      console.error('Error al cargar datos de campañas:', err);
-      setMensajeError('No se pudieron obtener las campañas publicitarias.');
+      console.error('Error al cargar datos de ofertas:', err);
+      setMensajeError('No se pudieron obtener las ofertas.');
     } finally {
       setLoading(false);
     }
@@ -87,21 +87,21 @@ const PaginaCampanas = () => {
     });
   };
 
-  // --- CRUD CAMPAÑAS ---
-  const handleToggleActivoCampana = async (campana) => {
-    const confirm = window.confirm(`¿Estás seguro de que deseas ${campana.activo ? 'desactivar' : 'activar'} esta campaña?`);
+  // --- CRUD OFERTAS ---
+  const handleToggleActivoOferta = async (oferta) => {
+    const confirm = window.confirm(`¿Estás seguro de que deseas ${oferta.activo ? 'desactivar' : 'activar'} esta oferta de descuento?`);
     if (!confirm) return;
 
     try {
-      if (campana.activo) {
-        await eliminarCampana(campana.id);
+      if (oferta.activo) {
+        await eliminarOferta(oferta.id);
       } else {
-        await actualizarCampana(campana.id, { ...campana, activo: true });
+        await actualizarOferta(oferta.id, { ...oferta, activo: true });
       }
-      setMensajeExito('Estado de la campaña modificado con éxito.');
+      setMensajeExito('Estado de la oferta modificado con éxito.');
       cargarDatos();
     } catch (err) {
-      setMensajeError('Error al modificar el estado: ' + (err.response?.data || err.message));
+      setMensajeError('Error al modificar el estado de la oferta: ' + (err.response?.data || err.message));
     }
   };
 
@@ -118,19 +118,19 @@ const PaginaCampanas = () => {
           </Link>
           <div>
             <h1 className="text-2xl font-black text-slate-850 dark:text-slate-100 tracking-tight leading-none">
-              Campañas de Salud
+              Ofertas de Descuento
             </h1>
             <p className="text-slate-500 dark:text-slate-400 text-xs mt-1.5 font-medium">
-              Publica y administra los eventos y banners promocionales de los paquetes clínicos.
+              Gestiona campañas de descuento exclusivas para los productos de la farmacia veterinaria.
             </p>
           </div>
         </div>
 
         <button
-          onClick={() => navigate('/admin/campanas/nueva')}
-          className="px-4 py-2.5 bg-sky-50 text-sky-600 hover:bg-sky-500 hover:text-white rounded-xl border border-sky-100 hover:border-sky-300 text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm dark:bg-slate-700 dark:text-sky-350 dark:border-slate-650"
+          onClick={() => navigate('/admin/ofertas/nueva')}
+          className="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-lg shadow-emerald-500/20"
         >
-          <Plus size={14} /> Nueva Campaña
+          <Plus size={14} /> Nueva Oferta de Descuento
         </button>
       </div>
 
@@ -152,12 +152,12 @@ const PaginaCampanas = () => {
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm gap-3 animate-pulse">
           <CargadorSpinner size="lg" />
-          <span className="text-sm font-bold text-slate-400 dark:text-slate-500">Consultando campañas de salud...</span>
+          <span className="text-sm font-bold text-slate-400 dark:text-slate-550">Consultando ofertas de farmacia...</span>
         </div>
       ) : (
-        <ListaCampanasPublicitarias
-          campanas={campanas}
-          onToggleActivo={handleToggleActivoCampana}
+        <ListaOfertasProductos
+          ofertas={ofertas}
+          onToggleActivo={handleToggleActivoOferta}
           calcularExpiracion={calcularExpiracion}
           formatarFecha={formatarFecha}
         />
@@ -166,4 +166,4 @@ const PaginaCampanas = () => {
   );
 };
 
-export default PaginaCampanas;
+export default PaginaOfertas;

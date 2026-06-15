@@ -35,6 +35,19 @@ export const eliminarCampana = async (id) => {
   return respuesta.data;
 };
 
+/** Subir foto/banner de la campaña */
+export const subirFotoCampana = async (id, archivo) => {
+  const formData = new FormData();
+  formData.append('archivo', archivo);
+  const respuesta = await axios.post(`${API_BASE}/campanas/${id}/foto`, formData, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return respuesta.data;
+};
+
 // --- OFERTAS ---
 
 /** Listar todas las ofertas (Recepcionista/Administrador) */
@@ -49,6 +62,12 @@ export const registrarOferta = async (ofertaData) => {
   return respuesta.data;
 };
 
+/** Registrar ofertas de forma masiva por categoría */
+export const registrarOfertaPorCategoria = async (ofertaCategoriaData) => {
+  const respuesta = await axios.post(`${API_BASE}/ofertas/categoria`, ofertaCategoriaData, obtenerHeaders());
+  return respuesta.data;
+};
+
 /** Actualizar una oferta */
 export const actualizarOferta = async (id, ofertaData) => {
   const respuesta = await axios.put(`${API_BASE}/ofertas/${id}`, ofertaData, obtenerHeaders());
@@ -58,5 +77,17 @@ export const actualizarOferta = async (id, ofertaData) => {
 /** Eliminar/Desactivar una oferta */
 export const eliminarOferta = async (id) => {
   const respuesta = await axios.delete(`${API_BASE}/ofertas/${id}`, obtenerHeaders());
+  return respuesta.data;
+};
+
+/** Obtener campaña por ID */
+export const obtenerCampanaPorId = async (id) => {
+  const respuesta = await axios.get(`${API_BASE}/campanas/${id}`, obtenerHeaders());
+  return respuesta.data;
+};
+
+/** Obtener oferta por ID */
+export const obtenerOfertaPorId = async (id) => {
+  const respuesta = await axios.get(`${API_BASE}/ofertas/${id}`, obtenerHeaders());
   return respuesta.data;
 };

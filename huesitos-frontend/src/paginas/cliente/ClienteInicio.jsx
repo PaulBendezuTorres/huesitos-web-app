@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Megaphone, PawPrint, Calendar, Stethoscope, Syringe, Eye, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import useTableroCliente from '@/hooks/useTableroCliente';
@@ -6,7 +7,15 @@ const ClienteInicio = () => {
   const navigate = useNavigate();
   const { mascotas, citas, campanas, cargando, recargar } = useTableroCliente();
 
-  const campanaActiva = campanas.length > 0 ? campanas[0] : null;
+  const [indiceCampana, setIndiceCampana] = useState(0);
+
+  useEffect(() => {
+    if (campanas.length <= 1) return;
+    const intervalo = setInterval(() => {
+      setIndiceCampana((prev) => (prev + 1) % campanas.length);
+    }, 6000);
+    return () => clearInterval(intervalo);
+  }, [campanas]);
 
   // Filtrar citas pendientes/confirmadas/en espera (próximas)
   const citasProximas = citas.filter(
@@ -48,23 +57,103 @@ const ClienteInicio = () => {
 
   return (
     <div className="space-y-8">
-      {/* BANNER DE CAMPAÑA */}
-      {campanaActiva && (
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-sky-600 via-cyan-500 to-emerald-400 p-6 shadow-xl shadow-sky-500/15">
-          <div className="absolute -right-8 -top-8 w-40 h-40 bg-white/10 rounded-full blur-2xl" />
-          <div className="absolute -left-4 -bottom-6 w-28 h-28 bg-white/10 rounded-full blur-xl" />
-          <div className="relative z-10 flex items-center gap-4">
-            <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shrink-0">
-              <Megaphone size={24} className="text-white" />
-            </div>
-            <div>
-              <p className="text-[10px] font-bold text-white/80 tracking-wider mb-0.5">Campaña del mes</p>
-              <h3 className="text-lg font-bold text-white leading-tight">{campanaActiva.titulo || campanaActiva.nombre}</h3>
-              {campanaActiva.descripcion && (
-                <p className="text-sm text-white/80 mt-1 max-w-xl">{campanaActiva.descripcion}</p>
-              )}
-            </div>
+      {/* RULETA/CARRUSEL DE CAMPAÑAS PUBLICITARIAS (16:9) */}
+      {campanas && campanas.length > 0 && (
+        <div className="relative overflow-hidden rounded-3xl border border-slate-200/60 dark:border-slate-700/60 shadow-lg bg-slate-900 group">
+          <div className="aspect-[16/7] md:aspect-[21/7] w-full relative overflow-hidden">
+            {campanas.map((campana, index) => {
+              const activa = index === indiceCampana;
+              const tieneImagen = !!campana.imagenUrl;
+              const urlImagen = tieneImagen ? `http://localhost:8080${campana.imagenUrl}` : '';
+
+              return (
+                <div
+                  key={campana.id}
+                  className={`absolute inset-0 transition-opacity duration-1000 ease-in-out flex items-center ${
+                    activa ? 'opacity-100 z-10 pointer-events-auto' : 'opacity-0 z-0 pointer-events-none'
+                  }`}
+                >
+                  {/* Fondo: Imagen o Degradado */}
+                  {tieneImagen ? (
+                    <>
+                      <img
+                        src={urlImagen}
+                        alt={campana.nombre}
+                        className="absolute inset-0 w-full h-full object-cover select-none"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/80 to-transparent z-10" />
+                    </>
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-r from-sky-850 via-cyan-800 to-emerald-700 z-10" />
+                  )}
+
+                  {/* Contenido de la campaña */}
+                  <div className="relative z-20 px-8 sm:px-12 md:px-16 py-6 md:py-8 flex flex-col justify-center h-full max-w-xl md:max-w-2xl text-white">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 text-[10px] font-black uppercase tracking-wider border border-sky-400/30 w-fit mb-2">
+                      <Megaphone size={10} className="animate-pulse" /> Campaña Activa
+                    </span>
+                    <h3 className="text-lg sm:text-2xl font-black tracking-tight leading-tight mb-2 drop-shadow-sm text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-slate-200">
+                      {campana.nombre}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-200 line-clamp-2 mb-3 leading-relaxed drop-shadow">
+                      {campana.descripcion}
+                    </p>
+
+                    <div className="flex flex-wrap items-center gap-3">
+                      {campana.precioPromocional && (
+                        <div className="px-3.5 py-1 rounded-xl bg-emerald-500 text-white text-xs sm:text-sm font-black shadow-md shadow-emerald-500/20 flex items-center gap-1 border border-emerald-400/30">
+                          <span>Precio Especial: S/. {campana.precioPromocional}</span>
+                        </div>
+                      )}
+                      
+                      {campana.servicios && campana.servicios.length > 0 && (
+                        <div className="flex items-center gap-1 text-[11px] font-bold text-slate-300 bg-slate-800/85 backdrop-blur-md px-2.5 py-1 rounded-lg border border-slate-700">
+                          <Stethoscope size={12} className="text-sky-400" />
+                          <span>{campana.servicios.length} {campana.servicios.length === 1 ? 'Servicio' : 'Servicios'}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
+
+          {/* Controles de Navegación del Carrusel (Flechas visibles en hover) */}
+          {campanas.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={() => setIndiceCampana((prev) => (prev - 1 + campanas.length) % campanas.length)}
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-xl bg-slate-900/60 hover:bg-slate-900 text-white transition-all opacity-0 group-hover:opacity-100 border border-slate-700/50 backdrop-blur-md z-30"
+                title="Anterior"
+              >
+                &#10094;
+              </button>
+              <button
+                type="button"
+                onClick={() => setIndiceCampana((prev) => (prev + 1) % campanas.length)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-xl bg-slate-900/60 hover:bg-slate-900 text-white transition-all opacity-0 group-hover:opacity-100 border border-slate-700/50 backdrop-blur-md z-30"
+                title="Siguiente"
+              >
+                &#10095;
+              </button>
+
+              {/* Indicadores de puntos */}
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-30">
+                {campanas.map((_, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => setIndiceCampana(index)}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      index === indiceCampana ? 'w-5 bg-sky-500 shadow-sm shadow-sky-500/30' : 'w-1.5 bg-white/40 hover:bg-white/70'
+                    }`}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
       )}
 

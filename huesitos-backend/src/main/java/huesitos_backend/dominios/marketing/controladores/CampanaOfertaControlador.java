@@ -46,6 +46,18 @@ public class CampanaOfertaControlador {
         }
     }
 
+    @PostMapping("/campanas/{id}/foto")
+    public ResponseEntity<?> subirFotoCampana(@PathVariable Long id, @RequestParam("archivo") org.springframework.web.multipart.MultipartFile archivo) {
+        try {
+            String urlFoto = campanaOfertaServicio.subirFotoCampana(id, archivo);
+            java.util.Map<String, String> respuesta = new java.util.HashMap<>();
+            respuesta.put("imagenUrl", urlFoto);
+            return ResponseEntity.ok(respuesta);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @PutMapping("/campanas/{id}")
     public ResponseEntity<?> actualizarCampana(@PathVariable Long id, @RequestBody Campana campana) {
         try {
@@ -96,6 +108,31 @@ public class CampanaOfertaControlador {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @PostMapping("/ofertas/categoria")
+    public ResponseEntity<?> registrarOfertasPorCategoria(@RequestBody SolicitudOfertaCategoria solicitud) {
+        try {
+            List<Oferta> resultados = campanaOfertaServicio.guardarOfertasPorCategoria(
+                    solicitud.getCategoriaId(),
+                    solicitud.getDescuentoPorcentaje(),
+                    solicitud.getFechaInicio(),
+                    solicitud.getFechaFin()
+            );
+            return ResponseEntity.ok(resultados);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @lombok.Getter
+    @lombok.Setter
+    @lombok.NoArgsConstructor
+    public static class SolicitudOfertaCategoria {
+        private Long categoriaId;
+        private java.math.BigDecimal descuentoPorcentaje;
+        private java.time.LocalDate fechaInicio;
+        private java.time.LocalDate fechaFin;
     }
 
     @PutMapping("/ofertas/{id}")

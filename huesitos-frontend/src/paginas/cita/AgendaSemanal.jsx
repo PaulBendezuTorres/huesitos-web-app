@@ -5,22 +5,17 @@ import {
   ChevronRight,
   User,
   Clock,
-  Check,
-  X,
   AlertTriangle,
   RefreshCw,
   Filter,
-  PawPrint,
-  CheckCircle,
-  FileText
+  PawPrint
 } from 'lucide-react';
 import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
+import Combobox from '@/componentes/comun/Combobox';
+import ModalReprogramarCita from '@/componentes/cita/ModalReprogramarCita';
 import {
   obtenerCitasAgenda,
-  reprogramarCita,
-  obtenerUsuarios,
-  obtenerCitasPorDia,
-  obtenerHorariosVeterinario
+  obtenerUsuarios
 } from '@/api/citaApi';
 
 const ESTADOS = [
@@ -30,12 +25,6 @@ const ESTADOS = [
   { value: 'EN_ESPERA', label: 'En Espera' },
   { value: 'COMPLETADA', label: 'Completada' },
   { value: 'CANCELADA', label: 'Cancelada' }
-];
-
-const HORARIOS_BASE = [
-  '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
-  '12:00', '14:00', '14:30', '15:00', '15:30',
-  '16:00', '16:30', '17:00', '17:30',
 ];
 
 const AgendaSemanal = () => {
@@ -52,13 +41,6 @@ const AgendaSemanal = () => {
 
   // Modal de Reprogramación
   const [citaSeleccionada, setCitaSeleccionada] = useState(null);
-  const [fechaReprogramar, setFechaReprogramar] = useState('');
-  const [horaReprogramar, setHoraReprogramar] = useState('');
-  const [cargandoSlots, setCargandoSlots] = useState(false);
-  const [citasDelDia, setCitasDelDia] = useState([]);
-  const [horariosVet, setHorariosVet] = useState([]);
-  const [guardandoReprogramacion, setGuardandoReprogramacion] = useState(false);
-  const [errorReprogramar, setErrorReprogramar] = useState('');
 
   // Helpers de formato para Sentence case
   const formatEstadoCita = (est) => {
@@ -163,72 +145,6 @@ const AgendaSemanal = () => {
     fetchCitas();
   }, [fetchCitas]);
 
-  // Cargar disponibilidad para reprogramación cuando cambia la fecha o la cita seleccionada
-  useEffect(() => {
-    if (fechaReprogramar && citaSeleccionada) {
-      const cargarDisponibilidad = async () => {
-        setCargandoSlots(true);
-        setErrorReprogramar('');
-        try {
-          const promesas = [obtenerCitasPorDia(fechaReprogramar)];
-          if (citaSeleccionada.veterinario?.id) {
-            promesas.push(obtenerHorariosVeterinario(citaSeleccionada.veterinario.id));
-          }
-          const [citasRes, horariosRes] = await Promise.allSettled(promesas);
-          
-          setCitasDelDia(citasRes.status === 'fulfilled' ? citasRes.value : []);
-          if (horariosRes) {
-            setHorariosVet(horariosRes.status === 'fulfilled' ? horariosRes.value : []);
-          } else {
-            setHorariosVet([]);
-          }
-        } catch (err) {
-          console.error("Error al cargar disponibilidad:", err);
-          setErrorReprogramar('No se pudo verificar la disponibilidad del horario.');
-        } finally {
-          setCargandoSlots(false);
-        }
-      };
-      cargarDisponibilidad();
-      setHoraReprogramar('');
-    }
-  }, [fechaReprogramar, citaSeleccionada]);
-
-  // Filtrar los horarios de reprogramación disponibles
-  const slotsDisponibles = HORARIOS_BASE.filter((hora) => {
-    if (citaSeleccionada?.veterinario?.id && citasDelDia.length > 0) {
-      const ocupado = citasDelDia.some((c) => {
-        if (c.id === citaSeleccionada.id) return false; // Permitir el mismo slot de la cita actual
-        if (c.veterinario?.id !== citaSeleccionada.veterinario.id) return false;
-        if (c.estado === 'CANCELADA') return false;
-        const horaCita = c.fechaHora ? c.fechaHora.substring(11, 16) : '';
-        return horaCita === hora;
-      });
-      if (ocupado) return false;
-    }
-
-    // Filtrar por fechas bloqueadas (excepciones/vacaciones)
-    if (citaSeleccionada?.veterinario?.id && fechaReprogramar) {
-      const blockedData = localStorage.getItem(`excepciones_horario_${citaSeleccionada.veterinario.id}`);
-      if (blockedData) {
-        const list = JSON.parse(blockedData);
-        if (list.some((ex) => ex.fecha === fechaReprogramar)) {
-          return false;
-        }
-      }
-    }
-
-    if (horariosVet.length > 0 && fechaReprogramar) {
-      const diaSemana = new Date(fechaReprogramar + 'T12:00:00').getDay();
-      const diaMap = { 0: 7, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6 };
-      const horarioDia = horariosVet.find((h) => h.diaSemana === diaMap[diaSemana] && h.activo);
-      if (!horarioDia) return false;
-      if (hora < horarioDia.horaEntrada || hora >= horarioDia.horaSalida) return false;
-    }
-
-    return true;
-  });
-
   // Agrupar citas por fecha
   const citasPorDia = {};
   diasSemana.forEach(d => {
@@ -252,30 +168,6 @@ const AgendaSemanal = () => {
     });
   });
 
-  // Manejar reprogramación
-  const handleReprogramarSubmit = async (e) => {
-    e.preventDefault();
-    if (!fechaReprogramar || !horaReprogramar) {
-      setErrorReprogramar('Por favor selecciona una fecha y hora válidas.');
-      return;
-    }
-
-    setGuardandoReprogramacion(true);
-    setErrorReprogramar('');
-    try {
-      const nuevaFechaHora = `${fechaReprogramar}T${horaReprogramar}:00`;
-      await reprogramarCita(citaSeleccionada.id, nuevaFechaHora);
-      alert('La cita ha sido reprogramada con éxito.');
-      setCitaSeleccionada(null);
-      fetchCitas();
-    } catch (err) {
-      const msg = err.response?.data || 'Error al reprogramar la cita.';
-      setErrorReprogramar(typeof msg === 'string' ? msg : JSON.stringify(msg));
-    } finally {
-      setGuardandoReprogramacion(false);
-    }
-  };
-
   // Clases CSS por estado de cita
   const obtenerEstiloEstado = (estado) => {
     switch (estado) {
@@ -296,14 +188,6 @@ const AgendaSemanal = () => {
 
   const abrirModalReprogramar = (cita) => {
     setCitaSeleccionada(cita);
-    if (cita.fechaHora) {
-      setFechaReprogramar(cita.fechaHora.substring(0, 10));
-      setHoraReprogramar(cita.fechaHora.substring(11, 16));
-    } else {
-      setFechaReprogramar('');
-      setHoraReprogramar('');
-    }
-    setErrorReprogramar('');
   };
 
   return (
@@ -360,36 +244,54 @@ const AgendaSemanal = () => {
           </div>
  
           {/* Filtros de Veterinario y Estado */}
-          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-            <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg px-2.5 py-1.5 flex-1 sm:flex-initial sm:min-w-[180px]">
-              <User size={13} className="text-slate-400" />
-              <select
-                value={filtroVeterinario}
-                onChange={(e) => setFiltroVeterinario(e.target.value)}
-                className="bg-transparent text-xs font-semibold text-slate-650 dark:text-slate-200 outline-none w-full cursor-pointer"
-              >
-                <option value="">Todos los veterinarios</option>
-                {veterinarios.map((vet) => (
-                  <option key={vet.id} value={vet.id}>
-                    {vet.nombre || vet.correo}
-                  </option>
-                ))}
-              </select>
+          <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto z-20">
+            <div className="w-full sm:w-56 shrink-0">
+              <Combobox
+                value={filtroVeterinario ? veterinarios.find(v => String(v.id) === String(filtroVeterinario))?.nombre || veterinarios.find(v => String(v.id) === String(filtroVeterinario))?.correo : 'Todos los veterinarios'}
+                onChange={(label, _, opcCompleto) => {
+                  if (opcCompleto) {
+                    setFiltroVeterinario(opcCompleto.id);
+                  } else {
+                    if (!label || label.toLowerCase() === 'todos los veterinarios'.toLowerCase()) {
+                      setFiltroVeterinario('');
+                    } else {
+                      const coincidencia = veterinarios.find(v => (v.nombre || v.correo).toLowerCase() === label.toLowerCase());
+                      setFiltroVeterinario(coincidencia ? coincidencia.id : '');
+                    }
+                  }
+                }}
+                opciones={[
+                  { id: '', label: 'Todos los veterinarios' },
+                  ...veterinarios.map((vet) => ({
+                    id: vet.id,
+                    label: vet.nombre || vet.correo
+                  }))
+                ]}
+                placeholder="Buscar veterinario..."
+                icono={User}
+                compacto={true}
+              />
             </div>
  
-            <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg px-2.5 py-1.5 flex-1 sm:flex-initial sm:min-w-[150px]">
-              <Filter size={13} className="text-slate-400" />
-              <select
-                value={filtroEstado}
-                onChange={(e) => setFiltroEstado(e.target.value)}
-                className="bg-transparent text-xs font-semibold text-slate-650 dark:text-slate-200 outline-none w-full cursor-pointer"
-              >
-                {ESTADOS.map((est) => (
-                  <option key={est.value} value={est.value}>
-                    {est.label}
-                  </option>
-                ))}
-              </select>
+            <div className="w-full sm:w-48 shrink-0">
+              <Combobox
+                value={ESTADOS.find(e => e.value === filtroEstado)?.label || 'Todos los estados'}
+                onChange={(label, _, opcCompleto) => {
+                  if (opcCompleto) {
+                    setFiltroEstado(opcCompleto.id);
+                  } else {
+                    const coincidencia = ESTADOS.find(e => e.label.toLowerCase() === label.toLowerCase());
+                    setFiltroEstado(coincidencia ? coincidencia.value : 'TODOS');
+                  }
+                }}
+                opciones={ESTADOS.map((est) => ({
+                  id: est.value,
+                  label: est.label
+                }))}
+                placeholder="Filtro estado..."
+                icono={Filter}
+                compacto={true}
+              />
             </div>
  
             <button
@@ -509,143 +411,12 @@ const AgendaSemanal = () => {
       )}
 
       {/* MODAL DE REPROGRAMACIÓN DE CITA */}
-      {citaSeleccionada && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
-            {/* Header Modal */}
-            <div className="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/40">
-              <div>
-                <h3 className="font-bold text-slate-800 dark:text-slate-100 text-base tracking-tight">Reprogramar cita</h3>
-                <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 font-medium">ID cita: #{citaSeleccionada.id}</p>
-              </div>
-              <button
-                onClick={() => setCitaSeleccionada(null)}
-                className="p-1.5 rounded-lg hover:bg-slate-200/60 text-slate-400 hover:text-slate-600 transition-all"
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            {/* Contenido/Formulario */}
-            <form onSubmit={handleReprogramarSubmit} className="p-5 space-y-4">
-              {/* Resumen cita */}
-              <div className="bg-slate-50 dark:bg-slate-900/40 rounded-xl p-3.5 border border-slate-100 dark:border-slate-700 space-y-2">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <span className="text-[9px] font-bold text-sky-500 uppercase tracking-wider">Paciente</span>
-                    <h4 className="font-bold text-slate-800 dark:text-slate-100 text-sm">{citaSeleccionada.mascota?.nombre}</h4>
-                    <p className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold">{citaSeleccionada.mascota?.dueño?.nombreCompleto || 'Propietario'}</p>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-[9px] font-bold text-emerald-500 uppercase tracking-wider">Servicio</span>
-                    <p className="font-bold text-slate-800 dark:text-slate-100 text-xs">{citaSeleccionada.servicio?.nombre}</p>
-                  </div>
-                </div>
-
-                <div className="pt-2 border-t border-slate-200/50 dark:border-slate-700 flex justify-between text-[10px] text-slate-500 dark:text-slate-400">
-                  <span className="flex items-center gap-1 font-semibold">
-                    <User size={12} className="text-slate-400" />
-                    Vet: {citaSeleccionada.veterinario ? (citaSeleccionada.veterinario.nombre || citaSeleccionada.veterinario.correo) : 'Sin asignar'}
-                  </span>
-                  <span className="flex items-center gap-1 font-semibold">
-                    <Clock size={12} className="text-slate-400" />
-                    Actual: {citaSeleccionada.fechaHora ? new Date(citaSeleccionada.fechaHora).toLocaleString('es-PE', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''}
-                  </span>
-                </div>
-              </div>
-
-              {/* Selector de nueva Fecha */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wide block">
-                  Nueva fecha
-                </label>
-                <input
-                  type="date"
-                  value={fechaReprogramar}
-                  min={formatarFechaYMD(new Date())}
-                  onChange={(e) => setFechaReprogramar(e.target.value)}
-                  required
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 text-sm text-slate-700 dark:text-slate-100 bg-white dark:bg-slate-700 focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:focus:ring-sky-900 outline-none transition-all"
-                />
-              </div>
-
-              {/* Selector de nueva Hora (Slots) */}
-              {fechaReprogramar && (
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wide block">
-                    Horarios disponibles
-                  </label>
-                  
-                  {cargandoSlots ? (
-                    <div className="flex items-center justify-center py-6 bg-slate-50 border border-slate-200 rounded-xl gap-2">
-                      <CargadorSpinner size="sm" />
-                      <span className="text-xs font-semibold text-slate-400">Verificando horarios...</span>
-                    </div>
-                  ) : slotsDisponibles.length === 0 ? (
-                    <div className="text-center py-6 bg-slate-50 border border-slate-200 rounded-xl">
-                      <AlertTriangle size={20} className="text-amber-500 mx-auto mb-1.5" />
-                      <p className="text-xs font-bold text-slate-500">Sin horarios disponibles</p>
-                      <p className="text-[10px] text-slate-400">Intenta con otro día.</p>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-4 gap-1.5 max-h-[140px] overflow-y-auto pr-1">
-                      {slotsDisponibles.map((hora) => (
-                        <button
-                          key={hora}
-                          type="button"
-                          onClick={() => setHoraReprogramar(hora)}
-                          className={`py-2 rounded-lg text-xs font-bold transition-all ${
-                            horaReprogramar === hora
-                              ? 'bg-sky-500 text-white shadow-md shadow-sky-500/20 scale-105'
-                              : 'bg-slate-50 text-slate-600 border border-slate-200 hover:border-sky-300 hover:bg-sky-50'
-                          }`}
-                        >
-                          {hora}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Alertas de error del modal */}
-              {errorReprogramar && (
-                <div className="bg-red-50 border border-red-200 rounded-xl p-3 flex items-center gap-2">
-                  <AlertTriangle size={14} className="text-red-500 shrink-0" />
-                  <p className="text-xs text-red-700 font-semibold">{errorReprogramar}</p>
-                </div>
-              )}
-
-              {/* Botones de acción */}
-              <div className="pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center justify-end gap-2.5">
-                <button
-                  type="button"
-                  onClick={() => setCitaSeleccionada(null)}
-                  disabled={guardandoReprogramacion}
-                  className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-600 transition-all"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  disabled={guardandoReprogramacion || !fechaReprogramar || !horaReprogramar}
-                  className="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-sky-500 hover:bg-sky-600 transition-all shadow-md shadow-sky-500/10 flex items-center justify-center gap-1.5 disabled:opacity-40"
-                >
-                  {guardandoReprogramacion ? (
-                    <>
-                      <CargadorSpinner size="xs" color="border-white" /> Reprogramando...
-                    </>
-                  ) : (
-                    <>
-                      <Check size={12} /> Reprogramar cita
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <ModalReprogramarCita
+        isOpen={!!citaSeleccionada}
+        onClose={() => setCitaSeleccionada(null)}
+        cita={citaSeleccionada}
+        onReprogramada={fetchCitas}
+      />
 
       {/* Estilo para animación lenta */}
       <style>{`
