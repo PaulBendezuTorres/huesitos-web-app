@@ -60,7 +60,7 @@ const ClienteInicio = () => {
       {/* RULETA/CARRUSEL DE CAMPAÑAS PUBLICITARIAS (16:9) */}
       {campanas && campanas.length > 0 && (
         <div className="relative overflow-hidden rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-lg bg-slate-900 group">
-          <div className="w-full h-[420px] md:h-[340px] relative overflow-hidden">
+          <div className="w-full h-[420px] md:h-[340px] lg:h-[400px] xl:h-[460px] relative overflow-hidden">
             {campanas.map((campana, index) => {
               const activa = index === indiceCampana;
               const tieneImagen = !!campana.imagenUrl;
