@@ -56,7 +56,7 @@ Cada vez que se complete un cambio relevante o a petición del usuario:
 ## Reglas de Compresión (OBLIGATORIAS)
 
 > [!CAUTION]
-> El archivo `memoria.md` NUNCA debe superar las **120 líneas**. Si al agregar nuevos logros se excede este límite, el agente DEBE comprimir antes de guardar.
+> El archivo `memoria.md` NUNCA debe superar las **240 líneas**. El agente solo debe comprimir el archivo cuando el usuario lo solicite de forma explícita.
 
 ### Principios de compresión
 
@@ -92,12 +92,12 @@ Cada vez que se complete un cambio relevante o a petición del usuario:
 ### Proceso de compresión al actualizar
 
 1. Contar las líneas actuales del archivo.
-2. Si `líneas + nuevos logros > 120`:
+2. Si `líneas + nuevos logros > 240`:
    - Fusionar logros granulares dentro de cada módulo.
    - Eliminar detalles de implementación (rutas, CSS, píxeles).
    - Consolidar decisiones redundantes.
 3. Agregar los nuevos logros en el módulo correspondiente.
-4. Verificar que el resultado final sea ≤ 120 líneas.
+4. Verificar que el resultado final sea ≤ 240 líneas.
 
 ### Módulos estándar para agrupar
 Usar estos encabezados (crear nuevos solo si no encajan):

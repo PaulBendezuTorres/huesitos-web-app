@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, Routes, Route, Navigate } from 'react-router-dom';
 
 import ClienteInicio from '@/paginas/cliente/ClienteInicio';
 import ClienteMascotas from '@/paginas/cliente/ClienteMascotas';
@@ -9,19 +9,16 @@ import PlantillaTablero from '@/componentes/layout/PlantillaTablero';
 
 const TableroCliente = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [correo] = useState(localStorage.getItem('usuarioCorreo') || 'Cliente');
-  const [vistaActual, setVistaActual] = useState(() => {
-    const subvista = localStorage.getItem('subvistaDefecto');
-    if (subvista) {
-      localStorage.removeItem('subvistaDefecto');
-      return subvista;
-    }
-    return localStorage.getItem('clienteVistaActual') || 'dashboard';
-  });
 
-  useEffect(() => {
-    localStorage.setItem('clienteVistaActual', vistaActual);
-  }, [vistaActual]);
+  // Obtener la subvista actual desde la URL (ej: /cliente/dashboard -> dashboard)
+  const subvistaUrl = location.pathname.split('/')[2];
+  const vistaActual = subvistaUrl || 'dashboard';
+
+  const setVistaActual = (nuevaVista) => {
+    navigate(`/cliente/${nuevaVista}`);
+  };
 
   useEffect(() => {
     const rol = localStorage.getItem('usuarioRol');
@@ -30,21 +27,17 @@ const TableroCliente = () => {
     }
   }, [navigate]);
 
+  useEffect(() => {
+    const subvistaDefecto = localStorage.getItem('subvistaDefecto');
+    if (subvistaDefecto) {
+      localStorage.removeItem('subvistaDefecto');
+      setVistaActual(subvistaDefecto);
+    }
+  }, []);
+
   const handleLogout = () => {
     localStorage.clear();
     navigate('/');
-  };
-
-  const renderizarVista = () => {
-    switch (vistaActual) {
-      case 'dashboard': return <ClienteInicio />;
-      case 'mascotas': return <ClienteMascotas />;
-      case 'citas': return <ClienteAgendarCita />;
-      case 'tienda': return <ClienteTienda />;
-      case 'recetas': return <PlaceholderVista titulo="Mis recetas" descripcion="Próximamente: descarga de recetas PDF." />;
-      case 'facturacion': return <PlaceholderVista titulo="Facturación" descripcion="Próximamente: historial de pagos." />;
-      default: return <ClienteInicio />;
-    }
   };
 
   return (
@@ -56,7 +49,16 @@ const TableroCliente = () => {
       handleLogout={handleLogout}
       tituloHeader="Portal del cliente"
     >
-      {renderizarVista()}
+      <Routes>
+        <Route path="/" element={<Navigate to="dashboard" replace />} />
+        <Route path="dashboard" element={<ClienteInicio />} />
+        <Route path="mascotas" element={<ClienteMascotas />} />
+        <Route path="citas" element={<ClienteAgendarCita />} />
+        <Route path="tienda" element={<ClienteTienda />} />
+        <Route path="recetas" element={<PlaceholderVista titulo="Mis recetas" descripcion="Próximamente: descarga de recetas PDF." />} />
+        <Route path="facturacion" element={<PlaceholderVista titulo="Facturación" descripcion="Próximamente: historial de pagos." />} />
+        <Route path="*" element={<ClienteInicio />} />
+      </Routes>
     </PlantillaTablero>
   );
 };
@@ -64,8 +66,12 @@ const TableroCliente = () => {
 const PlaceholderVista = ({ titulo, descripcion }) => (
   <div className="flex items-center justify-center h-64">
     <div className="text-center">
-      <h2 className="text-2xl font-bold text-slate-300 mb-2">{titulo}</h2>
-      <p className="text-sm text-slate-400">{descripcion}</p>
+      <h2 className="text-2xl font-bold text-slate-350 dark:text-slate-500 mb-2 transition-colors duration-300">
+        {titulo}
+      </h2>
+      <p className="text-sm text-slate-400 dark:text-slate-650 transition-colors duration-300">
+        {descripcion}
+      </p>
     </div>
   </div>
 );
