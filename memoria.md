@@ -1,6 +1,6 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-15 (Alineación a la izquierda y desacoplamiento de Registrar Mascota)
+Última actualización: 2026-06-15 (Estructuración en bloques y subida de foto de mascota)
 
 ## 🚀 Logros por Módulo
 
@@ -22,7 +22,7 @@
 ### Mascotas
 - [x] Entidad `Mascota` con `@JsonAlias({"dueño", "dueno"})` para compatibilidad UTF-8/ASCII.
 - [x] CRUD completo: `MascotaRepositorio`, `MascotaServicio`, `MascotaControlador`. QA completado.
-- [x] Nueva página física `RegistrarMascotaCliente.jsx` (`/cliente/mascotas/nueva`) desacoplada con el subcomponente `FormularioRegistroMascota.jsx` alineado a la izquierda ocupando ancho completo (`w-full`) según las directrices estéticas.
+- [x] Nueva página física `RegistrarMascotaCliente.jsx` (`/cliente/mascotas/nueva`) desacoplada con el subcomponente `FormularioRegistroMascota.jsx` estructurado en bloques de tarjetas independientes, alineado a la izquierda (`w-full`), con subida de fotos (máximo 2 MB) y previsualización interactiva.
 
 ### Citas y Agenda
 - [x] Entidad `Cita` con estados: `PENDIENTE`, `CONFIRMADA`, `COMPLETADA`, `CANCELADA`, `EN_ESPERA`.

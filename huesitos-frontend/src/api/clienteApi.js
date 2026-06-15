@@ -36,3 +36,18 @@ export const registrarMascota = async (datosMascota) => {
   return respuesta.data;
 };
 
+/** Subir foto de una mascota */
+export const subirFotoMascota = async (mascotaId, archivo) => {
+  const formData = new FormData();
+  formData.append('archivo', archivo);
+  
+  const respuesta = await axios.post(`${API_BASE}/perfiles/mascota/${mascotaId}/foto`, formData, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return respuesta.data;
+};
+
+
