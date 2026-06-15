@@ -44,8 +44,8 @@ public class CampanaOfertaServicio {
         if (campana.getFechaFin().isBefore(campana.getFechaInicio())) {
             throw new RuntimeException("La fecha de fin no puede ser anterior a la de inicio");
         }
-        if (campana.getDescripcion() != null && campana.getDescripcion().trim().length() > 350) {
-            throw new RuntimeException("La descripción de la campaña no puede superar los 350 caracteres");
+        if (campana.getDescripcion() != null && campana.getDescripcion().trim().length() > 500) {
+            throw new RuntimeException("La descripción de la campaña no puede superar los 500 caracteres");
         }
 
         campana.setNombre(campana.getNombre().trim());

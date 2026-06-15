@@ -16,6 +16,7 @@ const RegistrarCampana = () => {
     fechaInicio: '',
     fechaFin: '',
     imagenUrl: '',
+    precioPromocional: '',
     servicios: []
   });
 
@@ -43,6 +44,7 @@ const RegistrarCampana = () => {
               fechaInicio: campana.fechaInicio,
               fechaFin: campana.fechaFin,
               imagenUrl: campana.imagenUrl || '',
+              precioPromocional: campana.precioPromocional || '',
               servicios: campana.servicios ? campana.servicios.map(s => s.id) : []
             });
             if (campana.imagenUrl) {
@@ -96,8 +98,8 @@ const RegistrarCampana = () => {
       if (form.fechaInicio > form.fechaFin) {
         throw new Error('La fecha de inicio no puede ser posterior a la fecha de término.');
       }
-      if (form.descripcion.length > 350) {
-        throw new Error('La descripción no puede superar los 350 caracteres.');
+      if (form.descripcion.length > 500) {
+        throw new Error('La descripción no puede superar los 500 caracteres.');
       }
 
       const payload = {
@@ -106,6 +108,7 @@ const RegistrarCampana = () => {
         fechaInicio: form.fechaInicio,
         fechaFin: form.fechaFin,
         imagenUrl: form.imagenUrl,
+        precioPromocional: form.precioPromocional ? Number(form.precioPromocional) : null,
         servicios: form.servicios.map(sid => ({ id: sid }))
       };
 
@@ -196,8 +199,8 @@ const RegistrarCampana = () => {
               <div>
                 <div className="flex justify-between items-center mb-2">
                   <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Detalles y Términos de la Promoción</label>
-                  <span className={`text-[10px] font-bold ${form.descripcion.length > 300 ? 'text-red-500' : 'text-slate-400'}`}>
-                    {form.descripcion.length} / 350
+                  <span className={`text-[10px] font-bold ${form.descripcion.length > 450 ? 'text-red-500' : 'text-slate-400'}`}>
+                    {form.descripcion.length} / 500
                   </span>
                 </div>
                 <textarea
@@ -205,9 +208,23 @@ const RegistrarCampana = () => {
                   value={form.descripcion}
                   onChange={handleChange}
                   required
-                  maxLength={350}
+                  maxLength={500}
                   placeholder="Describe qué incluye la campaña (ej. Consulta, Vacunación, Test Rápido), precios promocionales e indicaciones..."
                   className="w-full h-32 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-650 text-slate-800 dark:text-slate-100 text-sm font-semibold outline-none focus:ring-2 focus:ring-sky-100 focus:border-sky-400 transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                />
+              </div>
+
+              {/* Precio Promocional de la Campaña */}
+              <div>
+                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Precio Fijo Promocional Especial (S/.)</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  name="precioPromocional"
+                  value={form.precioPromocional}
+                  onChange={handleChange}
+                  placeholder="Ej: 150.00 (Precio final del paquete de la campaña)"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-650 text-slate-800 dark:text-slate-100 text-sm font-semibold outline-none focus:ring-2 focus:ring-sky-100 focus:border-sky-400 transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 placeholder:text-slate-400 dark:placeholder:text-slate-500"
                 />
               </div>
 

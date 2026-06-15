@@ -1,8 +1,14 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-15 (Desacoplamiento Completo de Marketing en Páginas Dedicadas, Combobox en Ofertas, Refactorización de Campañas, Corrección de 403 y layout shift)
+Última actualización: 2026-06-15 (Precio Promocional en Campañas, Descripción Ampliada a 500 caracteres, Desacoplamiento de Marketing, Combobox)
 
 ## 🚀 Logros Recientes
+- [x] **Precio Promocional y Ampliación de Descripción en Campañas**:
+  - Añadido el campo `precioPromocional` a la entidad `Campana` en el backend ([Campana.java](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-backend/src/main/java/huesitos_backend/dominios/marketing/entidades/Campana.java)) para definir precios fijos promocionales para paquetes de servicios.
+  - Incrementado el límite físico de la descripción de la campaña a **500 caracteres** en la base de datos (longitud de columna `descripcion`), en la validación del servicio del backend ([CampanaOfertaServicio.java](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-backend/src/main/java/huesitos_backend/dominios/marketing/servicios/CampanaOfertaServicio.java)) y en el frontend ([RegistrarCampana.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/RegistrarCampana.jsx)).
+  - Integrada la entrada del precio promocional y el contador dinámico en tiempo real (`0/500`) en la vista de registro.
+  - Agregado el despliegue del precio promocional destacado en el listado de tarjetas de campañas en [PaginaCampanas.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/PaginaCampanas.jsx).
+  - Validada la compilación de producción exitosa del frontend (`npm run build`) y la compilación del backend (`.\mvnw compile`).
 - [x] **Desacoplamiento de Marketing en Páginas Dedicadas**:
   - Extraído el formulario de creación/edición de Campañas de un modal en la vista principal a la página independiente [RegistrarCampana.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/RegistrarCampana.jsx).
   - Extraído el formulario de creación/edición de Ofertas a la página independiente [RegistrarOferta.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx).

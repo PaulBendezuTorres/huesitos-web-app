@@ -22,7 +22,7 @@ public class Campana {
     @Column(nullable = false, length = 150)
     private String nombre;
 
-    @Column(length = 350)
+    @Column(length = 500)
     private String descripcion;
 
     @Column(name = "fecha_inicio", nullable = false)
@@ -36,6 +36,9 @@ public class Campana {
 
     @Column(name = "imagen_url", length = 500)
     private String imagenUrl;
+
+    @Column(name = "precio_promocional", precision = 10, scale = 2)
+    private java.math.BigDecimal precioPromocional;
 
     @ManyToMany
     @JoinTable(

@@ -249,6 +249,21 @@ const PaginaCampanas = () => {
                       </p>
                     </div>
 
+                    {/* Precio Promocional de la Campaña */}
+                    {c.precioPromocional && (
+                      <div className="flex items-center gap-3 bg-sky-50/50 border border-sky-100 p-2.5 rounded-xl dark:bg-sky-950/20 dark:border-sky-900/40">
+                        <div className="w-8 h-8 bg-sky-500 rounded-lg flex items-center justify-center text-white font-black shrink-0 shadow-sm shadow-sky-500/10 text-xs">
+                          S/
+                        </div>
+                        <div>
+                          <span className="text-[9px] font-black text-slate-400 uppercase block leading-none mb-1">Precio Paquete Promocional</span>
+                          <span className="text-sm font-black text-sky-700 dark:text-sky-450">
+                            S/ {c.precioPromocional.toFixed(2)}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Servicios vinculados */}
                     {c.servicios && c.servicios.length > 0 && (
                       <div className="space-y-1.5">
