@@ -4,10 +4,11 @@
 
 ## 🚀 Logros Recientes
 - [x] **Desacoplamiento y Paginación en Resumen Estadístico**:
-  - Eliminado el widget de "Inventario Crítico (FEFO)" del dashboard de analíticas del administrador.
+  - Conservado el widget de alertas de inventario en el dashboard, renombrándolo a `"Inventario Crítico"` para remover la abreviatura "(FEFO)".
+  - Agregada paginación integrada con `<Paginacion />` para ambas columnas del widget (`Stock crítico` y `Próximos a vencer`), limitando la visualización a un máximo de 5 elementos por página.
   - Extraído el módulo de logs al componente modular independiente [AuditoriaSistema.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/dashboard/AuditoriaSistema.jsx).
   - Integrado el componente reutilizable `<Paginacion />` para paginar localmente las actividades de auditoría con opciones de filas configurables (`5, 10, 15, 20`).
-  - Rediseñado [TableroAnaliticas.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/dashboard/TableroAnaliticas.jsx) para utilizar el nuevo componente, simplificando la vista principal.
+  - Rediseñado [TableroAnaliticas.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/dashboard/TableroAnaliticas.jsx) para utilizar el nuevo componente de auditoría, simplificando la vista principal.
   - Validada la correcta compilación del frontend mediante `npm run build` sin errores.
 - [x] **Desacoplamiento y Paginación en Caja y Finanzas**:
   - Extraído el historial global de transacciones al componente modular e independiente [TablaTransacciones.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/finanzas/TablaTransacciones.jsx).

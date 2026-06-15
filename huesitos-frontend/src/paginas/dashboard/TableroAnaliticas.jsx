@@ -1,6 +1,7 @@
 import { useTablero } from '@/hooks/useTablero';
 import { Activity, Users, Stethoscope, Wallet, RefreshCw } from 'lucide-react';
 import AuditoriaSistema from '@/componentes/dashboard/AuditoriaSistema';
+import WidgetInventarioCritico from '@/componentes/tienda/WidgetInventarioCritico';
 
 const TableroAnaliticas = () => {
   const { stats, loading, refetch } = useTablero();
@@ -72,6 +73,11 @@ const TableroAnaliticas = () => {
             S/ {stats.ingresosTotales ? stats.ingresosTotales.toFixed(2) : "0.00"}
           </p>
         </div>
+      </div>
+
+      {/* INVENTARIO CRÍTICO */}
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm overflow-hidden flex flex-col">
+        <WidgetInventarioCritico />
       </div>
 
       {/* AUDITORÍA DEL SISTEMA */}
