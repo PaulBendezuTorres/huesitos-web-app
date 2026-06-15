@@ -10,7 +10,7 @@
   - Actualizadas las páginas principales [PaginaCampanas.jsx](./huesitos-frontend/src/paginas/marketing/PaginaCampanas.jsx) y [PaginaOfertas.jsx](./huesitos-frontend/src/paginas/marketing/PaginaOfertas.jsx) con los respectivos manejadores `handleToggleActivo` y `handleEliminarFisico` y confirmaciones en español.
 - [x] **Banners de Campaña Limpios en Cliente e Inicio Público (16:9)**:
   - Modificado el renderizado del carrusel de campañas en la página de inicio del cliente ([ClienteInicio.jsx](./huesitos-frontend/src/paginas/cliente/ClienteInicio.jsx)) y en la sección de la portada pública ([SeccionCampanas.jsx](./huesitos-frontend/src/componentes/portada/SeccionCampanas.jsx)).
-  - Si una campaña cuenta con una imagen de banner cargada (`tieneImagen` es verdadero), ahora se renderiza de forma limpia al 100% de la proporción 16:9 sin superponer la máscara de degradado oscuro ni la caja de textos informativos (título, descripción, precio, servicios), evitando tapar la información del diseño gráfico.
+  - Si una campaña cuenta con una imagen de banner cargada (`tieneImagen` es verdadero), ahora se renderiza de forma limpia fijando el contenedor del carrusel con la relación exacta `aspect-video` (16:9) en todo tipo de pantallas. Esto evita deformaciones o recortes toscos en la imagen del banner, ocultando la máscara de degradado oscuro y la caja de textos informativos (título, descripción, precio, servicios) para no tapar la información gráfica prediseñada.
   - Si la campaña no tiene imagen banner, continúa renderizándose el degradado con el texto y detalles dinámicos encima.
   - Validada la construcción exitosa del frontend (`npm run build`) libre de errores.
 - [x] **Rediseño, Simplificación de Ofertas de Productos e Interactividad Financiera**:

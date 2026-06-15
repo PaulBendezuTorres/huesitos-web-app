@@ -39,7 +39,7 @@ const SeccionCampanas = ({ campanas, fadeUp }) => {
 
         {/* RULETA / CARRUSEL 16:9 */}
         <div className="relative overflow-hidden rounded-3xl border border-slate-200/60 dark:border-slate-700/60 shadow-xl bg-slate-950 group max-w-5xl mx-auto">
-          <div className="aspect-[16/9] md:aspect-[21/9] w-full relative overflow-hidden">
+          <div className="aspect-video w-full relative overflow-hidden">
             {campanas.map((campana, index) => {
               const activo = index === indice;
               const tieneImagen = !!campana.imagenUrl;
