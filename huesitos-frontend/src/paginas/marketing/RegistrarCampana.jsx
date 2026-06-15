@@ -271,80 +271,27 @@ const RegistrarCampana = () => {
               <Check size={16} className="text-emerald-500" /> Servicios Incluidos en el Paquete
             </h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Buscador interactivo de Servicios */}
-              <div className="space-y-3">
-                <span className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Buscar y Agregar Servicios</span>
-                <p className="text-xs text-slate-400 dark:text-slate-500 leading-relaxed">
-                  Busca los servicios clínicos que formarán parte de esta campaña y agrégalos al paquete.
-                </p>
-                <div className="pt-1">
-                  <Combobox
-                    value=""
-                    onChange={handleSeleccionarServicioCombobox}
-                    opciones={todosServicios
-                      .filter(s => s.activo)
-                      .map(s => ({
-                        label: s.nombre,
-                        precio: s.precio,
-                        id: s.id,
-                        categoria: `Duración: ${s.duracionMinutos} min`
-                      }))
-                    }
-                    placeholder="Escribe para buscar un servicio..."
-                    icono={Stethoscope}
-                  />
-                </div>
-              </div>
-
-              {/* Caja de Servicios Seleccionados */}
-              <div className="space-y-2">
-                <span className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                  Servicios Seleccionados ({form.servicios.length})
-                </span>
-                <div className="border border-slate-150 dark:border-slate-700 rounded-2xl p-3 h-[200px] overflow-y-auto space-y-2 bg-slate-50/50 dark:bg-slate-900/30">
-                  {form.servicios.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center h-full py-4 text-slate-400 dark:text-slate-500">
-                      <Stethoscope size={20} className="opacity-40 mb-1" />
-                      <p className="text-xs italic text-center">
-                        Ningún servicio agregado. Búscalos al costado.
-                      </p>
-                    </div>
-                  ) : (
-                    form.servicios.map((id) => {
-                      const s = todosServicios.find(item => item.id === id);
-                      if (!s) return null;
-                      return (
-                        <div
-                          key={s.id}
-                          className="flex items-center justify-between p-2.5 bg-white dark:bg-slate-800 rounded-xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm animate-in fade-in slide-in-from-top-1 duration-200"
-                        >
-                          <div className="flex flex-col min-w-0 pr-2">
-                            <span className="text-xs font-bold text-slate-850 dark:text-slate-150 truncate" title={s.nombre}>
-                              {s.nombre}
-                            </span>
-                            <span className="text-[9px] text-slate-400 dark:text-slate-500 font-medium">
-                              Duración: {s.duracionMinutos} min
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2 flex-shrink-0">
-                            <span className="text-xs font-black text-slate-800 dark:text-slate-200">
-                              S/. {s.precio?.toFixed(2)}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => removerServicioSeleccionado(s.id)}
-                              className="p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors border border-transparent hover:border-red-150 dark:hover:border-red-900/40"
-                              title="Remover servicio"
-                            >
-                              <X size={12} />
-                            </button>
-                          </div>
-                        </div>
-                      );
-                    })
-                  )}
-                </div>
+            <div className="space-y-3">
+              <span className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Buscar y Agregar Servicios</span>
+              <p className="text-xs text-slate-400 dark:text-slate-500 leading-relaxed">
+                Busca y selecciona los servicios clínicos que formarán parte de esta campaña y paquete promocional.
+              </p>
+              <div className="pt-1">
+                <Combobox
+                  value=""
+                  onChange={handleSeleccionarServicioCombobox}
+                  opciones={todosServicios
+                    .filter(s => s.activo)
+                    .map(s => ({
+                      label: s.nombre,
+                      precio: s.precio,
+                      id: s.id,
+                      categoria: `Duración: ${s.duracionMinutos} min`
+                    }))
+                  }
+                  placeholder="Escribe para buscar y seleccionar un servicio..."
+                  icono={Stethoscope}
+                />
               </div>
             </div>
           </div>
@@ -391,6 +338,57 @@ const RegistrarCampana = () => {
                   )}
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Servicios Seleccionados */}
+          <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200/60 dark:border-slate-700/60 p-6 space-y-4 shadow-sm animate-in fade-in duration-300">
+            <h3 className="text-sm font-black text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-700 pb-3 flex items-center gap-2 uppercase tracking-wide">
+              <Check size={16} className="text-emerald-500" /> Servicios Seleccionados ({form.servicios.length})
+            </h3>
+            
+            <div className="border border-slate-150 dark:border-slate-700 rounded-2xl p-3 h-[200px] overflow-y-auto space-y-2 bg-slate-50/50 dark:bg-slate-900/30">
+              {form.servicios.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-full py-4 text-slate-400 dark:text-slate-500">
+                  <Stethoscope size={24} className="opacity-40 mb-1" />
+                  <p className="text-xs italic text-center">
+                    Ningún servicio agregado todavía.
+                  </p>
+                </div>
+              ) : (
+                form.servicios.map((id) => {
+                  const s = todosServicios.find(item => item.id === id);
+                  if (!s) return null;
+                  return (
+                    <div
+                      key={s.id}
+                      className="flex items-center justify-between p-2.5 bg-white dark:bg-slate-800 rounded-xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm animate-in fade-in slide-in-from-top-1 duration-200"
+                    >
+                      <div className="flex flex-col min-w-0 pr-2">
+                        <span className="text-xs font-bold text-slate-850 dark:text-slate-150 truncate" title={s.nombre}>
+                          {s.nombre}
+                        </span>
+                        <span className="text-[9px] text-slate-400 dark:text-slate-500 font-medium">
+                          Duración: {s.duracionMinutos} min
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <span className="text-xs font-black text-slate-800 dark:text-slate-200">
+                          S/. {s.precio?.toFixed(2)}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => removerServicioSeleccionado(s.id)}
+                          className="p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors border border-transparent hover:border-red-150 dark:hover:border-red-900/40"
+                          title="Remover servicio"
+                        >
+                          <X size={12} />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
             </div>
           </div>
 
