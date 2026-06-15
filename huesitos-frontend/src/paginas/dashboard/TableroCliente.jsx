@@ -55,6 +55,7 @@ const TableroCliente = () => {
       setVistaActual={setVistaActual}
       handleLogout={handleLogout}
       tituloHeader="Portal del cliente"
+      sinPadding={vistaActual === 'dashboard'}
     >
       {renderizarVista()}
     </PlantillaTablero>

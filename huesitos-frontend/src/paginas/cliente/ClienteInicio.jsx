@@ -56,11 +56,11 @@ const ClienteInicio = () => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="flex flex-col">
       {/* RULETA/CARRUSEL DE CAMPAÑAS PUBLICITARIAS (16:9) */}
       {campanas && campanas.length > 0 && (
-        <div className="relative overflow-hidden rounded-3xl border border-slate-200/60 dark:border-slate-700/60 shadow-lg bg-slate-900 group">
-          <div className="w-full h-[460px] md:h-[340px] relative overflow-hidden">
+        <div className="relative overflow-hidden md:rounded-none rounded-3xl border border-slate-200/60 md:border-0 dark:border-slate-700/60 shadow-lg bg-slate-900 group">
+          <div className="w-full h-[460px] md:h-[calc(100vh-5rem)] relative overflow-hidden">
             {campanas.map((campana, index) => {
               const activa = index === indiceCampana;
               const tieneImagen = !!campana.imagenUrl;
@@ -88,7 +88,7 @@ const ClienteInicio = () => {
                       <div className="w-full md:w-[25%] bg-slate-900 dark:bg-slate-950 p-5 md:p-6 flex flex-col justify-between text-white md:border-l md:border-slate-800/80 overflow-y-auto h-full shrink-0">
                         <div className="space-y-2.5">
                           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 text-[9px] font-black uppercase tracking-wider border border-sky-400/30 w-fit">
-                            <Megaphone size={9} className="animate-pulse" /> Campaña Activa
+                            <Megaphone size={9} className="animate-pulse" /> Campaña
                           </span>
                           <h3 className="text-base md:text-lg font-black tracking-tight leading-tight text-white line-clamp-1">
                             {campana.nombre}
@@ -134,7 +134,7 @@ const ClienteInicio = () => {
                       {/* Contenido de la campaña */}
                       <div className="relative z-20 px-8 sm:px-12 md:px-16 py-6 md:py-8 flex flex-col justify-center h-full max-w-xl md:max-w-2xl text-white">
                         <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 text-[10px] font-black uppercase tracking-wider border border-sky-400/30 w-fit mb-2">
-                          <Megaphone size={10} className="animate-pulse" /> Campaña Activa
+                          <Megaphone size={10} className="animate-pulse" /> Campaña
                         </span>
                         <h3 className="text-lg sm:text-2xl font-black tracking-tight leading-tight mb-2 drop-shadow-sm text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-slate-200">
                           {campana.nombre}
@@ -205,7 +205,7 @@ const ClienteInicio = () => {
       )}
 
       {/* HEADER CON REFRESH */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-8 px-4 lg:px-8">
         <div>
           <h2 className="text-2xl font-bold text-slate-800 tracking-tight">Mis mascotas</h2>
           <p className="text-sm text-slate-400 mt-0.5">Gestiona la salud de tus compañeros</p>
@@ -220,6 +220,7 @@ const ClienteInicio = () => {
       </div>
 
       {/* GRID DE MASCOTAS */}
+      <div className="px-4 lg:px-8">
       {mascotas.length === 0 ? (
         <div className="bg-white rounded-2xl border border-slate-200/60 p-12 text-center shadow-sm">
           <div className="w-16 h-16 bg-sky-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -286,9 +287,11 @@ const ClienteInicio = () => {
           ))}
         </div>
       )}
+      </div>
 
       {/* PRÓXIMAS CITAS */}
       <div>
+        <div className="px-4 lg:px-8">
         <h2 className="text-2xl font-bold text-slate-800 tracking-tight mb-1">Próximas citas</h2>
         <p className="text-sm text-slate-400 mb-5">Tus citas agendadas y confirmadas</p>
 
@@ -349,7 +352,9 @@ const ClienteInicio = () => {
             </div>
           </div>
         )}
+        </div>
       </div>
+      <div className="pb-8" />
     </div>
   );
 };
