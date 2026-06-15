@@ -5,6 +5,7 @@ import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
 import {
   obtenerTodasOfertas,
   eliminarOferta,
+  eliminarOfertaFisico,
   actualizarOferta
 } from '@/api/marketingApi';
 import ListaOfertasProductos from '@/componentes/marketing/ListaOfertasProductos';
@@ -88,18 +89,37 @@ const PaginaOfertas = () => {
   };
 
   // --- CRUD OFERTAS ---
-  const handleEliminarOferta = async (oferta) => {
-    const confirm = window.confirm(`¿Estás seguro de que deseas eliminar permanentemente la oferta "${oferta.titulo}"? Esta acción no se puede deshacer.`);
+  const handleToggleActivo = async (oferta) => {
+    const accion = oferta.activo ? 'desactivar' : 'activar';
+    const confirm = window.confirm(`¿Estás seguro de que deseas ${accion} la oferta "${oferta.titulo}"?`);
     if (!confirm) return;
 
     try {
-      await eliminarOferta(oferta.id);
-      setMensajeExito('Oferta eliminada con éxito.');
+      if (oferta.activo) {
+        await eliminarOferta(oferta.id);
+      } else {
+        await actualizarOferta(oferta.id, { ...oferta, activo: true });
+      }
+      setMensajeExito(`Oferta ${accion}da con éxito.`);
       cargarDatos();
     } catch (err) {
-      setMensajeError('Error al eliminar la oferta: ' + (err.response?.data || err.message));
+      setMensajeError(`Error al ${accion} la oferta: ` + (err.response?.data || err.message));
     }
   };
+
+  const handleEliminarFisico = async (oferta) => {
+    const confirm = window.confirm(`¿Estás seguro de que deseas ELIMINAR COMPLETAMENTE la oferta "${oferta.titulo}" de la base de datos?\nEsta acción es irreversible.`);
+    if (!confirm) return;
+
+    try {
+      await eliminarOfertaFisico(oferta.id);
+      setMensajeExito('Oferta eliminada permanentemente con éxito.');
+      cargarDatos();
+    } catch (err) {
+      setMensajeError('Error al eliminar la oferta permanentemente: ' + (err.response?.data || err.message));
+    }
+  };
+
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
@@ -153,7 +173,8 @@ const PaginaOfertas = () => {
       ) : (
         <ListaOfertasProductos
           ofertas={ofertas}
-          onToggleActivo={handleEliminarOferta}
+          onToggleActivo={handleToggleActivo}
+          onEliminarFisico={handleEliminarFisico}
           calcularExpiracion={calcularExpiracion}
           formatarFecha={formatarFecha}
         />

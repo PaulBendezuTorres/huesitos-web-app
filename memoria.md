@@ -1,9 +1,20 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-15 (Direcciones de Marketing Separadas, Carrusel 16:9, Layout de Servicios Lado a Lado)
+Última actualización: 2026-06-15 (Doble lógica de eliminación física y desactivación, Banners limpios de campañas)
 
 ## 🚀 Logros Recientes
+- [x] **Doble lógica de Desactivación Lógica y Eliminación Física en Marketing**:
+  - Implementados dos flujos separados de acciones en las grillas de Campañas ([ListaCampanasPublicitarias.jsx](./huesitos-frontend/src/componentes/marketing/ListaCampanasPublicitarias.jsx)) y Ofertas ([ListaOfertasProductos.jsx](./huesitos-frontend/src/componentes/marketing/ListaOfertasProductos.jsx)).
+  - Añadido un botón de activación/desactivación lógica (con el icono `Power` de Lucide) que realiza el cambio de estado `activo` llamando a los respectivos endpoints.
+  - Añadido un botón de eliminación física irreversible (con el icono `Trash2` de Lucide en color rojo) para borrar de forma definitiva el registro de la base de datos MySQL (con advertencia de desvinculación).
+  - Actualizadas las páginas principales [PaginaCampanas.jsx](./huesitos-frontend/src/paginas/marketing/PaginaCampanas.jsx) y [PaginaOfertas.jsx](./huesitos-frontend/src/paginas/marketing/PaginaOfertas.jsx) con los respectivos manejadores `handleToggleActivo` y `handleEliminarFisico` y confirmaciones en español.
+- [x] **Banners de Campaña Limpios en Cliente e Inicio Público (16:9)**:
+  - Modificado el renderizado del carrusel de campañas en la página de inicio del cliente ([ClienteInicio.jsx](./huesitos-frontend/src/paginas/cliente/ClienteInicio.jsx)) y en la sección de la portada pública ([SeccionCampanas.jsx](./huesitos-frontend/src/componentes/portada/SeccionCampanas.jsx)).
+  - Si una campaña cuenta con una imagen de banner cargada (`tieneImagen` es verdadero), ahora se renderiza de forma limpia al 100% de la proporción 16:9 sin superponer la máscara de degradado oscuro ni la caja de textos informativos (título, descripción, precio, servicios), evitando tapar la información del diseño gráfico.
+  - Si la campaña no tiene imagen banner, continúa renderizándose el degradado con el texto y detalles dinámicos encima.
+  - Validada la construcción exitosa del frontend (`npm run build`) libre de errores.
 - [x] **Rediseño, Simplificación de Ofertas de Productos e Interactividad Financiera**:
+
   - Rediseñado y simplificado el formulario [RegistrarOferta.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx) para enfocarse exclusivamente en productos del inventario y farmacia, removiendo banners, títulos manuales, descripciones y relaciones a campañas.
   - Añadido soporte para registrar descuentos por **Categoría Completa** en [RegistrarOferta.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx), permitiendo que el usuario ingrese un porcentaje de descuento y cree ofertas individuales de forma masiva para todos los productos de la categoría mediante el endpoint `POST /api/ofertas/categoria`.
   - Autogeneración transparente del título (`Oferta: [Nombre del Producto]`) y descripción en el submit de la oferta, garantizando compatibilidad con el backend sin forzar al usuario a ingresarlos manualmente.

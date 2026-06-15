@@ -52,44 +52,43 @@ const SeccionCampanas = ({ campanas, fadeUp }) => {
                     activo ? 'opacity-100 scale-100 z-10 pointer-events-auto' : 'opacity-0 scale-95 z-0 pointer-events-none'
                   }`}
                 >
-                  {/* Banner de fondo */}
+                  {/* Banner de fondo con imagen o degradado con textos */}
                   {tieneImagen ? (
-                    <>
-                      <img
-                        src={urlImagen}
-                        alt={campana.nombre}
-                        className="absolute inset-0 w-full h-full object-cover select-none transition-transform duration-700 hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/85 md:via-slate-900/80 to-transparent z-10" />
-                    </>
+                    <img
+                      src={urlImagen}
+                      alt={campana.nombre}
+                      className="absolute inset-0 w-full h-full object-cover select-none transition-transform duration-700 hover:scale-105"
+                    />
                   ) : (
-                    <div className="absolute inset-0 bg-gradient-to-r from-sky-900 via-indigo-900 to-cyan-850 z-10" />
+                    <>
+                      <div className="absolute inset-0 bg-gradient-to-r from-sky-900 via-indigo-900 to-cyan-850 z-10" />
+                      
+                      {/* Detalle informativo */}
+                      <div className="relative z-20 px-6 sm:px-16 py-8 flex flex-col justify-center h-full max-w-lg md:max-w-xl text-white">
+                        <h3 className="text-xl sm:text-3xl font-black tracking-tight leading-tight mb-3 text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-slate-200 drop-shadow-sm">
+                          {campana.nombre}
+                        </h3>
+                        <p className="text-xs sm:text-sm text-slate-200 line-clamp-3 mb-5 leading-relaxed drop-shadow">
+                          {campana.descripcion}
+                        </p>
+
+                        <div className="flex flex-wrap items-center gap-3">
+                          {campana.precioPromocional && (
+                            <div className="px-4 py-1.5 rounded-xl bg-emerald-500 text-white text-xs sm:text-sm font-black shadow-lg shadow-emerald-500/20 border border-emerald-400/30">
+                              <span>Precio Especial: S/. {campana.precioPromocional}</span>
+                            </div>
+                          )}
+
+                          {campana.servicios && campana.servicios.length > 0 && (
+                            <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-300 bg-slate-800/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-slate-700">
+                              <Stethoscope size={12} className="text-sky-400" />
+                              <span>{campana.servicios.length} {campana.servicios.length === 1 ? 'Servicio Clínico' : 'Servicios Incluidos'}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </>
                   )}
-
-                  {/* Detalle informativo */}
-                  <div className="relative z-20 px-6 sm:px-16 py-8 flex flex-col justify-center h-full max-w-lg md:max-w-xl text-white">
-                    <h3 className="text-xl sm:text-3xl font-black tracking-tight leading-tight mb-3 text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-slate-200 drop-shadow-sm">
-                      {campana.nombre}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-slate-200 line-clamp-3 mb-5 leading-relaxed drop-shadow">
-                      {campana.descripcion}
-                    </p>
-
-                    <div className="flex flex-wrap items-center gap-3">
-                      {campana.precioPromocional && (
-                        <div className="px-4 py-1.5 rounded-xl bg-emerald-500 text-white text-xs sm:text-sm font-black shadow-lg shadow-emerald-500/20 border border-emerald-400/30">
-                          <span>Precio Especial: S/. {campana.precioPromocional}</span>
-                        </div>
-                      )}
-
-                      {campana.servicios && campana.servicios.length > 0 && (
-                        <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-300 bg-slate-800/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-slate-700">
-                          <Stethoscope size={12} className="text-sky-400" />
-                          <span>{campana.servicios.length} {campana.servicios.length === 1 ? 'Servicio Clínico' : 'Servicios Incluidos'}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
                 </div>
               );
             })}

@@ -106,9 +106,14 @@ public class CampanaOfertaServicio {
     @Transactional
     public void eliminarCampana(Long id) {
         Campana campana = buscarCampanaPorId(id);
-        // Desvincular ofertas asociadas para evitar restricción de FK
+        campana.setActivo(false);
+        campanaRepositorio.save(campana);
+    }
+
+    @Transactional
+    public void eliminarFisicamenteCampana(Long id) {
+        Campana campana = buscarCampanaPorId(id);
         ofertaRepositorio.desvincularCampana(id);
-        // Eliminar físicamente la campaña de la base de datos
         campanaRepositorio.delete(campana);
     }
 
@@ -236,6 +241,13 @@ public class CampanaOfertaServicio {
 
     @Transactional
     public void eliminarOferta(Long id) {
+        Oferta oferta = buscarOfertaPorId(id);
+        oferta.setActivo(false);
+        ofertaRepositorio.save(oferta);
+    }
+
+    @Transactional
+    public void eliminarFisicamenteOferta(Long id) {
         Oferta oferta = buscarOfertaPorId(id);
         ofertaRepositorio.delete(oferta);
     }

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { Megaphone, Calendar, Edit2, Trash2 } from 'lucide-react';
+import { Megaphone, Calendar, Edit2, Trash2, Power } from 'lucide-react';
 
-const ListaCampanasPublicitarias = ({ campanas, onToggleActivo, calcularExpiracion, formatarFecha }) => {
+const ListaCampanasPublicitarias = ({ campanas, onToggleActivo, onEliminarFisico, calcularExpiracion, formatarFecha }) => {
   const navigate = useNavigate();
 
   if (campanas.length === 0) {
@@ -105,7 +105,7 @@ const ListaCampanasPublicitarias = ({ campanas, onToggleActivo, calcularExpiraci
                 <div className="flex items-center gap-1">
                   <button
                     onClick={() => navigate(`/admin/campanas/editar/${c.id}`)}
-                    className="p-1.5 hover:bg-sky-50 dark:hover:bg-slate-700 text-sky-600 dark:text-sky-400 rounded-lg border border-transparent hover:border-sky-100 dark:hover:border-slate-650 transition-all"
+                    className="p-1.5 hover:bg-sky-50 dark:hover:bg-slate-700 text-sky-650 dark:text-sky-400 rounded-lg border border-transparent hover:border-sky-100 dark:hover:border-slate-650 transition-all"
                     title="Editar campaña"
                   >
                     <Edit2 size={12} />
@@ -114,10 +114,17 @@ const ListaCampanasPublicitarias = ({ campanas, onToggleActivo, calcularExpiraci
                     onClick={() => onToggleActivo(c)}
                     className={`p-1.5 rounded-lg border border-transparent transition-all ${
                       c.activo 
-                        ? 'hover:bg-red-50 dark:hover:bg-red-950/30 text-red-500 hover:border-red-100 dark:hover:border-red-900/30' 
+                        ? 'hover:bg-amber-50 dark:hover:bg-amber-950/30 text-amber-500 hover:border-amber-100 dark:hover:border-amber-900/30' 
                         : 'hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-emerald-500 hover:border-emerald-100 dark:hover:border-emerald-900/30'
                     }`}
                     title={c.activo ? 'Desactivar campaña' : 'Activar campaña'}
+                  >
+                    <Power size={12} />
+                  </button>
+                  <button
+                    onClick={() => onEliminarFisico(c)}
+                    className="p-1.5 rounded-lg border border-transparent transition-all hover:bg-red-50 dark:hover:bg-red-950/30 text-red-500 hover:border-red-100 dark:hover:border-red-900/30"
+                    title="Eliminar permanentemente de la base de datos"
                   >
                     <Trash2 size={12} />
                   </button>

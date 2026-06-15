@@ -29,9 +29,15 @@ export const actualizarCampana = async (id, campanaData) => {
   return respuesta.data;
 };
 
-/** Eliminar/Desactivar una campaña */
+/** Desactivar una campaña (Lógico) */
 export const eliminarCampana = async (id) => {
   const respuesta = await axios.delete(`${API_BASE}/campanas/${id}`, obtenerHeaders());
+  return respuesta.data;
+};
+
+/** Eliminar permanentemente una campaña (Físico) */
+export const eliminarCampanaFisico = async (id) => {
+  const respuesta = await axios.delete(`${API_BASE}/campanas/${id}/fisico`, obtenerHeaders());
   return respuesta.data;
 };
 
@@ -74,9 +80,15 @@ export const actualizarOferta = async (id, ofertaData) => {
   return respuesta.data;
 };
 
-/** Eliminar/Desactivar una oferta */
+/** Desactivar una oferta (Lógico) */
 export const eliminarOferta = async (id) => {
   const respuesta = await axios.delete(`${API_BASE}/ofertas/${id}`, obtenerHeaders());
+  return respuesta.data;
+};
+
+/** Eliminar permanentemente una oferta (Físico) */
+export const eliminarOfertaFisico = async (id) => {
+  const respuesta = await axios.delete(`${API_BASE}/ofertas/${id}/fisico`, obtenerHeaders());
   return respuesta.data;
 };
 
