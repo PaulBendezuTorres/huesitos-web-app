@@ -59,8 +59,8 @@ const ClienteInicio = () => {
     <div className="flex flex-col">
       {/* RULETA/CARRUSEL DE CAMPAÑAS PUBLICITARIAS (16:9) */}
       {campanas && campanas.length > 0 && (
-        <div className="relative overflow-hidden lg:rounded-none rounded-3xl border border-slate-200/60 lg:border-0 dark:border-slate-700/60 shadow-lg bg-slate-900 group">
-          <div className="w-full h-[460px] lg:h-[calc(100vh-5rem)] relative overflow-hidden">
+        <div className="relative overflow-hidden xl:rounded-none rounded-3xl border border-slate-200/60 xl:border-0 dark:border-slate-700/60 shadow-lg bg-slate-900 group">
+          <div className="w-full h-[460px] xl:h-[calc(100vh-5rem)] relative overflow-hidden">
             {campanas.map((campana, index) => {
               const activa = index === indiceCampana;
               const tieneImagen = !!campana.imagenUrl;
@@ -71,29 +71,57 @@ const ClienteInicio = () => {
                   key={campana.id}
                   className={`absolute inset-0 transition-opacity duration-1000 ease-in-out flex ${
                     activa ? 'opacity-100 z-10 pointer-events-auto' : 'opacity-0 z-0 pointer-events-none'
-                  } ${tieneImagen ? 'flex-col lg:flex-row' : 'items-center'}`}
+                  } ${tieneImagen ? 'xl:flex-row' : 'items-center'}`}
                 >
                   {tieneImagen ? (
                     <>
-                      {/* Banner de imagen */}
-                      <div className="w-full lg:w-[75%] aspect-video lg:aspect-auto lg:h-full relative overflow-hidden shrink-0 bg-slate-950">
+                      {/* IMAGEN COMO FONDO FULL (mobile y tablet) + SPLIT en xl */}
+                      <div className="absolute inset-0 xl:relative xl:w-[75%] xl:h-full bg-slate-950 overflow-hidden shrink-0">
                         <img
                           src={urlImagen}
                           alt={campana.nombre}
                           className="absolute inset-0 w-full h-full object-cover select-none"
                         />
+                        {/* Overlay gradiente oscuro para legibilidad del texto en mobile/tablet */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-slate-900/80 via-slate-900/40 to-transparent xl:hidden" />
                       </div>
 
-                      {/* Información de campaña al costado */}
-                      <div className="w-full lg:w-[25%] bg-slate-900 dark:bg-slate-950 p-5 lg:p-6 flex flex-col justify-between text-white lg:border-l lg:border-slate-800/80 overflow-y-auto shrink-0">
+                      {/* Texto overlay en mobile/tablet (sobre la imagen) */}
+                      <div className="relative z-20 xl:hidden absolute inset-0 flex flex-col justify-end p-6 sm:p-10 text-white">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-500/30 text-sky-200 text-[10px] font-black uppercase tracking-wider border border-sky-400/30 w-fit mb-2 backdrop-blur-sm">
+                          <Megaphone size={10} className="animate-pulse" /> Campaña
+                        </span>
+                        <h3 className="text-xl sm:text-2xl font-black tracking-tight leading-tight mb-1 drop-shadow-lg">
+                          {campana.nombre}
+                        </h3>
+                        <p className="text-sm text-slate-200 line-clamp-2 leading-relaxed drop-shadow mb-3">
+                          {campana.descripcion}
+                        </p>
+                        <div className="flex flex-wrap items-center gap-3">
+                          {campana.precioPromocional && (
+                            <div className="px-3 py-1 rounded-xl bg-emerald-500 text-white text-sm font-black shadow-lg flex items-center gap-1 border border-emerald-400/30">
+                              <span>S/. {campana.precioPromocional.toFixed(2)}</span>
+                            </div>
+                          )}
+                          <button
+                            onClick={() => navigate('/cliente/reservar-cita')}
+                            className="px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-lg shadow-sky-500/30"
+                          >
+                            <Calendar size={13} /> Adquiere tu Promo
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Panel lateral solo en xl (split-screen) */}
+                      <div className="hidden xl:flex xl:w-[25%] bg-slate-900 dark:bg-slate-950 p-6 flex-col justify-between text-white border-l border-slate-800/80 overflow-y-auto shrink-0">
                         <div className="space-y-2.5">
                           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 text-[9px] font-black uppercase tracking-wider border border-sky-400/30 w-fit">
                             <Megaphone size={9} className="animate-pulse" /> Campaña
                           </span>
-                          <h3 className="text-base lg:text-lg font-black tracking-tight leading-tight text-white line-clamp-1">
+                          <h3 className="text-lg font-black tracking-tight leading-tight text-white line-clamp-1">
                             {campana.nombre}
                           </h3>
-                          <p className="text-xs text-slate-400 line-clamp-2 lg:line-clamp-3 leading-relaxed">
+                          <p className="text-xs text-slate-400 line-clamp-3 leading-relaxed">
                             {campana.descripcion}
                           </p>
                         </div>
@@ -108,7 +136,6 @@ const ClienteInicio = () => {
                                 </span>
                               </div>
                             )}
-                            
                             {campana.servicios && campana.servicios.length > 0 && (
                               <div className="flex items-center gap-1 text-[10px] font-bold text-slate-300 bg-slate-800/85 px-2.5 py-1 rounded-lg border border-slate-700 select-none">
                                 <Stethoscope size={10} className="text-sky-400" />
@@ -116,7 +143,6 @@ const ClienteInicio = () => {
                               </div>
                             )}
                           </div>
-
                           <button
                             onClick={() => navigate('/cliente/reservar-cita')}
                             className="w-full py-2.5 bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white rounded-xl text-xs font-bold transition-all duration-300 shadow-md shadow-sky-500/10 flex items-center justify-center gap-1.5 hover:shadow-lg hover:shadow-sky-500/20"
@@ -125,7 +151,6 @@ const ClienteInicio = () => {
                           </button>
                         </div>
                       </div>
-
                     </>
                   ) : (
                     <>
