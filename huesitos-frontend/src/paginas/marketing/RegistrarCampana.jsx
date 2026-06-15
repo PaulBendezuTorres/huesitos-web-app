@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Megaphone, Save, Upload, Calendar, AlertTriangle, Check } from 'lucide-react';
+import { ArrowLeft, Megaphone, Save, Upload, Calendar, AlertTriangle, Check, X, Stethoscope } from 'lucide-react';
 import { registrarCampana, actualizarCampana, obtenerCampanaPorId, subirFotoCampana } from '@/api/marketingApi';
 import { listarServicios } from '@/servicios/servicioServicio';
+import Combobox from '@/componentes/comun/Combobox';
 import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
 
 const RegistrarCampana = () => {
@@ -68,13 +69,20 @@ const RegistrarCampana = () => {
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleServicioToggle = (servicioId) => {
-    setForm(prev => {
-      const servicios = prev.servicios.includes(servicioId)
-        ? prev.servicios.filter(sid => sid !== servicioId)
-        : [...prev.servicios, servicioId];
-      return { ...prev, servicios };
-    });
+  const handleSeleccionarServicioCombobox = (nombreLabel, precio, objetoCompleto) => {
+    if (objetoCompleto && objetoCompleto.id) {
+      setForm(prev => {
+        if (prev.servicios.includes(objetoCompleto.id)) return prev;
+        return { ...prev, servicios: [...prev.servicios, objetoCompleto.id] };
+      });
+    }
+  };
+
+  const removerServicioSeleccionado = (servicioId) => {
+    setForm(prev => ({
+      ...prev,
+      servicios: prev.servicios.filter(id => id !== servicioId)
+    }));
   };
 
   const handleImagenChange = (e) => {
@@ -260,41 +268,84 @@ const RegistrarCampana = () => {
           {/* Vinculación de Servicios */}
           <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200/60 dark:border-slate-700/60 p-6 space-y-4 shadow-sm">
             <h3 className="text-sm font-black text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-700 pb-3 flex items-center gap-2 uppercase tracking-wide">
-              <Check size={16} className="text-emerald-500" /> Servicios Incluidos
+              <Check size={16} className="text-emerald-500" /> Servicios Incluidos en el Paquete
             </h3>
             
-            <div className="border border-slate-100 dark:border-slate-700 rounded-2xl p-4 max-h-60 overflow-y-auto space-y-2 bg-slate-50/50 dark:bg-slate-900/30">
-              {todosServicios.length === 0 ? (
-                <p className="text-xs text-slate-400 dark:text-slate-500 italic py-2">No hay servicios clínicos registrados en el sistema.</p>
-              ) : (
-                todosServicios.map((s) => {
-                  const seleccionado = form.servicios.includes(s.id);
-                  return (
-                    <label
-                      key={s.id}
-                      className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer select-none ${
-                        seleccionado
-                          ? 'bg-sky-50/70 border-sky-200 dark:bg-sky-950/20 dark:border-sky-900/60 text-sky-700 dark:text-sky-300'
-                          : 'bg-white dark:bg-slate-800 border-slate-150 dark:border-slate-700 text-slate-700 dark:text-slate-350 hover:bg-slate-50 dark:hover:bg-slate-700'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <input
-                          type="checkbox"
-                          checked={seleccionado}
-                          onChange={() => handleServicioToggle(s.id)}
-                          className="w-4 h-4 text-sky-500 bg-slate-100 border-slate-300 rounded focus:ring-sky-500 cursor-pointer"
-                        />
-                        <div className="flex flex-col">
-                          <span className="text-xs font-bold">{s.nombre}</span>
-                          <span className="text-[10px] text-slate-400 dark:text-slate-550">Duración: {s.duracionMinutos} min</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Buscador interactivo de Servicios */}
+              <div className="space-y-3">
+                <span className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Buscar y Agregar Servicios</span>
+                <p className="text-xs text-slate-400 dark:text-slate-500 leading-relaxed">
+                  Busca los servicios clínicos que formarán parte de esta campaña y agrégalos al paquete.
+                </p>
+                <div className="pt-1">
+                  <Combobox
+                    value=""
+                    onChange={handleSeleccionarServicioCombobox}
+                    opciones={todosServicios
+                      .filter(s => s.activo)
+                      .map(s => ({
+                        label: s.nombre,
+                        precio: s.precio,
+                        id: s.id,
+                        categoria: `Duración: ${s.duracionMinutos} min`
+                      }))
+                    }
+                    placeholder="Escribe para buscar un servicio..."
+                    icono={Stethoscope}
+                  />
+                </div>
+              </div>
+
+              {/* Caja de Servicios Seleccionados */}
+              <div className="space-y-2">
+                <span className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                  Servicios Seleccionados ({form.servicios.length})
+                </span>
+                <div className="border border-slate-150 dark:border-slate-700 rounded-2xl p-3 h-[200px] overflow-y-auto space-y-2 bg-slate-50/50 dark:bg-slate-900/30">
+                  {form.servicios.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center h-full py-4 text-slate-400 dark:text-slate-500">
+                      <Stethoscope size={20} className="opacity-40 mb-1" />
+                      <p className="text-xs italic text-center">
+                        Ningún servicio agregado. Búscalos al costado.
+                      </p>
+                    </div>
+                  ) : (
+                    form.servicios.map((id) => {
+                      const s = todosServicios.find(item => item.id === id);
+                      if (!s) return null;
+                      return (
+                        <div
+                          key={s.id}
+                          className="flex items-center justify-between p-2.5 bg-white dark:bg-slate-800 rounded-xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm animate-in fade-in slide-in-from-top-1 duration-200"
+                        >
+                          <div className="flex flex-col min-w-0 pr-2">
+                            <span className="text-xs font-bold text-slate-850 dark:text-slate-150 truncate" title={s.nombre}>
+                              {s.nombre}
+                            </span>
+                            <span className="text-[9px] text-slate-400 dark:text-slate-500 font-medium">
+                              Duración: {s.duracionMinutos} min
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            <span className="text-xs font-black text-slate-800 dark:text-slate-200">
+                              S/. {s.precio?.toFixed(2)}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => removerServicioSeleccionado(s.id)}
+                              className="p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors border border-transparent hover:border-red-150 dark:hover:border-red-900/40"
+                              title="Remover servicio"
+                            >
+                              <X size={12} />
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                      <span className="text-xs font-black">S/. {s.precio?.toFixed(2)}</span>
-                    </label>
-                  );
-                })
-              )}
+                      );
+                    })
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -312,7 +363,7 @@ const RegistrarCampana = () => {
                 <label className="w-full flex flex-col items-center justify-center p-6 border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-sky-400 dark:hover:border-sky-500 rounded-2xl cursor-pointer transition-all hover:bg-slate-50/50 dark:hover:bg-slate-750">
                   <Upload size={24} className="text-slate-400 mb-2" />
                   <span className="text-xs font-bold text-slate-600 dark:text-slate-300">Seleccionar Banner Promocional</span>
-                  <span className="text-[9px] text-slate-400 dark:text-slate-500 mt-1 uppercase font-semibold">Formatos: PNG, JPG, WEBP (Máx 5MB)</span>
+                  <span className="text-[9px] text-slate-400 dark:text-slate-500 mt-1 uppercase font-semibold">Formatos: PNG, JPG, WEBP · Recomendado 16:9 (Máx 5MB)</span>
                   <input
                     type="file"
                     accept="image/*"
@@ -322,19 +373,19 @@ const RegistrarCampana = () => {
                 </label>
               </div>
 
-              {/* Vista Previa del Banner tipo Hero */}
+              {/* Vista Previa del Banner tipo Hero (16:9 y reducido) */}
               <div className="space-y-2">
-                <span className="block text-xs font-bold text-slate-500 uppercase tracking-wider">Vista Previa del Banner</span>
-                <div className="aspect-[4/3] w-full rounded-2xl border overflow-hidden bg-slate-50 dark:bg-slate-900 flex items-center justify-center relative group">
+                <span className="block text-xs font-bold text-slate-550 uppercase tracking-wider text-center">Vista Previa (16:9)</span>
+                <div className="aspect-video max-w-xs mx-auto rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden bg-slate-50 dark:bg-slate-900 flex items-center justify-center relative group shadow-sm">
                   {vistaPreviaImagen ? (
                     <img
                       src={vistaPreviaImagen}
-                      alt="Banner promocional"
+                      alt="Banner promocional 16:9"
                       className="w-full h-full object-cover"
                     />
                   ) : (
                     <div className="text-center p-4">
-                      <Megaphone size={32} className="text-slate-300 dark:text-slate-700 mx-auto mb-2 animate-bounce" />
+                      <Megaphone size={28} className="text-slate-300 dark:text-slate-700 mx-auto mb-2 animate-bounce" />
                       <span className="text-[10px] text-slate-400 dark:text-slate-550 font-bold">Ninguna imagen seleccionada.</span>
                     </div>
                   )}

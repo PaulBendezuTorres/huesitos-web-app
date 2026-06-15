@@ -210,7 +210,7 @@ const PaginaCampanas = () => {
                   }`}
                 >
                   {/* Banner superior de la campaña */}
-                  <div className="h-40 relative bg-slate-100 dark:bg-slate-900 flex-shrink-0 overflow-hidden">
+                  <div className="aspect-video relative bg-slate-100 dark:bg-slate-900 flex-shrink-0 overflow-hidden">
                     {c.imagenUrl ? (
                       <img
                         src={`http://localhost:8080${c.imagenUrl}`}

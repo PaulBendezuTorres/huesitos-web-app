@@ -5,11 +5,13 @@ import { obtenerConfiguracionNegocio } from '@/api/configuracionApi';
 // === COMPONENTES MODULARES ===
 import EncabezadoPortada from '@/componentes/portada/EncabezadoPortada';
 import SeccionHero from '@/componentes/portada/SeccionHero';
+import SeccionCampanas from '@/componentes/portada/SeccionCampanas';
 import SeccionNosotros from '@/componentes/portada/SeccionNosotros';
 import SeccionServicios from '@/componentes/portada/SeccionServicios';
 import SeccionUbicacion from '@/componentes/portada/SeccionUbicacion';
 import SeccionEmergencias from '@/componentes/portada/SeccionEmergencias';
 import PiePaginaPortada from '@/componentes/portada/PiePaginaPortada';
+import { obtenerCampanasActivas } from '@/api/clienteApi';
 
 // === ASSETS LOCALES ===
 import imagenNosotros from '@/assets/veterinario.jpg';
@@ -35,7 +37,7 @@ const Portada = () => {
     visible: { transition: { staggerChildren: 0.2 } }
   };
 
-  // === ESTADO DINÁMICO DE CONFIGURACIÓN ===
+  // === ESTADO DINÁMICO DE CONFIGURACIÓN Y CAMPAÑAS ===
   const [config, setConfig] = useState({
     nombreNegocio: "Huesitos",
     telefono: "(01) 628-2000",
@@ -45,6 +47,7 @@ const Portada = () => {
     horarioSemana: "Lunes a Sábado: 08:00 AM - 08:00 PM",
     horarioDomingo: "Domingos: 09:00 AM - 02:00 PM"
   });
+  const [campanas, setCampanas] = useState([]);
 
   // === EFECTO PARA TRAER DATOS REALES DEL BACKEND ===
   useEffect(() => {
@@ -53,6 +56,12 @@ const Portada = () => {
         if (data) setConfig(data);
       })
       .catch((err) => console.warn("Usando datos estáticos de respaldo:", err));
+
+    obtenerCampanasActivas()
+      .then((data) => {
+        setCampanas(data || []);
+      })
+      .catch((err) => console.error("Error al obtener campañas para la portada:", err));
   }, []);
 
 
@@ -74,6 +83,12 @@ const Portada = () => {
         fadeUp={fadeUp}
         portada={portada}
         config={config}
+      />
+
+      {/* 2.5 RULETA DE CAMPAÑAS */}
+      <SeccionCampanas
+        campanas={campanas}
+        fadeUp={fadeUp}
       />
 
       {/* 3. NOSOTROS */}

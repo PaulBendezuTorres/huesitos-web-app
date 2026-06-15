@@ -1,8 +1,16 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-15 (Precio Promocional en Campañas, Descripción Ampliada a 500 caracteres, Desacoplamiento de Marketing, Combobox)
+Última actualización: 2026-06-15 (Carrusel de Campañas 16:9, Layout de Servicios Lado a Lado, Consistencia Aspect Ratio)
 
 ## 🚀 Logros Recientes
+- [x] **Carrusel / Ruleta de Campañas (16:9) e Integración en Portada y Cliente**:
+  - Desarrollado el componente modular [SeccionCampanas.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/portada/SeccionCampanas.jsx) con un carrusel dinámico en 16:9 (`aspect-[16/9]` o `aspect-[21/9]`), soporte de rotación automática (cada 6 segundos), flechas de navegación, puntos indicadores y overlay de gradiente oscuro para legibilidad de textos.
+  - Integrado el carrusel de campañas activas en la página de inicio pública [Portada.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/dashboard/Portada.jsx) obteniendo los datos desde la API pública.
+  - Reemplazado el banner estático del cliente en [ClienteInicio.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/cliente/ClienteInicio.jsx) por este mismo carrusel interactivo dinámico de campañas.
+  - Corregido el contenedor del banner en el catálogo administrativo de campañas [PaginaCampanas.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/PaginaCampanas.jsx) para usar `aspect-video` (16:9) en lugar de una altura fija `h-40`, logrando consistencia visual del banner.
+- [x] **Buscador de Servicios en Dos Columnas en Nueva Campaña**:
+  - Rediseñada la vinculación de servicios en [RegistrarCampana.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/RegistrarCampana.jsx) usando un grid responsivo de dos columnas (`md:grid-cols-2`): buscador `<Combobox />` a la izquierda con instructivo y la caja de servicios seleccionados con scroll dinámico a la derecha.
+  - Reducido el tamaño de la previsualización del banner a `max-w-xs` en [RegistrarCampana.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/RegistrarCampana.jsx) para un diseño compacto y simétrico, añadiendo la recomendación visual de relación de aspecto 16:9.
 - [x] **Precio Promocional y Ampliación de Descripción en Campañas**:
   - Añadido el campo `precioPromocional` a la entidad `Campana` en el backend ([Campana.java](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-backend/src/main/java/huesitos_backend/dominios/marketing/entidades/Campana.java)) para definir precios fijos promocionales para paquetes de servicios.
   - Incrementado el límite físico de la descripción de la campaña a **500 caracteres** en la base de datos (longitud de columna `descripcion`), en la validación del servicio del backend ([CampanaOfertaServicio.java](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-backend/src/main/java/huesitos_backend/dominios/marketing/servicios/CampanaOfertaServicio.java)) y en el frontend ([RegistrarCampana.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/RegistrarCampana.jsx)).
