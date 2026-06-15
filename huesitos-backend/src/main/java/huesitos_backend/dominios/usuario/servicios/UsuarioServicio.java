@@ -77,7 +77,19 @@ public class UsuarioServicio {
     }
 
     @Transactional
-    public Usuario cambiarRolUsuario(Long id, Rol nuevoRol) {
+    public Usuario cambiarRolUsuario(Long id, Rol nuevoRol, String contrasenaConfirmacion, String correoAdminActual) {
+        if (nuevoRol == Rol.ADMINISTRADOR) {
+            if (contrasenaConfirmacion == null || contrasenaConfirmacion.trim().isEmpty()) {
+                throw new RuntimeException("Se requiere confirmación de contraseña para otorgar permisos de Administrador.");
+            }
+            Usuario adminActual = usuarioRepositorio.findByCorreo(correoAdminActual)
+                    .orElseThrow(() -> new RuntimeException("Administrador actual no encontrado."));
+            
+            if (!passwordEncoder.matches(contrasenaConfirmacion, adminActual.getContrasena())) {
+                throw new RuntimeException("La contraseña ingresada es incorrecta. No se pudo realizar el cambio de rol.");
+            }
+        }
+
         Usuario usuario = usuarioRepositorio.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
 

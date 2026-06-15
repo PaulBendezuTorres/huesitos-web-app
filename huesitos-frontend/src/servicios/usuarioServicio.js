@@ -11,8 +11,12 @@ export const registrarNuevoPersonal = async (datosPersonales) => {
   return response.data;
 };
 
-export const modificarRolUsuario = async (id, nuevoRol) => {
-  const response = await usuarioApi.patch(`/${id}/rol?rol=${nuevoRol}`);
+export const modificarRolUsuario = async (id, nuevoRol, contrasenaConfirmacion) => {
+  let url = `/${id}/rol?rol=${nuevoRol}`;
+  if (contrasenaConfirmacion) {
+    url += `&contrasenaConfirmacion=${encodeURIComponent(contrasenaConfirmacion)}`;
+  }
+  const response = await usuarioApi.patch(url);
   return response.data;
 };
 

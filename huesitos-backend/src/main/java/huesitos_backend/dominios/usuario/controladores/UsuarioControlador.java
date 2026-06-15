@@ -46,9 +46,14 @@ public class UsuarioControlador {
     }
 
     @PatchMapping("/{id}/rol")
-    public ResponseEntity<?> cambiarRol(@PathVariable Long id, @RequestParam Rol rol) {
+    public ResponseEntity<?> cambiarRol(
+            @PathVariable Long id, 
+            @RequestParam Rol rol,
+            @RequestParam(required = false) String contrasenaConfirmacion) {
         try {
-            Usuario usuarioActualizado = usuarioServicio.cambiarRolUsuario(id, rol);
+            org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+            String correoAdmin = auth.getName();
+            Usuario usuarioActualizado = usuarioServicio.cambiarRolUsuario(id, rol, contrasenaConfirmacion, correoAdmin);
             return ResponseEntity.ok(usuarioActualizado);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

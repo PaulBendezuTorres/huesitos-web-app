@@ -1,8 +1,12 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-15 (Paginación de Auditoría, Desacoplamiento de Resumen Estadístico y Caja/Finanzas)
+Última actualización: 2026-06-15 (Seguridad en Roles de Usuarios, Paginación de Auditoría y Caja/Finanzas)
 
 ## 🚀 Logros Recientes
+- [x] **Seguridad y Simplificación en la Gestión de Usuarios**:
+  - Removida la funcionalidad redundante de creación de "Nuevo Personal" en el panel de usuarios para evitar duplicidad de flujos.
+  - Implementada una validación de seguridad robusta tanto en backend ([UsuarioServicio.java](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-backend/src/main/java/huesitos_backend/dominios/usuario/servicios/UsuarioServicio.java) y [UsuarioControlador.java](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-backend/src/main/java/huesitos_backend/dominios/usuario/controladores/UsuarioControlador.java)) como en frontend ([PaginaUsuarios.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/dashboard/PaginaUsuarios.jsx)) que exige la confirmación mediante contraseña del administrador autenticado para promover a cualquier usuario al rol `ADMINISTRADOR`.
+  - Validada la correcta compilación de producción del frontend (`npm run build`) y del backend (`.\mvnw compile`) de forma exitosa.
 - [x] **Desacoplamiento y Paginación en Resumen Estadístico**:
   - Conservado el widget de alertas de inventario en el dashboard, renombrándolo a `"Inventario Crítico"` para remover la abreviatura "(FEFO)".
   - Agregada paginación integrada con `<Paginacion />` para ambas columnas del widget (`Stock crítico` y `Próximos a vencer`), limitando la visualización a un máximo de 5 elementos por página.

@@ -4,13 +4,12 @@ import {
   modificarRolUsuario, 
   modificarEstadoUsuario
 } from '@/servicios/usuarioServicio';
-import { UserPlus, ShieldAlert, ShieldCheck, Edit, Trash2 } from 'lucide-react';
+import { ShieldAlert, ShieldCheck, Edit, Trash2 } from 'lucide-react';
 import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
 import Buscador from '@/componentes/comun/Buscador';
 import Avatar from '@/componentes/comun/Avatar';
 
 // Nuevos componentes desacoplados
-import ModalCrearPersonal from "@/componentes/usuario/ModalCrearPersonal";
 import ModalDetallesUsuario from "@/componentes/usuario/ModalDetallesUsuario";
 import ModalEliminarUsuario from "@/componentes/usuario/ModalEliminarUsuario";
 
@@ -21,7 +20,6 @@ const PaginaUsuarios = () => {
   const [busqueda, setBusqueda] = useState('');
 
   // Controladores de Modales
-  const [modalCrearOpen, setModalCrearOpen] = useState(false);
   const [modalDetallesOpen, setModalDetallesOpen] = useState(false);
   const [modalEliminarOpen, setModalEliminarOpen] = useState(false);
 
@@ -49,14 +47,26 @@ const PaginaUsuarios = () => {
   }, [refreshTrigger]);
 
   const handleRolChange = async (id, nuevoRol) => {
+    let contrasena = null;
+    if (nuevoRol === "ADMINISTRADOR") {
+      contrasena = window.prompt("ATENCIÓN: Promover a un usuario a ADMINISTRADOR otorga acceso completo. Ingrese su contraseña de Administrador para confirmar:");
+      if (!contrasena) {
+        // Cancelar el cambio y recargar para revertir el selector en el frontend
+        setRefreshTrigger(prev => prev + 1);
+        return;
+      }
+    }
+
     setUsuarioEnAccionId(id);
     try {
-      await modificarRolUsuario(id, nuevoRol);
+      await modificarRolUsuario(id, nuevoRol, contrasena);
       setRefreshTrigger(prev => prev + 1);
       alert("Rol de usuario actualizado correctamente.");
     } catch (error) {
       console.error(error);
-      alert("No se pudo procesar el cambio de rol.");
+      const msg = error.response?.data || "No se pudo procesar el cambio de rol.";
+      alert(typeof msg === 'string' ? msg : JSON.stringify(msg));
+      setRefreshTrigger(prev => prev + 1);
     } finally {
       setUsuarioEnAccionId(null);
     }
@@ -112,17 +122,9 @@ const PaginaUsuarios = () => {
 
   return (
     <div className="space-y-6">
-      {/* CABECERA Y BOTÓN NUEVO */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
-        <div>
-          <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">Gestión de Usuarios y Permisos</h1>
-        </div>
-        <button 
-          onClick={() => setModalCrearOpen(true)}
-          className="bg-gradient-to-r from-sky-500 to-cyan-400 hover:from-sky-600 hover:to-cyan-500 text-white px-5 py-2.5 rounded-xl font-bold shadow-lg shadow-sky-500/30 transition-all flex items-center gap-2"
-        >
-          <UserPlus size={18} /> Nuevo Personal
-        </button>
+      {/* CABECERA */}
+      <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
+        <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">Gestión de Usuarios y Permisos</h1>
       </div>
 
       {/* BUSCADOR DE USUARIOS */}
@@ -220,11 +222,6 @@ const PaginaUsuarios = () => {
       </div>
 
       {/* Componentes modales desacoplados */}
-      <ModalCrearPersonal 
-        isOpen={modalCrearOpen} 
-        onClose={() => setModalCrearOpen(false)} 
-        onCreated={recargarUsuarios} 
-      />
 
       <ModalDetallesUsuario 
         isOpen={modalDetallesOpen} 
