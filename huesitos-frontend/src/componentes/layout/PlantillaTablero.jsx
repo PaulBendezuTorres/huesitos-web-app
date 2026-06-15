@@ -110,8 +110,8 @@ const PlantillaTablero = ({
         </header>
 
         {/* CONTENEDOR DINÁMICO DE PÁGINAS */}
-        <div className={`flex-1 bg-slate-50 dark:bg-slate-900 ${sinPadding ? 'p-0 overflow-y-auto' : 'p-4 lg:p-8 overflow-y-auto'}`}>
-          <div className={`${sinPadding ? 'w-full animate-in fade-in slide-in-from-bottom-4 duration-500' : 'max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500'}`}>
+        <div className={`flex-1 bg-slate-50 dark:bg-slate-900 ${sinPadding ? 'p-0 overflow-hidden h-full flex' : 'p-4 lg:p-8 overflow-y-auto'}`}>
+          <div className={`${sinPadding ? 'w-full h-full flex' : 'max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500'}`}>
             {children}
           </div>
         </div>

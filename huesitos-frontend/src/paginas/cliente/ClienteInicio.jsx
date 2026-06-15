@@ -56,11 +56,11 @@ const ClienteInicio = () => {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="space-y-8">
       {/* RULETA/CARRUSEL DE CAMPAÑAS PUBLICITARIAS (16:9) */}
       {campanas && campanas.length > 0 && (
-        <div className="relative overflow-hidden xl:rounded-none rounded-3xl border border-slate-200/60 xl:border-0 dark:border-slate-700/60 shadow-lg bg-slate-900 group">
-          <div className="w-full h-[460px] xl:h-[calc(100vh-5rem)] relative overflow-hidden">
+        <div className="relative overflow-hidden rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-lg bg-slate-900 group">
+          <div className="w-full h-[420px] md:h-[340px] relative overflow-hidden">
             {campanas.map((campana, index) => {
               const activa = index === indiceCampana;
               const tieneImagen = !!campana.imagenUrl;
@@ -71,83 +71,55 @@ const ClienteInicio = () => {
                   key={campana.id}
                   className={`absolute inset-0 transition-opacity duration-1000 ease-in-out flex ${
                     activa ? 'opacity-100 z-10 pointer-events-auto' : 'opacity-0 z-0 pointer-events-none'
-                  } ${tieneImagen ? 'xl:flex-row' : 'items-center'}`}
+                  } ${tieneImagen ? 'flex-col md:flex-row' : 'items-center'}`}
                 >
                   {tieneImagen ? (
                     <>
-                      {/* IMAGEN COMO FONDO FULL (mobile y tablet) + SPLIT en xl */}
-                      <div className="absolute inset-0 xl:relative xl:w-[75%] xl:h-full bg-slate-950 overflow-hidden shrink-0">
+                      {/* Imagen 75% */}
+                      <div className="w-full md:w-[75%] h-[220px] md:h-full relative overflow-hidden shrink-0 bg-slate-950">
                         <img
                           src={urlImagen}
                           alt={campana.nombre}
                           className="absolute inset-0 w-full h-full object-cover select-none"
                         />
-                        {/* Overlay gradiente oscuro para legibilidad del texto en mobile/tablet */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-slate-900/80 via-slate-900/40 to-transparent xl:hidden" />
                       </div>
 
-                      {/* Texto overlay en mobile/tablet (sobre la imagen) */}
-                      <div className="relative z-20 xl:hidden absolute inset-0 flex flex-col justify-end p-6 sm:p-10 text-white">
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-500/30 text-sky-200 text-[10px] font-black uppercase tracking-wider border border-sky-400/30 w-fit mb-2 backdrop-blur-sm">
-                          <Megaphone size={10} className="animate-pulse" /> Campaña
-                        </span>
-                        <h3 className="text-xl sm:text-2xl font-black tracking-tight leading-tight mb-1 drop-shadow-lg">
-                          {campana.nombre}
-                        </h3>
-                        <p className="text-sm text-slate-200 line-clamp-2 leading-relaxed drop-shadow mb-3">
-                          {campana.descripcion}
-                        </p>
-                        <div className="flex flex-wrap items-center gap-3">
-                          {campana.precioPromocional && (
-                            <div className="px-3 py-1 rounded-xl bg-emerald-500 text-white text-sm font-black shadow-lg flex items-center gap-1 border border-emerald-400/30">
-                              <span>S/. {campana.precioPromocional.toFixed(2)}</span>
-                            </div>
-                          )}
-                          <button
-                            onClick={() => navigate('/cliente/reservar-cita')}
-                            className="px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-lg shadow-sky-500/30"
-                          >
-                            <Calendar size={13} /> Adquiere tu Promo
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Panel lateral solo en xl (split-screen) */}
-                      <div className="hidden xl:flex xl:w-[25%] bg-slate-900 dark:bg-slate-950 p-6 flex-col justify-between text-white border-l border-slate-800/80 overflow-y-auto shrink-0">
-                        <div className="space-y-2.5">
+                      {/* Panel de información 25% */}
+                      <div className="w-full md:w-[25%] bg-slate-900 dark:bg-slate-950 p-4 md:p-5 flex flex-col justify-between text-white md:border-l md:border-slate-800/80 overflow-y-auto h-full shrink-0">
+                        <div className="space-y-2">
                           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 text-[9px] font-black uppercase tracking-wider border border-sky-400/30 w-fit">
                             <Megaphone size={9} className="animate-pulse" /> Campaña
                           </span>
-                          <h3 className="text-lg font-black tracking-tight leading-tight text-white line-clamp-1">
+                          <h3 className="text-sm md:text-base font-black tracking-tight leading-tight text-white line-clamp-2">
                             {campana.nombre}
                           </h3>
-                          <p className="text-xs text-slate-400 line-clamp-3 leading-relaxed">
+                          <p className="text-[11px] text-slate-400 line-clamp-2 md:line-clamp-3 leading-relaxed">
                             {campana.descripcion}
                           </p>
                         </div>
 
-                        <div className="mt-4 flex flex-col gap-3">
-                          <div className="flex items-center justify-between gap-2 border-t border-slate-800/80 pt-3">
+                        <div className="mt-3 flex flex-col gap-2.5">
+                          <div className="flex items-center justify-between gap-2 border-t border-slate-800/80 pt-2.5">
                             {campana.precioPromocional && (
                               <div>
-                                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block leading-none mb-1">Precio Paquete</span>
-                                <span className="text-base font-black text-emerald-400">
+                                <span className="text-[8px] font-bold text-slate-400 uppercase tracking-wider block leading-none mb-0.5">Precio Paquete</span>
+                                <span className="text-sm font-black text-emerald-400">
                                   S/. {campana.precioPromocional.toFixed(2)}
                                 </span>
                               </div>
                             )}
                             {campana.servicios && campana.servicios.length > 0 && (
-                              <div className="flex items-center gap-1 text-[10px] font-bold text-slate-300 bg-slate-800/85 px-2.5 py-1 rounded-lg border border-slate-700 select-none">
-                                <Stethoscope size={10} className="text-sky-400" />
+                              <div className="flex items-center gap-1 text-[9px] font-bold text-slate-300 bg-slate-800/85 px-2 py-1 rounded-lg border border-slate-700 select-none">
+                                <Stethoscope size={9} className="text-sky-400" />
                                 <span>{campana.servicios.length} {campana.servicios.length === 1 ? 'Servicio' : 'Servicios'}</span>
                               </div>
                             )}
                           </div>
                           <button
                             onClick={() => navigate('/cliente/reservar-cita')}
-                            className="w-full py-2.5 bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white rounded-xl text-xs font-bold transition-all duration-300 shadow-md shadow-sky-500/10 flex items-center justify-center gap-1.5 hover:shadow-lg hover:shadow-sky-500/20"
+                            className="w-full py-2 bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white rounded-xl text-xs font-bold transition-all duration-300 shadow-md shadow-sky-500/10 flex items-center justify-center gap-1.5"
                           >
-                            <Calendar size={13} /> Adquiere tu Promo
+                            <Calendar size={12} /> Adquiere tu Promo
                           </button>
                         </div>
                       </div>
@@ -155,8 +127,6 @@ const ClienteInicio = () => {
                   ) : (
                     <>
                       <div className="absolute inset-0 bg-gradient-to-r from-sky-850 via-cyan-800 to-emerald-700 z-10" />
-                      
-                      {/* Contenido de la campaña */}
                       <div className="relative z-20 px-8 sm:px-12 md:px-16 py-6 md:py-8 flex flex-col justify-center h-full max-w-xl md:max-w-2xl text-white">
                         <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 text-[10px] font-black uppercase tracking-wider border border-sky-400/30 w-fit mb-2">
                           <Megaphone size={10} className="animate-pulse" /> Campaña
@@ -167,14 +137,12 @@ const ClienteInicio = () => {
                         <p className="text-xs sm:text-sm text-slate-200 line-clamp-2 mb-3 leading-relaxed drop-shadow">
                           {campana.descripcion}
                         </p>
-
                         <div className="flex flex-wrap items-center gap-3">
                           {campana.precioPromocional && (
                             <div className="px-3.5 py-1 rounded-xl bg-emerald-500 text-white text-xs sm:text-sm font-black shadow-md shadow-emerald-500/20 flex items-center gap-1 border border-emerald-400/30">
                               <span>Precio Especial: S/. {campana.precioPromocional}</span>
                             </div>
                           )}
-                          
                           {campana.servicios && campana.servicios.length > 0 && (
                             <div className="flex items-center gap-1 text-[11px] font-bold text-slate-300 bg-slate-800/85 backdrop-blur-md px-2.5 py-1 rounded-lg border border-slate-700">
                               <Stethoscope size={12} className="text-sky-400" />
@@ -190,8 +158,7 @@ const ClienteInicio = () => {
             })}
           </div>
 
-
-          {/* Controles de Navegación del Carrusel (Flechas visibles en hover) */}
+          {/* Controles del carrusel */}
           {campanas.length > 1 && (
             <>
               <button
@@ -210,8 +177,6 @@ const ClienteInicio = () => {
               >
                 &#10095;
               </button>
-
-              {/* Indicadores de puntos */}
               <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-30">
                 {campanas.map((_, index) => (
                   <button
@@ -230,7 +195,7 @@ const ClienteInicio = () => {
       )}
 
       {/* HEADER CON REFRESH */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-8 px-4 lg:px-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-slate-800 tracking-tight">Mis mascotas</h2>
           <p className="text-sm text-slate-400 mt-0.5">Gestiona la salud de tus compañeros</p>
@@ -245,7 +210,6 @@ const ClienteInicio = () => {
       </div>
 
       {/* GRID DE MASCOTAS */}
-      <div className="px-4 lg:px-8">
       {mascotas.length === 0 ? (
         <div className="bg-white rounded-2xl border border-slate-200/60 p-12 text-center shadow-sm">
           <div className="w-16 h-16 bg-sky-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -312,11 +276,9 @@ const ClienteInicio = () => {
           ))}
         </div>
       )}
-      </div>
 
       {/* PRÓXIMAS CITAS */}
       <div>
-        <div className="px-4 lg:px-8">
         <h2 className="text-2xl font-bold text-slate-800 tracking-tight mb-1">Próximas citas</h2>
         <p className="text-sm text-slate-400 mb-5">Tus citas agendadas y confirmadas</p>
 
@@ -377,9 +339,7 @@ const ClienteInicio = () => {
             </div>
           </div>
         )}
-        </div>
       </div>
-      <div className="pb-8" />
     </div>
   );
 };
