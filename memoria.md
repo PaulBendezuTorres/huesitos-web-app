@@ -1,6 +1,6 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-15 (Página para registrar mascotas desde portal cliente)
+Última actualización: 2026-06-15 (Alineación a la izquierda y desacoplamiento de Registrar Mascota)
 
 ## 🚀 Logros por Módulo
 
@@ -22,7 +22,7 @@
 ### Mascotas
 - [x] Entidad `Mascota` con `@JsonAlias({"dueño", "dueno"})` para compatibilidad UTF-8/ASCII.
 - [x] CRUD completo: `MascotaRepositorio`, `MascotaServicio`, `MascotaControlador`. QA completado.
-- [x] Implementación en el frontend de la nueva página física `RegistrarMascotaCliente.jsx` (`/cliente/mascotas/nueva`) con soporte claro/oscuro para permitir a los clientes registrar de forma autónoma sus mascotas.
+- [x] Nueva página física `RegistrarMascotaCliente.jsx` (`/cliente/mascotas/nueva`) desacoplada con el subcomponente `FormularioRegistroMascota.jsx` alineado a la izquierda ocupando ancho completo (`w-full`) según las directrices estéticas.
 
 ### Citas y Agenda
 - [x] Entidad `Cita` con estados: `PENDIENTE`, `CONFIRMADA`, `COMPLETADA`, `CANCELADA`, `EN_ESPERA`.
@@ -86,6 +86,7 @@
 - [x] Corrección de desbordamientos en headers/celdas de tablas. Responsividad consistente en todos los tableros.
 - [x] Desacoplamiento de `ClienteInicio` en componentes atómicos (`CarruselCampanas`, `TarjetasMascotasCliente` y `TablaCitasProximas`) con soporte adaptativo completo de tema claro y oscuro.
 - [x] Migración de subvistas del portal de clientes a rutas físicas reales de React Router (`/cliente/*`), garantizando la persistencia tras recargas (F5).
+- [x] Incorporación de reglas de Maquetación y Layout General en `frontend.md` para evitar centrado estrecho (`max-w-2xl mx-auto`) y alinear todo a la izquierda (`w-full`).
 
 ### Renombrado y Organización
 - [x] Frontend renombrado a español: `components` → `componentes`, `pages` → `paginas`, `services` → `servicios`, `Modules` → `modulos`. Script automático de refactorización ejecutado.

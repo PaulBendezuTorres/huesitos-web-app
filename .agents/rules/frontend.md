@@ -35,3 +35,6 @@
 - **Estructura Atómica de Componentes**: Separar las páginas y flujos complejos en subcomponentes atómicos e independientes ubicados en subdirectorios por feature (ej. `/src/componentes/portada/`, `/src/componentes/autenticacion/`) para evitar archivos gigantes.
 - **Uso de Alias de Ruta**: Emplear siempre el alias `@` configurado para la carpeta `/src` (ej. `import BotonVolver from '@/componentes/autenticacion/BotonVolver'`) para evitar rutas relativas largas y confusas.
 - **Desacoplamiento de Lógica**: Desacoplar la lógica de negocio y las llamadas de API de las vistas de presentación, centralizando llamadas de API en helpers específicos (`src/servicios/`).
+
+## Maquetación y Layout General
+- **Alineación a la Izquierda (Estética Paul)**: Las vistas del panel, páginas completas y formularios de registro deben alinearse a la izquierda ocupando todo el ancho disponible (`w-full`). Queda estrictamente prohibido centrar o limitar estrechamente el ancho del contenido principal (evitar `max-w-2xl mx-auto` para contenedores de página), garantizando que todo el frontend mantenga una maquetación ancha, fluida y homogénea.
