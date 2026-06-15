@@ -17,11 +17,13 @@
   - Integrada la entrada del precio promocional y el contador dinámico en tiempo real (`0/500`) en la vista de registro.
   - Agregado el despliegue del precio promocional destacado en el listado de tarjetas de campañas en [PaginaCampanas.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/PaginaCampanas.jsx).
   - Validada la compilación de producción exitosa del frontend (`npm run build`) y la compilación del backend (`.\mvnw compile`).
-- [x] **Desacoplamiento de Marketing en Páginas Dedicadas**:
+- [x] **Desacoplamiento Completo del Módulo de Marketing**:
+  - Extraído el listado de campañas publicitarias al nuevo componente atómico [ListaCampanasPublicitarias.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/marketing/ListaCampanasPublicitarias.jsx), aislando la visualización de tarjetas.
+  - Extraído el listado de ofertas de descuento al nuevo componente atómico [ListaOfertasProductos.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/marketing/ListaOfertasProductos.jsx), aislando las tarjetas de ofertas de farmacia.
+  - Simplificada la vista general de [PaginaCampanas.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/PaginaCampanas.jsx), reduciéndola de 419 a 214 líneas delegando la renderización de listas a los nuevos componentes modulares.
   - Extraído el formulario de creación/edición de Campañas de un modal en la vista principal a la página independiente [RegistrarCampana.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/RegistrarCampana.jsx).
   - Extraído el formulario de creación/edición de Ofertas a la página independiente [RegistrarOferta.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx).
   - Integrado el componente buscador interactivo `<Combobox />` en [RegistrarOferta.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx) para buscar y autocompletar productos de farmacia de forma dinámica.
-  - Limpiada y simplificada [PaginaCampanas.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/PaginaCampanas.jsx) removiendo cientos de líneas de código redundante de modales internos y delegando flujos de navegación al React Router.
   - Registradas las nuevas subrutas de creación y edición de marketing en [TableroAdministrador.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/dashboard/TableroAdministrador.jsx).
   - Validada la compilación de producción exitosa del frontend (`npm run build`).
 - [x] **Refactorización de Campañas y Marketing de Servicios**:
