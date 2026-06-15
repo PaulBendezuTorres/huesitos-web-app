@@ -59,8 +59,8 @@ const ClienteInicio = () => {
     <div className="flex flex-col">
       {/* RULETA/CARRUSEL DE CAMPAÑAS PUBLICITARIAS (16:9) */}
       {campanas && campanas.length > 0 && (
-        <div className="relative overflow-hidden md:rounded-none rounded-3xl border border-slate-200/60 md:border-0 dark:border-slate-700/60 shadow-lg bg-slate-900 group">
-          <div className="w-full h-[460px] md:h-[calc(100vh-5rem)] relative overflow-hidden">
+        <div className="relative overflow-hidden lg:rounded-none rounded-3xl border border-slate-200/60 lg:border-0 dark:border-slate-700/60 shadow-lg bg-slate-900 group">
+          <div className="w-full h-[460px] lg:h-[calc(100vh-5rem)] relative overflow-hidden">
             {campanas.map((campana, index) => {
               const activa = index === indiceCampana;
               const tieneImagen = !!campana.imagenUrl;
@@ -71,12 +71,12 @@ const ClienteInicio = () => {
                   key={campana.id}
                   className={`absolute inset-0 transition-opacity duration-1000 ease-in-out flex ${
                     activa ? 'opacity-100 z-10 pointer-events-auto' : 'opacity-0 z-0 pointer-events-none'
-                  } ${tieneImagen ? 'flex-col md:flex-row' : 'items-center'}`}
+                  } ${tieneImagen ? 'flex-col lg:flex-row' : 'items-center'}`}
                 >
                   {tieneImagen ? (
                     <>
                       {/* Banner de imagen */}
-                      <div className="w-full md:w-[75%] aspect-video md:aspect-auto md:h-full relative overflow-hidden shrink-0 bg-slate-950">
+                      <div className="w-full lg:w-[75%] aspect-video lg:aspect-auto lg:h-full relative overflow-hidden shrink-0 bg-slate-950">
                         <img
                           src={urlImagen}
                           alt={campana.nombre}
@@ -85,15 +85,15 @@ const ClienteInicio = () => {
                       </div>
 
                       {/* Información de campaña al costado */}
-                      <div className="w-full md:w-[25%] bg-slate-900 dark:bg-slate-950 p-5 md:p-6 flex flex-col justify-between text-white md:border-l md:border-slate-800/80 overflow-y-auto h-full shrink-0">
+                      <div className="w-full lg:w-[25%] bg-slate-900 dark:bg-slate-950 p-5 lg:p-6 flex flex-col justify-between text-white lg:border-l lg:border-slate-800/80 overflow-y-auto shrink-0">
                         <div className="space-y-2.5">
                           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 text-[9px] font-black uppercase tracking-wider border border-sky-400/30 w-fit">
                             <Megaphone size={9} className="animate-pulse" /> Campaña
                           </span>
-                          <h3 className="text-base md:text-lg font-black tracking-tight leading-tight text-white line-clamp-1">
+                          <h3 className="text-base lg:text-lg font-black tracking-tight leading-tight text-white line-clamp-1">
                             {campana.nombre}
                           </h3>
-                          <p className="text-xs text-slate-355 line-clamp-2 md:line-clamp-3 leading-relaxed">
+                          <p className="text-xs text-slate-400 line-clamp-2 lg:line-clamp-3 leading-relaxed">
                             {campana.descripcion}
                           </p>
                         </div>
