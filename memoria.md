@@ -1,8 +1,13 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-15 (Seguridad en Roles de Usuarios, Paginación de Auditoría y Caja/Finanzas)
+Última actualización: 2026-06-15 (Rediseño y Desacoplamiento de Pedidos, Seguridad de Roles, Paginación y Finanzas)
 
 ## 🚀 Logros Recientes
+- [x] **Desacoplamiento, Paginación y Rediseño de Gestión de Pedidos**:
+  - Extraído el listado de compras al componente modular independiente [ListaPedidosDespacho.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/tienda/ListaPedidosDespacho.jsx), incorporando paginación integrada (`6` pedidos por página).
+  - Extraído el detalle de despacho al componente independiente [DetallePedidoDespacho.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/tienda/DetallePedidoDespacho.jsx).
+  - Rediseñada la maquetación de [GestionPedidos.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/tienda/GestionPedidos.jsx) para utilizar una estructura premium flotante tipo canvas (espaciado `gap-6` y padding `p-6` alineado con el estilo de registro de producto).
+  - Validada la correcta compilación del frontend mediante `npm run build` sin errores.
 - [x] **Seguridad y Simplificación en la Gestión de Usuarios**:
   - Removida la funcionalidad redundante de creación de "Nuevo Personal" en el panel de usuarios para evitar duplicidad de flujos.
   - Implementada una validación de seguridad robusta tanto en backend ([UsuarioServicio.java](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-backend/src/main/java/huesitos_backend/dominios/usuario/servicios/UsuarioServicio.java) y [UsuarioControlador.java](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-backend/src/main/java/huesitos_backend/dominios/usuario/controladores/UsuarioControlador.java)) como en frontend ([PaginaUsuarios.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/dashboard/PaginaUsuarios.jsx)) que exige la confirmación mediante contraseña del administrador autenticado para promover a cualquier usuario al rol `ADMINISTRADOR`.
