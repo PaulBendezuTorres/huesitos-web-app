@@ -1,4 +1,4 @@
-import { PawPrint, Eye, Syringe, RefreshCw } from 'lucide-react';
+import { PawPrint, Eye, Syringe, RefreshCw, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const TarjetasMascotasCliente = ({ mascotas, recargar }) => {
@@ -6,7 +6,7 @@ const TarjetasMascotasCliente = ({ mascotas, recargar }) => {
 
   return (
     <div className="space-y-6">
-      {/* HEADER CON REFRESH */}
+      {/* HEADER CON REFRESH Y NUEVA MASCOTA */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 tracking-tight transition-colors duration-300">
@@ -16,13 +16,22 @@ const TarjetasMascotasCliente = ({ mascotas, recargar }) => {
             Gestiona la salud de tus compañeros
           </p>
         </div>
-        <button
-          onClick={recargar}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 hover:border-sky-300 dark:hover:border-sky-500 hover:shadow-md hover:shadow-sky-500/10 dark:hover:shadow-sky-500/5 transition-all duration-300 self-start sm:self-auto"
-        >
-          <RefreshCw size={16} />
-          Actualizar
-        </button>
+        <div className="flex items-center gap-3 self-start sm:self-auto">
+          <button
+            onClick={recargar}
+            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 hover:border-sky-300 dark:hover:border-sky-500 hover:shadow-md hover:shadow-sky-500/10 dark:hover:shadow-sky-500/5 transition-all duration-300"
+          >
+            <RefreshCw size={16} />
+            Actualizar
+          </button>
+          <button
+            onClick={() => navigate('/cliente/mascotas/nueva')}
+            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white rounded-xl text-sm font-bold transition-all duration-300 shadow-md shadow-sky-500/10"
+          >
+            <Plus size={16} />
+            Registrar mascota
+          </button>
+        </div>
       </div>
 
       {/* GRID DE MASCOTAS */}
@@ -34,9 +43,16 @@ const TarjetasMascotasCliente = ({ mascotas, recargar }) => {
           <h3 className="text-lg font-bold text-slate-700 dark:text-slate-200 mb-1 transition-colors duration-300">
             Aún no tienes mascotas registradas
           </h3>
-          <p className="text-sm text-slate-400 dark:text-slate-500 transition-colors duration-300">
-            Visita la clínica para registrar a tu compañero peludo.
+          <p className="text-sm text-slate-400 dark:text-slate-500 mb-5 transition-colors duration-300">
+            Comienza registrando a tu primer compañero peludo para gestionar su salud.
           </p>
+          <button
+            onClick={() => navigate('/cliente/mascotas/nueva')}
+            className="mx-auto flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white rounded-xl text-sm font-bold transition-all duration-300 shadow-md shadow-sky-500/10"
+          >
+            <Plus size={16} />
+            Registrar mi mascota
+          </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">

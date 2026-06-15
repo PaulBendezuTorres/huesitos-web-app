@@ -29,3 +29,10 @@ export const obtenerCampanasActivas = async () => {
   const respuesta = await axios.get(`${API_BASE}/campanas`);
   return respuesta.data;
 };
+
+/** Registrar una nueva mascota */
+export const registrarMascota = async (datosMascota) => {
+  const respuesta = await axios.post(`${API_BASE}/mascotas`, datosMascota, obtenerHeaders());
+  return respuesta.data;
+};
+

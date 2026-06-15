@@ -1,6 +1,6 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-15 (Enrutamiento físico para subvistas de cliente)
+Última actualización: 2026-06-15 (Página para registrar mascotas desde portal cliente)
 
 ## 🚀 Logros por Módulo
 
@@ -22,6 +22,7 @@
 ### Mascotas
 - [x] Entidad `Mascota` con `@JsonAlias({"dueño", "dueno"})` para compatibilidad UTF-8/ASCII.
 - [x] CRUD completo: `MascotaRepositorio`, `MascotaServicio`, `MascotaControlador`. QA completado.
+- [x] Implementación en el frontend de la nueva página física `RegistrarMascotaCliente.jsx` (`/cliente/mascotas/nueva`) con soporte claro/oscuro para permitir a los clientes registrar de forma autónoma sus mascotas.
 
 ### Citas y Agenda
 - [x] Entidad `Cita` con estados: `PENDIENTE`, `CONFIRMADA`, `COMPLETADA`, `CANCELADA`, `EN_ESPERA`.
