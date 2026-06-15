@@ -1,8 +1,13 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-14 (Filtro Combobox Compacto, Desacoplamiento de Registro de Productos, Límite de Caracteres, Rediseño de Lotes, Desacoplamiento de Usuarios y Ajustes)
+Última actualización: 2026-06-15 (Desacoplamiento de Agenda Semanal y Filtros Combobox)
 
 ## 🚀 Logros Recientes
+- [x] **Desacoplamiento y Rediseño de la Agenda Semanal**:
+  - Extraído el modal de reprogramación de citas al componente independiente [ModalReprogramarCita.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/cita/ModalReprogramarCita.jsx), centralizando la verificación de disponibilidad horaria del veterinario, excepciones de fechas y llamadas API (`reprogramarCita`, `obtenerCitasPorDia`, `obtenerHorariosVeterinario`).
+  - Rediseñado el componente principal [AgendaSemanal.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/cita/AgendaSemanal.jsx) para utilizar el modal modular, reduciendo su complejidad y eliminando estados y efectos locales innecesarios de reprogramación.
+  - Reemplazados los selectores de dropdown nativos y toscos de filtros de Veterinario y Estado por el componente interactivo y moderno `<Combobox compacto={true} />`.
+  - Validada la correcta compilación del frontend mediante `npm run build` sin errores.
 - [x] **Filtro Combobox de Categorías en Inventario**:
   - Implementada la prop `compacto` en [Combobox.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/comun/Combobox.jsx) para reducir la altura (`py-1.5 text-xs`), el padding y el tamaño de los iconos en el componente reutilizable.
   - Reemplazado el selector nativo y tosco en [PaginaInventario.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/tienda/PaginaInventario.jsx) por una instancia del Combobox en modo compacto, permitiendo filtrar interactivamente por categoría con un buscador y diseño premium.
