@@ -1,8 +1,11 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-14 (Desacoplamiento de Registro de Productos, Límite de Caracteres, Rediseño de Lotes, Desacoplamiento de Usuarios y Ajustes)
+Última actualización: 2026-06-14 (Filtro Combobox Compacto, Desacoplamiento de Registro de Productos, Límite de Caracteres, Rediseño de Lotes, Desacoplamiento de Usuarios y Ajustes)
 
 ## 🚀 Logros Recientes
+- [x] **Filtro Combobox de Categorías en Inventario**:
+  - Implementada la prop `compacto` en [Combobox.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/comun/Combobox.jsx) para reducir la altura (`py-1.5 text-xs`), el padding y el tamaño de los iconos en el componente reutilizable.
+  - Reemplazado el selector nativo y tosco en [PaginaInventario.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/tienda/PaginaInventario.jsx) por una instancia del Combobox en modo compacto, permitiendo filtrar interactivamente por categoría con un buscador y diseño premium.
 - [x] **Desacoplamiento en Registro de Productos**:
   - Extraído el modal de creación rápida de categorías a su propio componente independiente [ModalCrearCategoria.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/tienda/ModalCrearCategoria.jsx).
   - Rediseñada la página [RegistrarProductoNuevo.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/tienda/RegistrarProductoNuevo.jsx) para importar y utilizar el modal modular, simplificando la vista del formulario.

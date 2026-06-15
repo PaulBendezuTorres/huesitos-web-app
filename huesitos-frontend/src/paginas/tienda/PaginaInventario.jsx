@@ -4,6 +4,7 @@ import { Filter, Plus } from 'lucide-react';
 import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
 import Buscador from '@/componentes/comun/Buscador';
 import Paginacion from '@/componentes/comun/Paginacion';
+import Combobox from '@/componentes/comun/Combobox';
 
 // Componentes Modularizados
 import TarjetasAlertasInventario from '@/componentes/tienda/TarjetasAlertasInventario';
@@ -185,20 +186,32 @@ const PaginaInventario = () => {
             sinContenedor={true} 
           />
 
-          <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 shrink-0">
-            <Filter size={13} className="text-slate-400" />
-            <select
-              value={filtroCategoria}
-              onChange={(e) => setFiltroCategoria(e.target.value)}
-              className="bg-transparent text-xs font-semibold text-slate-650 dark:text-slate-200 outline-none cursor-pointer w-full"
-            >
-              <option value="">Todas las categorías</option>
-              {categorias.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.nombre}
-                </option>
-              ))}
-            </select>
+          <div className="w-full sm:w-52 shrink-0 z-10">
+            <Combobox
+              value={filtroCategoria ? categorias.find(c => c.id === Number(filtroCategoria))?.nombre : 'Todas las categorías'}
+              onChange={(label, _, opcCompleto) => {
+                if (opcCompleto) {
+                  setFiltroCategoria(opcCompleto.id);
+                } else {
+                  if (label.toLowerCase() === 'todas las categorías'.toLowerCase() || !label) {
+                    setFiltroCategoria('');
+                  } else {
+                    const coincidencia = categorias.find(c => c.nombre.toLowerCase() === label.toLowerCase());
+                    setFiltroCategoria(coincidencia ? coincidencia.id : '');
+                  }
+                }
+              }}
+              opciones={[
+                { id: '', label: 'Todas las categorías' },
+                ...categorias.map((cat) => ({
+                  id: cat.id,
+                  label: cat.nombre
+                }))
+              ]}
+              placeholder="Filtro categoría..."
+              icono={Filter}
+              compacto={true}
+            />
           </div>
         </div>
 
