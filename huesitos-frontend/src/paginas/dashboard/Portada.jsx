@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useTema } from '@/contextos/ContextoTema';
+import { obtenerConfiguracionNegocio } from '@/api/configuracionApi';
 
 // === COMPONENTES MODULARES ===
 import EncabezadoPortada from '@/componentes/portada/EncabezadoPortada';
@@ -48,12 +48,13 @@ const Portada = () => {
 
   // === EFECTO PARA TRAER DATOS REALES DEL BACKEND ===
   useEffect(() => {
-    axios.get("http://localhost:8080/api/configuracion-negocio")
-      .then((res) => {
-        if (res.data) setConfig(res.data);
+    obtenerConfiguracionNegocio()
+      .then((data) => {
+        if (data) setConfig(data);
       })
       .catch((err) => console.warn("Usando datos estáticos de respaldo:", err));
   }, []);
+
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-oscuro-base text-slate-800 dark:text-slate-100 font-sans scroll-smooth selection:bg-blue-600 selection:text-white transition-colors duration-300">

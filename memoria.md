@@ -1,8 +1,14 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-15 (Rediseño y Desacoplamiento de Pedidos, Seguridad de Roles, Paginación y Finanzas)
+Última actualización: 2026-06-15 (Rediseño y Desacoplamiento de Configuración Global, Pedidos, Seguridad de Roles, Paginación y Finanzas)
 
 ## 🚀 Logros Recientes
+- [x] **Desacoplamiento y Rediseño de Configuración Global**:
+  - Creado el servicio API de configuración en [configuracionApi.js](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/api/configuracionApi.js) para independizar el controlador.
+  - Extraídas las secciones de la página en tres subcomponentes atómicos e independientes en `src/componentes/dashboard/`: [FormularioInfoNegocio.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/dashboard/FormularioInfoNegocio.jsx), [FormularioContacto.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/dashboard/FormularioContacto.jsx) y [FormularioFinanciero.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/dashboard/FormularioFinanciero.jsx).
+  - Rediseñada la página [ConfiguracionDinamica.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/dashboard/ConfiguracionDinamica.jsx) utilizando la nueva API y componentes, adoptando la estética premium flotante del dashboard (cards estructuradas, inputs estilizados, ring en focus, banners interactivos de éxito/error).
+  - Reemplazada la llamada directa a axios en [Portada.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/dashboard/Portada.jsx) para utilizar el nuevo servicio API configurado.
+  - Validada la correcta compilación y construcción del frontend mediante `npm run build` sin errores.
 - [x] **Desacoplamiento, Paginación y Rediseño de Gestión de Pedidos**:
   - Extraído el listado de compras al componente modular independiente [ListaPedidosDespacho.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/tienda/ListaPedidosDespacho.jsx), incorporando paginación integrada (`6` pedidos por página).
   - Extraído el detalle de despacho al componente independiente [DetallePedidoDespacho.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/tienda/DetallePedidoDespacho.jsx).
