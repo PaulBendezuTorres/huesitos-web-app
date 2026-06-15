@@ -46,6 +46,18 @@ public class CampanaOfertaControlador {
         }
     }
 
+    @PostMapping("/campanas/{id}/foto")
+    public ResponseEntity<?> subirFotoCampana(@PathVariable Long id, @RequestParam("archivo") org.springframework.web.multipart.MultipartFile archivo) {
+        try {
+            String urlFoto = campanaOfertaServicio.subirFotoCampana(id, archivo);
+            java.util.Map<String, String> respuesta = new java.util.HashMap<>();
+            respuesta.put("imagenUrl", urlFoto);
+            return ResponseEntity.ok(respuesta);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @PutMapping("/campanas/{id}")
     public ResponseEntity<?> actualizarCampana(@PathVariable Long id, @RequestBody Campana campana) {
         try {

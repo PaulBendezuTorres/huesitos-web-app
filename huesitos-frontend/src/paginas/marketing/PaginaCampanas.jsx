@@ -12,7 +12,8 @@ import {
   AlertTriangle,
   CheckCircle,
   Tag,
-  ShoppingBag
+  ShoppingBag,
+  Upload
 } from 'lucide-react';
 import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
 import {
@@ -23,9 +24,11 @@ import {
   obtenerTodasOfertas,
   registrarOferta,
   actualizarOferta,
-  eliminarOferta
+  eliminarOferta,
+  subirFotoCampana
 } from '@/api/marketingApi';
 import { obtenerProductos } from '@/api/tiendaApi';
+import { listarServicios } from '@/servicios/servicioServicio';
 
 const PaginaCampanas = () => {
   const [activeTab, setActiveTab] = useState('campanas'); // 'campanas' o 'ofertas'
@@ -34,6 +37,7 @@ const PaginaCampanas = () => {
   const [campanas, setCampanas] = useState([]);
   const [ofertas, setOfertas] = useState([]);
   const [productos, setProductos] = useState([]);
+  const [todosServicios, setTodosServicios] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Modales
@@ -47,7 +51,8 @@ const PaginaCampanas = () => {
     descripcion: '',
     fechaInicio: '',
     fechaFin: '',
-    imagenUrl: ''
+    imagenUrl: '',
+    servicios: []
   });
   
   const [formOferta, setFormOferta] = useState({
@@ -61,6 +66,8 @@ const PaginaCampanas = () => {
     fechaFin: ''
   });
 
+  const [imagenArchivo, setImagenArchivo] = useState(null);
+  const [vistaPreviaImagen, setVistaPreviaImagen] = useState('');
   const [procesando, setProcesando] = useState(false);
   const [errorForm, setErrorForm] = useState('');
   const [mensajeExito, setMensajeExito] = useState('');
@@ -72,15 +79,17 @@ const PaginaCampanas = () => {
     setMensajeExito('');
     setMensajeError('');
     try {
-      const [campRes, ofRes, prodRes] = await Promise.allSettled([
+      const [campRes, ofRes, prodRes, servRes] = await Promise.allSettled([
         obtenerTodasCampanas(),
         obtenerTodasOfertas(),
-        obtenerProductos()
+        obtenerProductos(),
+        listarServicios()
       ]);
 
       setCampanas(campRes.status === 'fulfilled' ? campRes.value : []);
       setOfertas(ofRes.status === 'fulfilled' ? ofRes.value : []);
       setProductos(prodRes.status === 'fulfilled' ? prodRes.value : []);
+      setTodosServicios(servRes.status === 'fulfilled' ? servRes.value : []);
     } catch (err) {
       console.error('Error al cargar datos de marketing:', err);
     } finally {
@@ -128,7 +137,16 @@ const PaginaCampanas = () => {
   // --- CRUD CAMPAÑAS ---
   const abrirNuevaCampana = () => {
     setEdicionItem(null);
-    setFormCampana({ nombre: '', descripcion: '', fechaInicio: '', fechaFin: '', imagenUrl: '/uploads/defecto-campana.png' });
+    setFormCampana({
+      nombre: '',
+      descripcion: '',
+      fechaInicio: '',
+      fechaFin: '',
+      imagenUrl: '',
+      servicios: []
+    });
+    setImagenArchivo(null);
+    setVistaPreviaImagen('');
     setErrorForm('');
     setModalCampana(true);
   };
@@ -140,10 +158,34 @@ const PaginaCampanas = () => {
       descripcion: campana.descripcion || '',
       fechaInicio: campana.fechaInicio,
       fechaFin: campana.fechaFin,
-      imagenUrl: campana.imagenUrl || '/uploads/defecto-campana.png'
+      imagenUrl: campana.imagenUrl || '',
+      servicios: campana.servicios ? campana.servicios.map(s => s.id) : []
     });
+    setImagenArchivo(null);
+    setVistaPreviaImagen(campana.imagenUrl ? `http://localhost:8080${campana.imagenUrl}` : '');
     setErrorForm('');
     setModalCampana(true);
+  };
+
+  const handleImagenChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert("El archivo no debe superar los 5MB");
+        return;
+      }
+      setImagenArchivo(file);
+      setVistaPreviaImagen(URL.createObjectURL(file));
+    }
+  };
+
+  const handleServicioToggle = (servicioId) => {
+    setFormCampana(prev => {
+      const servicios = prev.servicios.includes(servicioId)
+        ? prev.servicios.filter(id => id !== servicioId)
+        : [...prev.servicios, servicioId];
+      return { ...prev, servicios };
+    });
   };
 
   const handleCampanaSubmit = async (e) => {
@@ -154,15 +196,32 @@ const PaginaCampanas = () => {
       if (formCampana.fechaInicio > formCampana.fechaFin) {
         throw new Error('La fecha de inicio no puede ser posterior a la fecha de fin.');
       }
-
-      if (edicionItem) {
-        await actualizarCampana(edicionItem.id, { ...formCampana, activo: edicionItem.activo });
-        alert('Campaña actualizada con éxito.');
-      } else {
-        await registrarCampana({ ...formCampana, activo: true });
-        alert('Campaña creada con éxito.');
+      if (formCampana.descripcion.length > 350) {
+        throw new Error('La descripción no puede superar los 350 caracteres.');
       }
-      
+
+      const payload = {
+        nombre: formCampana.nombre,
+        descripcion: formCampana.descripcion,
+        fechaInicio: formCampana.fechaInicio,
+        fechaFin: formCampana.fechaFin,
+        imagenUrl: formCampana.imagenUrl,
+        servicios: formCampana.servicios.map(id => ({ id }))
+      };
+
+      let campanaGuardada;
+      if (edicionItem) {
+        campanaGuardada = await actualizarCampana(edicionItem.id, { ...payload, activo: edicionItem.activo });
+      } else {
+        campanaGuardada = await registrarCampana({ ...payload, activo: true });
+      }
+
+      // Subir archivo de imagen si fue seleccionado
+      if (imagenArchivo && campanaGuardada && campanaGuardada.id) {
+        await subirFotoCampana(campanaGuardada.id, imagenArchivo);
+      }
+
+      alert(edicionItem ? 'Campaña actualizada con éxito.' : 'Campaña creada con éxito.');
       setModalCampana(false);
       cargarDatos();
     } catch (err) {
@@ -179,10 +238,8 @@ const PaginaCampanas = () => {
 
     try {
       if (campana.activo) {
-        // En backend, el DELETE desactiva la campaña
         await eliminarCampana(campana.id);
       } else {
-        // Para activar, volvemos a guardar con activo: true
         await actualizarCampana(campana.id, { ...campana, activo: true });
       }
       alert('Estado de la campaña modificado con éxito.');
@@ -368,57 +425,94 @@ const PaginaCampanas = () => {
               return (
                 <div
                   key={c.id}
-                  className={`bg-white dark:bg-slate-800 rounded-2xl border ${
+                  className={`bg-white dark:bg-slate-800 rounded-3xl border overflow-hidden transition-all duration-300 flex flex-col justify-between min-h-[360px] relative hover:shadow-xl hover:shadow-sky-500/5 group ${
                     c.activo ? 'border-slate-200/60 dark:border-slate-700/60 hover:border-sky-300' : 'border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/30'
-                  } shadow-sm p-5 transition-all duration-300 flex flex-col justify-between min-h-[220px] relative hover:shadow-md hover:shadow-sky-500/5`}
+                  }`}
                 >
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-start">
-                      <span className={`text-[9px] font-black px-2 py-0.5 rounded-full border ${expiracion.estilo}`}>
+                  {/* Banner superior de la campaña */}
+                  <div className="h-40 relative bg-slate-100 dark:bg-slate-900 flex-shrink-0 overflow-hidden">
+                    {c.imagenUrl ? (
+                      <img
+                        src={`http://localhost:8080${c.imagenUrl}`}
+                        alt={c.nombre}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-sky-500 to-cyan-400 flex items-center justify-center">
+                        <Megaphone size={32} className="text-white opacity-40 animate-pulse" />
+                      </div>
+                    )}
+                    {/* Insignias flotantes en la imagen */}
+                    <div className="absolute top-3 left-3 flex gap-1.5 z-10">
+                      <span className={`text-[9px] font-black px-2.5 py-1 rounded-full border shadow-sm backdrop-blur-md ${expiracion.estilo}`}>
                         {expiracion.texto}
                       </span>
-                      <span className={`text-[9px] font-extrabold px-2 py-0.5 rounded-full border ${
+                    </div>
+                    <div className="absolute top-3 right-3 z-10">
+                      <span className={`text-[9px] font-black px-2.5 py-1 rounded-full border shadow-sm backdrop-blur-md ${
                         c.activo 
-                          ? 'bg-emerald-50 border-emerald-200 text-emerald-700' 
-                          : 'bg-red-50 border-red-200 text-red-700'
+                          ? 'bg-emerald-500 border-emerald-400 text-white' 
+                          : 'bg-red-500 border-red-400 text-white'
                       }`}>
                         {c.activo ? 'ACTIVA' : 'INACTIVA'}
                       </span>
                     </div>
-
-                    <div>
-                      <h3 className="font-black text-slate-800 dark:text-slate-100 text-sm tracking-tight leading-tight group-hover:text-sky-600 transition-colors">
-                        {c.nombre}
-                      </h3>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-relaxed mt-1">{c.descripcion}</p>
-                    </div>
                   </div>
 
-                  <div className="pt-4 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between text-[10px] text-slate-400 dark:text-slate-500 font-semibold mt-4">
-                    <div className="flex items-center gap-1.5">
-                      <Calendar size={12} />
-                      <span>{formatarFecha(c.fechaInicio)} — {formatarFecha(c.fechaFin)}</span>
+                  <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                    <div className="space-y-2">
+                      <h3 className="font-black text-slate-800 dark:text-slate-100 text-sm tracking-tight leading-snug group-hover:text-sky-500 transition-colors">
+                        {c.nombre}
+                      </h3>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-relaxed line-clamp-3">
+                        {c.descripcion}
+                      </p>
                     </div>
 
-                    <div className="flex items-center gap-1">
-                      <button
-                        onClick={() => abrirEditarCampana(c)}
-                        className="p-1.5 hover:bg-sky-50 text-sky-600 rounded-lg border border-transparent hover:border-sky-100 transition-all"
-                        title="Editar campaña"
-                      >
-                        <Edit2 size={12} />
-                      </button>
-                      <button
-                        onClick={() => handleToggleActivoCampana(c)}
-                        className={`p-1.5 rounded-lg border border-transparent transition-all ${
-                          c.activo 
-                            ? 'hover:bg-red-50 text-red-500 hover:border-red-100' 
-                            : 'hover:bg-emerald-50 text-emerald-500 hover:border-emerald-100'
-                        }`}
-                        title={c.activo ? 'Desactivar campaña' : 'Activar campaña'}
-                      >
-                        <Trash2 size={12} />
-                      </button>
+                    {/* Servicios vinculados */}
+                    {c.servicios && c.servicios.length > 0 && (
+                      <div className="space-y-1.5">
+                        <span className="text-[9px] uppercase font-black text-slate-400 tracking-wider">Servicios Incluidos:</span>
+                        <div className="flex flex-wrap gap-1">
+                          {c.servicios.map((s) => (
+                            <span
+                              key={s.id}
+                              className="px-2 py-0.5 bg-sky-50 dark:bg-sky-950/40 text-sky-650 dark:text-sky-300 text-[9px] font-extrabold rounded-lg border border-sky-100 dark:border-sky-900/40"
+                            >
+                              {s.nombre}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Footer del card */}
+                    <div className="pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between text-[10px] text-slate-400 dark:text-slate-500 font-semibold">
+                      <div className="flex items-center gap-1.5">
+                        <Calendar size={12} />
+                        <span>{formatarFecha(c.fechaInicio)} — {formatarFecha(c.fechaFin)}</span>
+                      </div>
+
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => abrirEditarCampana(c)}
+                          className="p-1.5 hover:bg-sky-50 dark:hover:bg-slate-700 text-sky-600 dark:text-sky-400 rounded-lg border border-transparent hover:border-sky-100 dark:hover:border-slate-650 transition-all"
+                          title="Editar campaña"
+                        >
+                          <Edit2 size={12} />
+                        </button>
+                        <button
+                          onClick={() => handleToggleActivoCampana(c)}
+                          className={`p-1.5 rounded-lg border border-transparent transition-all ${
+                            c.activo 
+                              ? 'hover:bg-red-50 dark:hover:bg-red-950/30 text-red-500 hover:border-red-100 dark:hover:border-red-900/30' 
+                              : 'hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-emerald-500 hover:border-emerald-100 dark:hover:border-emerald-900/30'
+                          }`}
+                          title={c.activo ? 'Desactivar campaña' : 'Activar campaña'}
+                        >
+                          <Trash2 size={12} />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -534,7 +628,7 @@ const PaginaCampanas = () => {
               </button>
             </div>
 
-            <form onSubmit={handleCampanaSubmit} className="p-5 space-y-4 text-xs font-semibold">
+            <form onSubmit={handleCampanaSubmit} className="p-5 space-y-4 text-xs font-semibold max-h-[80vh] overflow-y-auto">
               <div className="space-y-1">
                 <label className="block text-slate-500 uppercase">Nombre de la Campaña</label>
                 <input
@@ -548,14 +642,42 @@ const PaginaCampanas = () => {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-slate-500 uppercase">Descripción</label>
+                <div className="flex justify-between items-center">
+                  <label className="block text-slate-500 uppercase">Descripción</label>
+                  <span className={`text-[10px] font-bold ${formCampana.descripcion.length > 300 ? 'text-red-500' : 'text-slate-400'}`}>
+                    {formCampana.descripcion.length} / 350
+                  </span>
+                </div>
                 <textarea
                   required
+                  maxLength={350}
                   value={formCampana.descripcion}
                   onChange={(e) => setFormCampana({ ...formCampana, descripcion: e.target.value })}
                   placeholder="Mensaje o términos de la campaña de marketing..."
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:border-sky-400 transition-all h-24"
+                  className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all h-24 bg-white dark:bg-slate-700"
                 />
+              </div>
+
+              {/* Vinculación de Servicios */}
+              <div className="space-y-1.5">
+                <label className="block text-slate-500 uppercase">Servicios Vinculados (Uno o Más)</label>
+                <div className="border border-slate-200 dark:border-slate-600 rounded-lg p-3 max-h-32 overflow-y-auto space-y-2 bg-slate-50 dark:bg-slate-900/50">
+                  {todosServicios.length === 0 ? (
+                    <p className="text-[10px] text-slate-400 dark:text-slate-500 italic">No hay servicios disponibles.</p>
+                  ) : (
+                    todosServicios.map((s) => (
+                      <label key={s.id} className="flex items-center gap-2 cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={formCampana.servicios.includes(s.id)}
+                          onChange={() => handleServicioToggle(s.id)}
+                          className="w-3.5 h-3.5 text-sky-650 bg-gray-100 border-gray-300 rounded focus:ring-sky-500 dark:focus:ring-sky-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 cursor-pointer"
+                        />
+                        <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300">{s.nombre}</span>
+                      </label>
+                    ))
+                  )}
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -577,20 +699,30 @@ const PaginaCampanas = () => {
                     required
                     value={formCampana.fechaFin}
                     onChange={(e) => setFormCampana({ ...formCampana, fechaFin: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:border-sky-400 transition-all"
+                    className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all bg-white dark:bg-slate-700"
                   />
                 </div>
               </div>
 
-              <div className="space-y-1">
-                <label className="block text-slate-500 uppercase">Enlace de Imagen</label>
-                <input
-                  type="text"
-                  value={formCampana.imagenUrl}
-                  onChange={(e) => setFormCampana({ ...formCampana, imagenUrl: e.target.value })}
-                  placeholder="/uploads/defecto-campana.png"
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:border-sky-400 transition-all"
-                />
+              {/* Subida de Banner / Hero */}
+              <div className="space-y-2">
+                <label className="block text-slate-500 uppercase">Subir Banner publicitario (Formatos: PNG, JPG, WEBP)</label>
+                <div className="flex gap-4 items-center">
+                  <label className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 rounded-xl border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-350 cursor-pointer transition-colors flex items-center gap-1.5 text-[11px] font-bold">
+                    <Upload size={14} /> Seleccionar Banner
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImagenChange}
+                      className="hidden"
+                    />
+                  </label>
+                  {vistaPreviaImagen && (
+                    <div className="relative w-16 h-12 rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
+                      <img src={vistaPreviaImagen} alt="Previsualización" className="w-full h-full object-cover" />
+                    </div>
+                  )}
+                </div>
               </div>
 
               {errorForm && (

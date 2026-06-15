@@ -35,6 +35,19 @@ export const eliminarCampana = async (id) => {
   return respuesta.data;
 };
 
+/** Subir foto/banner de la campaña */
+export const subirFotoCampana = async (id, archivo) => {
+  const formData = new FormData();
+  formData.append('archivo', archivo);
+  const respuesta = await axios.post(`${API_BASE}/campanas/${id}/foto`, formData, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return respuesta.data;
+};
+
 // --- OFERTAS ---
 
 /** Listar todas las ofertas (Recepcionista/Administrador) */

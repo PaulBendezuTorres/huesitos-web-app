@@ -1,8 +1,14 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-15 (Corrección de error 403 y layout shift en Configuración Global, Desacoplamiento de Horarios e Integración de Personal)
+Última actualización: 2026-06-15 (Refactorización de Campañas de Marketing con Servicios y Banners, Corrección de error 403 y layout shift en Configuración Global, Desacoplamiento de Horarios)
 
 ## 🚀 Logros Recientes
+- [x] **Refactorización de Campañas y Marketing de Servicios**:
+  - Implementada la vinculación de **uno o más servicios** a las Campañas en el backend ([Campana.java](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-backend/src/main/java/huesitos_backend/dominios/marketing/entidades/Campana.java)) mediante una relación Many-to-Many con [Servicio.java](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-backend/src/main/java/huesitos_backend/dominios/veterinaria_servicio/entidades/Servicio.java).
+  - Creado un endpoint multipart en el backend y el cliente API del frontend ([marketingApi.js](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/api/marketingApi.js)) para permitir la subida de un **Banner publicitario (Hero)** comprimido automáticamente a WebP.
+  - Implementada la validación estricta y límite físico de **350 caracteres** en la descripción de las campañas en backend y frontend, añadiendo un contador de caracteres interactivo en el modal.
+  - Rediseñadas las tarjetas (cards) en [PaginaCampanas.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/PaginaCampanas.jsx) para desplegar el banner superior de la campaña con estilo de evento y badges con los servicios incluidos en el paquete.
+  - Validada la correcta compilación y construcción exitosa del frontend (`npm run build`) y el backend (`.\mvnw compile`).
 - [x] **Estabilización y Corrección de la Configuración Global**:
   - Solucionado el error **403 (Forbidden)** en la obtención de parámetros globales desde el panel administrativo al actualizar el cliente API [configuracionApi.js](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/api/configuracionApi.js) para que envíe condicionalmente el token JWT de autorización si el usuario está autenticado.
   - Eliminado por completo el molesto parpadeo y cambio de tamaño del contenedor principal ("se agranda y se achica") al introducir un componente de carga esqueleto `EsqueletoFormulario` en [ConfiguracionDinamica.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/dashboard/ConfiguracionDinamica.jsx) que simula las dimensiones tridimensionales del formulario real.

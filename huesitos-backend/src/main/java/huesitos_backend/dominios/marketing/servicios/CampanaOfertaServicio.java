@@ -6,14 +6,19 @@ import huesitos_backend.dominios.tienda.entidades.Producto;
 import huesitos_backend.dominios.marketing.repositorios.CampanaRepositorio;
 import huesitos_backend.dominios.marketing.repositorios.OfertaRepositorio;
 import huesitos_backend.dominios.tienda.repositorios.ProductoRepositorio;
+import huesitos_backend.dominios.veterinaria_servicio.entidades.Servicio;
+import huesitos_backend.dominios.veterinaria_servicio.repositorios.ServicioRepositorio;
+import huesitos_backend.servicios.StorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.ArrayList;
 
 @Slf4j
 @Service
@@ -23,6 +28,8 @@ public class CampanaOfertaServicio {
     private final CampanaRepositorio campanaRepositorio;
     private final OfertaRepositorio ofertaRepositorio;
     private final ProductoRepositorio productoRepositorio;
+    private final ServicioRepositorio servicioRepositorio;
+    private final StorageService storageService;
 
     // --- SERVICIOS DE CAMPAÑAS ---
 
@@ -37,6 +44,9 @@ public class CampanaOfertaServicio {
         if (campana.getFechaFin().isBefore(campana.getFechaInicio())) {
             throw new RuntimeException("La fecha de fin no puede ser anterior a la de inicio");
         }
+        if (campana.getDescripcion() != null && campana.getDescripcion().trim().length() > 350) {
+            throw new RuntimeException("La descripción de la campaña no puede superar los 350 caracteres");
+        }
 
         campana.setNombre(campana.getNombre().trim());
         if (campana.getActivo() == null) {
@@ -48,7 +58,33 @@ public class CampanaOfertaServicio {
             campana.setActivo(false);
         }
 
+        // Cargar y vincular servicios de la base de datos para evitar desvinculación JPA
+        if (campana.getServicios() != null) {
+            List<Servicio> serviciosPersistidos = new ArrayList<>();
+            for (Servicio s : campana.getServicios()) {
+                if (s.getId() != null) {
+                    servicioRepositorio.findById(s.getId()).ifPresent(serviciosPersistidos::add);
+                }
+            }
+            campana.setServicios(serviciosPersistidos);
+        }
+
         return campanaRepositorio.save(campana);
+    }
+
+    @Transactional
+    public String subirFotoCampana(Long id, MultipartFile archivo) {
+        Campana campana = campanaRepositorio.findById(id)
+                .orElseThrow(() -> new RuntimeException("Campaña no encontrada con ID: " + id));
+        String fotoAnterior = campana.getImagenUrl();
+        String urlFoto = storageService.comprimirYGuardarFoto(archivo, "campana");
+        campana.setImagenUrl(urlFoto);
+        campanaRepositorio.save(campana);
+        
+        if (fotoAnterior != null && !fotoAnterior.contains("defecto-")) {
+            storageService.borrarFoto(fotoAnterior);
+        }
+        return urlFoto;
     }
 
     @Transactional(readOnly = true)
