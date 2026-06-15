@@ -31,6 +31,9 @@ public class ProductoServicio {
         if (producto.getCategoria() == null || producto.getCategoria().getId() == null) {
             throw new RuntimeException("La categoría asociada es obligatoria");
         }
+        if (producto.getDescripcion() != null && producto.getDescripcion().trim().length() > 350) {
+            throw new RuntimeException("La descripción del producto no puede superar los 350 caracteres");
+        }
 
         // Validar que la categoría exista y esté activa
         categoriaRepositorio.findById(producto.getCategoria().getId())

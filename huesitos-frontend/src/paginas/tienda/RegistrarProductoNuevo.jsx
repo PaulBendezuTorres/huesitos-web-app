@@ -142,6 +142,10 @@ const RegistrarProductoNuevo = () => {
       setErrorForm('El nombre del producto es obligatorio.');
       return;
     }
+    if (descripcion && descripcion.length > 350) {
+      setErrorForm('La descripción del producto no puede superar los 350 caracteres.');
+      return;
+    }
     if (!precio || Number(precio) < 0) {
       setErrorForm('El precio debe ser un número igual o mayor a cero.');
       return;
@@ -291,10 +295,16 @@ const RegistrarProductoNuevo = () => {
 
             {/* Descripción */}
             <div className="space-y-1 text-xs font-bold uppercase tracking-wider">
-              <label className="block text-slate-500 dark:text-slate-400">Descripción</label>
+              <div className="flex justify-between items-center">
+                <label className="block text-slate-500 dark:text-slate-400">Descripción</label>
+                <span className={`text-[10px] lowercase font-semibold tracking-normal ${descripcion.length > 350 ? 'text-red-500' : 'text-slate-400 dark:text-slate-500'}`}>
+                  {descripcion.length}/350 caracteres
+                </span>
+              </div>
               <textarea
                 value={descripcion}
                 onChange={(e) => setDescripcion(e.target.value)}
+                maxLength={350}
                 placeholder="Ingresa los componentes, modo de uso o información relevante del producto..."
                 className="w-full px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-sky-100 focus:border-sky-400 transition-all h-24 bg-slate-50 dark:bg-slate-700 focus:bg-white dark:focus:bg-slate-650 resize-none"
                 disabled={procesando}

@@ -1,8 +1,11 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-14 (Rediseño de Modal Lotes, Desacoplamiento de Usuarios y Ajustes)
+Última actualización: 2026-06-14 (Límite de Caracteres en Producto, Rediseño de Lotes, Desacoplamiento de Usuarios y Ajustes)
 
 ## 🚀 Logros Recientes
+- [x] **Límite de Caracteres en Descripción del Producto**:
+  - Implementada la validación en el cliente ([RegistrarProductoNuevo.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/tienda/RegistrarProductoNuevo.jsx)) añadiendo un atributo `maxLength={350}`, un contador visual de caracteres en tiempo real y bloqueo en `handleSubmit`.
+  - Implementada la validación en el servidor ([ProductoServicio.java](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-backend/src/main/java/huesitos_backend/dominios/tienda/servicios/ProductoServicio.java)) verificando que el largo de la descripción sea menor o igual a 350 caracteres antes de guardar.
 - [x] **Rediseño Estético de Lotes de Stock**:
   - Mejorada la interfaz visual de [ModalIngresoLote.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/tienda/ModalIngresoLote.jsx) aplicando la paleta de diseño Tailwind de Huesitos (gradiente de botones, inputs estructurados con focos ring, bordes redondeados amplios y soporte robusto para tema oscuro en mensajes de error).
   - Corregidas las importaciones de Lucide en el componente, reemplazando iconos inexistentes por `Plus` y `Calendar` asegurando la estabilidad.
