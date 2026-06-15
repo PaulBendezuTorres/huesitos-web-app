@@ -73,3 +73,15 @@ export const eliminarOferta = async (id) => {
   const respuesta = await axios.delete(`${API_BASE}/ofertas/${id}`, obtenerHeaders());
   return respuesta.data;
 };
+
+/** Obtener campaña por ID */
+export const obtenerCampanaPorId = async (id) => {
+  const respuesta = await axios.get(`${API_BASE}/campanas/${id}`, obtenerHeaders());
+  return respuesta.data;
+};
+
+/** Obtener oferta por ID */
+export const obtenerOfertaPorId = async (id) => {
+  const respuesta = await axios.get(`${API_BASE}/ofertas/${id}`, obtenerHeaders());
+  return respuesta.data;
+};

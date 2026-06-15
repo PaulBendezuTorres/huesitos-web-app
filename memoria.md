@@ -1,8 +1,15 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-15 (Refactorización de Campañas de Marketing con Servicios y Banners, Corrección de error 403 y layout shift en Configuración Global, Desacoplamiento de Horarios)
+Última actualización: 2026-06-15 (Desacoplamiento Completo de Marketing en Páginas Dedicadas, Combobox en Ofertas, Refactorización de Campañas, Corrección de 403 y layout shift)
 
 ## 🚀 Logros Recientes
+- [x] **Desacoplamiento de Marketing en Páginas Dedicadas**:
+  - Extraído el formulario de creación/edición de Campañas de un modal en la vista principal a la página independiente [RegistrarCampana.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/RegistrarCampana.jsx).
+  - Extraído el formulario de creación/edición de Ofertas a la página independiente [RegistrarOferta.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx).
+  - Integrado el componente buscador interactivo `<Combobox />` en [RegistrarOferta.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx) para buscar y autocompletar productos de farmacia de forma dinámica.
+  - Limpiada y simplificada [PaginaCampanas.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/PaginaCampanas.jsx) removiendo cientos de líneas de código redundante de modales internos y delegando flujos de navegación al React Router.
+  - Registradas las nuevas subrutas de creación y edición de marketing en [TableroAdministrador.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/dashboard/TableroAdministrador.jsx).
+  - Validada la compilación de producción exitosa del frontend (`npm run build`).
 - [x] **Refactorización de Campañas y Marketing de Servicios**:
   - Implementada la vinculación de **uno o más servicios** a las Campañas en el backend ([Campana.java](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-backend/src/main/java/huesitos_backend/dominios/marketing/entidades/Campana.java)) mediante una relación Many-to-Many con [Servicio.java](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-backend/src/main/java/huesitos_backend/dominios/veterinaria_servicio/entidades/Servicio.java).
   - Creado un endpoint multipart en el backend y el cliente API del frontend ([marketingApi.js](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/api/marketingApi.js)) para permitir la subida de un **Banner publicitario (Hero)** comprimido automáticamente a WebP.

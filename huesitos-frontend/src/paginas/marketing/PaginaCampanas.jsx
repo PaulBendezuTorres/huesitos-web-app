@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Megaphone,
   Percent,
@@ -7,69 +8,28 @@ import {
   Trash2,
   Calendar,
   Clock,
-  X,
-  Save,
   AlertTriangle,
   CheckCircle,
-  Tag,
-  ShoppingBag,
-  Upload
+  ShoppingBag
 } from 'lucide-react';
 import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
 import {
   obtenerTodasCampanas,
-  registrarCampana,
-  actualizarCampana,
   eliminarCampana,
+  actualizarCampana,
   obtenerTodasOfertas,
-  registrarOferta,
-  actualizarOferta,
   eliminarOferta,
-  subirFotoCampana
+  actualizarOferta
 } from '@/api/marketingApi';
-import { obtenerProductos } from '@/api/tiendaApi';
-import { listarServicios } from '@/servicios/servicioServicio';
 
 const PaginaCampanas = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('campanas'); // 'campanas' o 'ofertas'
 
   // Datos
   const [campanas, setCampanas] = useState([]);
   const [ofertas, setOfertas] = useState([]);
-  const [productos, setProductos] = useState([]);
-  const [todosServicios, setTodosServicios] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // Modales
-  const [modalCampana, setModalCampana] = useState(false);
-  const [modalOferta, setModalOferta] = useState(false);
-  const [edicionItem, setEdicionItem] = useState(null); // Para guardar el item en edición (Campaña u Oferta)
-
-  // Formularios
-  const [formCampana, setFormCampana] = useState({
-    nombre: '',
-    descripcion: '',
-    fechaInicio: '',
-    fechaFin: '',
-    imagenUrl: '',
-    servicios: []
-  });
-  
-  const [formOferta, setFormOferta] = useState({
-    titulo: '',
-    descripcion: '',
-    descuentoPorcentaje: '',
-    precioOferta: '',
-    productoId: '',
-    campanaId: '',
-    fechaInicio: '',
-    fechaFin: ''
-  });
-
-  const [imagenArchivo, setImagenArchivo] = useState(null);
-  const [vistaPreviaImagen, setVistaPreviaImagen] = useState('');
-  const [procesando, setProcesando] = useState(false);
-  const [errorForm, setErrorForm] = useState('');
   const [mensajeExito, setMensajeExito] = useState('');
   const [mensajeError, setMensajeError] = useState('');
 
@@ -79,17 +39,13 @@ const PaginaCampanas = () => {
     setMensajeExito('');
     setMensajeError('');
     try {
-      const [campRes, ofRes, prodRes, servRes] = await Promise.allSettled([
+      const [campRes, ofRes] = await Promise.allSettled([
         obtenerTodasCampanas(),
-        obtenerTodasOfertas(),
-        obtenerProductos(),
-        listarServicios()
+        obtenerTodasOfertas()
       ]);
 
       setCampanas(campRes.status === 'fulfilled' ? campRes.value : []);
       setOfertas(ofRes.status === 'fulfilled' ? ofRes.value : []);
-      setProductos(prodRes.status === 'fulfilled' ? prodRes.value : []);
-      setTodosServicios(servRes.status === 'fulfilled' ? servRes.value : []);
     } catch (err) {
       console.error('Error al cargar datos de marketing:', err);
     } finally {
@@ -103,7 +59,7 @@ const PaginaCampanas = () => {
 
   // --- CONTADORES DE EXPIRACIÓN ---
   const calcularExpiracion = (fechaFinStr) => {
-    if (!fechaFinStr) return { texto: 'Sin límite', estilo: 'text-slate-500 bg-slate-100 border-slate-200' };
+    if (!fechaFinStr) return { texto: 'Sin límite', estilo: 'text-slate-500 bg-slate-100 border-slate-200 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-300' };
     
     const hoy = new Date();
     hoy.setHours(0,0,0,0);
@@ -112,15 +68,15 @@ const PaginaCampanas = () => {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffDays < 0) {
-      return { texto: 'Expirada', estilo: 'text-red-700 bg-red-50 border-red-200' };
+      return { texto: 'Expirada', estilo: 'text-red-700 bg-red-50 border-red-200 dark:bg-red-950/20 dark:border-red-900/40 dark:text-red-400' };
     } else if (diffDays === 0) {
-      return { texto: 'Expira hoy', estilo: 'text-amber-700 bg-amber-50 border-amber-200 font-bold animate-pulse' };
+      return { texto: 'Expira hoy', estilo: 'text-amber-700 bg-amber-50 border-amber-200 font-bold animate-pulse dark:bg-amber-950/20 dark:border-amber-900/40 dark:text-amber-400' };
     } else if (diffDays === 1) {
-      return { texto: 'Último día', estilo: 'text-amber-700 bg-amber-50 border-amber-200 font-bold' };
+      return { texto: 'Último día', estilo: 'text-amber-700 bg-amber-50 border-amber-200 font-bold dark:bg-amber-950/20 dark:border-amber-900/40 dark:text-amber-400' };
     } else if (diffDays <= 7) {
-      return { texto: `${diffDays} días rest.`, estilo: 'text-amber-700 bg-amber-50 border-amber-200' };
+      return { texto: `${diffDays} días rest.`, estilo: 'text-amber-700 bg-amber-50 border-amber-200 dark:bg-amber-950/20 dark:border-amber-900/40 dark:text-amber-400' };
     } else {
-      return { texto: `${diffDays} días rest.`, estilo: 'text-emerald-700 bg-emerald-50 border-emerald-200' };
+      return { texto: `${diffDays} días rest.`, estilo: 'text-emerald-700 bg-emerald-50 border-emerald-200 dark:bg-emerald-950/20 dark:border-emerald-900/40 dark:text-emerald-400' };
     }
   };
 
@@ -135,103 +91,6 @@ const PaginaCampanas = () => {
   };
 
   // --- CRUD CAMPAÑAS ---
-  const abrirNuevaCampana = () => {
-    setEdicionItem(null);
-    setFormCampana({
-      nombre: '',
-      descripcion: '',
-      fechaInicio: '',
-      fechaFin: '',
-      imagenUrl: '',
-      servicios: []
-    });
-    setImagenArchivo(null);
-    setVistaPreviaImagen('');
-    setErrorForm('');
-    setModalCampana(true);
-  };
-
-  const abrirEditarCampana = (campana) => {
-    setEdicionItem(campana);
-    setFormCampana({
-      nombre: campana.nombre,
-      descripcion: campana.descripcion || '',
-      fechaInicio: campana.fechaInicio,
-      fechaFin: campana.fechaFin,
-      imagenUrl: campana.imagenUrl || '',
-      servicios: campana.servicios ? campana.servicios.map(s => s.id) : []
-    });
-    setImagenArchivo(null);
-    setVistaPreviaImagen(campana.imagenUrl ? `http://localhost:8080${campana.imagenUrl}` : '');
-    setErrorForm('');
-    setModalCampana(true);
-  };
-
-  const handleImagenChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        alert("El archivo no debe superar los 5MB");
-        return;
-      }
-      setImagenArchivo(file);
-      setVistaPreviaImagen(URL.createObjectURL(file));
-    }
-  };
-
-  const handleServicioToggle = (servicioId) => {
-    setFormCampana(prev => {
-      const servicios = prev.servicios.includes(servicioId)
-        ? prev.servicios.filter(id => id !== servicioId)
-        : [...prev.servicios, servicioId];
-      return { ...prev, servicios };
-    });
-  };
-
-  const handleCampanaSubmit = async (e) => {
-    e.preventDefault();
-    setProcesando(true);
-    setErrorForm('');
-    try {
-      if (formCampana.fechaInicio > formCampana.fechaFin) {
-        throw new Error('La fecha de inicio no puede ser posterior a la fecha de fin.');
-      }
-      if (formCampana.descripcion.length > 350) {
-        throw new Error('La descripción no puede superar los 350 caracteres.');
-      }
-
-      const payload = {
-        nombre: formCampana.nombre,
-        descripcion: formCampana.descripcion,
-        fechaInicio: formCampana.fechaInicio,
-        fechaFin: formCampana.fechaFin,
-        imagenUrl: formCampana.imagenUrl,
-        servicios: formCampana.servicios.map(id => ({ id }))
-      };
-
-      let campanaGuardada;
-      if (edicionItem) {
-        campanaGuardada = await actualizarCampana(edicionItem.id, { ...payload, activo: edicionItem.activo });
-      } else {
-        campanaGuardada = await registrarCampana({ ...payload, activo: true });
-      }
-
-      // Subir archivo de imagen si fue seleccionado
-      if (imagenArchivo && campanaGuardada && campanaGuardada.id) {
-        await subirFotoCampana(campanaGuardada.id, imagenArchivo);
-      }
-
-      alert(edicionItem ? 'Campaña actualizada con éxito.' : 'Campaña creada con éxito.');
-      setModalCampana(false);
-      cargarDatos();
-    } catch (err) {
-      const msg = err.response?.data || err.message || 'Error al guardar campaña.';
-      setErrorForm(typeof msg === 'string' ? msg : JSON.stringify(msg));
-    } finally {
-      setProcesando(false);
-    }
-  };
-
   const handleToggleActivoCampana = async (campana) => {
     const confirm = window.confirm(`¿Estás seguro de que deseas ${campana.activo ? 'desactivar' : 'activar'} esta campaña?`);
     if (!confirm) return;
@@ -242,93 +101,14 @@ const PaginaCampanas = () => {
       } else {
         await actualizarCampana(campana.id, { ...campana, activo: true });
       }
-      alert('Estado de la campaña modificado con éxito.');
+      setMensajeExito('Estado de la campaña modificado con éxito.');
       cargarDatos();
     } catch (err) {
-      alert('Error al modificar el estado: ' + (err.response?.data || err.message));
+      setMensajeError('Error al modificar el estado: ' + (err.response?.data || err.message));
     }
   };
 
   // --- CRUD OFERTAS ---
-  const abrirNuevaOferta = () => {
-    setEdicionItem(null);
-    setFormOferta({
-      titulo: '',
-      descripcion: '',
-      descuentoPorcentaje: '',
-      precioOferta: '',
-      productoId: '',
-      campanaId: '',
-      fechaInicio: '',
-      fechaFin: ''
-    });
-    setErrorForm('');
-    setModalOferta(true);
-  };
-
-  const abrirEditarOferta = (oferta) => {
-    setEdicionItem(oferta);
-    setFormOferta({
-      titulo: oferta.titulo,
-      descripcion: oferta.descripcion || '',
-      descuentoPorcentaje: oferta.descuentoPorcentaje || '',
-      precioOferta: oferta.precioOferta || '',
-      productoId: oferta.producto?.id || '',
-      campanaId: oferta.campana?.id || '',
-      fechaInicio: oferta.fechaInicio,
-      fechaFin: oferta.fechaFin
-    });
-    setErrorForm('');
-    setModalOferta(true);
-  };
-
-  const handleOfertaSubmit = async (e) => {
-    e.preventDefault();
-    setProcesando(true);
-    setErrorForm('');
-    try {
-      if (formOferta.fechaInicio > formOferta.fechaFin) {
-        throw new Error('La fecha de inicio no puede ser posterior a la fecha de fin.');
-      }
-      if (!formOferta.productoId) {
-        throw new Error('El producto es obligatorio.');
-      }
-      if (!formOferta.descuentoPorcentaje && !formOferta.precioOferta) {
-        throw new Error('Debes ingresar al menos el porcentaje de descuento o el precio de oferta.');
-      }
-
-      const payload = {
-        titulo: formOferta.titulo,
-        descripcion: formOferta.descripcion,
-        descuentoPorcentaje: formOferta.descuentoPorcentaje ? Number(formOferta.descuentoPorcentaje) : null,
-        precioOferta: formOferta.precioOferta ? Number(formOferta.precioOferta) : null,
-        producto: { id: Number(formOferta.productoId) },
-        fechaInicio: formOferta.fechaInicio,
-        fechaFin: formOferta.fechaFin
-      };
-
-      if (formOferta.campanaId) {
-        payload.campana = { id: Number(formOferta.campanaId) };
-      }
-
-      if (edicionItem) {
-        await actualizarOferta(edicionItem.id, { ...payload, activo: edicionItem.activo });
-        alert('Oferta actualizada con éxito.');
-      } else {
-        await registrarOferta({ ...payload, activo: true });
-        alert('Oferta creada con éxito.');
-      }
-
-      setModalOferta(false);
-      cargarDatos();
-    } catch (err) {
-      const msg = err.response?.data || err.message || 'Error al guardar la oferta.';
-      setErrorForm(typeof msg === 'string' ? msg : JSON.stringify(msg));
-    } finally {
-      setProcesando(false);
-    }
-  };
-
   const handleToggleActivoOferta = async (oferta) => {
     const confirm = window.confirm(`¿Estás seguro de que deseas ${oferta.activo ? 'desactivar' : 'activar'} esta oferta de descuento?`);
     if (!confirm) return;
@@ -339,10 +119,10 @@ const PaginaCampanas = () => {
       } else {
         await actualizarOferta(oferta.id, { ...oferta, activo: true });
       }
-      alert('Estado de la oferta modificado con éxito.');
+      setMensajeExito('Estado de la oferta modificado con éxito.');
       cargarDatos();
     } catch (err) {
-      alert('Error al modificar el estado de la oferta: ' + (err.response?.data || err.message));
+      setMensajeError('Error al modificar el estado de la oferta: ' + (err.response?.data || err.message));
     }
   };
 
@@ -377,14 +157,14 @@ const PaginaCampanas = () => {
 
         {activeTab === 'campanas' ? (
           <button
-            onClick={abrirNuevaCampana}
-            className="px-4 py-2.5 bg-sky-50 text-sky-600 hover:bg-sky-500 hover:text-white rounded-xl border border-sky-100 hover:border-sky-300 text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm"
+            onClick={() => navigate('/admin/campanas/nueva')}
+            className="px-4 py-2.5 bg-sky-50 text-sky-600 hover:bg-sky-500 hover:text-white rounded-xl border border-sky-100 hover:border-sky-300 text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm dark:bg-slate-700 dark:text-sky-350 dark:border-slate-650"
           >
             <Plus size={14} /> Nueva Campaña
           </button>
         ) : (
           <button
-            onClick={abrirNuevaOferta}
+            onClick={() => navigate('/admin/campanas/oferta/nueva')}
             className="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-lg shadow-emerald-500/20"
           >
             <Plus size={14} /> Nueva Oferta de Descuento
@@ -394,27 +174,27 @@ const PaginaCampanas = () => {
 
       {/* MENSAJES DE OPERACIÓN */}
       {mensajeExito && (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center gap-3">
+        <div className="bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/30 rounded-xl p-4 flex items-center gap-3">
           <CheckCircle size={18} className="text-emerald-500 shrink-0" />
-          <p className="text-xs text-emerald-700 font-semibold">{mensajeExito}</p>
+          <p className="text-xs text-emerald-700 dark:text-emerald-400 font-semibold">{mensajeExito}</p>
         </div>
       )}
       {mensajeError && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-center gap-3">
+        <div className="bg-red-50 dark:bg-red-950/20 border border-red-100 dark:border-red-900/30 rounded-xl p-4 flex items-center gap-3">
           <AlertTriangle size={18} className="text-red-500 shrink-0" />
-          <p className="text-xs text-red-700 font-semibold">{mensajeError}</p>
+          <p className="text-xs text-red-750 dark:text-red-450 font-semibold">{mensajeError}</p>
         </div>
       )}
 
       {/* GRILLAS PRINCIPALES */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm gap-3">
+        <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm gap-3 animate-pulse">
           <CargadorSpinner size="lg" />
-          <span className="text-sm font-bold text-slate-400 dark:text-slate-500 font-semibold">Consultando datos de marketing...</span>
+          <span className="text-sm font-bold text-slate-400 dark:text-slate-500">Consultando datos de marketing...</span>
         </div>
       ) : activeTab === 'campanas' ? (
         /* ─── PESTAÑA: CAMPAÑAS ─── */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-200">
           {campanas.length === 0 ? (
             <div className="col-span-full py-16 text-center text-slate-400 dark:text-slate-500 font-bold bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
               No hay campañas de marketing registradas.
@@ -461,7 +241,7 @@ const PaginaCampanas = () => {
 
                   <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                     <div className="space-y-2">
-                      <h3 className="font-black text-slate-800 dark:text-slate-100 text-sm tracking-tight leading-snug group-hover:text-sky-500 transition-colors">
+                      <h3 className="font-black text-slate-850 dark:text-slate-100 text-sm tracking-tight leading-snug group-hover:text-sky-500 transition-colors">
                         {c.nombre}
                       </h3>
                       <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-relaxed line-clamp-3">
@@ -495,7 +275,7 @@ const PaginaCampanas = () => {
 
                       <div className="flex items-center gap-1">
                         <button
-                          onClick={() => abrirEditarCampana(c)}
+                          onClick={() => navigate(`/admin/campanas/editar/${c.id}`)}
                           className="p-1.5 hover:bg-sky-50 dark:hover:bg-slate-700 text-sky-600 dark:text-sky-400 rounded-lg border border-transparent hover:border-sky-100 dark:hover:border-slate-650 transition-all"
                           title="Editar campaña"
                         >
@@ -522,7 +302,7 @@ const PaginaCampanas = () => {
         </div>
       ) : (
         /* ─── PESTAÑA: OFERTAS ─── */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-200">
           {ofertas.length === 0 ? (
             <div className="col-span-full py-16 text-center text-slate-400 dark:text-slate-500 font-bold bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
               No hay ofertas de productos activas.
@@ -536,7 +316,7 @@ const PaginaCampanas = () => {
               return (
                 <div
                   key={o.id}
-                  className={`bg-white dark:bg-slate-800 rounded-2xl border ${
+                  className={`bg-white dark:bg-slate-800 rounded-3xl border ${
                     o.activo ? 'border-slate-200/60 dark:border-slate-700/60 hover:border-emerald-300' : 'border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/30'
                   } shadow-sm p-5 transition-all duration-300 flex flex-col justify-between min-h-[260px] relative hover:shadow-md hover:shadow-emerald-500/5`}
                 >
@@ -562,11 +342,13 @@ const PaginaCampanas = () => {
                         <ShoppingBag size={12} className="text-slate-400" />
                         Producto: {o.producto?.nombre}
                       </p>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-relaxed mt-2">{o.descripcion}</p>
+                      {o.descripcion && (
+                        <p className="text-[11px] text-slate-550 dark:text-slate-400 font-medium leading-relaxed mt-2 line-clamp-2">{o.descripcion}</p>
+                      )}
                     </div>
 
                     {/* Precios y descuento */}
-                    <div className="flex items-center gap-4 bg-emerald-50/40 border border-emerald-100 p-3 rounded-xl">
+                    <div className="flex items-center gap-4 bg-emerald-50/40 border border-emerald-100 p-3 rounded-xl dark:bg-emerald-950/20 dark:border-emerald-900/40">
                       <div className="w-10 h-10 bg-emerald-500 rounded-lg flex flex-col items-center justify-center text-white font-black shrink-0 shadow-sm shadow-emerald-500/10">
                         <span className="text-[10px] uppercase font-bold leading-none">%</span>
                         <span className="text-sm leading-none mt-0.5">-{o.descuentoPorcentaje ? Math.round(o.descuentoPorcentaje) : Math.round((1 - precioDescuento/precioOrig)*100)}</span>
@@ -574,7 +356,7 @@ const PaginaCampanas = () => {
                       <div>
                         <span className="text-[9px] font-black text-slate-400 uppercase block leading-none mb-1">Precio Oferta</span>
                         <div className="flex items-baseline gap-1.5">
-                          <span className="text-base font-black text-emerald-700">S/ {precioDescuento.toFixed(2)}</span>
+                          <span className="text-base font-black text-emerald-750 dark:text-emerald-400">S/ {precioDescuento.toFixed(2)}</span>
                           <span className="text-[10px] font-bold text-slate-400 line-through">S/ {precioOrig.toFixed(2)}</span>
                         </div>
                       </div>
@@ -589,8 +371,8 @@ const PaginaCampanas = () => {
 
                     <div className="flex items-center gap-1">
                       <button
-                        onClick={() => abrirEditarOferta(o)}
-                        className="p-1.5 hover:bg-sky-50 text-sky-600 rounded-lg border border-transparent hover:border-sky-100 transition-all"
+                        onClick={() => navigate(`/admin/campanas/oferta/editar/${o.id}`)}
+                        className="p-1.5 hover:bg-sky-50 dark:hover:bg-slate-700 text-sky-650 dark:text-sky-400 rounded-lg border border-transparent hover:border-sky-100 dark:hover:border-slate-650 transition-all"
                         title="Editar oferta"
                       >
                         <Edit2 size={12} />
@@ -599,8 +381,8 @@ const PaginaCampanas = () => {
                         onClick={() => handleToggleActivoOferta(o)}
                         className={`p-1.5 rounded-lg border border-transparent transition-all ${
                           o.activo 
-                            ? 'hover:bg-red-50 text-red-500 hover:border-red-100' 
-                            : 'hover:bg-emerald-50 text-emerald-500 hover:border-emerald-100'
+                            ? 'hover:bg-red-50 dark:hover:bg-red-950/30 text-red-500 hover:border-red-100 dark:hover:border-red-900/30' 
+                            : 'hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-emerald-500 hover:border-emerald-100 dark:hover:border-emerald-900/30'
                         }`}
                         title={o.activo ? 'Desactivar oferta' : 'Activar oferta'}
                       >
@@ -614,295 +396,6 @@ const PaginaCampanas = () => {
           )}
         </div>
       )}
-
-      {/* ─── MODAL CREAR/EDITAR CAMPAÑA ─── */}
-      {modalCampana && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden">
-            <div className="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/40">
-              <h3 className="font-black text-slate-800 dark:text-slate-100 text-sm uppercase tracking-wide">
-                {edicionItem ? 'Editar Campaña Publicitaria' : 'Nueva Campaña Publicitaria'}
-              </h3>
-              <button onClick={() => setModalCampana(false)} className="p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-400 transition-all">
-                <X size={18} />
-              </button>
-            </div>
-
-            <form onSubmit={handleCampanaSubmit} className="p-5 space-y-4 text-xs font-semibold max-h-[80vh] overflow-y-auto">
-              <div className="space-y-1">
-                <label className="block text-slate-500 uppercase">Nombre de la Campaña</label>
-                <input
-                  type="text"
-                  required
-                  value={formCampana.nombre}
-                  onChange={(e) => setFormCampana({ ...formCampana, nombre: e.target.value })}
-                  placeholder="Ej: Descuento Navideño, Campaña de Desparasitación"
-                  className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all bg-white dark:bg-slate-700"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <div className="flex justify-between items-center">
-                  <label className="block text-slate-500 uppercase">Descripción</label>
-                  <span className={`text-[10px] font-bold ${formCampana.descripcion.length > 300 ? 'text-red-500' : 'text-slate-400'}`}>
-                    {formCampana.descripcion.length} / 350
-                  </span>
-                </div>
-                <textarea
-                  required
-                  maxLength={350}
-                  value={formCampana.descripcion}
-                  onChange={(e) => setFormCampana({ ...formCampana, descripcion: e.target.value })}
-                  placeholder="Mensaje o términos de la campaña de marketing..."
-                  className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all h-24 bg-white dark:bg-slate-700"
-                />
-              </div>
-
-              {/* Vinculación de Servicios */}
-              <div className="space-y-1.5">
-                <label className="block text-slate-500 uppercase">Servicios Vinculados (Uno o Más)</label>
-                <div className="border border-slate-200 dark:border-slate-600 rounded-lg p-3 max-h-32 overflow-y-auto space-y-2 bg-slate-50 dark:bg-slate-900/50">
-                  {todosServicios.length === 0 ? (
-                    <p className="text-[10px] text-slate-400 dark:text-slate-500 italic">No hay servicios disponibles.</p>
-                  ) : (
-                    todosServicios.map((s) => (
-                      <label key={s.id} className="flex items-center gap-2 cursor-pointer select-none">
-                        <input
-                          type="checkbox"
-                          checked={formCampana.servicios.includes(s.id)}
-                          onChange={() => handleServicioToggle(s.id)}
-                          className="w-3.5 h-3.5 text-sky-650 bg-gray-100 border-gray-300 rounded focus:ring-sky-500 dark:focus:ring-sky-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 cursor-pointer"
-                        />
-                        <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300">{s.nombre}</span>
-                      </label>
-                    ))
-                  )}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="block text-slate-500 uppercase">Fecha de Inicio</label>
-                  <input
-                    type="date"
-                    required
-                    value={formCampana.fechaInicio}
-                    onChange={(e) => setFormCampana({ ...formCampana, fechaInicio: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all bg-white dark:bg-slate-700"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="block text-slate-500 uppercase">Fecha de Término</label>
-                  <input
-                    type="date"
-                    required
-                    value={formCampana.fechaFin}
-                    onChange={(e) => setFormCampana({ ...formCampana, fechaFin: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all bg-white dark:bg-slate-700"
-                  />
-                </div>
-              </div>
-
-              {/* Subida de Banner / Hero */}
-              <div className="space-y-2">
-                <label className="block text-slate-500 uppercase">Subir Banner publicitario (Formatos: PNG, JPG, WEBP)</label>
-                <div className="flex gap-4 items-center">
-                  <label className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 rounded-xl border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-350 cursor-pointer transition-colors flex items-center gap-1.5 text-[11px] font-bold">
-                    <Upload size={14} /> Seleccionar Banner
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImagenChange}
-                      className="hidden"
-                    />
-                  </label>
-                  {vistaPreviaImagen && (
-                    <div className="relative w-16 h-12 rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
-                      <img src={vistaPreviaImagen} alt="Previsualización" className="w-full h-full object-cover" />
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {errorForm && (
-                <div className="bg-red-50 border border-red-200 rounded-xl p-3 flex items-center gap-2 text-[11px] text-red-700">
-                  <AlertTriangle size={14} className="shrink-0" />
-                  <p>{errorForm}</p>
-                </div>
-              )}
-
-              <div className="pt-3 border-t border-slate-100 dark:border-slate-700 flex justify-end gap-2.5">
-                <button
-                  type="button"
-                  onClick={() => setModalCampana(false)}
-                  className="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  disabled={procesando}
-                  className="px-5 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50"
-                >
-                  {procesando ? <CargadorSpinner size="xs" color="border-white" /> : <Save size={12} />}
-                  Guardar Campaña
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* ─── MODAL CREAR/EDITAR OFERTA ─── */}
-      {modalOferta && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden">
-            <div className="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/40">
-              <h3 className="font-black text-slate-800 dark:text-slate-100 text-sm uppercase tracking-wide">
-                {edicionItem ? 'Editar Oferta de Descuento' : 'Nueva Oferta de Descuento'}
-              </h3>
-              <button onClick={() => setModalOferta(false)} className="p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-400 transition-all">
-                <X size={18} />
-              </button>
-            </div>
-
-            <form onSubmit={handleOfertaSubmit} className="p-5 space-y-4 text-xs font-semibold">
-              <div className="space-y-1">
-                <label className="block text-slate-500 uppercase">Título de la Oferta</label>
-                <input
-                  type="text"
-                  required
-                  value={formOferta.titulo}
-                  onChange={(e) => setFormOferta({ ...formOferta, titulo: e.target.value })}
-                  placeholder="Ej: Descuento 20% en Correas, Oferta Especial de Champú"
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:border-sky-400 transition-all"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="block text-slate-500 uppercase">Descripción</label>
-                <textarea
-                  value={formOferta.descripcion}
-                  onChange={(e) => setFormOferta({ ...formOferta, descripcion: e.target.value })}
-                  placeholder="Detalles adicionales sobre el descuento de la oferta..."
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:border-sky-400 transition-all h-20"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="block text-slate-500 uppercase">Producto Asociado</label>
-                <select
-                  required
-                  value={formOferta.productoId}
-                  onChange={(e) => setFormOferta({ ...formOferta, productoId: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all bg-white dark:bg-slate-700"
-                >
-                  <option value="">Seleccionar Producto</option>
-                  {productos.map((prod) => (
-                    <option key={prod.id} value={prod.id}>
-                      {prod.nombre} (S/ {prod.precio?.toFixed(2)})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="block text-slate-500 uppercase">Descuento (%)</label>
-                  <input
-                    type="number"
-                    max="100"
-                    min="1"
-                    value={formOferta.descuentoPorcentaje}
-                    onChange={(e) => setFormOferta({ ...formOferta, descuentoPorcentaje: e.target.value })}
-                    placeholder="20"
-                    className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all bg-white dark:bg-slate-700"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="block text-slate-500 uppercase">Precio Fijo Especial (S/)</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    value={formOferta.precioOferta}
-                    onChange={(e) => setFormOferta({ ...formOferta, precioOferta: e.target.value })}
-                    placeholder="Opcional"
-                    className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all bg-white dark:bg-slate-700"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <label className="block text-slate-500 uppercase">Campaña Vinculada (Opcional)</label>
-                <select
-                  value={formOferta.campanaId}
-                  onChange={(e) => setFormOferta({ ...formOferta, campanaId: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all bg-white dark:bg-slate-700"
-                >
-                  <option value="">Ninguna campaña</option>
-                  {campanas.filter((c) => c.activo).map((camp) => (
-                    <option key={camp.id} value={camp.id}>
-                      {camp.nombre}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="block text-slate-500 uppercase">Fecha de Inicio</label>
-                  <input
-                    type="date"
-                    required
-                    value={formOferta.fechaInicio}
-                    onChange={(e) => setFormOferta({ ...formOferta, fechaInicio: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all bg-white dark:bg-slate-700"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="block text-slate-500 uppercase">Fecha de Término</label>
-                  <input
-                    type="date"
-                    required
-                    value={formOferta.fechaFin}
-                    onChange={(e) => setFormOferta({ ...formOferta, fechaFin: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all bg-white dark:bg-slate-700"
-                  />
-                </div>
-              </div>
-
-              {errorForm && (
-                <div className="bg-red-50 border border-red-200 rounded-xl p-3 flex items-center gap-2 text-[11px] text-red-700">
-                  <AlertTriangle size={14} className="shrink-0" />
-                  <p>{errorForm}</p>
-                </div>
-              )}
-
-              <div className="pt-3 border-t border-slate-100 dark:border-slate-700 flex justify-end gap-2.5">
-                <button
-                  type="button"
-                  onClick={() => setModalOferta(false)}
-                  className="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  disabled={procesando}
-                  className="px-5 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50"
-                >
-                  {procesando ? <CargadorSpinner size="xs" color="border-white" /> : <Save size={12} />}
-                  Guardar Oferta
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
     </div>
   );
 };
