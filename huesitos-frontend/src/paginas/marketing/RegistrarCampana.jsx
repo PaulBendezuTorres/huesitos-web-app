@@ -97,6 +97,15 @@ const RegistrarCampana = () => {
     }
   };
 
+  const serviciosSeleccionadosObj = form.servicios.map(sid => todosServicios.find(s => s.id === sid)).filter(Boolean);
+  const precioOriginalPaquete = serviciosSeleccionadosObj.reduce((sum, s) => sum + (s.precio || 0), 0);
+  const precioPromocionalFinal = form.precioPromocional ? Number(form.precioPromocional) : 0;
+
+  let descuentoCalculado = 0;
+  if (precioOriginalPaquete > 0 && precioPromocionalFinal > 0 && precioPromocionalFinal < precioOriginalPaquete) {
+    descuentoCalculado = Math.round(((precioOriginalPaquete - precioPromocionalFinal) / precioOriginalPaquete) * 100);
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setProcesando(true);
@@ -390,6 +399,45 @@ const RegistrarCampana = () => {
                 })
               )}
             </div>
+
+            {/* Resumen Financiero Calculado */}
+            {form.servicios.length > 0 && (
+              <div className="pt-3 border-t border-slate-100 dark:border-slate-700 space-y-3">
+                <div className="flex justify-between items-center text-xs font-semibold text-slate-500 dark:text-slate-400">
+                  <span>Precio Inicial (Suma de Servicios):</span>
+                  <span className="font-bold text-slate-700 dark:text-slate-350">
+                    S/. {precioOriginalPaquete.toFixed(2)}
+                  </span>
+                </div>
+                
+                <div className="flex justify-between items-center text-xs font-semibold text-slate-500 dark:text-slate-400">
+                  <span>Precio Promocional:</span>
+                  <span className="font-bold text-sky-600 dark:text-sky-400">
+                    {precioPromocionalFinal > 0 ? `S/. ${precioPromocionalFinal.toFixed(2)}` : 'S/. 0.00'}
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center bg-slate-50 dark:bg-slate-900/50 p-2.5 rounded-xl border border-slate-150 dark:border-slate-750">
+                  <span className="text-[11px] font-bold text-slate-550 dark:text-slate-400 uppercase">Descuento</span>
+                  <span className="text-lg font-black text-emerald-500">
+                    {descuentoCalculado}%
+                  </span>
+                </div>
+
+                {precioOriginalPaquete > 0 && precioPromocionalFinal > 0 && precioPromocionalFinal < precioOriginalPaquete ? (
+                  <div className="bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/40 rounded-xl p-2.5 text-center flex flex-col gap-0.5 shadow-sm animate-in zoom-in-95 duration-200">
+                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">¡Ahorro para el Cliente!</span>
+                    <span className="text-sm font-black text-emerald-650 dark:text-emerald-400">
+                      S/. {(precioOriginalPaquete - precioPromocionalFinal).toFixed(2)}
+                    </span>
+                  </div>
+                ) : precioPromocionalFinal >= precioOriginalPaquete && precioPromocionalFinal > 0 ? (
+                  <div className="text-[10px] text-amber-600 dark:text-amber-400 font-semibold text-center bg-amber-50/50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/30 p-2 rounded-xl">
+                    El precio promocional debería ser menor a la suma de servicios.
+                  </div>
+                ) : null}
+              </div>
+            )}
           </div>
 
           {/* Botones de acción */}

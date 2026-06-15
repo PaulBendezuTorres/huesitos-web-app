@@ -3,6 +3,12 @@
 Última actualización: 2026-06-15 (Direcciones de Marketing Separadas, Carrusel 16:9, Layout de Servicios Lado a Lado)
 
 ## 🚀 Logros Recientes
+- [x] **Rediseño, Simplificación de Ofertas de Productos e Interactividad Financiera**:
+  - Rediseñado y simplificado el formulario [RegistrarOferta.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx) para enfocarse exclusivamente en productos del inventario y farmacia, removiendo banners, títulos manuales, descripciones y relaciones a campañas.
+  - Autogeneración transparente del título (`Oferta: [Nombre del Producto]`) y descripción en el submit de la oferta, garantizando compatibilidad con el backend sin forzar al usuario a ingresarlos manualmente.
+  - Implementado el cálculo reactivo del porcentaje de descuento y el ahorro neto en [RegistrarOferta.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx) basado en el precio original y el precio de oferta.
+  - Integrado un panel de resumen financiero reactivo en [RegistrarCampana.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/RegistrarCampana.jsx) debajo del listado de servicios seleccionados que calcula y muestra la suma del **Precio Inicial** (suma de precios de los servicios), el **Descuento (%)** frente al **Precio Promocional** de campaña, y el **Ahorro para el Cliente**.
+  - Añadida validación interactiva que alerta al usuario si el precio promocional de la campaña supera o iguala la suma de precios originales de los servicios incluidos.
 - [x] **Separación de Direcciones de Marketing (Campañas vs Ofertas)**:
   - Desacoplada la ruta única de administración `/admin/campanas` para ofertas. Ahora las campañas de salud residen exclusivamente en `/admin/campanas` y las ofertas de farmacia en `/admin/ofertas`.
   - Creada la página independiente [PaginaOfertas.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/marketing/PaginaOfertas.jsx) exclusiva para la administración y listado de ofertas de productos.

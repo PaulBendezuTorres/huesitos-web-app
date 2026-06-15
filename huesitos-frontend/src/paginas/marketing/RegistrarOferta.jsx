@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Percent, Save, Clock, AlertTriangle, Tag, ShoppingBag, Calendar } from 'lucide-react';
-import { registrarOferta, actualizarOferta, obtenerOfertaPorId, obtenerTodasCampanas } from '@/api/marketingApi';
+import { ArrowLeft, Percent, Save, AlertTriangle, ShoppingBag, Tag, Calendar } from 'lucide-react';
+import { registrarOferta, actualizarOferta, obtenerOfertaPorId } from '@/api/marketingApi';
 import { obtenerProductos } from '@/api/tiendaApi';
 import Combobox from '@/componentes/comun/Combobox';
 import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
@@ -12,19 +12,14 @@ const RegistrarOferta = () => {
   const esEdicion = !!id;
 
   const [form, setForm] = useState({
-    titulo: '',
-    descripcion: '',
-    descuentoPorcentaje: '',
-    precioOferta: '',
     productoId: '',
-    productoNombre: '', // Auxiliar para mostrar el valor seleccionado en el Combobox
-    campanaId: '',
+    productoNombre: '', 
+    precioOferta: '',
     fechaInicio: '',
     fechaFin: ''
   });
 
   const [productos, setProductos] = useState([]);
-  const [campanas, setCampanas] = useState([]);
   const [cargando, setCargando] = useState(false);
   const [procesando, setProcesando] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -34,24 +29,16 @@ const RegistrarOferta = () => {
       setCargando(true);
       setErrorMsg('');
       try {
-        const [prodList, campList] = await Promise.all([
-          obtenerProductos(),
-          obtenerTodasCampanas()
-        ]);
+        const prodList = await obtenerProductos();
         setProductos(prodList || []);
-        setCampanas(campList?.filter(c => c.activo) || []);
 
         if (esEdicion) {
           const oferta = await obtenerOfertaPorId(id);
           if (oferta) {
             setForm({
-              titulo: oferta.titulo,
-              descripcion: oferta.descripcion || '',
-              descuentoPorcentaje: oferta.descuentoPorcentaje || '',
-              precioOferta: oferta.precioOferta || '',
               productoId: oferta.producto?.id || '',
               productoNombre: oferta.producto?.nombre || '',
-              campanaId: oferta.campana?.id || '',
+              precioOferta: oferta.precioOferta || '',
               fechaInicio: oferta.fechaInicio,
               fechaFin: oferta.fechaFin
             });
@@ -78,17 +65,29 @@ const RegistrarOferta = () => {
       setForm(prev => ({
         ...prev,
         productoId: objetoCompleto.id,
-        productoNombre: objetoCompleto.nombre
+        productoNombre: objetoCompleto.nombre,
+        precioOferta: '' // Limpiar precio anterior al cambiar de producto
       }));
     } else {
-      // Si limpia el buscador
       setForm(prev => ({
         ...prev,
         productoId: '',
-        productoNombre: ''
+        productoNombre: '',
+        precioOferta: ''
       }));
     }
   };
+
+  // Obtener producto seleccionado para los cálculos
+  const prodSeleccionado = productos.find(p => p.id === Number(form.productoId));
+  const precioOriginal = prodSeleccionado?.precio || 0;
+  const precioFinal = form.precioOferta ? Number(form.precioOferta) : 0;
+
+  // Calcular el porcentaje de descuento en tiempo real
+  let descuentoPorcentajeCalculado = 0;
+  if (precioOriginal > 0 && precioFinal > 0 && precioFinal < precioOriginal) {
+    descuentoPorcentajeCalculado = Math.round(((precioOriginal - precioFinal) / precioOriginal) * 100);
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -102,29 +101,24 @@ const RegistrarOferta = () => {
       if (!form.productoId) {
         throw new Error('El producto de farmacia es obligatorio.');
       }
-      if (!form.descuentoPorcentaje && !form.precioOferta) {
-        throw new Error('Debes ingresar al menos el porcentaje de descuento o el precio fijo de oferta.');
+      if (!form.precioOferta || Number(form.precioOferta) <= 0) {
+        throw new Error('Debes ingresar un precio de oferta válido y mayor a 0.');
       }
-      if (form.descripcion.length > 350) {
-        throw new Error('La descripción no puede superar los 350 caracteres.');
+      if (Number(form.precioOferta) >= precioOriginal) {
+        throw new Error('El precio de oferta debe ser menor al precio original del producto.');
       }
 
       const payload = {
-        titulo: form.titulo,
-        descripcion: form.descripcion,
-        descuentoPorcentaje: form.descuentoPorcentaje ? Number(form.descuentoPorcentaje) : null,
-        precioOferta: form.precioOferta ? Number(form.precioOferta) : null,
+        titulo: `Oferta: ${form.productoNombre}`,
+        descripcion: `Descuento especial en ${form.productoNombre}`,
+        descuentoPorcentaje: descuentoPorcentajeCalculado,
+        precioOferta: precioFinal,
         producto: { id: Number(form.productoId) },
         fechaInicio: form.fechaInicio,
         fechaFin: form.fechaFin,
-        activo: true
+        activo: true,
+        campana: null
       };
-
-      if (form.campanaId) {
-        payload.campana = { id: Number(form.campanaId) };
-      } else {
-        payload.campana = null;
-      }
 
       if (esEdicion) {
         await actualizarOferta(id, payload);
@@ -142,7 +136,7 @@ const RegistrarOferta = () => {
     }
   };
 
-  // Convertir los productos de farmacia a opciones compatibles con el Combobox
+  // Opciones para el buscador Combobox
   const opcionesProductos = productos.map(p => ({
     label: p.nombre,
     precio: p.precio,
@@ -159,17 +153,6 @@ const RegistrarOferta = () => {
     );
   }
 
-  // Obtener producto seleccionado para cálculos de vista previa
-  const prodSeleccionado = productos.find(p => p.id === Number(form.productoId));
-  const precioOriginal = prodSeleccionado?.precio || 0;
-  let precioFinalCalculado = 0;
-
-  if (form.precioOferta) {
-    precioFinalCalculado = Number(form.precioOferta);
-  } else if (form.descuentoPorcentaje && precioOriginal > 0) {
-    precioFinalCalculado = precioOriginal * (1 - Number(form.descuentoPorcentaje) / 100);
-  }
-
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* HEADER */}
@@ -183,10 +166,10 @@ const RegistrarOferta = () => {
           </Link>
           <div>
             <h1 className="text-2xl font-black text-slate-850 dark:text-slate-100 tracking-tight leading-none">
-              {esEdicion ? 'Editar Oferta de Descuento' : 'Nueva Oferta de Descuento'}
+              {esEdicion ? 'Editar Oferta de Producto' : 'Nueva Oferta de Producto'}
             </h1>
             <p className="text-slate-500 dark:text-slate-400 text-xs mt-1.5 font-medium">
-              Aplica descuentos directos o precios especiales a productos del inventario y farmacia.
+              Define descuentos exclusivos en productos del inventario y farmacia veterinaria.
             </p>
           </div>
         </div>
@@ -201,29 +184,15 @@ const RegistrarOferta = () => {
 
       {/* FORMULARIO */}
       <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Panel Izquierdo: Formulario */}
+        {/* Panel Izquierdo: Parámetros del Producto */}
         <div className="lg:col-span-8 space-y-6">
           <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200/60 dark:border-slate-700/60 p-6 space-y-5 shadow-sm">
             <h3 className="text-sm font-black text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-700 pb-3 flex items-center gap-2 uppercase tracking-wide">
-              <Percent size={16} className="text-emerald-500" /> Parámetros del Descuento
+              <ShoppingBag size={16} className="text-emerald-500" /> Selección de Producto e Inventario
             </h3>
 
             <div className="space-y-4">
-              {/* Título de la Oferta */}
-              <div>
-                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Título de la Oferta</label>
-                <input
-                  type="text"
-                  name="titulo"
-                  value={form.titulo}
-                  onChange={handleChange}
-                  required
-                  placeholder="Ej: Descuento 20% en Correas, Oferta Especial Champú"
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-650 text-slate-800 dark:text-slate-100 text-sm font-semibold outline-none focus:ring-2 focus:ring-sky-100 focus:border-sky-400 transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 placeholder:text-slate-400 dark:placeholder:text-slate-500"
-                />
-              </div>
-
-              {/* Producto Asociado mediante Combobox */}
+              {/* Producto a ofertar */}
               <div>
                 <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Producto de Farmacia / Tienda</label>
                 <Combobox
@@ -236,73 +205,33 @@ const RegistrarOferta = () => {
                 />
               </div>
 
-              {/* Descripción */}
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Términos y Condiciones</label>
-                  <span className={`text-[10px] font-bold ${form.descripcion.length > 300 ? 'text-red-500' : 'text-slate-400'}`}>
-                    {form.descripcion.length} / 350
-                  </span>
-                </div>
-                <textarea
-                  name="descripcion"
-                  value={form.descripcion}
-                  onChange={handleChange}
-                  maxLength={350}
-                  placeholder="Detalles opcionales de la promoción, límite de stock por cliente, etc..."
-                  className="w-full h-24 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-650 text-slate-800 dark:text-slate-100 text-sm font-semibold outline-none focus:ring-2 focus:ring-sky-100 focus:border-sky-400 transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 placeholder:text-slate-400 dark:placeholder:text-slate-500"
-                />
-              </div>
-
-              {/* Porcentaje y Precio Fijo */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Precios (Inicial y Final) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                {/* Precio Inicial (Lectura) */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Descuento Porcentual (%)</label>
-                  <input
-                    type="number"
-                    name="descuentoPorcentaje"
-                    max="100"
-                    min="1"
-                    value={form.descuentoPorcentaje}
-                    onChange={handleChange}
-                    placeholder="Ej: 20 (Para descontar el 20%)"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-650 text-slate-800 dark:text-slate-100 text-sm font-semibold outline-none focus:ring-2 focus:ring-sky-100 focus:border-sky-400 transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 placeholder:text-slate-400 dark:placeholder:text-slate-500"
-                  />
+                  <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Precio Inicial (S/.)</label>
+                  <div className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 text-sm font-bold bg-slate-100 dark:bg-slate-900/60 select-none">
+                    {precioOriginal > 0 ? `S/. ${precioOriginal.toFixed(2)}` : 'S/. 0.00'}
+                  </div>
                 </div>
 
+                {/* Precio Final (Precio Oferta) */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Precio Oferta Fijo Especial (S/.)</label>
+                  <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Precio Final de Oferta (S/.)</label>
                   <input
                     type="number"
                     step="0.01"
                     name="precioOferta"
                     value={form.precioOferta}
                     onChange={handleChange}
-                    placeholder="Ej: 15.50 (Opcional si usas %)"
+                    required
+                    placeholder="Ej: 15.50 (Ingresa el precio rebajado)"
                     className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-650 text-slate-800 dark:text-slate-100 text-sm font-semibold outline-none focus:ring-2 focus:ring-sky-100 focus:border-sky-400 transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800 placeholder:text-slate-400 dark:placeholder:text-slate-500"
                   />
                 </div>
               </div>
 
-              {/* Campaña vinculada */}
-              <div>
-                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Vincular a Campaña Activa (Opcional)</label>
-                <select
-                  name="campanaId"
-                  value={form.campanaId}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-650 text-slate-800 dark:text-slate-100 text-sm font-semibold outline-none focus:ring-2 focus:ring-sky-100 focus:border-sky-400 transition-all bg-slate-50 dark:bg-slate-900 focus:bg-white dark:focus:bg-slate-800"
-                >
-                  <option value="">Ninguna campaña vinculada</option>
-                  {campanas.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.nombre}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Rango de fechas de la oferta */}
+              {/* Vigencia / Fechas */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Vigente Desde</label>
@@ -332,41 +261,31 @@ const RegistrarOferta = () => {
           </div>
         </div>
 
-        {/* Panel Derecho: Vista previa e información adicional */}
+        {/* Panel Derecho: Ahorro y Descuento */}
         <div className="lg:col-span-4 space-y-6">
           <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200/60 dark:border-slate-700/60 p-6 space-y-4 shadow-sm">
             <h3 className="text-sm font-black text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-700 pb-3 flex items-center gap-2 uppercase tracking-wide">
-              <Tag size={16} className="text-emerald-500" /> Resumen Promocional
+              <Tag size={16} className="text-emerald-500" /> Ahorro y Descuento
             </h3>
 
             <div className="space-y-4">
-              <div className="space-y-1">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Producto Seleccionado</span>
-                <span className="text-xs font-bold text-slate-800 dark:text-slate-200 block truncate">
-                  {form.productoNombre || <span className="text-slate-400 italic">Ningún producto seleccionado</span>}
+              <div className="flex justify-between items-center bg-slate-50 dark:bg-slate-900/50 p-3.5 rounded-xl border border-slate-150 dark:border-slate-750">
+                <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Descuento (%)</span>
+                <span className="text-2xl font-black text-emerald-500">
+                  {descuentoPorcentajeCalculado}%
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 border-t border-slate-100 dark:border-slate-700 pt-3">
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Precio Base</span>
-                  <span className="text-sm font-extrabold text-slate-600 dark:text-slate-400">
-                    S/. {precioOriginal.toFixed(2)}
+              {precioOriginal > 0 && precioFinal > 0 && precioFinal < precioOriginal ? (
+                <div className="bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/40 rounded-xl p-3.5 text-center flex flex-col gap-1 shadow-sm">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">¡Tus clientes ahorran!</span>
+                  <span className="text-lg font-black text-emerald-650 dark:text-emerald-400">
+                    S/. {(precioOriginal - precioFinal).toFixed(2)}
                   </span>
                 </div>
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Precio Oferta</span>
-                  <span className="text-base font-black text-emerald-600">
-                    {precioFinalCalculado > 0 ? `S/. ${precioFinalCalculado.toFixed(2)}` : 'S/. 0.00'}
-                  </span>
-                </div>
-              </div>
-
-              {precioOriginal > 0 && precioFinalCalculado > 0 && (
-                <div className="bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/40 rounded-xl p-3 text-center">
-                  <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase">
-                    ¡Ahorro de S/. {(precioOriginal - precioFinalCalculado).toFixed(2)}!
-                  </span>
+              ) : (
+                <div className="bg-slate-50 dark:bg-slate-900/40 rounded-xl p-3.5 text-center text-xs italic text-slate-400">
+                  Ingresa un precio de oferta para calcular el ahorro.
                 </div>
               )}
             </div>
@@ -383,17 +302,17 @@ const RegistrarOferta = () => {
             <button
               type="submit"
               disabled={procesando}
-              className="px-8 py-3 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-black rounded-xl shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2 disabled:opacity-50"
+              className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-600 hover:to-teal-500 text-white text-sm font-black rounded-xl shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2 disabled:opacity-50"
             >
               {procesando ? (
                 <>
                   <CargadorSpinner size="xs" color="border-white" />
-                  <span>Guardando...</span>
+                  <span>Procesando...</span>
                 </>
               ) : (
                 <>
                   <Save size={16} />
-                  <span>{esEdicion ? 'Guardar Cambios' : 'Crear Oferta'}</span>
+                  <span>{esEdicion ? 'Guardar Cambios' : 'Lanzar Oferta'}</span>
                 </>
               )}
             </button>
