@@ -1,8 +1,13 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-15 (Desacoplamiento de Agenda Semanal y Filtros Combobox)
+Última actualización: 2026-06-15 (Paginación e Historial de Transacciones, Desacoplamiento de Agenda Semanal y Filtros Combobox)
 
 ## 🚀 Logros Recientes
+- [x] **Desacoplamiento y Paginación en Caja y Finanzas**:
+  - Extraído el historial global de transacciones al componente modular e independiente [TablaTransacciones.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/finanzas/TablaTransacciones.jsx).
+  - Integrado el componente reutilizable `<Paginacion />` en la tabla para paginar localmente el historial de cobros con opciones de visualización configurable (`5, 10, 20, 50` filas por página).
+  - Rediseñado [PaginaFinanzas.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/finanzas/PaginaFinanzas.jsx) para utilizar el nuevo componente, reduciendo su complejidad y limpiando el archivo principal.
+  - Validada la correcta compilación del frontend mediante `npm run build` sin errores.
 - [x] **Desacoplamiento y Rediseño de la Agenda Semanal**:
   - Extraído el modal de reprogramación de citas al componente independiente [ModalReprogramarCita.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/componentes/cita/ModalReprogramarCita.jsx), centralizando la verificación de disponibilidad horaria del veterinario, excepciones de fechas y llamadas API (`reprogramarCita`, `obtenerCitasPorDia`, `obtenerHorariosVeterinario`).
   - Rediseñado el componente principal [AgendaSemanal.jsx](file:///c:/Users/Paul%20Bendezu/Desktop/huesitos-web-app/huesitos-frontend/src/paginas/cita/AgendaSemanal.jsx) para utilizar el modal modular, reduciendo su complejidad y eliminando estados y efectos locales innecesarios de reprogramación.
