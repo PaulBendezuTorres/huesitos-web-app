@@ -85,7 +85,9 @@ public class StorageService {
         BufferedImage redimensionada = new BufferedImage(nuevoAncho, nuevoAlto, tipo);
         Graphics2D g2d = redimensionada.createGraphics();
         
-        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.drawImage(original, 0, 0, nuevoAncho, nuevoAlto, null);
         g2d.dispose();
 
