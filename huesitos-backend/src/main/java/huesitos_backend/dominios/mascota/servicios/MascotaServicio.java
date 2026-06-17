@@ -27,6 +27,9 @@ public class MascotaServicio {
             !dueñoRepositorio.existsById(mascota.getDueño().getId())) {
             throw new RuntimeException("El dueño especificado no existe");
         }
+        if (mascota.getFotoUrl() == null || mascota.getFotoUrl().trim().isEmpty()) {
+            mascota.setFotoUrl("/uploads/defecto-mascota.png");
+        }
         return mascotaRepositorio.save(mascota);
     }
 
