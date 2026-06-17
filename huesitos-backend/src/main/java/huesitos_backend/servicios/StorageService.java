@@ -50,8 +50,8 @@ public class StorageService {
                 throw new RuntimeException("El archivo no es una imagen válida");
             }
 
-            // 2. Redimensionar si supera los 800px de ancho
-            BufferedImage imagenFinal = redimensionarSiEsNecesario(imagenOriginal, 800);
+            // 2. Redimensionar si supera los 1200px de ancho
+            BufferedImage imagenFinal = redimensionarSiEsNecesario(imagenOriginal, 1200);
 
             // 3. Nombre único del archivo
             String nombreArchivo = prefijo + "_" + UUID.randomUUID().toString() + ".webp";
@@ -115,7 +115,7 @@ public class StorageService {
             param.setCompressionType(tipoSeleccionado);
         }
         
-        param.setCompressionQuality(0.75f); // 75% de calidad para WebP
+        param.setCompressionQuality(0.88f); // 88% de calidad para WebP — balance calidad/peso
 
         try (FileImageOutputStream outputStream = new FileImageOutputStream(outputFile)) {
             writer.setOutput(outputStream);
