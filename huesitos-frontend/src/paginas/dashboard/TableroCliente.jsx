@@ -4,6 +4,8 @@ import { useNavigate, useLocation, Routes, Route, Navigate } from 'react-router-
 import ClienteInicio from '@/paginas/cliente/ClienteInicio';
 import ClienteMascotas from '@/paginas/cliente/ClienteMascotas';
 import RegistrarMascotaCliente from '@/paginas/cliente/RegistrarMascotaCliente';
+import MascotaHistorial from '@/paginas/cliente/MascotaHistorial';
+import MascotaVacunas from '@/paginas/cliente/MascotaVacunas';
 import ClienteAgendarCita from '@/paginas/cita/ClienteAgendarCita';
 import PaginaRetornoPago from '@/paginas/cliente/PaginaRetornoPago';
 import ClienteTienda from '@/paginas/tienda/ClienteTienda';
@@ -56,6 +58,8 @@ const TableroCliente = () => {
         <Route path="dashboard" element={<ClienteInicio />} />
         <Route path="mascotas" element={<ClienteMascotas />} />
         <Route path="mascotas/nueva" element={<RegistrarMascotaCliente />} />
+        <Route path="mascotas/:mascotaId/historial" element={<MascotaHistorial />} />
+        <Route path="mascotas/:mascotaId/vacunas" element={<MascotaVacunas />} />
         <Route path="citas" element={<ClienteAgendarCita />} />
         <Route path="citas/retorno-pago" element={<PaginaRetornoPago />} />
         <Route path="tienda" element={<ClienteTienda />} />

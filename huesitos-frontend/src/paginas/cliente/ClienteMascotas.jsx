@@ -165,14 +165,14 @@ const ClienteMascotas = () => {
 
                     <div className="flex gap-2 mt-auto">
                       <button
-                        onClick={() => navigate(`/cliente/mascota/${mascota.id}`)}
+                        onClick={() => navigate(`/cliente/mascotas/${mascota.id}/historial`)}
                         className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-sky-50 dark:bg-sky-950/30 text-sky-600 dark:text-sky-400 text-xs font-bold hover:bg-sky-100 dark:hover:bg-sky-900/40 transition-all duration-200"
                       >
                         <Eye size={13} />
                         Ver historial
                       </button>
                       <button
-                        onClick={() => navigate(`/cliente/mascota/${mascota.id}`)}
+                        onClick={() => navigate(`/cliente/mascotas/${mascota.id}/vacunas`)}
                         className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-700 transition-all duration-200 border border-slate-200/60 dark:border-slate-700"
                       >
                         <Syringe size={13} />
