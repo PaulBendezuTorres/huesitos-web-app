@@ -47,24 +47,44 @@ const MascotaVacunas = () => {
     <div className="space-y-5">
       {/* Breadcrumb */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           <button
             onClick={() => navigate('/cliente/mascotas')}
-            className="flex items-center gap-1.5 text-sm font-semibold text-slate-400 dark:text-slate-500 hover:text-sky-500 dark:hover:text-sky-400 transition-colors"
+            className="flex items-center gap-1.5 text-sm font-semibold text-slate-400 dark:text-slate-500 hover:text-sky-500 dark:hover:text-sky-400 transition-colors shrink-0"
           >
             <ArrowLeft size={15} />
             Mis mascotas
           </button>
           <span className="text-slate-300 dark:text-slate-700">/</span>
-          <div className="flex items-center gap-1.5 text-sm font-semibold text-slate-600 dark:text-slate-300">
-            <Syringe size={14} className="text-emerald-500" />
-            Vacunas
-            {mascota && <span className="text-slate-400 dark:text-slate-500 font-normal">· {mascota.nombre}</span>}
+          <div className="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300 min-w-0">
+            <Syringe size={14} className="text-emerald-500 shrink-0" />
+            <span className="shrink-0">Vacunas</span>
+            {mascota && (
+              <>
+                <span className="text-slate-300 dark:text-slate-700 shrink-0">·</span>
+                {/* Mini foto */}
+                <div className="w-6 h-6 rounded-full overflow-hidden bg-gradient-to-tr from-sky-500 to-cyan-400 shrink-0 relative">
+                  {mascota.fotoUrl && !mascota.fotoUrl.includes('defecto-mascota') ? (
+                    <img
+                      src={`http://localhost:8080${mascota.fotoUrl}`}
+                      alt={mascota.nombre}
+                      className="w-full h-full object-cover"
+                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                    />
+                  ) : (
+                    <span className="absolute inset-0 flex items-center justify-center text-white text-[10px] font-black">
+                      {mascota.nombre?.charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                </div>
+                <span className="truncate text-slate-500 dark:text-slate-400 font-normal">{mascota.nombre}</span>
+              </>
+            )}
           </div>
         </div>
         <button
           onClick={cargar}
-          className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all"
+          className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all shrink-0"
           title="Actualizar"
         >
           <RefreshCw size={15} />

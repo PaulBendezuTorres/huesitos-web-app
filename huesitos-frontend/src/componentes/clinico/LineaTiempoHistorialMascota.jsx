@@ -163,9 +163,22 @@ const LineaTiempoHistorialMascota = ({ mascotaId: propMascotaId, mostrarCabecera
       {mostrarCabecera && (
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/60">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-5">
-            {/* Avatar */}
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-sky-500 to-cyan-400 flex items-center justify-center text-white text-3xl font-black shadow-xl shadow-sky-500/20 shrink-0">
-              {mascota.nombre ? mascota.nombre.charAt(0).toUpperCase() : '🐾'}
+            {/* Avatar con foto */}
+            <div className="w-20 h-20 rounded-2xl overflow-hidden bg-gradient-to-tr from-sky-500 to-cyan-400 shadow-xl shadow-sky-500/20 shrink-0 relative">
+              {mascota.fotoUrl && !mascota.fotoUrl.includes('defecto-mascota') ? (
+                <img
+                  src={`http://localhost:8080${mascota.fotoUrl}`}
+                  alt={mascota.nombre}
+                  className="w-full h-full object-cover"
+                  onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextSibling.style.display = 'flex'; }}
+                />
+              ) : null}
+              <div
+                className="absolute inset-0 flex items-center justify-center text-white text-3xl font-black"
+                style={{ display: (mascota.fotoUrl && !mascota.fotoUrl.includes('defecto-mascota')) ? 'none' : 'flex' }}
+              >
+                {mascota.nombre ? mascota.nombre.charAt(0).toUpperCase() : '🐾'}
+              </div>
             </div>
 
             {/* Info */}
