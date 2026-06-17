@@ -13,4 +13,6 @@ public interface HistorialVacunacionRepositorio extends JpaRepository<HistorialV
     List<HistorialVacunacion> findByMascotaIdOrderByFechaAplicacionDesc(Long mascotaId);
 
     List<HistorialVacunacion> findByFechaProximaDosisBetween(java.time.LocalDate inicio, java.time.LocalDate fin);
+
+    boolean existsByMascotaId(Long mascotaId);
 }

@@ -27,6 +27,11 @@ public interface CitaRepositorio extends JpaRepository<Cita, Long> {
     List<Cita> findByVeterinarioId(Long veterinarioId);
 
     /**
+     * Verifica si una mascota tiene citas asociadas.
+     */
+    boolean existsByMascotaId(Long mascotaId);
+
+    /**
      * Lista todas las citas programadas entre un rango de fechas (para el calendario diario).
      */
     List<Cita> findByFechaHoraBetween(LocalDateTime inicio, LocalDateTime fin);

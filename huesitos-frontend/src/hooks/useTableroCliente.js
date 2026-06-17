@@ -36,7 +36,7 @@ const useTableroCliente = () => {
     cargarDatos();
   }, [cargarDatos]);
 
-  return { mascotas, citas, campanas, cargando, error, recargar: cargarDatos };
+  return { mascotas, citas, campanas, cargando, error, recargar: cargarDatos, setMascotas };
 };
 
 export default useTableroCliente;
