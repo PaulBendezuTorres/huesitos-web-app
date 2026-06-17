@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { X, Save, PawPrint, AlertCircle, Sparkles, Calendar, Scale, ClipboardList } from 'lucide-react';
-import { actualizarMascota } from '@/api/clienteApi';
+import { useState, useEffect, useRef } from 'react';
+import { X, Save, PawPrint, AlertCircle, Sparkles, Calendar, Scale, ClipboardList, Upload, Image as ImageIcon } from 'lucide-react';
+import { actualizarMascota, subirFotoMascota } from '@/api/clienteApi';
 import Combobox from '@/componentes/comun/Combobox';
 
 const ModalEditarMascota = ({ mascota, onCerrar, onExito }) => {
@@ -11,10 +11,14 @@ const ModalEditarMascota = ({ mascota, onCerrar, onExito }) => {
   const [fechaNacimiento, setFechaNacimiento] = useState('');
   const [pesoActual, setPesoActual] = useState('');
   const [alertasMedicas, setAlertasMedicas] = useState('');
+  const [archivoFoto, setArchivoFoto] = useState(null);
+  const [vistaPrevia, setVistaPrevia] = useState('');
+  const archivoInputRef = useRef(null);
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState('');
 
   const LIMITE_CARACTERES = 350;
+  const LIMITE_PESO_FOTO = 2 * 1024 * 1024;
 
   const especiesOpciones = [
     { label: 'Perro' },
@@ -33,8 +37,32 @@ const ModalEditarMascota = ({ mascota, onCerrar, onExito }) => {
       setFechaNacimiento(mascota.fechaNacimiento || '');
       setPesoActual(mascota.pesoActual?.toString() || '');
       setAlertasMedicas(mascota.alertasMedicas || '');
+      // Previsualizar foto actual si existe y no es la por defecto
+      const urlFoto = mascota.fotoUrl || mascota.foto_url || '';
+      if (urlFoto && !urlFoto.includes('defecto-mascota')) {
+        setVistaPrevia(`http://localhost:8080${urlFoto}`);
+      } else {
+        setVistaPrevia('');
+      }
+      setArchivoFoto(null);
     }
   }, [mascota]);
+
+  const manejarCambioFoto = (e) => {
+    setError('');
+    const archivo = e.target.files[0];
+    if (!archivo) return;
+    if (archivo.size > LIMITE_PESO_FOTO) {
+      setError('La foto supera el tamaño máximo permitido de 2 MB.');
+      setArchivoFoto(null);
+      if (archivoInputRef.current) archivoInputRef.current.value = '';
+      return;
+    }
+    setArchivoFoto(archivo);
+    const lector = new FileReader();
+    lector.onloadend = () => setVistaPrevia(lector.result);
+    lector.readAsDataURL(archivo);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -62,7 +90,13 @@ const ModalEditarMascota = ({ mascota, onCerrar, onExito }) => {
         alertasMedicas: alertasMedicas.trim(),
         dueño: { id: mascota.dueño?.id ?? mascota.dueno?.id },
       };
-      const actualizada = await actualizarMascota(mascota.id, datos);
+      let actualizada = await actualizarMascota(mascota.id, datos);
+
+      // Si hay nueva foto, subirla
+      if (archivoFoto) {
+        await subirFotoMascota(mascota.id, archivoFoto);
+      }
+
       onExito(actualizada);
     } catch (err) {
       setError(err.response?.data || 'Error al actualizar la mascota. Reintenta.');
@@ -102,6 +136,59 @@ const ModalEditarMascota = ({ mascota, onCerrar, onExito }) => {
               <span>{error}</span>
             </div>
           )}
+
+          {/* Fotografía */}
+          <div className="bg-slate-50 dark:bg-slate-950/60 rounded-xl p-4 border border-slate-200/60 dark:border-slate-800">
+            <div className="flex items-center gap-2 mb-3">
+              <ImageIcon size={13} className="text-sky-500" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Fotografía</span>
+            </div>
+            <div className="flex items-center gap-5">
+              <div
+                onClick={() => !cargando && archivoInputRef.current?.click()}
+                className="w-20 h-20 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-sky-500 dark:hover:border-sky-500 bg-white dark:bg-slate-900 flex items-center justify-center relative cursor-pointer group overflow-hidden transition-all duration-200 shrink-0"
+              >
+                {vistaPrevia ? (
+                  <>
+                    <img src={vistaPrevia} alt="Vista previa" className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Upload size={16} className="text-white" />
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-600">
+                    <PawPrint size={20} />
+                    <span className="text-[9px] font-black uppercase tracking-wider">Elegir</span>
+                  </div>
+                )}
+              </div>
+              <div className="space-y-1">
+                <p className="text-xs font-semibold text-slate-600 dark:text-slate-300">Cambiar foto</p>
+                <p className="text-[10px] text-slate-400 dark:text-slate-500">JPG, PNG o WebP · Máx. 2 MB</p>
+                <input
+                  type="file"
+                  ref={archivoInputRef}
+                  onChange={manejarCambioFoto}
+                  accept="image/*"
+                  className="hidden"
+                  disabled={cargando}
+                />
+                <button
+                  type="button"
+                  onClick={() => archivoInputRef.current?.click()}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-[10px] font-bold text-slate-600 dark:text-slate-300 rounded-lg transition-colors border border-slate-200 dark:border-slate-700"
+                  disabled={cargando}
+                >
+                  <Upload size={10} /> Subir archivo
+                </button>
+                {archivoFoto && (
+                  <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">
+                    ✓ {archivoFoto.name}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {/* Identidad */}
