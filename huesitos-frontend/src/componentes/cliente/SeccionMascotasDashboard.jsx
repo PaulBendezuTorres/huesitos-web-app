@@ -62,8 +62,6 @@ const SeccionMascotasDashboard = ({ mascotas, recargar }) => {
           <TarjetaMascota
             key={mascota.id}
             mascota={mascota}
-            onEditar={() => navigate(`/cliente/mascotas/${mascota.id}/editar`)}
-            onEliminar={() => console.log('eliminar', mascota.id)}
           />
         ))}
       </div>

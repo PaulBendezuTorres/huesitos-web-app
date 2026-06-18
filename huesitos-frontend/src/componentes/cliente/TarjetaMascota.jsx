@@ -43,23 +43,29 @@ const TarjetaMascota = ({ mascota, onEditar, onEliminar }) => {
           </span>
         </div>
 
-        {/* Botones flotantes (editar / eliminar) */}
-        <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <button
-            onClick={onEditar}
-            title="Editar mascota"
-            className="w-7 h-7 flex items-center justify-center rounded-lg bg-white/90 dark:bg-slate-800/90 text-sky-500 hover:bg-white dark:hover:bg-slate-700 shadow-md transition-all duration-150 backdrop-blur-sm"
-          >
-            <Pencil size={13} />
-          </button>
-          <button
-            onClick={onEliminar}
-            title="Eliminar mascota"
-            className="w-7 h-7 flex items-center justify-center rounded-lg bg-white/90 dark:bg-slate-800/90 text-rose-400 hover:bg-white dark:hover:bg-slate-700 shadow-md transition-all duration-150 backdrop-blur-sm"
-          >
-            <Trash2 size={13} />
-          </button>
-        </div>
+        {/* Botones flotantes (editar / eliminar) - solo si se proveen las funciones */}
+        {(onEditar || onEliminar) && (
+          <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            {onEditar && (
+              <button
+                onClick={onEditar}
+                title="Editar mascota"
+                className="w-7 h-7 flex items-center justify-center rounded-lg bg-white/90 dark:bg-slate-800/90 text-sky-500 hover:bg-white dark:hover:bg-slate-700 shadow-md transition-all duration-150 backdrop-blur-sm"
+              >
+                <Pencil size={13} />
+              </button>
+            )}
+            {onEliminar && (
+              <button
+                onClick={onEliminar}
+                title="Eliminar mascota"
+                className="w-7 h-7 flex items-center justify-center rounded-lg bg-white/90 dark:bg-slate-800/90 text-rose-400 hover:bg-white dark:hover:bg-slate-700 shadow-md transition-all duration-150 backdrop-blur-sm"
+              >
+                <Trash2 size={13} />
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Badge peso */}
         {mascota.pesoActual && (
