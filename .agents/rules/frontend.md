@@ -1,3 +1,8 @@
+---
+trigger: always_on
+description: Reglas y estándares para el desarrollo del Fronted.
+---
+
 # Reglas de Desarrollo Frontend (Huesitos)
 
 ## Arquitectura y Enrutamiento (React Router)
