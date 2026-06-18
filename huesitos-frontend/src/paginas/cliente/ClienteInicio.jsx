@@ -1,6 +1,6 @@
 import useTableroCliente from '@/hooks/useTableroCliente';
 import CarruselCampanas from '@/componentes/cliente/CarruselCampanas';
-import TarjetasMascotasCliente from '@/componentes/cliente/TarjetasMascotasCliente';
+import SeccionMascotasDashboard from '@/componentes/cliente/SeccionMascotasDashboard';
 import TablaCitasProximas from '@/componentes/cliente/TablaCitasProximas';
 
 const ClienteInicio = () => {
@@ -24,8 +24,8 @@ const ClienteInicio = () => {
       {/* Ruleta/Carrusel de Campañas Publicitarias */}
       <CarruselCampanas campanas={campanas} />
 
-      {/* Grid de Mascotas con su respectiva cabecera y botón de recarga */}
-      <TarjetasMascotasCliente mascotas={mascotas} recargar={recargar} />
+      {/* Sección compacta de Mascotas para el Dashboard */}
+      <SeccionMascotasDashboard mascotas={mascotas} recargar={recargar} />
 
       {/* Listado de Próximas Citas */}
       <TablaCitasProximas citas={citas} />

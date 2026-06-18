@@ -12,8 +12,8 @@ const TarjetasMascotasCliente = ({ mascotas, recargar }) => {
           <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 tracking-tight transition-colors duration-300">
             Mis mascotas
           </h2>
-          <p className="text-sm text-slate-400 dark:text-slate-500 mt-0.5 transition-colors duration-300">
-            Gestiona la salud de tus compañeros
+          <p className="text-sm text-slate-450 dark:text-slate-500 mt-0.5 transition-colors duration-300">
+            Gestiona la salud y el historial de tus compañeros
           </p>
         </div>
         {mascotas.length > 0 && (
@@ -57,65 +57,90 @@ const TarjetasMascotasCliente = ({ mascotas, recargar }) => {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
           {mascotas.map((mascota) => (
-            <div
+            <TarjetaMascotaCliente
               key={mascota.id}
-              className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/60 dark:border-slate-850 p-5 shadow-sm hover:shadow-lg hover:shadow-sky-500/8 dark:hover:shadow-sky-500/5 hover:border-sky-200 dark:hover:border-sky-900/60 transition-all duration-300 group"
-            >
-              <div className="flex items-start gap-4">
-                {/* Avatar de mascota */}
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-500 to-cyan-400 flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-sky-500/20 shrink-0 group-hover:scale-105 transition-transform duration-300">
-                  {mascota.nombre ? mascota.nombre.charAt(0).toUpperCase() : '🐾'}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="text-base font-bold text-slate-800 dark:text-slate-200 truncate transition-colors duration-300">
-                    {mascota.nombre}
-                  </h4>
-                  <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 transition-colors duration-300">
-                    {mascota.especie}{mascota.raza ? ` · ${mascota.raza}` : ''}
-                  </p>
-                  <div className="flex items-center gap-2 mt-2 flex-wrap">
-                    {mascota.edad && (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-[11px] font-semibold text-slate-500 dark:text-slate-400 transition-colors duration-300">
-                        {mascota.edad}
-                      </span>
-                    )}
-                    {mascota.peso && (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-[11px] font-semibold text-slate-500 dark:text-slate-400 transition-colors duration-300">
-                        {mascota.peso} kg
-                      </span>
-                    )}
-                    {mascota.sexo && (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-violet-50 dark:bg-violet-950/40 text-[11px] font-semibold text-violet-500 dark:text-violet-400 border border-violet-100 dark:border-violet-900/40 transition-colors duration-300">
-                        {mascota.sexo}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Acciones */}
-              <div className="flex gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-850 transition-colors duration-300">
-                <button
-                  onClick={() => navigate(`/cliente/mascota/${mascota.id}`)}
-                  className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-sky-50 dark:bg-sky-950/30 text-sky-600 dark:text-sky-400 text-xs font-bold hover:bg-sky-100 dark:hover:bg-sky-900/40 transition-all duration-200"
-                >
-                  <Eye size={14} />
-                  Ver historial
-                </button>
-                <button
-                  onClick={() => navigate(`/cliente/mascota/${mascota.id}`)}
-                  className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-700 transition-all duration-200 border border-slate-200/60 dark:border-slate-700"
-                >
-                  <Syringe size={14} />
-                  Vacunas
-                </button>
-              </div>
-            </div>
+              mascota={mascota}
+              onVerHistorial={() => navigate(`/cliente/mascota/${mascota.id}/historial`)}
+              onVacunas={() => navigate(`/cliente/mascotas/${mascota.id}/vacunas`)}
+            />
           ))}
         </div>
       )}
+    </div>
+  );
+};
+
+/**
+ * TarjetaMascotaCliente
+ * Componente de tarjeta individual con foto real, usado en /cliente/dashboard.
+ */
+const TarjetaMascotaCliente = ({ mascota, onVerHistorial, onVacunas }) => {
+  const urlFoto = mascota.fotoUrl || mascota.foto_url || '';
+  const tieneFoto = urlFoto && !urlFoto.includes('defecto-mascota');
+
+  return (
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-xl hover:shadow-sky-500/8 dark:hover:shadow-sky-500/5 hover:border-sky-200/80 dark:hover:border-sky-900/60 transition-all duration-300 group overflow-hidden flex flex-col">
+      {/* Foto / Avatar */}
+      <div className="relative w-full aspect-[4/3] bg-gradient-to-tr from-sky-100 to-cyan-50 dark:from-sky-950/60 dark:to-slate-900 overflow-hidden shrink-0">
+        {tieneFoto ? (
+          <img
+            src={`http://localhost:8080${urlFoto}`}
+            alt={mascota.nombre}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              const fallback = document.createElement('div');
+              fallback.className = 'absolute inset-0 flex items-center justify-center';
+              fallback.innerHTML = `<span className="text-5xl font-black text-sky-400/60 dark:text-sky-500/40 select-none">${mascota.nombre ? mascota.nombre.charAt(0).toUpperCase() : '🐾'}</span>`;
+              e.currentTarget.parentNode.insertBefore(fallback, e.currentTarget.nextSibling);
+            }}
+          />
+        ) : null}
+
+        {/* Fallback inicial */}
+        <div className="absolute inset-0 flex items-center justify-center" style={{ display: tieneFoto ? 'none' : 'flex' }}>
+          <span className="text-5xl font-black text-sky-400/60 dark:text-sky-500/40 select-none">
+            {mascota.nombre ? mascota.nombre.charAt(0).toUpperCase() : '🐾'}
+          </span>
+        </div>
+
+        {/* Badge peso */}
+        {mascota.pesoActual && (
+          <div className="absolute bottom-2.5 left-2.5">
+            <span className="inline-flex items-center px-2 py-0.5 rounded-lg bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm text-[11px] font-bold text-slate-600 dark:text-slate-300 shadow-sm">
+              {mascota.pesoActual} kg
+            </span>
+          </div>
+        )}
+
+        {/* Botones flotantes (ver historial) */}
+        <div className="absolute top-2.5 right-2.5 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <button onClick={onVerHistorial} title="Ver historial" className="w-7 h-7 flex items-center justify-center rounded-lg bg-white/90 dark:bg-slate-800/90 text-sky-500 hover:bg-white dark:hover:bg-slate-700 shadow-md transition-all duration-150 backdrop-blur-sm">
+            <Eye size={13} />
+          </button>
+        </div>
+      </div>
+
+      {/* Info + acciones */}
+      <div className="p-4 flex flex-col flex-1">
+        <div className="mb-3">
+          <h4 className="text-base font-bold text-slate-800 dark:text-slate-100 truncate">{mascota.nombre}</h4>
+          <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
+            {mascota.especie}{mascota.raza ? ` · ${mascota.raza}` : ''}
+          </p>
+        </div>
+
+        <div className="flex gap-2 mt-auto">
+          <button onClick={onVerHistorial} className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-sky-50 dark:bg-sky-950/30 text-sky-600 dark:text-sky-400 text-xs font-bold hover:bg-sky-100 dark:hover:bg-sky-900/40 transition-all duration-200">
+            <Eye size={13} /> Ver historial
+          </button>
+          <button onClick={onVacunas} className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-700 transition-all duration-200 border border-slate-200/60 dark:border-slate-700">
+            <Syringe size={13} /> Vacunas
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
