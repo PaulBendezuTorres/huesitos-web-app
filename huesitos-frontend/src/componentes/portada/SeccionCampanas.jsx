@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Megaphone, Stethoscope, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { obtenerUrlImagen } from '@/servicios/imagenServicio';
 
 const SeccionCampanas = ({ campanas, fadeUp }) => {
   const [indice, setIndice] = useState(0);
@@ -45,7 +46,7 @@ const SeccionCampanas = ({ campanas, fadeUp }) => {
             {campanas.map((campana, index) => {
               const activo = index === indice;
               const tieneImagen = !!campana.imagenUrl;
-              const urlImagen = tieneImagen ? `http://localhost:8080${campana.imagenUrl}` : '';
+              const urlImagen = tieneImagen ? obtenerUrlImagen(campana.imagenUrl) : '';
 
               return (
                 <div

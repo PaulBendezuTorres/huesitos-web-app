@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Syringe, AlertCircle, RefreshCw, PawPrint, Calendar, FlaskConical, Clock } from 'lucide-react';
 import { obtenerVacunasPorMascota, obtenerMascotaPorId } from '@/api/mascotaApi';
+import { obtenerUrlImagen } from '@/servicios/imagenServicio';
 
 const MascotaVacunas = () => {
   const { mascotaId } = useParams();
@@ -66,7 +67,7 @@ const MascotaVacunas = () => {
                 <div className="w-6 h-6 rounded-full overflow-hidden bg-gradient-to-tr from-sky-500 to-cyan-400 shrink-0 relative">
                   {mascota.fotoUrl && !mascota.fotoUrl.includes('defecto-mascota') ? (
                     <img
-                      src={`http://localhost:8080${mascota.fotoUrl}`}
+                      src={obtenerUrlImagen(mascota.fotoUrl)}
                       alt={mascota.nombre}
                       className="w-full h-full object-cover"
                       onError={(e) => { e.currentTarget.style.display = 'none'; }}

@@ -1,6 +1,6 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-15 (Eliminación de redundancia de botones en panel vacío)
+Última actualización: 2026-06-24 (Integración de Cloudinary para almacenamiento de imágenes y archivos)
 
 ## 🚀 Logros por Módulo
 
@@ -77,6 +77,7 @@
 - [x] `ConfiguracionDinamica` con subcomponentes: `FormularioInfoNegocio`, `FormularioContacto`, `FormularioFinanciero`.
 - [x] API `configuracionApi.js` con envío condicional de JWT. Esqueleto de carga para eliminar parpadeo. Interfaz de fallo de conexión con "Reintentar Carga".
 - [x] `ConfiguracionRolControlador` con endpoints por rol.
+- [x] Migración de almacenamiento local a Cloudinary en backend para fotos de perfil, mascotas, productos, campañas y archivos clínicos.
 
 ### Arquitectura Frontend Compartida
 - [x] `PlantillaTablero`: estructura unificada responsiva (sidebar drawer, overlay, header hamburguesa, badge perfil).
@@ -91,6 +92,7 @@
 - [x] Migración de subvistas del portal de clientes a rutas físicas reales de React Router (`/cliente/*`), garantizando la persistencia tras recargas (F5).
 - [x] Incorporación de reglas de Maquetación y Layout General en `frontend.md` para alinear el panel a la izquierda ocupando todo el ancho (`w-full`).
 - [x] Componente `Combobox.jsx` optimizado y accesible con soporte completo de navegación por teclado.
+- [x] Helper `imagenServicio` para formatear URLs dinámicas permitiendo compatibilidad entre Cloudinary (absoluto) y local (relativo).
 
 ### Renombrado y Organización
 - [x] Frontend renombrado a español: `components` → `componentes`, `pages` → `paginas`, `services` → `servicios`, `Modules` → `modulos`. Script automático de refactorización ejecutado.
@@ -100,7 +102,7 @@
 - [x] Rama `develop` creada y publicada. Feature branches desde `develop`. Merge `develop` → `main` validado.
 
 ## 📌 Estado Actual
-- **Backend (Spring Boot 4 / Java 26)**: Todos los módulos implementados y validados: Autenticación JWT, Mascotas, Citas (con reprogramación/check-in), Servicios, Transacciones/Boletas PDF, Consultas Clínicas, Vacunas/Recetas, Archivos Clínicos, Inventario FEFO, Tienda Online/Pedidos, Marketing/Campañas, Horarios de Personal, Perfiles/Fotos WebP, Configuración por Rol, Tareas Programadas.
+- **Backend (Spring Boot 4 / Java 26)**: Integración con Cloudinary finalizada y compilación exitosa. Todos los módulos implementados y validados: Autenticación JWT, Mascotas, Citas (con reprogramación/check-in), Servicios, Transacciones/Boletas PDF, Consultas Clínicas, Vacunas/Recetas, Archivos Clínicos, Inventario FEFO, Tienda Online/Pedidos, Marketing/Campañas, Horarios de Personal, Perfiles/Fotos WebP, Configuración por Rol, Tareas Programadas.
 - **Frontend (React 18 / Vite / Tailwind 3.4)**: Todas las vistas de los 4 roles implementadas y modularizadas. Tema oscuro completo. Responsividad validada. Compilación de producción sin errores.
 - **Base de Datos (MySQL 8.4)**: Hibernate auto-genera todas las tablas al iniciar.
 
@@ -121,5 +123,7 @@
 - **Tema oscuro**: `darkMode: 'class'` + paleta `slate` premium + base `#0B1A30`.
 - **Modularización**: Formularios complejos migrados a páginas independientes en vez de modales.
 - **Fotos**: WebP 75%, eliminación automática de imagen anterior, canal alfa para PNG.
+- **Cloudinary**: Integración de SDK oficial para prevenir almacenamiento local efímero y transformaciones automáticas de imágenes en la nube.
 - **Commits granulares**: División detallada por fase desde Fase 11A.
 - **Límite de memoria**: Ampliado a 240 líneas por indicación del usuario, con compresión ejecutada únicamente bajo demanda explícita.
+

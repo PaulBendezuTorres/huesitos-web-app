@@ -3,6 +3,7 @@ import { X, Stethoscope, Tag, Clock, Camera } from 'lucide-react';
 import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
 import AreaTexto from '@/componentes/comun/AreaTexto';
 import { actualizarServicio, subirFotoServicio } from '@/servicios/servicioServicio';
+import { obtenerUrlImagen } from '@/servicios/imagenServicio';
 
 const ModalEditarServicio = ({
   isOpen,
@@ -112,7 +113,7 @@ const ModalEditarServicio = ({
             <div className="w-16 h-16 rounded-xl bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 overflow-hidden shrink-0 flex items-center justify-center text-slate-400 shadow-inner relative">
               {formEdit.fotoUrl && formEdit.fotoUrl !== '/uploads/defecto-servicio.png' ? (
                 <img 
-                  src={`http://localhost:8080${formEdit.fotoUrl}`} 
+                  src={obtenerUrlImagen(formEdit.fotoUrl)} 
                   alt="Servicio" 
                   className={`w-full h-full object-cover ${subiendoFoto ? 'opacity-40' : ''}`} 
                 />

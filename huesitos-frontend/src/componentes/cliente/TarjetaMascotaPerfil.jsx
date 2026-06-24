@@ -1,4 +1,5 @@
 import { Eye, Syringe } from 'lucide-react';
+import { obtenerUrlImagen } from '@/servicios/imagenServicio';
 
 /**
  * TarjetaMascotaPerfil
@@ -14,7 +15,7 @@ const TarjetaMascotaPerfil = ({ mascota, onVerHistorial, onVacunas }) => {
       <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-gradient-to-br from-sky-100 to-cyan-100 dark:from-sky-950/80 dark:to-cyan-950/50 border border-sky-200 dark:border-sky-900 ring-2 ring-sky-100 dark:ring-sky-950/50 shadow-md group-hover:ring-sky-300 dark:group-hover:ring-sky-800 group-hover:shadow-lg transition-all duration-300 flex-shrink-0">
         {tieneFoto ? (
           <img
-            src={`http://localhost:8080${urlFoto}`}
+            src={obtenerUrlImagen(urlFoto)}
             alt={mascota.nombre}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
           />

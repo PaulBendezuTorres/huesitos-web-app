@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { User, Menu, Sun, Moon } from 'lucide-react';
 import BarraLateral from './BarraLateral';
 import { useTema } from '@/contextos/ContextoTema';
+import { obtenerUrlImagen } from '@/servicios/imagenServicio';
 
 const PlantillaTablero = ({
   rol,
@@ -94,7 +95,7 @@ const PlantillaTablero = ({
               <div className={`w-8 h-8 rounded-full bg-gradient-to-tr ${rol === 'VETERINARIO' ? 'from-emerald-500 to-teal-400' : 'from-sky-500 to-cyan-300'} shadow-sm flex items-center justify-center text-white shrink-0 group-hover:scale-105 transition-transform overflow-hidden`}>
                 {fotoPerfilUrl && fotoPerfilUrl !== '/uploads/defecto-usuario.png' ? (
                   <img 
-                    src={`http://localhost:8080${fotoPerfilUrl}`} 
+                    src={obtenerUrlImagen(fotoPerfilUrl)} 
                     alt="Foto de perfil" 
                     className="w-full h-full object-cover" 
                   />

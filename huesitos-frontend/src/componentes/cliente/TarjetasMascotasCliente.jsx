@@ -1,5 +1,6 @@
 import { PawPrint, Eye, Syringe, RefreshCw, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { obtenerUrlImagen } from '@/servicios/imagenServicio';
 
 const TarjetasMascotasCliente = ({ mascotas, recargar }) => {
   const navigate = useNavigate();
@@ -86,7 +87,7 @@ const TarjetaMascotaCliente = ({ mascota, onVerHistorial, onVacunas }) => {
       <div className="relative w-full aspect-[4/3] bg-gradient-to-tr from-sky-100 to-cyan-50 dark:from-sky-950/60 dark:to-slate-900 overflow-hidden shrink-0">
         {tieneFoto ? (
           <img
-            src={`http://localhost:8080${urlFoto}`}
+            src={obtenerUrlImagen(urlFoto)}
             alt={mascota.nombre}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             onError={(e) => {

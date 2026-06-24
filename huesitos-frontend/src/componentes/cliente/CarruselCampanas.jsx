@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Megaphone, Calendar, Stethoscope } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { obtenerUrlImagen } from '@/servicios/imagenServicio';
 
 const CarruselCampanas = ({ campanas }) => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const CarruselCampanas = ({ campanas }) => {
         {campanas.map((campana, index) => {
           const activa = index === indiceCampana;
           const tieneImagen = !!campana.imagenUrl;
-          const urlImagen = tieneImagen ? `http://localhost:8080${campana.imagenUrl}` : '';
+          const urlImagen = tieneImagen ? obtenerUrlImagen(campana.imagenUrl) : '';
 
           return (
             <div

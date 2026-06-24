@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { X, Save, PawPrint, AlertCircle, Sparkles, Calendar, Scale, ClipboardList, Upload, Image as ImageIcon } from 'lucide-react';
 import { actualizarMascota, subirFotoMascota } from '@/api/clienteApi';
+import { obtenerUrlImagen } from '@/servicios/imagenServicio';
 import Combobox from '@/componentes/comun/Combobox';
 
 const ModalEditarMascota = ({ mascota, onCerrar, onExito }) => {
@@ -40,7 +41,7 @@ const ModalEditarMascota = ({ mascota, onCerrar, onExito }) => {
       // Previsualizar foto actual si existe y no es la por defecto
       const urlFoto = mascota.fotoUrl || mascota.foto_url || '';
       if (urlFoto && !urlFoto.includes('defecto-mascota')) {
-        setVistaPrevia(`http://localhost:8080${urlFoto}`);
+        setVistaPrevia(obtenerUrlImagen(urlFoto));
       } else {
         setVistaPrevia('');
       }

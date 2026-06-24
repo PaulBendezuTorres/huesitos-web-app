@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Megaphone, Calendar, Edit2, Trash2, Power } from 'lucide-react';
+import { obtenerUrlImagen } from '@/servicios/imagenServicio';
 
 const ListaCampanasPublicitarias = ({ campanas, onToggleActivo, onEliminarFisico, calcularExpiracion, formatarFecha }) => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const ListaCampanasPublicitarias = ({ campanas, onToggleActivo, onEliminarFisico
             <div className="aspect-video relative bg-slate-100 dark:bg-slate-900 flex-shrink-0 overflow-hidden">
               {c.imagenUrl ? (
                 <img
-                  src={`http://localhost:8080${c.imagenUrl}`}
+                  src={obtenerUrlImagen(c.imagenUrl)}
                   alt={c.nombre}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />

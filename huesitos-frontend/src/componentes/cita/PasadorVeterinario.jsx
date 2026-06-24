@@ -1,4 +1,5 @@
 import { UserRound, Check } from 'lucide-react';
+import { obtenerUrlImagen } from '@/servicios/imagenServicio';
 
 /**
  * PasadorVeterinario — Paso 3 del flujo de reserva de cita.
@@ -46,7 +47,7 @@ const PasadorVeterinario = ({ veterinarios, veterinarioSeleccionado, onSeleccion
               <div className="w-10 h-10 rounded-xl overflow-hidden bg-gradient-to-tr from-violet-500 to-purple-400 flex items-center justify-center shrink-0 relative">
                 {tieneFoto ? (
                   <img
-                    src={`http://localhost:8080${urlFoto}`}
+                    src={obtenerUrlImagen(urlFoto)}
                     alt={v.nombre}
                     className="w-full h-full object-cover"
                     onError={(e) => { e.currentTarget.style.display = 'none'; }}

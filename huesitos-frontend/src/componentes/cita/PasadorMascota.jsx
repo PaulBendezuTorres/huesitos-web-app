@@ -1,4 +1,5 @@
 import { PawPrint, Check } from 'lucide-react';
+import { obtenerUrlImagen } from '@/servicios/imagenServicio';
 
 /**
  * PasadorMascota — Paso 1 del flujo de reserva de cita.
@@ -37,7 +38,7 @@ const PasadorMascota = ({ mascotas, mascotaSeleccionada, onSeleccionar }) => {
             <div className="relative w-full aspect-[4/3] bg-gradient-to-tr from-sky-100 to-cyan-50 dark:from-sky-950/60 dark:to-slate-900 overflow-hidden">
               {tieneFoto ? (
                 <img
-                  src={`http://localhost:8080${urlFoto}`}
+                  src={obtenerUrlImagen(urlFoto)}
                   alt={m.nombre}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextSibling.style.display = 'flex'; }}

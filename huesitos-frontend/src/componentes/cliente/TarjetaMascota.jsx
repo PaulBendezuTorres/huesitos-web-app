@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Eye, Syringe, Pencil, Trash2 } from 'lucide-react';
+import { obtenerUrlImagen } from '@/servicios/imagenServicio';
 
 /**
  * TarjetaMascota
@@ -23,7 +24,7 @@ const TarjetaMascota = ({ mascota, onEditar, onEliminar }) => {
 
         {tieneFoto ? (
           <img
-            src={`http://localhost:8080${urlFoto}`}
+            src={obtenerUrlImagen(urlFoto)}
             alt={mascota.nombre}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             onError={(e) => {

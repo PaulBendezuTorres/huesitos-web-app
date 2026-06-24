@@ -1,4 +1,5 @@
 import { UserCircle } from 'lucide-react';
+import { obtenerUrlImagen } from '@/servicios/imagenServicio';
 
 const Avatar = ({ url, nombre = "", size = "w-8 h-8", className = "" }) => {
   const esUrlValida = url && url !== "/uploads/defecto-usuario.png";
@@ -8,7 +9,7 @@ const Avatar = ({ url, nombre = "", size = "w-8 h-8", className = "" }) => {
     <div className={`rounded-full bg-slate-100 flex items-center justify-center text-slate-400 overflow-hidden shadow-inner border border-slate-200/50 shrink-0 ${size} ${className}`}>
       {esUrlValida ? (
         <img 
-          src={`http://localhost:8080${url}`} 
+          src={obtenerUrlImagen(url)} 
           alt="Foto de perfil" 
           className="w-full h-full object-cover" 
         />

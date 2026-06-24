@@ -5,6 +5,7 @@ import { registrarCampana, actualizarCampana, obtenerCampanaPorId, subirFotoCamp
 import { listarServicios } from '@/servicios/servicioServicio';
 import Combobox from '@/componentes/comun/Combobox';
 import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
+import { obtenerUrlImagen } from '@/servicios/imagenServicio';
 
 const RegistrarCampana = () => {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ const RegistrarCampana = () => {
               servicios: campana.servicios ? campana.servicios.map(s => s.id) : []
             });
             if (campana.imagenUrl) {
-              setVistaPreviaImagen(`http://localhost:8080${campana.imagenUrl}`);
+              setVistaPreviaImagen(obtenerUrlImagen(campana.imagenUrl));
             }
           }
         }

@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import useHistorialClinico from '@/hooks/clinico/useHistorialClinico';
 import { descargarRecetaPdf, obtenerRecetasPorConsulta } from '@/api/mascotaApi';
+import { obtenerUrlImagen } from '@/servicios/imagenServicio';
 
 const LineaTiempoHistorialMascota = ({ mascotaId: propMascotaId, mostrarCabecera = true, onBack }) => {
   const params = useParams();
@@ -167,7 +168,7 @@ const LineaTiempoHistorialMascota = ({ mascotaId: propMascotaId, mostrarCabecera
             <div className="w-20 h-20 rounded-2xl overflow-hidden bg-gradient-to-tr from-sky-500 to-cyan-400 shadow-xl shadow-sky-500/20 shrink-0 relative">
               {mascota.fotoUrl && !mascota.fotoUrl.includes('defecto-mascota') ? (
                 <img
-                  src={`http://localhost:8080${mascota.fotoUrl}`}
+                  src={obtenerUrlImagen(mascota.fotoUrl)}
                   alt={mascota.nombre}
                   className="w-full h-full object-cover"
                   onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextSibling.style.display = 'flex'; }}
@@ -415,7 +416,7 @@ const LineaTiempoHistorialMascota = ({ mascotaId: propMascotaId, mostrarCabecera
                         )}
                         {item.urlArchivo && (
                           <button
-                            onClick={() => window.open(`http://localhost:8080${item.urlArchivo}`, '_blank')}
+                            onClick={() => window.open(obtenerUrlImagen(item.urlArchivo), '_blank')}
                             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-50 text-amber-600 text-xs font-bold hover:bg-amber-100 transition-colors border border-amber-200/60"
                           >
                             <Download size={14} />

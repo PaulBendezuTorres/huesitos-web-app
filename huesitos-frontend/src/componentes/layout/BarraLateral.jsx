@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import logo from '@/assets/Logo Huesitos.png';
 import { useNavigate } from 'react-router-dom';
+import { obtenerUrlImagen } from '@/servicios/imagenServicio';
 
 const configsRoles = {
   ADMINISTRADOR: {
@@ -219,7 +220,7 @@ const BarraLateral = ({
           <div className={`w-7 h-7 rounded-lg ${vistaActual === 'perfil' ? 'bg-white/20' : config.badgeBg} flex items-center justify-center text-white font-bold shrink-0 shadow-sm overflow-hidden`}>
             {fotoPerfilUrl && fotoPerfilUrl !== '/uploads/defecto-usuario.png' ? (
               <img 
-                src={`http://localhost:8080${fotoPerfilUrl}`} 
+                src={obtenerUrlImagen(fotoPerfilUrl)} 
                 alt="Foto de perfil" 
                 className="w-full h-full object-cover" 
               />

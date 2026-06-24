@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Edit2, ShieldAlert, ShieldCheck, Stethoscope, Trash2 } from 'lucide-react';
 import Paginacion from '@/componentes/comun/Paginacion';
+import { obtenerUrlImagen } from '@/servicios/imagenServicio';
 
 const TablaServicio = ({ servicios, onEditar, onEstado, onEliminar }) => {
   const [paginaActual, setPaginaActual] = useState(1);
@@ -43,7 +44,7 @@ const TablaServicio = ({ servicios, onEditar, onEstado, onEliminar }) => {
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-xl bg-slate-50 dark:bg-slate-700 border border-slate-200/60 dark:border-slate-600/60 overflow-hidden shrink-0 flex items-center justify-center text-slate-400 shadow-inner">
                       {servicio.fotoUrl && servicio.fotoUrl !== '/uploads/defecto-servicio.png' ? (
-                        <img src={`http://localhost:8080${servicio.fotoUrl}`} alt={servicio.nombre} className="w-full h-full object-cover" />
+                        <img src={obtenerUrlImagen(servicio.fotoUrl)} alt={servicio.nombre} className="w-full h-full object-cover" />
                       ) : (
                         <Stethoscope size={20} className="text-slate-350 dark:text-slate-500" />
                       )}
