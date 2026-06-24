@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Check, AlertTriangle, ChevronRight, ChevronLeft,
   CircleDollarSign, CalendarClock, CreditCard,
+  Copy, Smartphone, Landmark, Store
 } from 'lucide-react';
 import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
 import StepperCita from '@/componentes/cita/StepperCita';
@@ -19,6 +20,7 @@ import {
   obtenerHorariosVeterinario,
 } from '@/api/citaApi';
 import { obtenerTransaccionPorCita, crearPreferenciaPago } from '@/api/mercadoPagoApi';
+import { generarCipPagoEfectivo, simularPagoPagoEfectivo } from '@/api/pagoEfectivoApi';
 
 const HORARIOS_BASE = [
   '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
@@ -54,6 +56,11 @@ const ClienteAgendarCita = () => {
   const [error, setError] = useState('');
   const [exito, setExito] = useState(false);
   const [metodoPago, setMetodoPago] = useState('CLINICA');
+  const [cipInfo, setCipInfo] = useState(null);
+  const [simulandoPago, setSimulandoPago] = useState(false);
+  const [pagoSimuladoExitoso, setPagoSimuladoExitoso] = useState(false);
+  const [copiado, setCopiado] = useState(false);
+  const [tabInstrucciones, setTabInstrucciones] = useState('BANCA'); // 'BANCA' o 'EFECTIVO'
 
   // Cargar mascotas y servicios al montar
   useEffect(() => {
@@ -202,6 +209,19 @@ const ClienteAgendarCita = () => {
         }
       }
 
+      if (metodo === 'PAGO_EFECTIVO') {
+        try {
+          const transaccion = await obtenerTransaccionPorCita(citaNueva.id);
+          const resCip = await generarCipPagoEfectivo(transaccion.id);
+          setCipInfo(resCip);
+        } catch (errCip) {
+          console.error('Error al generar código CIP:', errCip);
+          alert('Cita agendada, pero hubo un error al generar el código PagoEfectivo. Puedes verlo y pagarlo en tu panel de citas.');
+          navigate('/cliente');
+          return;
+        }
+      }
+
       setExito(true);
     } catch (err) {
       const msg = err.response?.data || 'Error al agendar la cita. Intenta de nuevo.';
@@ -211,8 +231,196 @@ const ClienteAgendarCita = () => {
     }
   };
 
+  const handleCopiarCip = () => {
+    if (cipInfo?.cip) {
+      navigator.clipboard.writeText(cipInfo.cip);
+      setCopiado(true);
+      setTimeout(() => setCopiado(false), 2000);
+    }
+  };
+
+  const handleSimularPago = async () => {
+    if (!cipInfo?.cip) return;
+    setSimulandoPago(true);
+    try {
+      await simularPagoPagoEfectivo(cipInfo.cip);
+      setPagoSimuladoExitoso(true);
+    } catch (err) {
+      console.error('Error al simular pago:', err);
+      alert('Error al simular el pago: ' + (err.response?.data?.mensaje || err.message));
+    } finally {
+      setSimulandoPago(false);
+    }
+  };
+
   // ── Pantalla de éxito ──
   if (exito) {
+    if (metodoPago === 'PAGO_EFECTIVO' && cipInfo) {
+      return (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Reservar cita</h2>
+          </div>
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/60 dark:border-slate-800 p-8 shadow-sm">
+            <div className="max-w-2xl mx-auto">
+              <div className="text-center mb-6">
+                <div className="w-14 h-14 bg-amber-50 dark:bg-amber-950/40 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                  <Check size={28} className="text-amber-500" />
+                </div>
+                <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-1">¡Cita registrada con PagoEfectivo!</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Paga tu código CIP antes de la fecha límite para confirmar tu cita.</p>
+              </div>
+
+              {/* Tarjeta del Código CIP */}
+              <div className="bg-slate-50 dark:bg-slate-950/80 border border-slate-200/60 dark:border-slate-850 rounded-2xl p-6 mb-6">
+                <div className="flex flex-col sm:flex-row justify-between items-center gap-4 border-b border-slate-200/60 dark:border-slate-800/80 pb-5">
+                  <div>
+                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Código de Pago CIP</span>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-wider">
+                        {cipInfo.cip}
+                      </span>
+                      <button
+                        onClick={handleCopiarCip}
+                        className="p-1.5 hover:bg-slate-200/60 dark:hover:bg-slate-850 rounded-lg text-slate-500 dark:text-slate-400 transition-colors"
+                        title="Copiar código CIP"
+                      >
+                        {copiado ? <span className="text-[10px] font-bold text-emerald-500">¡Copiado!</span> : <Copy size={15} />}
+                      </button>
+                    </div>
+                  </div>
+                  <div className="text-right sm:text-right">
+                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Total a pagar</span>
+                    <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1 block">
+                      S/ {parseFloat(cipInfo.monto).toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-2.5 mt-5">
+                  <CalendarClock size={16} className="text-amber-500 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="text-xs font-bold text-slate-700 dark:text-slate-350 block">Paga antes de:</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-450 block mt-0.5">
+                      {new Date(cipInfo.fechaExpiracion).toLocaleString('es-PE', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Pestañas de Instrucciones */}
+              <div className="mb-6">
+                <div className="flex border-b border-slate-200 dark:border-slate-800 mb-4">
+                  <button
+                    onClick={() => setTabInstrucciones('BANCA')}
+                    className={`flex items-center gap-1.5 pb-2.5 px-4 font-bold text-xs border-b-2 transition-all ${tabInstrucciones === 'BANCA' ? 'border-sky-500 text-sky-500' : 'border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'}`}
+                  >
+                    <Landmark size={14} />
+                    Banca por Internet / Móvil
+                  </button>
+                  <button
+                    onClick={() => setTabInstrucciones('EFECTIVO')}
+                    className={`flex items-center gap-1.5 pb-2.5 px-4 font-bold text-xs border-b-2 transition-all ${tabInstrucciones === 'EFECTIVO' ? 'border-sky-500 text-sky-500' : 'border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'}`}
+                  >
+                    <Store size={14} />
+                    Agentes y Bodegas
+                  </button>
+                </div>
+
+                <div className="p-2 space-y-4">
+                  {tabInstrucciones === 'BANCA' ? (
+                    <div className="space-y-3">
+                      <p className="text-xs text-slate-500 dark:text-slate-400">Paga desde la banca móvil o web de tu banco usando los siguientes pasos:</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {[
+                          { banco: 'BCP', desc: 'Pago de servicios > Buscar "PagoEfectivo" > PagoEfectivo Soles' },
+                          { banco: 'BBVA', desc: 'Pago de servicios > Buscar "PagoEfectivo" > PagoEfectivo Soles' },
+                          { banco: 'Interbank', desc: 'Pago de servicios > Pago de recibos > Buscar "PagoEfectivo"' },
+                          { banco: 'Scotiabank', desc: 'Pagos > Pago de servicios > Buscar "PagoEfectivo"' },
+                        ].map((b) => (
+                          <div key={b.banco} className="bg-slate-50/50 dark:bg-slate-950/40 p-3 rounded-xl border border-slate-150 dark:border-slate-850">
+                            <span className="font-bold text-xs text-slate-700 dark:text-slate-300 block">{b.banco}</span>
+                            <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-1">{b.desc}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="bg-slate-50/50 dark:bg-slate-950/40 p-3 rounded-xl border border-slate-150 dark:border-slate-850 flex gap-2.5 items-start">
+                        <Smartphone size={15} className="text-slate-400 dark:text-slate-500 shrink-0 mt-0.5" />
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                          <span className="font-bold text-slate-600 dark:text-slate-350">Instrucciones generales:</span> Ingresa a la app o banca web de tu banco, busca la opción de pagar un servicio bajo el nombre <span className="font-semibold text-slate-700 dark:text-slate-300">PagoEfectivo Soles</span>, coloca tu código CIP y confirma el importe a pagar.
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      <p className="text-xs text-slate-500 dark:text-slate-400">Realiza tu depósito en efectivo en agencias bancarias, agentes autorizados o bodegas asociadas:</p>
+                      <div className="flex flex-wrap gap-2.5">
+                        {['Agentes BCP', 'Agentes BBVA', 'Agentes Interbank', 'Agentes KasNet', 'Agentes Western Union / Tambo', 'Agentes Red Digital'].map((ag) => (
+                          <span key={ag} className="inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-bold bg-slate-100 dark:bg-slate-855 text-slate-650 dark:text-slate-400 border border-slate-200/40 dark:border-slate-800">
+                            {ag}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="bg-slate-50/50 dark:bg-slate-950/40 p-3 rounded-xl border border-slate-150 dark:border-slate-850 flex gap-2.5 items-start">
+                        <Store size={15} className="text-slate-400 dark:text-slate-500 shrink-0 mt-0.5" />
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                          <span className="font-bold text-slate-600 dark:text-slate-350">Instrucciones generales:</span> Acércate al agente autorizado de tu preferencia, indica que deseas hacer un pago al servicio <span className="font-semibold text-slate-700 dark:text-slate-300">PagoEfectivo</span>, proporciona el código CIP y cancela el importe total en efectivo.
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Bloque de Simulación Local (Desarrollo) */}
+              <div className="bg-amber-500/5 dark:bg-amber-500/10 border border-amber-500/20 dark:border-amber-500/30 rounded-2xl p-5 mb-6">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle size={18} className="text-amber-500 shrink-0 mt-0.5" />
+                  <div className="space-y-3">
+                    <div>
+                      <span className="text-xs font-bold text-amber-800 dark:text-amber-400 block">Modo Simulación de Desarrollo</span>
+                      <span className="text-xs text-amber-700 dark:text-amber-500 leading-relaxed block mt-0.5">
+                        Dado que estamos en entorno de desarrollo local, puedes simular la aprobación exitosa del código CIP instantáneamente haciendo clic en el botón de abajo.
+                      </span>
+                    </div>
+                    {pagoSimuladoExitoso ? (
+                      <div className="flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/10 border border-emerald-500/20 p-2 rounded-lg">
+                        <Check size={14} />
+                        ¡El pago simulado ha sido procesado con éxito y la cita está Pagada!
+                      </div>
+                    ) : (
+                      <button
+                        onClick={handleSimularPago}
+                        disabled={simulandoPago}
+                        className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-xs rounded-lg transition-colors flex items-center gap-2"
+                      >
+                        {simulandoPago ? (
+                          <>
+                            <CargadorSpinner size="xs" color="border-slate-900" />
+                            <span>Procesando pago...</span>
+                          </>
+                        ) : (
+                          <span>Simular Pago Exitoso del CIP</span>
+                        )}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Botón de Retorno */}
+              <button
+                onClick={() => navigate('/cliente')}
+                className="w-full px-6 py-3 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl transition-colors shadow-lg shadow-sky-500/20"
+              >
+                Ir a mis citas
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="space-y-6">
         <div>
@@ -403,6 +611,18 @@ const ClienteAgendarCita = () => {
                 <CalendarClock size={16} />
               )}
               {enviando && metodoPago === 'CLINICA' ? 'Agendando...' : 'Reservar y pagar en clínica'}
+            </button>
+            <button
+              onClick={() => enviarCita('PAGO_EFECTIVO')}
+              disabled={!puedeAvanzar() || enviando}
+              className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold text-slate-900 bg-[#F7C600] hover:bg-[#e0b400] transition-all shadow-lg shadow-yellow-500/10 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              {enviando && metodoPago === 'PAGO_EFECTIVO' ? (
+                <CargadorSpinner size="xs" color="border-slate-900" />
+              ) : (
+                <CircleDollarSign size={16} />
+              )}
+              {enviando && metodoPago === 'PAGO_EFECTIVO' ? 'Generando CIP...' : 'Pagar con PagoEfectivo'}
             </button>
             <button
               onClick={() => enviarCita('MERCADO_PAGO')}

@@ -51,6 +51,8 @@ public class SeguridadConfig {
                     "/api/autenticacion/activar",
                     "/api/autenticacion/reenviar-codigo",
                     "/api/pagos/webhook",
+                    "/api/pagos/pagoefectivo/webhook",
+                    "/api/pagos/pagoefectivo/simular-pago",
                     "/uploads/**"
                 ).permitAll()
                 

@@ -57,6 +57,7 @@
 - [x] Frontend: Botón de pago en listado de próximas citas, consulta asíncrona de transacciones y página de retorno `/cliente/citas/retorno-pago` responsiva y compatible con modo oscuro.
 - [x] Robustecimiento de preferencia de Mercado Pago omitiendo URL de notificación en local (previene error 400).
 - [x] Corrección de generación de preferencias de pago con Mercado Pago usando carga ávida (Fetch Join) de Cita y Servicio en el repositorio de Transacciones.
+- [x] Integración de la pasarela PagoEfectivo (código CIP) en backend y frontend con modo de simulación local para agilizar pruebas en desarrollo.
 
 ### Inventario y Tienda
 - [x] Entidades: `Categoria`, `Producto` (con `stockMinimo`, foto WebP), `Inventario` (lotes stock/vencimiento FEFO).
@@ -135,4 +136,5 @@
 - **Commits granulares**: División detallada por fase desde Fase 11A.
 - **Límite de memoria**: Ampliado a 240 líneas por indicación del usuario, con compresión ejecutada únicamente bajo demanda explícita.
 - **Mercado Pago (Preferencia)**: Uso de carga ávida (`FETCH JOIN` de `Cita` y `Servicio`) en `TransaccionRepositorio` para evitar excepciones de inicialización perezosa de Hibernate (`LazyInitializationException`) en hilos fuera de sesión.
+- **PagoEfectivo (CIP)**: Incorporación de un modo de simulación local en desarrollo (CIP aleatorio de 8 dígitos) que permite probar el flujo completo de agendamiento y webhook de aprobación sin bloqueos de credenciales de pasarela.
 

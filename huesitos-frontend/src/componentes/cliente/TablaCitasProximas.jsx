@@ -1,11 +1,20 @@
 import { useState, useEffect } from 'react';
-import { Calendar, Stethoscope, CreditCard, Loader2 } from 'lucide-react';
+import {
+  Calendar, Stethoscope, CreditCard, Loader2,
+  Copy, Landmark, Store, Smartphone, FileText, X, Check, AlertTriangle, CalendarClock
+} from 'lucide-react';
 import { obtenerTransaccionPorCita, crearPreferenciaPago } from '@/api/mercadoPagoApi';
+import { simularPagoPagoEfectivo } from '@/api/pagoEfectivoApi';
 
 const FilaCita = ({ cita, badgeEstado, formatearEstado }) => {
   const [transaccion, setTransaccion] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [pagando, setPagando] = useState(false);
+  const [modalCipAbierto, setModalCipAbierto] = useState(false);
+  const [tabInstrucciones, setTabInstrucciones] = useState('BANCA'); // 'BANCA' o 'EFECTIVO'
+  const [copiado, setCopiado] = useState(false);
+  const [simulandoPago, setSimulandoPago] = useState(false);
+  const [pagoSimuladoExitoso, setPagoSimuladoExitoso] = useState(false);
 
   useEffect(() => {
     let activo = true;
@@ -47,6 +56,33 @@ const FilaCita = ({ cita, badgeEstado, formatearEstado }) => {
     }
   };
 
+  const handleCopiarCip = () => {
+    if (transaccion?.referenciaPago) {
+      navigator.clipboard.writeText(transaccion.referenciaPago);
+      setCopiado(true);
+      setTimeout(() => setCopiado(false), 2000);
+    }
+  };
+
+  const handleSimularPago = async () => {
+    if (!transaccion?.referenciaPago) return;
+    setSimulandoPago(true);
+    try {
+      await simularPagoPagoEfectivo(transaccion.referenciaPago);
+      setPagoSimuladoExitoso(true);
+      setTransaccion((prev) => ({ ...prev, estadoPago: 'APROBADO' }));
+      setTimeout(() => {
+        setModalCipAbierto(false);
+        setPagoSimuladoExitoso(false);
+      }, 1500);
+    } catch (err) {
+      console.error('Error al simular pago:', err);
+      alert('Error al simular el pago: ' + (err.response?.data?.mensaje || err.message));
+    } finally {
+      setSimulandoPago(false);
+    }
+  };
+
   const fecha = cita.fechaHora
     ? new Date(cita.fechaHora).toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric' })
     : '—';
@@ -75,7 +111,8 @@ const FilaCita = ({ cita, badgeEstado, formatearEstado }) => {
   };
 
   return (
-    <tr className="border-b border-slate-50 dark:border-slate-850 last:border-0 hover:bg-slate-50/60 dark:hover:bg-slate-850/40 transition-colors duration-200">
+    <>
+      <tr className="border-b border-slate-50 dark:border-slate-850 last:border-0 hover:bg-slate-50/60 dark:hover:bg-slate-850/40 transition-colors duration-200">
       <td className="px-6 py-4">
         <p className="text-sm font-bold text-slate-700 dark:text-slate-200 transition-colors duration-300">{fecha}</p>
         <p className="text-xs text-slate-400 dark:text-slate-500 transition-colors duration-300">{hora}</p>
@@ -122,27 +159,175 @@ const FilaCita = ({ cita, badgeEstado, formatearEstado }) => {
       </td>
       <td className="px-6 py-4">
         {!cargando && transaccion && cita.estado === 'PENDIENTE' && transaccion.estadoPago === 'PENDIENTE' && (
-          <button
-            onClick={handlePagar}
-            disabled={pagando}
-            className="bg-[#009EE3] hover:bg-[#0081bb] disabled:bg-slate-300 dark:disabled:bg-slate-800 disabled:text-slate-500 text-white font-bold py-1.5 px-3 rounded-lg flex items-center gap-1.5 text-xs transition-colors duration-200"
-          >
-            {pagando ? (
-              <>
-                <Loader2 size={13} className="animate-spin" />
-                <span>Procesando...</span>
-              </>
-            ) : (
-              <>
-                <CreditCard size={13} />
-                <span>Pagar con Mercado Pago</span>
-              </>
-            )}
-          </button>
+          transaccion.medioPago === 'PAGO_EFECTIVO' ? (
+            <button
+              onClick={() => setModalCipAbierto(true)}
+              className="bg-[#F7C600] hover:bg-[#e0b400] text-slate-900 font-bold py-1.5 px-3 rounded-lg flex items-center gap-1.5 text-xs transition-colors duration-200"
+            >
+              <FileText size={13} />
+              <span>Ver código CIP</span>
+            </button>
+          ) : (
+            <button
+              onClick={handlePagar}
+              disabled={pagando}
+              className="bg-[#009EE3] hover:bg-[#0081bb] disabled:bg-slate-300 dark:disabled:bg-slate-800 disabled:text-slate-500 text-white font-bold py-1.5 px-3 rounded-lg flex items-center gap-1.5 text-xs transition-colors duration-200"
+            >
+              {pagando ? (
+                <>
+                  <Loader2 size={13} className="animate-spin" />
+                  <span>Procesando...</span>
+                </>
+              ) : (
+                <>
+                  <CreditCard size={13} />
+                  <span>Pagar con Mercado Pago</span>
+                </>
+              )}
+            </button>
+          )
         )}
       </td>
     </tr>
-  );
+
+    {modalCipAbierto && transaccion && (
+      <tr className="bg-slate-50/10 dark:bg-slate-950/10">
+        <td colSpan="7" className="p-0 border-0">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden animate-in slide-in-from-bottom-4 duration-300 text-left">
+              {/* Header */}
+              <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-950/20">
+                <h3 className="font-bold text-slate-850 dark:text-slate-100 flex items-center gap-2">
+                  <FileText className="text-amber-500" size={18} />
+                  <span>Instrucciones de PagoEfectivo</span>
+                </h3>
+                <button
+                  onClick={() => setModalCipAbierto(false)}
+                  className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+
+              {/* Body */}
+              <div className="p-6 space-y-5">
+                {/* Tarjeta CIP */}
+                <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-150 dark:border-slate-850 rounded-xl p-5">
+                  <div className="flex justify-between items-center border-b border-slate-200/60 dark:border-slate-800 pb-4">
+                    <div>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Código CIP</span>
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        <span className="text-xl font-black text-slate-800 dark:text-slate-100 tracking-wider">
+                          {transaccion.referenciaPago}
+                        </span>
+                        <button
+                          onClick={handleCopiarCip}
+                          className="p-1 hover:bg-slate-200/50 dark:hover:bg-slate-800 rounded text-slate-400 transition-colors"
+                          title="Copiar"
+                        >
+                          {copiado ? <span className="text-[10px] font-bold text-emerald-500">¡Copiado!</span> : <Copy size={13} />}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Total</span>
+                      <span className="text-xl font-black text-emerald-650 dark:text-emerald-450 block mt-0.5">
+                        S/ {parseFloat(transaccion.monto).toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 mt-4 text-xs text-slate-550 dark:text-slate-400">
+                    <CalendarClock size={14} className="text-amber-500" />
+                    <span>
+                      Límite de pago: {transaccion.fechaCreacion 
+                        ? new Date(new Date(transaccion.fechaCreacion).getTime() + 24*60*60*1000).toLocaleString('es-PE', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })
+                        : '24 horas desde la reserva'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Pestañas */}
+                <div>
+                  <div className="flex border-b border-slate-200 dark:border-slate-800 mb-3.5">
+                    <button
+                      onClick={() => setTabInstrucciones('BANCA')}
+                      className={`flex items-center gap-1.5 pb-2 px-3 font-bold text-xs border-b-2 transition-all ${tabInstrucciones === 'BANCA' ? 'border-sky-500 text-sky-500' : 'border-transparent text-slate-450 hover:text-slate-600 dark:hover:text-slate-350'}`}
+                    >
+                      <Landmark size={13} />
+                      Banca Móvil
+                    </button>
+                    <button
+                      onClick={() => setTabInstrucciones('EFECTIVO')}
+                      className={`flex items-center gap-1.5 pb-2 px-3 font-bold text-xs border-b-2 transition-all ${tabInstrucciones === 'EFECTIVO' ? 'border-sky-500 text-sky-500' : 'border-transparent text-slate-455 hover:text-slate-600 dark:hover:text-slate-350'}`}
+                    >
+                      <Store size={13} />
+                      Agentes
+                    </button>
+                  </div>
+
+                  <div className="text-xs space-y-3">
+                    {tabInstrucciones === 'BANCA' ? (
+                      <>
+                        <p className="text-slate-400 dark:text-slate-450">Instrucciones bancarias:</p>
+                        <div className="grid grid-cols-2 gap-2 text-[10px]">
+                          {[
+                            { b: 'BCP', p: 'Pago servicios > PagoEfectivo Soles' },
+                            { b: 'BBVA', p: 'Pago servicios > PagoEfectivo Soles' },
+                            { b: 'Interbank', p: 'Pago recibos > Buscar PagoEfectivo' },
+                            { b: 'Scotiabank', p: 'Servicios > Buscar PagoEfectivo' },
+                          ].map((x) => (
+                            <div key={x.b} className="bg-slate-50 dark:bg-slate-950/40 p-2 rounded-lg border border-slate-100 dark:border-slate-850">
+                              <span className="font-bold text-slate-700 dark:text-slate-300 block">{x.b}</span>
+                              <span className="text-slate-500 dark:text-slate-450 mt-0.5 block">{x.p}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-slate-400 dark:text-slate-450">Puedes depositar en efectivo indicando el código CIP en:</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {['Agentes BCP', 'Agentes BBVA', 'Agentes Interbank', 'Agentes KasNet', 'Red Digital', 'Western Union'].map((a) => (
+                            <span key={a} className="px-2 py-0.5 rounded bg-slate-50 dark:bg-slate-850 border border-slate-100 dark:border-slate-800 text-[10px] text-slate-500 dark:text-slate-400 font-semibold">
+                              {a}
+                            </span>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                {/* Simulación */}
+                <div className="bg-amber-500/5 dark:bg-amber-500/10 border border-amber-500/20 dark:border-amber-500/30 rounded-xl p-4">
+                  <div className="flex gap-2">
+                    <AlertTriangle size={15} className="text-amber-500 shrink-0 mt-0.5" />
+                    <div className="space-y-2.5">
+                      <span className="text-[11px] font-bold text-amber-800 dark:text-amber-400 block">Desarrollo local: Simular Aprobación</span>
+                      {pagoSimuladoExitoso ? (
+                        <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-450 block">
+                          ✓ ¡Pago aprobado simulado!
+                        </span>
+                      ) : (
+                        <button
+                          onClick={handleSimularPago}
+                          disabled={simulandoPago}
+                          className="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-[10px] rounded-lg transition-colors disabled:opacity-40"
+                        >
+                          {simulandoPago ? 'Procesando...' : 'Aprobar Pago CIP'}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    )}
+  </>;
 };
 
 const TablaCitasProximas = ({ citas }) => {

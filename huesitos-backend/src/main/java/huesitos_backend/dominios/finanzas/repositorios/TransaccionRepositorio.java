@@ -32,4 +32,8 @@ public interface TransaccionRepositorio extends JpaRepository<Transaccion, Long>
 
     @Query("SELECT t FROM Transaccion t LEFT JOIN FETCH t.cita c LEFT JOIN FETCH c.servicio WHERE t.id = :id")
     java.util.Optional<Transaccion> findByIdConCitaYServicio(@Param("id") Long id);
+
+    java.util.Optional<Transaccion> findByIdTransaccionPasarela(String idTransaccionPasarela);
+
+    java.util.Optional<Transaccion> findByReferenciaPago(String referenciaPago);
 }
