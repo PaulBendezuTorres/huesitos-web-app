@@ -1,6 +1,6 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-24 (Integración de Cloudinary para almacenamiento de imágenes y archivos)
+Última actualización: 2026-06-24 (Optimización de flujo de citas, sesión activa y Mercado Pago local)
 
 ## 🚀 Logros por Módulo
 
@@ -11,6 +11,7 @@
 - [x] Modularización frontend: subcomponentes atómicos (`ContenedorAutenticacion`, `CampoFormulario`, `CasillerosCodigo`, `PanelIzquierdoAutenticacion`, `BotonVolver`).
 - [x] Card de auth con altura fija 600px en desktop, scroll interno, responsividad completa en móvil (contenido decorativo oculto en breakpoints pequeños).
 - [x] Alternador de tema corregido: Luna en modo oscuro, Sol en modo claro.
+- [x] Redirección automática de sesión activa en Login al navegar hacia atrás.
 
 ### Usuarios y Perfiles
 - [x] CRUD completo: creación segura de Veterinarios/Recepcionistas por Admin, activación/desactivación, listado por rol.
@@ -33,6 +34,10 @@
 - [x] Frontend: `AgendaSemanal` compartida (Admin/Recepcionista), `ModalReprogramarCita` modular, filtros con `<Combobox compacto>`, `ConfiguracionHorarios` con switches por día y excepciones.
 - [x] `ClienteAgendarCita` interactivo en 4 pasos (Mascota → Servicio → Profesional → Horario/Fecha).
 - [x] Desacoplamiento: `ListaPersonalClinica` extraído con avatares gradiente, badges por rol, buscador integrado.
+- [x] Endpoint público de veterinarios para resolver error 403 de clientes al agendar.
+- [x] Integración de descuentos de campañas en reserva de citas (en cascada hasta el total y transacción).
+- [x] Flujo de pago inmediato en la línea de reserva: opciones de "Pagar en clínica" y "Pagar en línea con Mercado Pago".
+- [x] Rediseño de paso de horario con placeholder y mensaje de instrucción dinámico.
 
 ### Módulo Clínico (Consultas, Vacunas, Recetas, Archivos)
 - [x] Entidades: `ConsultaMedica`, `Servicio`, `Vacuna`, `HistorialVacunacion`, `Receta`, `ArchivoClinico` + enum `TipoArchivoClinico`.
@@ -50,6 +55,8 @@
 - [x] Frontend: `CajaPOS` táctil con cálculo de vuelto, descarga/impresión de boleta. `TablaTransacciones` modular con paginación. `PaginaFinanzas` simplificada.
 - [x] Integración de Mercado Pago (Checkout Pro) para el pago en línea de citas pendientes con redirección a Sandbox y webhook `/api/pagos/webhook` asíncrono para cambiar el estado a `APROBADO` en base de datos.
 - [x] Frontend: Botón de pago en listado de próximas citas, consulta asíncrona de transacciones y página de retorno `/cliente/citas/retorno-pago` responsiva y compatible con modo oscuro.
+- [x] Robustecimiento de preferencia de Mercado Pago omitiendo URL de notificación en local (previene error 400).
+- [x] Corrección de generación de preferencias de pago con Mercado Pago usando carga ávida (Fetch Join) de Cita y Servicio en el repositorio de Transacciones.
 
 ### Inventario y Tienda
 - [x] Entidades: `Categoria`, `Producto` (con `stockMinimo`, foto WebP), `Inventario` (lotes stock/vencimiento FEFO).
@@ -127,4 +134,5 @@
 - **Cloudinary**: Integración de SDK oficial para prevenir almacenamiento local efímero y transformaciones automáticas de imágenes en la nube.
 - **Commits granulares**: División detallada por fase desde Fase 11A.
 - **Límite de memoria**: Ampliado a 240 líneas por indicación del usuario, con compresión ejecutada únicamente bajo demanda explícita.
+- **Mercado Pago (Preferencia)**: Uso de carga ávida (`FETCH JOIN` de `Cita` y `Servicio`) en `TransaccionRepositorio` para evitar excepciones de inicialización perezosa de Hibernate (`LazyInitializationException`) en hilos fuera de sesión.
 

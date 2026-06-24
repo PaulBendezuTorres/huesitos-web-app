@@ -27,7 +27,7 @@ public class MercadoPagoControlador {
     @PostMapping("/{id}/preferencia")
     public ResponseEntity<?> generarPreferencia(@PathVariable Long id) {
         try {
-            Transaccion transaccion = transaccionRepositorio.findById(id)
+            Transaccion transaccion = transaccionRepositorio.findByIdConCitaYServicio(id)
                     .orElseThrow(() -> new RuntimeException("Transacción no encontrada"));
             
             String initPoint = mercadoPagoServicio.crearPreferenciaPago(transaccion);

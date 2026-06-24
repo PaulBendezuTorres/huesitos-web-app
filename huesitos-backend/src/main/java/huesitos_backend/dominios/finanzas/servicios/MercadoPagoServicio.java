@@ -83,8 +83,13 @@ public class MercadoPagoServicio {
             Preference preference = client.create(request);
             return preference.getInitPoint();
 
-        } catch (MPException | MPApiException e) {
-            throw new RuntimeException("Error al comunicarse con Mercado Pago: " + e.getMessage(), e);
+        } catch (MPApiException e) {
+            String detalle = e.getApiResponse() != null ? e.getApiResponse().getContent() : "Sin respuesta de API";
+            System.err.println("Error de API Mercado Pago: " + e.getMessage() + " | Detalle: " + detalle);
+            throw new RuntimeException("Error de API Mercado Pago: " + e.getMessage() + " | Detalle: " + detalle, e);
+        } catch (MPException e) {
+            System.err.println("Error de SDK Mercado Pago: " + e.getMessage());
+            throw new RuntimeException("Error de SDK Mercado Pago: " + e.getMessage(), e);
         }
     }
 

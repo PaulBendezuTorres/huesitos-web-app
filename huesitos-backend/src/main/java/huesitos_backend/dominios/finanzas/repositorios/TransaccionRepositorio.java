@@ -29,4 +29,7 @@ public interface TransaccionRepositorio extends JpaRepository<Transaccion, Long>
     long countByEstadoPagoAndFechaCreacionBetween(EstadoPago estado, LocalDateTime inicio, LocalDateTime fin);
 
     java.util.Optional<Transaccion> findByCitaId(Long citaId);
+
+    @Query("SELECT t FROM Transaccion t LEFT JOIN FETCH t.cita c LEFT JOIN FETCH c.servicio WHERE t.id = :id")
+    java.util.Optional<Transaccion> findByIdConCitaYServicio(@Param("id") Long id);
 }
