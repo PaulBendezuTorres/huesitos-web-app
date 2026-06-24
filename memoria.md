@@ -78,6 +78,7 @@
 - [x] API `configuracionApi.js` con envío condicional de JWT. Esqueleto de carga para eliminar parpadeo. Interfaz de fallo de conexión con "Reintentar Carga".
 - [x] `ConfiguracionRolControlador` con endpoints por rol.
 - [x] Migración de almacenamiento local a Cloudinary en backend para fotos de perfil, mascotas, productos, campañas y archivos clínicos.
+- [x] Eliminación de credenciales hardcodeadas de Mercado Pago y del correo SMTP por defecto en application.properties, delegándolos al archivo .env.
 
 ### Arquitectura Frontend Compartida
 - [x] `PlantillaTablero`: estructura unificada responsiva (sidebar drawer, overlay, header hamburguesa, badge perfil).
