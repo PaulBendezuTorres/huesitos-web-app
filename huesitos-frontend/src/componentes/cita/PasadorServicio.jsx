@@ -27,10 +27,20 @@ const PasadorServicio = ({ servicios, servicioSeleccionado, mascota, onSeleccion
             )}
           </div>
           <div className="text-right shrink-0 space-y-1">
+            {s.enCampana && (
+              <span className="inline-block px-1.5 py-0.5 text-[8px] font-black text-amber-700 bg-amber-100 dark:text-amber-300 dark:bg-amber-950/45 rounded border border-amber-200 dark:border-amber-900/30 uppercase tracking-wider mb-1">
+                {s.nombreCampana}
+              </span>
+            )}
             <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 justify-end">
               <CircleDollarSign size={13} />
-              S/ {Number(s.precioRegular || s.precio || 0).toFixed(2)}
+              S/ {Number(s.precio || 0).toFixed(2)}
             </p>
+            {s.enCampana && (
+              <p className="text-[10px] text-slate-400 line-through">
+                S/ {Number(s.precioOriginal || 0).toFixed(2)}
+              </p>
+            )}
             {seleccionado && <Check size={14} className="text-sky-500 ml-auto" />}
           </div>
         </button>

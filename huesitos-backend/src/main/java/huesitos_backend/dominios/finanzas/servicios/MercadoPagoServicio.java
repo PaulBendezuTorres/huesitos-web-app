@@ -68,10 +68,13 @@ public class MercadoPagoServicio {
                     .build();
 
             // Configurar preferencia
+            String urlNotificacion = (webhookUrl != null && !webhookUrl.contains("localhost") && !webhookUrl.contains("127.0.0.1")) 
+                    ? webhookUrl : null;
+
             PreferenceRequest request = PreferenceRequest.builder()
                     .items(Collections.singletonList(item))
                     .backUrls(backUrls)
-                    .notificationUrl(webhookUrl)
+                    .notificationUrl(urlNotificacion)
                     .externalReference(transaccion.getId().toString())
                     .autoReturn("approved") // Retorno automático en caso de aprobación
                     .build();

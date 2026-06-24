@@ -22,6 +22,7 @@ import java.util.List;
 public class TransaccionServicio {
 
     private final TransaccionRepositorio transaccionRepositorio;
+    private final huesitos_backend.dominios.marketing.repositorios.CampanaRepositorio campanaRepositorio;
 
     @Transactional(readOnly = true)
     public List<Transaccion> listarTodas() {
@@ -102,13 +103,27 @@ public class TransaccionServicio {
         transaccion.setEstadoPago(EstadoPago.PENDIENTE);
         transaccion.setReferenciaPago("SISTEMA_CITA");
 
-        // Verifica si el servicio tiene un precio asignado, sino le pone 0
-        if (cita.getServicio() != null && cita.getServicio().getPrecio() != null) {
-            transaccion.setMonto(cita.getServicio().getPrecio());
-        } else {
-            transaccion.setMonto(BigDecimal.ZERO);
+        BigDecimal monto = BigDecimal.ZERO;
+        if (cita.getServicio() != null) {
+            monto = cita.getServicio().getPrecio();
+            
+            // Buscar si hay campañas activas que contengan este servicio
+            LocalDate hoy = LocalDate.now();
+            List<huesitos_backend.dominios.marketing.entidades.Campana> campanasActivas = campanaRepositorio.findByActivoTrue();
+            for (huesitos_backend.dominios.marketing.entidades.Campana campana : campanasActivas) {
+                if (!hoy.isBefore(campana.getFechaInicio()) && !hoy.isAfter(campana.getFechaFin())) {
+                    boolean contieneServicio = campana.getServicios().stream()
+                            .anyMatch(s -> s.getId().equals(cita.getServicio().getId()));
+                    if (contieneServicio && campana.getPrecioPromocional() != null) {
+                        monto = campana.getPrecioPromocional();
+                        transaccion.setReferenciaPago("CAMPANA_" + campana.getId());
+                        break;
+                    }
+                }
+            }
         }
+        transaccion.setMonto(monto != null ? monto : BigDecimal.ZERO);
 
         transaccionRepositorio.save(transaccion);
     }
-}
+}

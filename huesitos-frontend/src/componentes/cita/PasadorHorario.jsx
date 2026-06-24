@@ -20,7 +20,7 @@ const PasadorHorario = ({ fechaSeleccionada, horaSeleccionada, fechaMinima, hora
     </div>
 
     {/* Grid de horarios */}
-    {fechaSeleccionada && (
+    {fechaSeleccionada ? (
       <div>
         <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 block">
           Horarios disponibles
@@ -52,6 +52,18 @@ const PasadorHorario = ({ fechaSeleccionada, horaSeleccionada, fechaMinima, hora
             ))}
           </div>
         )}
+      </div>
+    ) : (
+      <div className="text-center py-12 bg-slate-50/50 dark:bg-slate-950/20 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800/60 p-6 transition-all duration-300">
+        <div className="w-12 h-12 bg-sky-50 dark:bg-sky-950/30 rounded-xl flex items-center justify-center mx-auto mb-3">
+          <Clock size={22} className="text-sky-500 dark:text-sky-400 animate-pulse" />
+        </div>
+        <h4 className="text-sm font-bold text-slate-700 dark:text-slate-200 mb-1">
+          Horarios no cargados
+        </h4>
+        <p className="text-xs text-slate-450 dark:text-slate-500 max-w-[280px] mx-auto leading-relaxed">
+          Selecciona una fecha en el calendario superior para mostrar los horarios de atención disponibles.
+        </p>
       </div>
     )}
   </div>

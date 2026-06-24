@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Check, AlertTriangle, ChevronRight, ChevronLeft,
-  CircleDollarSign, CalendarClock,
+  CircleDollarSign, CalendarClock, CreditCard,
 } from 'lucide-react';
 import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
 import StepperCita from '@/componentes/cita/StepperCita';
@@ -10,14 +10,15 @@ import PasadorMascota from '@/componentes/cita/PasadorMascota';
 import PasadorServicio from '@/componentes/cita/PasadorServicio';
 import PasadorVeterinario from '@/componentes/cita/PasadorVeterinario';
 import PasadorHorario from '@/componentes/cita/PasadorHorario';
-import { obtenerMascotasPorDueno } from '@/api/clienteApi';
+import { obtenerMascotasPorDueno, obtenerCampanasActivas } from '@/api/clienteApi';
 import {
   agendarCita,
   obtenerCitasPorDia,
   obtenerServiciosActivos,
-  obtenerUsuarios,
+  obtenerVeterinarios,
   obtenerHorariosVeterinario,
 } from '@/api/citaApi';
+import { obtenerTransaccionPorCita, crearPreferenciaPago } from '@/api/mercadoPagoApi';
 
 const HORARIOS_BASE = [
   '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
@@ -52,6 +53,7 @@ const ClienteAgendarCita = () => {
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState('');
   const [exito, setExito] = useState(false);
+  const [metodoPago, setMetodoPago] = useState('CLINICA');
 
   // Cargar mascotas y servicios al montar
   useEffect(() => {
@@ -59,13 +61,39 @@ const ClienteAgendarCita = () => {
       setCargando(true);
       try {
         const duenoId = localStorage.getItem('duenoId');
-        const [mascotasRes, serviciosRes] = await Promise.allSettled([
+        const [mascotasRes, serviciosRes, campanasRes] = await Promise.allSettled([
           duenoId ? obtenerMascotasPorDueno(duenoId) : Promise.resolve([]),
           obtenerServiciosActivos(),
+          obtenerCampanasActivas(),
         ]);
         setMascotas(mascotasRes.status === 'fulfilled' ? mascotasRes.value : []);
         const srv = serviciosRes.status === 'fulfilled' ? serviciosRes.value : [];
-        setServicios(srv.filter((s) => s.activo !== false));
+        const campanasActivas = campanasRes.status === 'fulfilled' ? campanasRes.value : [];
+        
+        // Mapear servicios aplicando precios de campañas activas
+        const serviciosMapeados = srv.filter((s) => s.activo !== false).map((servicio) => {
+          const hoy = new Date();
+          const campanaAplicable = campanasActivas.find((campana) => {
+            if (!campana.activo) return false;
+            const inicio = new Date(campana.fechaInicio + 'T00:00:00');
+            const fin = new Date(campana.fechaFin + 'T23:59:59');
+            if (hoy < inicio || hoy > fin) return false;
+            return campana.servicios?.some((cs) => cs.id === servicio.id);
+          });
+
+          if (campanaAplicable && campanaAplicable.precioPromocional) {
+            return {
+              ...servicio,
+              precioOriginal: servicio.precio,
+              precio: campanaAplicable.precioPromocional,
+              enCampana: true,
+              nombreCampana: campanaAplicable.nombre,
+            };
+          }
+          return servicio;
+        });
+
+        setServicios(serviciosMapeados);
       } catch (err) {
         console.error('Error cargando datos:', err);
       } finally {
@@ -78,8 +106,8 @@ const ClienteAgendarCita = () => {
   // Cargar veterinarios al paso 3
   useEffect(() => {
     if (pasoActual === 3 && veterinarios.length === 0) {
-      obtenerUsuarios()
-        .then((usuarios) => setVeterinarios(usuarios.filter((u) => u.rol === 'VETERINARIO' && u.activo !== false)))
+      obtenerVeterinarios()
+        .then((vets) => setVeterinarios(vets))
         .catch(() => setVeterinarios([]));
     }
   }, [pasoActual, veterinarios.length]);
@@ -144,7 +172,8 @@ const ClienteAgendarCita = () => {
     return false;
   };
 
-  const enviarCita = async () => {
+  const enviarCita = async (metodo = 'CLINICA') => {
+    setMetodoPago(metodo);
     setEnviando(true);
     setError('');
     try {
@@ -154,7 +183,25 @@ const ClienteAgendarCita = () => {
         fechaHora: `${fechaSeleccionada}T${horaSeleccionada}:00`,
       };
       if (veterinarioSeleccionado) payload.veterinario = { id: veterinarioSeleccionado.id };
-      await agendarCita(payload);
+      
+      const citaNueva = await agendarCita(payload);
+
+      if (metodo === 'MERCADO_PAGO') {
+        try {
+          const transaccion = await obtenerTransaccionPorCita(citaNueva.id);
+          const res = await crearPreferenciaPago(transaccion.id);
+          if (res.initPoint) {
+            window.location.href = res.initPoint;
+            return;
+          }
+        } catch (errPago) {
+          console.error('Error al procesar pago en línea:', errPago);
+          alert('Cita agendada, pero hubo un error al abrir Mercado Pago. Puedes realizar el pago en tu panel de citas.');
+          navigate('/cliente');
+          return;
+        }
+      }
+
       setExito(true);
     } catch (err) {
       const msg = err.response?.data || 'Error al agendar la cita. Intenta de nuevo.';
@@ -344,14 +391,32 @@ const ClienteAgendarCita = () => {
             Siguiente <ChevronRight size={16} />
           </button>
         ) : (
-          <button
-            onClick={enviarCita}
-            disabled={!puedeAvanzar() || enviando}
-            className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-emerald-500 hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20 disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            {enviando ? <CargadorSpinner size="xs" color="border-white" /> : <CalendarClock size={16} />}
-            {enviando ? 'Agendando...' : 'Confirmar cita'}
-          </button>
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={() => enviarCita('CLINICA')}
+              disabled={!puedeAvanzar() || enviando}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all disabled:opacity-40 disabled:cursor-not-allowed border border-slate-200 dark:border-slate-700"
+            >
+              {enviando && metodoPago === 'CLINICA' ? (
+                <CargadorSpinner size="xs" color="border-slate-700 dark:border-slate-300" />
+              ) : (
+                <CalendarClock size={16} />
+              )}
+              {enviando && metodoPago === 'CLINICA' ? 'Agendando...' : 'Reservar y pagar en clínica'}
+            </button>
+            <button
+              onClick={() => enviarCita('MERCADO_PAGO')}
+              disabled={!puedeAvanzar() || enviando}
+              className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-[#009EE3] hover:bg-[#0081bb] transition-all shadow-lg shadow-sky-500/20 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              {enviando && metodoPago === 'MERCADO_PAGO' ? (
+                <CargadorSpinner size="xs" color="border-white" />
+              ) : (
+                <CreditCard size={16} />
+              )}
+              {enviando && metodoPago === 'MERCADO_PAGO' ? 'Procesando pago...' : 'Pagar en línea con Mercado Pago'}
+            </button>
+          </div>
         )}
       </div>
 

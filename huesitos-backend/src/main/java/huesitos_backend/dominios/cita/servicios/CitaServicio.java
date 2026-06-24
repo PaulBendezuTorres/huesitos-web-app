@@ -6,6 +6,7 @@ import huesitos_backend.dominios.veterinaria_servicio.entidades.Servicio;
 import huesitos_backend.dominios.cita.repositorios.CitaRepositorio;
 import huesitos_backend.dominios.mascota.repositorios.MascotaRepositorio;
 import huesitos_backend.dominios.usuario.repositorios.UsuarioRepositorio;
+import huesitos_backend.dominios.usuario.entidades.Usuario;
 import huesitos_backend.dominios.veterinaria_servicio.repositorios.ServicioRepositorio;
 import huesitos_backend.dominios.finanzas.servicios.TransaccionServicio;
 import lombok.RequiredArgsConstructor;
@@ -235,5 +236,16 @@ public class CitaServicio {
             case SATURDAY -> "Sábado";
             case SUNDAY -> "Domingo";
         };
+    }
+
+    /**
+     * Obtiene la lista de todos los veterinarios activos.
+     */
+    @Transactional(readOnly = true)
+    public List<Usuario> obtenerVeterinariosActivos() {
+        return usuarioRepositorio.findByRol(huesitos_backend.dominios.usuario.entidades.Rol.VETERINARIO)
+                .stream()
+                .filter(Usuario::getActivo)
+                .toList();
     }
 }

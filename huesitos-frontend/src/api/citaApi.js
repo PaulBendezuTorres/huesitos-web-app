@@ -36,6 +36,12 @@ export const obtenerUsuarios = async () => {
   return respuesta.data;
 };
 
+/** Obtener lista de veterinarios activos (accesible por clientes) */
+export const obtenerVeterinarios = async () => {
+  const respuesta = await axios.get(`${API_BASE}/citas/veterinarios`, obtenerHeaders());
+  return respuesta.data;
+};
+
 /** Obtener horarios de un veterinario */
 export const obtenerHorariosVeterinario = async (usuarioId) => {
   const respuesta = await axios.get(`${API_BASE}/usuarios/${usuarioId}/horarios`, obtenerHeaders());
