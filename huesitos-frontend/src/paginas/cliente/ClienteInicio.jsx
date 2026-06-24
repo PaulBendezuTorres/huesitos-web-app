@@ -28,7 +28,7 @@ const ClienteInicio = () => {
       <SeccionMascotasDashboard mascotas={mascotas} recargar={recargar} />
 
       {/* Listado de Próximas Citas */}
-      <TablaCitasProximas citas={citas} />
+      <TablaCitasProximas citas={citas} onCitaCancelada={recargar} />
     </div>
   );
 };

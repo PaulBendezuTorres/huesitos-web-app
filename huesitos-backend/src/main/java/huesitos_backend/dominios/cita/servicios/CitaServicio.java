@@ -49,10 +49,23 @@ public class CitaServicio {
                 .orElseThrow(() -> new RuntimeException("El servicio especificado no existe o no está disponible"));
         cita.setServicio(servicioReal);
 
-        // 1. Validar que la mascota exista
-        if (cita.getMascota() == null || cita.getMascota().getId() == null ||
-                !mascotaRepositorio.existsById(cita.getMascota().getId())) {
+        // 1. Validar que la mascota exista y obtenerla con su dueño
+        if (cita.getMascota() == null || cita.getMascota().getId() == null) {
             throw new RuntimeException("La mascota especificada no existe");
+        }
+        huesitos_backend.dominios.mascota.entidades.Mascota mascotaReal = mascotaRepositorio.findById(cita.getMascota().getId())
+                .orElseThrow(() -> new RuntimeException("La mascota especificada no existe"));
+        cita.setMascota(mascotaReal);
+
+        // Validar límite de 2 citas activas (PENDIENTE, CONFIRMADA, EN_ESPERA) para el dueño de la mascota
+        if (mascotaReal.getDueño() != null && mascotaReal.getDueño().getId() != null) {
+            long citasActivas = citaRepositorio.countByMascotaDueñoIdAndEstadoIn(
+                    mascotaReal.getDueño().getId(),
+                    List.of(EstadoCita.PENDIENTE, EstadoCita.CONFIRMADA, EstadoCita.EN_ESPERA)
+            );
+            if (citasActivas >= 2) {
+                throw new RuntimeException("No puedes tener más de 2 citas activas (pendientes o confirmadas) simultáneamente. Cancela una cita anterior o asiste a tus citas programadas antes de reservar una nueva.");
+            }
         }
 
         // 2. Si tiene veterinario asignado, validar que exista

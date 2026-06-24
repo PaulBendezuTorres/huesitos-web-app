@@ -79,3 +79,9 @@ export const reprogramarCita = async (id, nuevaFechaHora) => {
   return respuesta.data;
 };
 
+/** Cancelar una cita (PUT /api/citas/{id}/cancelar) */
+export const cancelarCita = async (id) => {
+  const respuesta = await axios.put(`${API_BASE}/citas/${id}/cancelar`, {}, obtenerHeaders());
+  return respuesta.data;
+};
+

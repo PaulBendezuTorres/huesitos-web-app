@@ -1,16 +1,20 @@
 import { useState, useEffect } from 'react';
 import {
-  Calendar, Stethoscope, CreditCard, Loader2,
+  Calendar, Stethoscope, CreditCard, Loader2, Trash2,
   Copy, Landmark, Store, Smartphone, FileText, X, Check, AlertTriangle, CalendarClock
 } from 'lucide-react';
 import { obtenerTransaccionPorCita, crearPreferenciaPago } from '@/api/mercadoPagoApi';
 import { simularPagoPagoEfectivo } from '@/api/pagoEfectivoApi';
+import { cancelarCita } from '@/api/citaApi';
+import ModalConfirmacion from '@/componentes/comun/ModalConfirmacion';
 
-const FilaCita = ({ cita, badgeEstado, formatearEstado }) => {
+const FilaCita = ({ cita, badgeEstado, formatearEstado, onCitaCancelada }) => {
   const [transaccion, setTransaccion] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [pagando, setPagando] = useState(false);
   const [modalCipAbierto, setModalCipAbierto] = useState(false);
+  const [modalCancelarAbierto, setModalCancelarAbierto] = useState(false);
+  const [cancelando, setCancelando] = useState(false);
   const [tabInstrucciones, setTabInstrucciones] = useState('BANCA'); // 'BANCA' o 'EFECTIVO'
   const [copiado, setCopiado] = useState(false);
   const [simulandoPago, setSimulandoPago] = useState(false);
@@ -80,6 +84,22 @@ const FilaCita = ({ cita, badgeEstado, formatearEstado }) => {
       alert('Error al simular el pago: ' + (err.response?.data?.mensaje || err.message));
     } finally {
       setSimulandoPago(false);
+    }
+  };
+
+  const handleCancelar = async () => {
+    setCancelando(true);
+    try {
+      await cancelarCita(cita.id);
+      setModalCancelarAbierto(false);
+      if (onCitaCancelada) {
+        onCitaCancelada();
+      }
+    } catch (err) {
+      console.error('Error al cancelar la cita:', err);
+      alert('Error al cancelar la cita: ' + (err.response?.data || err.message));
+    } finally {
+      setCancelando(false);
     }
   };
 
@@ -159,33 +179,45 @@ const FilaCita = ({ cita, badgeEstado, formatearEstado }) => {
       </td>
       <td className="px-6 py-4">
         {!cargando && transaccion && cita.estado === 'PENDIENTE' && transaccion.estadoPago === 'PENDIENTE' && (
-          transaccion.medioPago === 'PAGO_EFECTIVO' ? (
+          <div className="flex items-center gap-2">
+            {transaccion.medioPago === 'PAGO_EFECTIVO' ? (
+              <button
+                onClick={() => setModalCipAbierto(true)}
+                className="bg-[#F7C600] hover:bg-[#e0b400] text-slate-900 font-bold py-1.5 px-3 rounded-lg flex items-center gap-1.5 text-xs transition-colors duration-200 whitespace-nowrap"
+              >
+                <FileText size={13} />
+                <span>Ver código CIP</span>
+              </button>
+            ) : (
+              <button
+                onClick={handlePagar}
+                disabled={pagando}
+                className="bg-[#009EE3] hover:bg-[#0081bb] disabled:bg-slate-300 dark:disabled:bg-slate-800 disabled:text-slate-500 text-white font-bold py-1.5 px-3 rounded-lg flex items-center gap-1.5 text-xs transition-colors duration-200 whitespace-nowrap"
+              >
+                {pagando ? (
+                  <>
+                    <Loader2 size={13} className="animate-spin" />
+                    <span>Procesando...</span>
+                  </>
+                ) : (
+                  <>
+                    <CreditCard size={13} />
+                    <span>Pagar</span>
+                  </>
+                )}
+              </button>
+            )}
+
             <button
-              onClick={() => setModalCipAbierto(true)}
-              className="bg-[#F7C600] hover:bg-[#e0b400] text-slate-900 font-bold py-1.5 px-3 rounded-lg flex items-center gap-1.5 text-xs transition-colors duration-200"
+              onClick={() => setModalCancelarAbierto(true)}
+              disabled={cancelando}
+              className="bg-rose-50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-900/30 hover:bg-rose-500 hover:text-white dark:hover:bg-rose-500 font-bold py-1.5 px-3 rounded-lg flex items-center gap-1.5 text-xs transition-colors duration-200"
+              title="Cancelar Cita"
             >
-              <FileText size={13} />
-              <span>Ver código CIP</span>
+              {cancelando ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+              <span>Cancelar</span>
             </button>
-          ) : (
-            <button
-              onClick={handlePagar}
-              disabled={pagando}
-              className="bg-[#009EE3] hover:bg-[#0081bb] disabled:bg-slate-300 dark:disabled:bg-slate-800 disabled:text-slate-500 text-white font-bold py-1.5 px-3 rounded-lg flex items-center gap-1.5 text-xs transition-colors duration-200"
-            >
-              {pagando ? (
-                <>
-                  <Loader2 size={13} className="animate-spin" />
-                  <span>Procesando...</span>
-                </>
-              ) : (
-                <>
-                  <CreditCard size={13} />
-                  <span>Pagar con Mercado Pago</span>
-                </>
-              )}
-            </button>
-          )
+          </div>
         )}
       </td>
     </tr>
@@ -327,10 +359,24 @@ const FilaCita = ({ cita, badgeEstado, formatearEstado }) => {
         </td>
       </tr>
     )}
-  </>;
+
+    {modalCancelarAbierto && (
+      <ModalConfirmacion
+        isOpen={modalCancelarAbierto}
+        onClose={() => setModalCancelarAbierto(false)}
+        onConfirm={handleCancelar}
+        titulo="Cancelar cita médica"
+        mensaje="¿Estás seguro de que deseas cancelar esta cita? Esta acción no se puede deshacer y liberará el horario de atención."
+        textoConfirmar="Sí, cancelar cita"
+        textoCancelar="No, mantener cita"
+        tipo="danger"
+      />
+    )}
+    </>
+  );
 };
 
-const TablaCitasProximas = ({ citas }) => {
+const TablaCitasProximas = ({ citas, onCitaCancelada }) => {
   // Filtrar citas pendientes/confirmadas/en espera (próximas)
   const citasProximas = citas.filter(
     (c) => c.estado === 'PENDIENTE' || c.estado === 'CONFIRMADA' || c.estado === 'EN_ESPERA'
@@ -401,6 +447,7 @@ const TablaCitasProximas = ({ citas }) => {
                     cita={cita}
                     badgeEstado={badgeEstado}
                     formatearEstado={formatearEstado}
+                    onCitaCancelada={onCitaCancelada}
                   />
                 ))}
               </tbody>

@@ -38,6 +38,9 @@
 - [x] Integración de descuentos de campañas en reserva de citas (en cascada hasta el total y transacción).
 - [x] Flujo de pago inmediato en la línea de reserva: opciones de "Pagar en clínica" y "Pagar en línea con Mercado Pago".
 - [x] Rediseño de paso de horario con placeholder y mensaje de instrucción dinámico.
+- [x] Límite de 2 citas activas (PENDIENTE, CONFIRMADA, EN_ESPERA) por cliente en backend para evitar abuso y spam del botón "Pagar en clínica".
+- [x] Botón de cancelación de citas pendientes en el panel del cliente, integrado con el componente ModalConfirmacion y recarga de datos reactiva.
+- [x] Selector de horarios en el agendamiento del cliente rediseñado de forma premium con agrupación por turnos (Turno Mañana y Turno Tarde) con iconos Sol y Atardecer.
 
 ### Módulo Clínico (Consultas, Vacunas, Recetas, Archivos)
 - [x] Entidades: `ConsultaMedica`, `Servicio`, `Vacuna`, `HistorialVacunacion`, `Receta`, `ArchivoClinico` + enum `TipoArchivoClinico`.
