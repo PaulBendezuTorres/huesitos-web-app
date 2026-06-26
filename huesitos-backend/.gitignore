@@ -35,3 +35,6 @@ build/
 ### Huesitos Uploads ###
 uploads/
 
+### Environment Files ###
+.env
+.env.*

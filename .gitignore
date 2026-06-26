@@ -1,1 +1,9 @@
 .vscode/
+
+### Environment Files ###
+.env
+.env.*
+huesitos-backend/.env
+huesitos-backend/.env.*
+huesitos-frontend/.env
+huesitos-frontend/.env.*
