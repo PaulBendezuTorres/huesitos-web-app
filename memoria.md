@@ -79,6 +79,8 @@
 - [x] Desacoplamiento: `ListaCampanasPublicitarias`, `ListaOfertasProductos`, `RegistrarCampana` (con buscador Combobox + panel de servicios + resumen financiero reactivo), `RegistrarOferta` (con descuento por categoría completa vía `POST /api/ofertas/categoria`).
 - [x] Carrusel en `ClienteInicio`: diseño unificado split 75% imagen / 25% panel info desde `md` (tablet y desktop). Altura fija escalonada (420px mobile, 340px tablet, 400px lg, 460px xl) con `object-cover` para consistencia entre imágenes. En mobile: columna vertical. Badge simplificado a "Campaña" (sin "Activa").
 - [x] Descripción de campaña ampliada a 500 chars con contador en tiempo real.
+- [x] Límite de un único uso de campañas promocionales por cliente, validado en backend al crear transacciones y filtrado en frontend en el mapeo de servicios.
+- [x] Redirección correcta del botón "Adquiere tu Promo" en el carrusel de campañas a `/cliente/citas` con preselección del servicio de la promoción.
 
 ### Dashboard y Analíticas
 - [x] `TableroAnaliticas` con `AuditoriaSistema` modular (paginación configurable 5/10/15/20 filas).

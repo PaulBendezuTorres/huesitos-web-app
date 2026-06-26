@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Check, AlertTriangle, ChevronRight, ChevronLeft,
   CircleDollarSign, CalendarClock, CreditCard,
@@ -11,7 +11,7 @@ import PasadorMascota from '@/componentes/cita/PasadorMascota';
 import PasadorServicio from '@/componentes/cita/PasadorServicio';
 import PasadorVeterinario from '@/componentes/cita/PasadorVeterinario';
 import PasadorHorario from '@/componentes/cita/PasadorHorario';
-import { obtenerMascotasPorDueno, obtenerCampanasActivas } from '@/api/clienteApi';
+import { obtenerMascotasPorDueno, obtenerCampanasActivas, obtenerCitasAgenda } from '@/api/clienteApi';
 import {
   agendarCita,
   obtenerCitasPorDia,
@@ -37,6 +37,7 @@ const TITULOS_PASO = [
 
 const ClienteAgendarCita = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [pasoActual, setPasoActual] = useState(1);
 
   const [mascotas, setMascotas] = useState([]);
@@ -68,16 +69,18 @@ const ClienteAgendarCita = () => {
       setCargando(true);
       try {
         const duenoId = localStorage.getItem('duenoId');
-        const [mascotasRes, serviciosRes, campanasRes] = await Promise.allSettled([
+        const [mascotasRes, serviciosRes, campanasRes, citasRes] = await Promise.allSettled([
           duenoId ? obtenerMascotasPorDueno(duenoId) : Promise.resolve([]),
           obtenerServiciosActivos(),
           obtenerCampanasActivas(),
+          obtenerCitasAgenda(),
         ]);
         setMascotas(mascotasRes.status === 'fulfilled' ? mascotasRes.value : []);
         const srv = serviciosRes.status === 'fulfilled' ? serviciosRes.value : [];
         const campanasActivas = campanasRes.status === 'fulfilled' ? campanasRes.value : [];
+        const citasActivas = citasRes.status === 'fulfilled' ? citasRes.value.filter(c => c.estado !== 'CANCELADA') : [];
         
-        // Mapear servicios aplicando precios de campañas activas
+        // Mapear servicios aplicando precios de campañas activas (si no han sido usadas por el cliente)
         const serviciosMapeados = srv.filter((s) => s.activo !== false).map((servicio) => {
           const hoy = new Date();
           const campanaAplicable = campanasActivas.find((campana) => {
@@ -89,13 +92,17 @@ const ClienteAgendarCita = () => {
           });
 
           if (campanaAplicable && campanaAplicable.precioPromocional) {
-            return {
-              ...servicio,
-              precioOriginal: servicio.precio,
-              precio: campanaAplicable.precioPromocional,
-              enCampana: true,
-              nombreCampana: campanaAplicable.nombre,
-            };
+            // Un cliente solo puede usar la promoción una vez para este servicio
+            const yaUsoCampana = citasActivas.some(c => c.servicio?.id === servicio.id);
+            if (!yaUsoCampana) {
+              return {
+                ...servicio,
+                precioOriginal: servicio.precio,
+                precio: campanaAplicable.precioPromocional,
+                enCampana: true,
+                nombreCampana: campanaAplicable.nombre,
+              };
+            }
           }
           return servicio;
         });
@@ -144,6 +151,16 @@ const ClienteAgendarCita = () => {
       setHoraSeleccionada('');
     }
   }, [fechaSeleccionada, cargarDisponibilidad]);
+
+  // Preseleccionar servicio si viene del estado de la navegación
+  useEffect(() => {
+    if (servicios.length > 0 && location.state?.servicioPreseleccionado) {
+      const srvPre = servicios.find(s => s.id === location.state.servicioPreseleccionado.id);
+      if (srvPre) {
+        setServicioSeleccionado(srvPre);
+      }
+    }
+  }, [servicios, location.state]);
 
   // Filtrar horarios disponibles
   const horariosDisponibles = HORARIOS_BASE.filter((hora) => {

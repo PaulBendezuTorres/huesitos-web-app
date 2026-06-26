@@ -36,4 +36,7 @@ public interface TransaccionRepositorio extends JpaRepository<Transaccion, Long>
     java.util.Optional<Transaccion> findByIdTransaccionPasarela(String idTransaccionPasarela);
 
     java.util.Optional<Transaccion> findByReferenciaPago(String referenciaPago);
+
+    @Query("SELECT COUNT(t) FROM Transaccion t WHERE t.cita.mascota.dueño.id = :dueñoId AND t.referenciaPago = :referenciaPago AND t.cita.estado <> 'CANCELADA'")
+    long contarUsosDeCampanaPorCliente(@Param("dueñoId") Long dueñoId, @Param("referenciaPago") String referenciaPago);
 }

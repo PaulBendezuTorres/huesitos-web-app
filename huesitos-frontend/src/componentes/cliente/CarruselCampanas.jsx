@@ -75,7 +75,7 @@ const CarruselCampanas = ({ campanas }) => {
                         )}
                       </div>
                       <button
-                        onClick={() => navigate('/cliente/reservar-cita')}
+                        onClick={() => navigate('/cliente/citas', { state: { servicioPreseleccionado: campana.servicios?.[0] } })}
                         className="w-full py-2 bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white rounded-xl text-xs font-bold transition-all duration-300 shadow-md shadow-sky-500/10 flex items-center justify-center gap-1.5"
                       >
                         <Calendar size={12} /> Adquiere tu Promo

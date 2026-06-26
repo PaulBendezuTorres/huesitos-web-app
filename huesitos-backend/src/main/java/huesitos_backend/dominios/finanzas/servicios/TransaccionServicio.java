@@ -115,9 +115,21 @@ public class TransaccionServicio {
                     boolean contieneServicio = campana.getServicios().stream()
                             .anyMatch(s -> s.getId().equals(cita.getServicio().getId()));
                     if (contieneServicio && campana.getPrecioPromocional() != null) {
-                        monto = campana.getPrecioPromocional();
-                        transaccion.setReferenciaPago("CAMPANA_" + campana.getId());
-                        break;
+                        boolean yaUsoCampana = false;
+                        if (cita.getMascota() != null && cita.getMascota().getDueño() != null) {
+                            long usos = transaccionRepositorio.contarUsosDeCampanaPorCliente(
+                                    cita.getMascota().getDueño().getId(),
+                                    "CAMPANA_" + campana.getId()
+                            );
+                            if (usos > 0) {
+                                yaUsoCampana = true;
+                            }
+                        }
+                        if (!yaUsoCampana) {
+                            monto = campana.getPrecioPromocional();
+                            transaccion.setReferenciaPago("CAMPANA_" + campana.getId());
+                            break;
+                        }
                     }
                 }
             }
