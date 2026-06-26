@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock } from 'lucide-react';
 import ContenedorAutenticacion from '@/componentes/autenticacion/ContenedorAutenticacion';
@@ -15,6 +15,22 @@ const IniciarSesion = () => {
   const [cargando, setCargando] = useState(false);
   
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const rol = localStorage.getItem('usuarioRol');
+    if (token && rol) {
+      if (rol === 'ADMINISTRADOR') {
+        navigate('/admin');
+      } else if (rol === 'CLIENTE') {
+        navigate('/cliente');
+      } else if (rol === 'VETERINARIO') {
+        navigate('/veterinario');
+      } else if (rol === 'RECEPCIONISTA') {
+        navigate('/recepcion');
+      }
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

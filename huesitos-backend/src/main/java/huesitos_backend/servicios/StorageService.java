@@ -1,42 +1,25 @@
 package huesitos_backend.servicios;
 
-import jakarta.annotation.PostConstruct;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.Transformation;
+import com.cloudinary.utils.ObjectUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Iterator;
-import java.util.UUID;
-import javax.imageio.IIOImage;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.stream.FileImageOutputStream;
+import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class StorageService {
 
-    private final String UPLOAD_DIR = "uploads/";
-    private final String CLINICOS_DIR = "uploads/clinicos/";
-
-    @PostConstruct
-    public void init() {
-        try {
-            Files.createDirectories(Paths.get(UPLOAD_DIR));
-            Files.createDirectories(Paths.get(CLINICOS_DIR));
-        } catch (IOException e) {
-            throw new RuntimeException("No se pudieron crear las carpetas de uploads", e);
-        }
-    }
+    private final Cloudinary cloudinary;
 
     /**
-     * Comprime y guarda una foto recibida en la carpeta de uploads.
+     * Sube una foto a Cloudinary optimizándola y limitando el tamaño a 1200px.
      */
     public String comprimirYGuardarFoto(MultipartFile archivo, String prefijo) {
         if (archivo == null || archivo.isEmpty()) {
@@ -44,90 +27,25 @@ public class StorageService {
         }
 
         try {
-            // 1. Leer imagen en memoria
-            BufferedImage imagenOriginal = ImageIO.read(archivo.getInputStream());
-            if (imagenOriginal == null) {
-                throw new RuntimeException("El archivo no es una imagen válida");
-            }
+            Map uploadResult = cloudinary.uploader().upload(archivo.getBytes(), ObjectUtils.asMap(
+                "folder", "huesitos",
+                "resource_type", "image",
+                "transformation", new Transformation()
+                    .width(1200)
+                    .crop("limit")
+                    .quality("auto")
+                    .fetchFormat("auto")
+            ));
 
-            // 2. Redimensionar si supera los 800px de ancho
-            BufferedImage imagenFinal = redimensionarSiEsNecesario(imagenOriginal, 800);
-
-            // 3. Nombre único del archivo
-            String nombreArchivo = prefijo + "_" + UUID.randomUUID().toString() + ".webp";
-
-            // 4. Configurar ImageWriter para compresión WebP (75% de calidad)
-            File outputFile = new File(UPLOAD_DIR + nombreArchivo);
-            guardarConCompresion(imagenFinal, outputFile);
-
-            // 5. Retornar la URL relativa
-            return "/uploads/" + nombreArchivo;
+            return (String) uploadResult.get("secure_url");
 
         } catch (IOException e) {
-            throw new RuntimeException("Error al procesar y guardar la imagen", e);
-        }
-    }
-
-    private BufferedImage redimensionarSiEsNecesario(BufferedImage original, int maxAncho) {
-        int anchoOriginal = original.getWidth();
-        int altoOriginal = original.getHeight();
-
-        if (anchoOriginal <= maxAncho) {
-            return original;
-        }
-
-        double ratio = (double) maxAncho / anchoOriginal;
-        int nuevoAncho = maxAncho;
-        int nuevoAlto = (int) (altoOriginal * ratio);
-
-        // Conservar transparencia si el original la tiene
-        int tipo = original.getColorModel().hasAlpha() ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB;
-        BufferedImage redimensionada = new BufferedImage(nuevoAncho, nuevoAlto, tipo);
-        Graphics2D g2d = redimensionada.createGraphics();
-        
-        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        g2d.drawImage(original, 0, 0, nuevoAncho, nuevoAlto, null);
-        g2d.dispose();
-
-        return redimensionada;
-    }
-
-    private void guardarConCompresion(BufferedImage imagen, File outputFile) throws IOException {
-        Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("webp");
-        if (!writers.hasNext()) {
-            throw new RuntimeException("No se encontró un escritor de imágenes para WebP. Verifica la dependencia de Maven.");
-        }
-        
-        ImageWriter writer = writers.next();
-        ImageWriteParam param = writer.getDefaultWriteParam();
-        param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-        
-        // Configurar tipo de compresión explícita para evitar "No compression type set!"
-        String[] types = param.getCompressionTypes();
-        if (types != null && types.length > 0) {
-            String tipoSeleccionado = types[0];
-            for (String t : types) {
-                if (t.equalsIgnoreCase("Lossy")) {
-                    tipoSeleccionado = t;
-                    break;
-                }
-            }
-            param.setCompressionType(tipoSeleccionado);
-        }
-        
-        param.setCompressionQuality(0.75f); // 75% de calidad para WebP
-
-        try (FileImageOutputStream outputStream = new FileImageOutputStream(outputFile)) {
-            writer.setOutput(outputStream);
-            writer.write(null, new IIOImage(imagen, null, null), param);
-        } finally {
-            writer.dispose();
+            throw new RuntimeException("Error al procesar y guardar la imagen en Cloudinary", e);
         }
     }
 
     /**
-     * Guarda un archivo clínico de forma genérica (PDF, imágenes, etc.) en uploads/clinicos/
-     * sin alterar ni comprimir su contenido.
+     * Guarda un archivo clínico de forma genérica (PDF, imágenes, etc.) en Cloudinary.
      */
     public String guardarArchivoClinico(MultipartFile archivo) {
         if (archivo == null || archivo.isEmpty()) {
@@ -135,29 +53,19 @@ public class StorageService {
         }
 
         try {
-            // Nombre original y extensión
-            String nombreOriginal = archivo.getOriginalFilename();
-            String extension = "";
-            if (nombreOriginal != null && nombreOriginal.contains(".")) {
-                extension = nombreOriginal.substring(nombreOriginal.lastIndexOf("."));
-            }
+            Map uploadResult = cloudinary.uploader().upload(archivo.getBytes(), ObjectUtils.asMap(
+                "folder", "huesitos/clinicos",
+                "resource_type", "auto"
+            ));
 
-            // Nombre único con UUID
-            String nombreArchivo = UUID.randomUUID().toString() + extension;
-
-            // Ruta de guardado
-            File destino = new File(CLINICOS_DIR + nombreArchivo);
-            archivo.transferTo(destino);
-
-            // URL relativa de acceso
-            return "/uploads/clinicos/" + nombreArchivo;
+            return (String) uploadResult.get("secure_url");
         } catch (IOException e) {
-            throw new RuntimeException("Error al guardar el archivo clínico", e);
+            throw new RuntimeException("Error al guardar el archivo clínico en Cloudinary", e);
         }
     }
 
     /**
-     * Borra una foto del almacenamiento si no es la de por defecto.
+     * Borra una foto de Cloudinary o del almacenamiento local si es antigua.
      */
     public void borrarFoto(String urlFoto) {
         if (urlFoto == null || urlFoto.isBlank() || urlFoto.contains("defecto-")) {
@@ -165,13 +73,50 @@ public class StorageService {
         }
 
         try {
-            String rutaRelativa = urlFoto.startsWith("/") ? urlFoto.substring(1) : urlFoto;
-            java.nio.file.Path rutaArchivo = Paths.get(rutaRelativa);
-            if (Files.exists(rutaArchivo)) {
-                Files.delete(rutaArchivo);
+            if (urlFoto.contains("cloudinary.com")) {
+                String publicId = extraerPublicId(urlFoto);
+                if (publicId != null) {
+                    String resourceType = urlFoto.contains("/raw/") ? "raw" : (urlFoto.contains("/video/") ? "video" : "image");
+                    cloudinary.uploader().destroy(publicId, ObjectUtils.asMap("resource_type", resourceType));
+                }
+            } else {
+                // Compatibilidad con archivos locales anteriores
+                String rutaRelativa = urlFoto.startsWith("/") ? urlFoto.substring(1) : urlFoto;
+                java.nio.file.Path rutaArchivo = Paths.get(rutaRelativa);
+                if (Files.exists(rutaArchivo)) {
+                    Files.delete(rutaArchivo);
+                }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.err.println("No se pudo borrar el archivo: " + urlFoto + ". Error: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Extrae el public_id de una URL de Cloudinary para poder borrar la imagen.
+     */
+    private String extraerPublicId(String url) {
+        try {
+            int idxUpload = url.indexOf("/upload/");
+            if (idxUpload == -1) return null;
+
+            String path = url.substring(idxUpload + 8);
+
+            if (path.startsWith("v")) {
+                int primerSlash = path.indexOf("/");
+                if (primerSlash != -1) {
+                    path = path.substring(primerSlash + 1);
+                }
+            }
+
+            int ultimoPunto = path.lastIndexOf(".");
+            if (ultimoPunto != -1) {
+                path = path.substring(0, ultimoPunto);
+            }
+
+            return path;
+        } catch (Exception e) {
+            return null;
         }
     }
 }

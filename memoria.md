@@ -1,349 +1,145 @@
 # Memoria de Desarrollo - Huesitos
 
-Última actualización: 2026-06-15 (Direcciones de Marketing Separadas, Carrusel 16:9, Layout de Servicios Lado a Lado)
+Última actualización: 2026-06-24 (Optimización de flujo de citas, sesión activa y Mercado Pago local)
 
-## 🚀 Logros Recientes
-- [x] **Rediseño, Simplificación de Ofertas de Productos e Interactividad Financiera**:
-  - Rediseñado y simplificado el formulario [RegistrarOferta.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx) para enfocarse exclusivamente en productos del inventario y farmacia, removiendo banners, títulos manuales, descripciones y relaciones a campañas.
-  - Añadido soporte para registrar descuentos por **Categoría Completa** en [RegistrarOferta.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx), permitiendo que el usuario ingrese un porcentaje de descuento y cree ofertas individuales de forma masiva para todos los productos de la categoría mediante el endpoint `POST /api/ofertas/categoria`.
-  - Autogeneración transparente del título (`Oferta: [Nombre del Producto]`) y descripción en el submit de la oferta, garantizando compatibilidad con el backend sin forzar al usuario a ingresarlos manualmente.
-  - Implementado el cálculo reactivo del porcentaje de descuento y el ahorro neto en [RegistrarOferta.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx) basado en el precio original y el precio de oferta.
-  - Integrado un panel de resumen financiero reactivo en [RegistrarCampana.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarCampana.jsx) debajo del listado de servicios seleccionados que calcula y muestra la suma del **Precio Inicial** (suma de precios de los servicios), el **Descuento (%)** frente al **Precio Promocional** de campaña, y el **Ahorro para el Cliente**.
-  - Añadida validación interactiva que alerta al usuario si el precio promocional de la campaña supera o iguala la suma de precios originales de los servicios incluidos.
-- [x] **Separación de Direcciones de Marketing (Campañas vs Ofertas)**:
-  - Desacoplada la ruta única de administración `/admin/campanas` para ofertas. Ahora las campañas de salud residen exclusivamente en `/admin/campanas` y las ofertas de farmacia en `/admin/ofertas`.
-  - Creada la página independiente [PaginaOfertas.jsx](./huesitos-frontend/src/paginas/marketing/PaginaOfertas.jsx) exclusiva para la administración y listado de ofertas de productos.
-  - Simplificada la página [PaginaCampanas.jsx](./huesitos-frontend/src/paginas/marketing/PaginaCampanas.jsx) eliminando la barra de pestañas (tabs) y los botones de ofertas para dejarla de uso único para campañas.
-  - Modificado el ruteo interno en [TableroAdministrador.jsx](./huesitos-frontend/src/paginas/dashboard/TableroAdministrador.jsx) agregando las nuevas subrutas de listado, registro y edición para `/admin/ofertas`.
-  - Modificado [RegistrarOferta.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx) para redirigir de forma correcta a `/admin/ofertas` tras guardar o cancelar.
-  - Separado el menú de la barra lateral en [BarraLateral.jsx](./huesitos-frontend/src/componentes/layout/BarraLateral.jsx) en dos botones independientes: "Campañas de Salud" (icono Megaphone) y "Ofertas de Descuento" (icono Percent).
-- [x] **Carrusel / Ruleta de Campañas (16:9) e Integración en Portada y Cliente**:
-  - Desarrollado el componente modular [SeccionCampanas.jsx](./huesitos-frontend/src/componentes/portada/SeccionCampanas.jsx) con un carrusel dinámico en 16:9 (`aspect-[16/9]` o `aspect-[21/9]`), soporte de rotación automática (cada 6 segundos), flechas de navegación, puntos indicadores y overlay de gradiente oscuro para legibilidad de textos.
-  - Integrado el carrusel de campañas activas en la página de inicio pública [Portada.jsx](./huesitos-frontend/src/paginas/dashboard/Portada.jsx) obteniendo los datos desde la API pública.
-  - Reemplazado el banner estático del cliente en [ClienteInicio.jsx](./huesitos-frontend/src/paginas/cliente/ClienteInicio.jsx) por este mismo carrusel interactivo dinámico de campañas.
-  - Corregido el contenedor del banner en el catálogo administrativo de campañas [PaginaCampanas.jsx](./huesitos-frontend/src/paginas/marketing/PaginaCampanas.jsx) para usar `aspect-video` (16:9) en lugar de una altura fija `h-40`, logrando consistencia visual del banner.
-- [x] **Buscador de Servicios y Distribución de Panel en Nueva Campaña**:
-  - Rediseñada la vinculación de servicios en [RegistrarCampana.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarCampana.jsx): el buscador `<Combobox />` y el texto instructivo se ubican en el panel izquierdo (debajo de los parámetros comerciales), mientras que el contenedor de **Servicios Seleccionados** (con scroll y controles para remover con X) se sitúa en el panel derecho, ubicado de forma limpia debajo del contenedor del Banner de campaña.
-  - Reducido el tamaño de la previsualización del banner a `max-w-xs` en [RegistrarCampana.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarCampana.jsx) para un diseño compacto y simétrico, añadiendo la recomendación visual de relación de aspecto 16:9.
-- [x] **Precio Promocional y Ampliación de Descripción en Campañas**:
-  - Añadido el campo `precioPromocional` a la entidad `Campana` en el backend ([Campana.java](./huesitos-backend/src/main/java/huesitos_backend/dominios/marketing/entidades/Campana.java)) para definir precios fijos promocionales para paquetes de servicios.
-  - Incrementado el límite físico de la descripción de la campaña a **500 caracteres** en la base de datos (longitud de columna `descripcion`), en la validación del servicio del backend ([CampanaOfertaServicio.java](./huesitos-backend/src/main/java/huesitos_backend/dominios/marketing/servicios/CampanaOfertaServicio.java)) y en el frontend ([RegistrarCampana.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarCampana.jsx)).
-  - Integrada la entrada del precio promocional y el contador dinámico en tiempo real (`0/500`) en la vista de registro.
-  - Agregado el despliegue del precio promocional destacado en el listado de tarjetas de campañas en [PaginaCampanas.jsx](./huesitos-frontend/src/paginas/marketing/PaginaCampanas.jsx).
-  - Validada la compilación de producción exitosa del frontend (`npm run build`) y la compilación del backend (`.\mvnw compile`).
-- [x] **Desacoplamiento Completo del Módulo de Marketing**:
-  - Extraído el listado de campañas publicitarias al nuevo componente atómico [ListaCampanasPublicitarias.jsx](./huesitos-frontend/src/componentes/marketing/ListaCampanasPublicitarias.jsx), aislando la visualización de tarjetas.
-  - Extraído el listado de ofertas de descuento al nuevo componente atómico [ListaOfertasProductos.jsx](./huesitos-frontend/src/componentes/marketing/ListaOfertasProductos.jsx), aislando las tarjetas de ofertas de farmacia.
-  - Simplificada la vista general de [PaginaCampanas.jsx](./huesitos-frontend/src/paginas/marketing/PaginaCampanas.jsx), reduciéndola de 419 a 214 líneas delegando la renderización de listas a los nuevos componentes modulares.
-  - Extraído el formulario de creación/edición de Campañas de un modal en la vista principal a la página independiente [RegistrarCampana.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarCampana.jsx).
-  - Extraído el formulario de creación/edición de Ofertas a la página independiente [RegistrarOferta.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx).
-  - Integrado el componente buscador interactivo `<Combobox />` en [RegistrarOferta.jsx](./huesitos-frontend/src/paginas/marketing/RegistrarOferta.jsx) para buscar y autocompletar productos de farmacia de forma dinámica.
-  - Registradas las nuevas subrutas de creación y edición de marketing en [TableroAdministrador.jsx](./huesitos-frontend/src/paginas/dashboard/TableroAdministrador.jsx).
-  - Validada la compilación de producción exitosa del frontend (`npm run build`).
-- [x] **Refactorización de Campañas y Marketing de Servicios**:
-  - Implementada la vinculación de **uno o más servicios** a las Campañas en el backend ([Campana.java](./huesitos-backend/src/main/java/huesitos_backend/dominios/marketing/entidades/Campana.java)) mediante una relación Many-to-Many con [Servicio.java](./huesitos-backend/src/main/java/huesitos_backend/dominios/veterinaria_servicio/entidades/Servicio.java).
-  - Creado un endpoint multipart en el backend y el cliente API del frontend ([marketingApi.js](./huesitos-frontend/src/api/marketingApi.js)) para permitir la subida de un **Banner publicitario (Hero)** comprimido automáticamente a WebP.
-  - Implementada la validación estricta y límite físico de **350 caracteres** en la descripción de las campañas en backend y frontend, añadiendo un contador de caracteres interactivo en el modal.
-  - Rediseñadas las tarjetas (cards) en [PaginaCampanas.jsx](./huesitos-frontend/src/paginas/marketing/PaginaCampanas.jsx) para desplegar el banner superior de la campaña con estilo de evento y badges con los servicios incluidos en el paquete.
-  - Validada la correcta compilación y construcción exitosa del frontend (`npm run build`) y el backend (`.\mvnw compile`).
-- [x] **Estabilización y Corrección de la Configuración Global**:
-  - Solucionado el error **403 (Forbidden)** en la obtención de parámetros globales desde el panel administrativo al actualizar el cliente API [configuracionApi.js](./huesitos-frontend/src/api/configuracionApi.js) para que envíe condicionalmente el token JWT de autorización si el usuario está autenticado.
-  - Eliminado por completo el molesto parpadeo y cambio de tamaño del contenedor principal ("se agranda y se achica") al introducir un componente de carga esqueleto `EsqueletoFormulario` en [ConfiguracionDinamica.jsx](./huesitos-frontend/src/paginas/dashboard/ConfiguracionDinamica.jsx) que simula las dimensiones tridimensionales del formulario real.
-  - Diseñada una interfaz interactiva de fallo de conexión con un botón de **Reintentar Carga** en lugar de renderizar formularios vacíos e inútiles ante errores de red o sesión.
-  - Validada la correcta compilación y construcción de producción del frontend con `npm run build` sin errores.
-- [x] **Desacoplamiento y Estilizado de Personal de la Clínica (Horarios)**:
-  - Extraído el listado de personal de [ConfiguracionHorarios.jsx](./huesitos-frontend/src/paginas/cita/ConfiguracionHorarios.jsx) a su propio componente [ListaPersonalClinica.jsx](./huesitos-frontend/src/componentes/cita/ListaPersonalClinica.jsx).
-  - Mejorado el estilo del listado con avatares con gradiente dinámico, badges coloridos y limpios según rol (Veterinario/Recepcionista), buscador integrado, bordes y transiciones activas de selección suaves.
-  - Limpiados el estado y funciones de búsqueda de la página de horarios al estar ahora encapsulados.
-  - Validada la correcta compilación y construcción del frontend mediante `npm run build` sin errores.
-- [x] **Desacoplamiento y Rediseño de Configuración Global**:
-  - Creado el servicio API de configuración en [configuracionApi.js](./huesitos-frontend/src/api/configuracionApi.js) para independizar el controlador.
-  - Extraídas las secciones de la página en tres subcomponentes atómicos e independientes en `src/componentes/dashboard/`: [FormularioInfoNegocio.jsx](./huesitos-frontend/src/componentes/dashboard/FormularioInfoNegocio.jsx), [FormularioContacto.jsx](./huesitos-frontend/src/componentes/dashboard/FormularioContacto.jsx) y [FormularioFinanciero.jsx](./huesitos-frontend/src/componentes/dashboard/FormularioFinanciero.jsx).
-  - Rediseñada la página [ConfiguracionDinamica.jsx](./huesitos-frontend/src/paginas/dashboard/ConfiguracionDinamica.jsx) utilizando la nueva API y componentes, adoptando la estética premium flotante del dashboard (cards estructuradas, inputs estilizados, ring en focus, banners interactivos de éxito/error).
-  - Reemplazada la llamada directa a axios en [Portada.jsx](./huesitos-frontend/src/paginas/dashboard/Portada.jsx) para utilizar el nuevo servicio API configurado.
-  - Validada la correcta compilación y construcción del frontend mediante `npm run build` sin errores.
-- [x] **Desacoplamiento, Paginación y Rediseño de Gestión de Pedidos**:
-  - Extraído el listado de compras al componente modular independiente [ListaPedidosDespacho.jsx](./huesitos-frontend/src/componentes/tienda/ListaPedidosDespacho.jsx), incorporando paginación integrada (`6` pedidos por página).
-  - Extraído el detalle de despacho al componente independiente [DetallePedidoDespacho.jsx](./huesitos-frontend/src/componentes/tienda/DetallePedidoDespacho.jsx).
-  - Rediseñada la maquetación de [GestionPedidos.jsx](./huesitos-frontend/src/paginas/tienda/GestionPedidos.jsx) para utilizar una estructura premium flotante tipo canvas (espaciado `gap-6` y padding `p-6` alineado con el estilo de registro de producto).
-  - Configurada la propiedad `sinPadding` dinámicamente en el [TableroAdministrador.jsx](./huesitos-frontend/src/paginas/dashboard/TableroAdministrador.jsx) para las subvistas de pedidos y agenda semanal, logrando que las tarjetas del módulo de despacho se estiren uniformemente al 100% de la altura de la pantalla de forma simétrica.
-  - Validada la correcta compilación del frontend mediante `npm run build` sin errores.
-- [x] **Seguridad y Simplificación en la Gestión de Usuarios**:
-  - Removida la funcionalidad redundante de creación de "Nuevo Personal" en el panel de usuarios para evitar duplicidad de flujos.
-  - Implementada una validación de seguridad robusta tanto en backend ([UsuarioServicio.java](./huesitos-backend/src/main/java/huesitos_backend/dominios/usuario/servicios/UsuarioServicio.java) y [UsuarioControlador.java](./huesitos-backend/src/main/java/huesitos_backend/dominios/usuario/controladores/UsuarioControlador.java)) como en frontend ([PaginaUsuarios.jsx](./huesitos-frontend/src/paginas/dashboard/PaginaUsuarios.jsx)) que exige la confirmación mediante contraseña del administrador autenticado para promover a cualquier usuario al rol `ADMINISTRADOR`.
-  - Validada la correcta compilación de producción del frontend (`npm run build`) y del backend (`.\mvnw compile`) de forma exitosa.
-- [x] **Desacoplamiento y Paginación en Resumen Estadístico**:
-  - Conservado el widget de alertas de inventario en el dashboard, renombrándolo a `"Inventario Crítico"` para remover la abreviatura "(FEFO)".
-  - Agregada paginación integrada con `<Paginacion />` para ambas columnas del widget (`Stock crítico` y `Próximos a vencer`), limitando la visualización a un máximo de 5 elementos por página.
-  - Extraído el módulo de logs al componente modular independiente [AuditoriaSistema.jsx](./huesitos-frontend/src/componentes/dashboard/AuditoriaSistema.jsx).
-  - Integrado el componente reutilizable `<Paginacion />` para paginar localmente las actividades de auditoría con opciones de filas configurables (`5, 10, 15, 20`).
-  - Rediseñado [TableroAnaliticas.jsx](./huesitos-frontend/src/paginas/dashboard/TableroAnaliticas.jsx) para utilizar el nuevo componente de auditoría, simplificando la vista principal.
-  - Validada la correcta compilación del frontend mediante `npm run build` sin errores.
-- [x] **Desacoplamiento y Paginación en Caja y Finanzas**:
-  - Extraído el historial global de transacciones al componente modular e independiente [TablaTransacciones.jsx](./huesitos-frontend/src/componentes/finanzas/TablaTransacciones.jsx).
-  - Integrado el componente reutilizable `<Paginacion />` en la tabla para paginar localmente el historial de cobros con opciones de visualización configurable (`5, 10, 20, 50` filas por página).
-  - Rediseñado [PaginaFinanzas.jsx](./huesitos-frontend/src/paginas/finanzas/PaginaFinanzas.jsx) para utilizar el nuevo componente, reduciendo su complejidad y limpiando el archivo principal.
-  - Validada la correcta compilación del frontend mediante `npm run build` sin errores.
-- [x] **Desacoplamiento y Rediseño de la Agenda Semanal**:
-  - Extraído el modal de reprogramación de citas al componente independiente [ModalReprogramarCita.jsx](./huesitos-frontend/src/componentes/cita/ModalReprogramarCita.jsx), centralizando la verificación de disponibilidad horaria del veterinario, excepciones de fechas y llamadas API (`reprogramarCita`, `obtenerCitasPorDia`, `obtenerHorariosVeterinario`).
-  - Rediseñado el componente principal [AgendaSemanal.jsx](./huesitos-frontend/src/paginas/cita/AgendaSemanal.jsx) para utilizar el modal modular, reduciendo su complejidad y eliminando estados y efectos locales innecesarios de reprogramación.
-  - Reemplazados los selectores de dropdown nativos y toscos de filtros de Veterinario y Estado por el componente interactivo y moderno `<Combobox compacto={true} />`.
-  - Validada la correcta compilación del frontend mediante `npm run build` sin errores.
-- [x] **Filtro Combobox de Categorías en Inventario**:
-  - Implementada la prop `compacto` en [Combobox.jsx](./huesitos-frontend/src/componentes/comun/Combobox.jsx) para reducir la altura (`py-1.5 text-xs`), el padding y el tamaño de los iconos en el componente reutilizable.
-  - Reemplazado el selector nativo y tosco en [PaginaInventario.jsx](./huesitos-frontend/src/paginas/tienda/PaginaInventario.jsx) por una instancia del Combobox en modo compacto, permitiendo filtrar interactivamente por categoría con un buscador y diseño premium.
-- [x] **Desacoplamiento en Registro de Productos**:
-  - Extraído el modal de creación rápida de categorías a su propio componente independiente [ModalCrearCategoria.jsx](./huesitos-frontend/src/componentes/tienda/ModalCrearCategoria.jsx).
-  - Rediseñada la página [RegistrarProductoNuevo.jsx](./huesitos-frontend/src/paginas/tienda/RegistrarProductoNuevo.jsx) para importar y utilizar el modal modular, simplificando la vista del formulario.
-- [x] **Límite de Caracteres en Descripción del Producto**:
-  - Implementada la validación en el cliente ([RegistrarProductoNuevo.jsx](./huesitos-frontend/src/paginas/tienda/RegistrarProductoNuevo.jsx)) añadiendo un atributo `maxLength={350}`, un contador visual de caracteres en tiempo real y bloqueo en `handleSubmit`.
-  - Implementada la validación en el servidor ([ProductoServicio.java](./huesitos-backend/src/main/java/huesitos_backend/dominios/tienda/servicios/ProductoServicio.java)) verificando que el largo de la descripción sea menor o igual a 350 caracteres antes de guardar.
-- [x] **Rediseño Estético de Lotes de Stock**:
-  - Mejorada la interfaz visual de [ModalIngresoLote.jsx](./huesitos-frontend/src/componentes/tienda/ModalIngresoLote.jsx) aplicando la paleta de diseño Tailwind de Huesitos (gradiente de botones, inputs estructurados con focos ring, bordes redondeados amplios y soporte robusto para tema oscuro en mensajes de error).
-  - Corregidas las importaciones de Lucide en el componente, reemplazando iconos inexistentes por `Plus` y `Calendar` asegurando la estabilidad.
-- [x] **Desacoplamiento de la Gestión de Usuarios**:
-  - Extraído el modal de alta de personal al subcomponente [ModalCrearPersonal.jsx](./huesitos-frontend/src/componentes/usuario/ModalCrearPersonal.jsx).
-  - Extraído el modal de detalles y edición de credenciales al subcomponente [ModalDetallesUsuario.jsx](./huesitos-frontend/src/componentes/usuario/ModalDetallesUsuario.jsx).
-  - Extraído el modal de advertencia de borrado de cuenta al subcomponente [ModalEliminarUsuario.jsx](./huesitos-frontend/src/componentes/usuario/ModalEliminarUsuario.jsx).
-  - Rediseñado [PaginaUsuarios.jsx](./huesitos-frontend/src/paginas/dashboard/PaginaUsuarios.jsx) para utilizar los componentes desacoplados, reduciendo su tamaño de 593 a 250 líneas.
-- [x] **Validación de Compilación**:
-  - Ejecutada la compilación de producción del frontend (`npm run build`) verificando que se construye sin ningún error sintáctico o de importación.
-- [x] **Ajuste de Sincronización de Temas**: Corregida la contradicción visual del alternador de tema en `PlantillaTablero.jsx`, `EncabezadoPortada.jsx` y `ContenedorAutenticacion.jsx`, mostrando ahora la Luna (`Moon`) en modo oscuro y el Sol (`Sun`) en modo claro para representar el estado actual y no el siguiente.
-- [x] **Corrección de Tema Oscuro en Inventario**:
-  - Añadidas clases de tema oscuro (`dark:bg-sky-950/30`, etc.) a las tarjetas de alertas seleccionadas en `TarjetasAlertasInventario.jsx` para evitar fondos claros e ilegibles.
-  - Modificado el botón principal "Ingresar Lote" en `PaginaInventario.jsx` para integrarse con la paleta semántica oscura (`dark:bg-sky-500` y `dark:text-slate-950`) en lugar de usar `dark:bg-slate-100` (que se veía blanco/gris muy claro).
-- [x] **Modularización del Catálogo de Servicios**: Extraído el modal de edición de servicios médicos de `PaginaServicios.jsx` al nuevo subcomponente [ModalEditarServicio.jsx](./huesitos-frontend/src/componentes/servicio/ModalEditarServicio.jsx), simplificando la vista del catálogo.
-- [x] **Modularización del Módulo de Inventario**: Separada la lógica de `PaginaInventario.jsx` en componentes atómicos independientes en `src/componentes/tienda/` (`TarjetasAlertasInventario.jsx`, `TablaInventario.jsx`, `ModalIngresoLote.jsx` y `ModalAjusteStockLote.jsx`), reduciendo drásticamente el tamaño del archivo principal.
-- [x] **Rediseño del Ancho Completo en Registro de Productos**: Modificada la vista `RegistrarProductoNuevo.jsx` para ocupar todo el ancho de la pantalla alineada a la izquierda (evitando que se centre y achique) y agrupando el título junto al botón de volver.
-- [x] **Desacoplamiento de Registro de Productos**: Convertido el formulario de registro en una página dedicada (`RegistrarProductoNuevo.jsx`) ruteada en el panel del administrador, removiendo el modal interno de inventario.
-- [x] **Carga y Compresión de Imágenes a WebP (Tienda)**: Agregada subida de imágenes de productos con límite de 5MB en frontend y compresión automática a formato WebP (800px ancho, 75% calidad) inyectando `StorageService` en `ProductoServicio.java` en el backend.
-- [x] **Paginación e Imagen en Tabla de Inventario**: Integrado el componente reutilizable `<Paginacion />` al pie de la tabla de productos y añadidas miniaturas visuales de los productos en las filas.
-- [x] **Eliminación del Término FEFO**: Removido el término "FEFO" de la barra lateral, botones and toda la UI del inventario para mayor legibilidad y simplicidad.
-- [x] **Selección e Ingreso Rápido de Categorías**: Adaptado el componente `<Combobox />` para soportar iconos customizados y retornar el objeto seleccionado. Se agregó un modal rápido de creación de categorías en la misma vista de registro de productos.
-- [x] **Modularización del Flujo de Autenticación**: Separado en subcomponentes atómicos (`ContenedorAutenticacion`, `CampoFormulario`, `CasillerosCodigo`).
-- [x] **Modularización de la Portada**: Dividida la landing page `Portada.jsx` en componentes autónomos en `/src/componentes/portada/` (Hero, Nosotros, Servicios, etc.).
-- [x] **Tema Oscuro Semántico y Legibilidad**: Integrada la paleta semántica oscura basada en el color azul marino profundo del usuario (`#0B1A30` como `oscuro-base`) en `tailwind.config.js` y documentada en `frontend.md`.
-- [x] **Automatización del Workflow de Memoria**: Modificados el workflow `actualizar_memoria.md` y las reglas generales `general.md` para actualizar la memoria de forma directa y automática.
-- [x] **Implementación de Dark Mode en toda la aplicación**:
-  - Configurado Tailwind CSS con la directiva `darkMode: 'class'`.
-  - Creado e integrado `huesitos-frontend/src/contextos/ContextoTema.jsx` para proveer un estado global reactivo de tema claro/oscuro.
-  - Rediseñadas todas las vistas principales de la aplicación para soportar el tema oscuro (TableroAdministrador, AgendaSemanal, GestionPedidos, PaginaServicios, PaginaDuenos, PaginaFinanzas, PaginaInventario, PaginaCampanas, PaginaUsuarios, ConfiguracionHorarios, ConfiguracionDinamica y WidgetInventarioCritico).
-- [x] **Fusión e Integración de Código en Producción**:
-  - Realizado el merge explícito no fast-forward de la rama `develop` a `main` tras validar la compilación exitosa y sin errores de producción en el frontend.
-- [x] **Seguridad en Cambio de Contraseña**: Implementada validación en backend (`PerfilControlador.java` y `PerfilRequest.java`) y frontend (`MiPerfil.jsx`) para requerir la contraseña actual y exigir una longitud mínima de 6 caracteres antes de permitir la actualización.
-- [x] **Conversión y Compresión de Imágenes a WebP**: Integrada la dependencia `webp-imageio` en `pom.xml`. Se configuró `StorageService.java` para convertir y guardar automáticamente las imágenes subidas en formato `.webp` con calidad del 75%, conservando el canal alfa (transparencia) para archivos PNG.
-- [x] **Servicio de Recursos Estáticos de Uploads**: Creada la clase de configuración `WebConfig.java` para exponer el directorio físico de subidas y servir archivos estáticos. Se actualizó `SeguridadConfig.java` para permitir el acceso público sin token a la ruta `/uploads/**`.
-- [x] **Sincronización de Avatar en Header y Sidebar en Tiempo Real**: Configurada la API de inicio de sesión (`AutenticacionControlador.java` y `RespuestaLogin.java`) para enviar la foto de perfil y guardarla en `localStorage`. Se implementó un estado reactivo y escucha de eventos `storage` en `PlantillaTablero.jsx` y `BarraLateral.jsx` para actualizar el avatar inmediatamente en todo el portal al subir una nueva foto.
-- [x] **Limpieza del Disco al Cambiar de Imagen**: Se añadió lógica en `StorageService.java` para borrar la foto antigua del servidor cuando se sube una nueva foto (de usuario o mascota), ignorando las fotos por defecto (`defecto-`).
-- [x] **Bloqueo y Feedback de Subida de Fotos**: Agregada una guardia en `handleSubirFoto` de `MiPerfil.jsx` para evitar subidas concurrentes, deshabilitando interacciones en el botón de cámara y mostrando un spinner de carga (`CargadorSpinner`) difuminado sobre el avatar.
-- [x] **Estructura Unificada de Tableros con `PlantillaTablero.jsx`**: Creado el componente contenedor `PlantillaTablero.jsx` que encapsula la estructura responsiva común de todos los tableros (sidebar responsivo, overlay de fondo, header de navegación con botón hamburguesa y badge del perfil de usuario).
-- [x] **Refactorización de los Portales de Roles**: Migrados los portales `TableroAdministrador.jsx`, `TableroCliente.jsx`, `TableroRecepcionista.jsx` y `TableroVeterinario.jsx` para utilizar `PlantillaTablero`, garantizando consistencia visual del 100%, idéntica responsividad adaptativa en móviles/tablets y eliminando código duplicado y estados locales.
-- [x] **Unificación de BarraLateral Dinámica**: Diseñado y desarrollado el componente dinámico `BarraLateral.jsx` que unifica las barras laterales de todos los roles (Administrador, Veterinario, Recepcionista y Cliente). El componente adapta de forma automática el listado de navegación, colores (emerald para veterinario, sky para el resto), subtítulo superior, y credenciales/rol del usuario en la parte inferior, eliminando código duplicado en los 4 tableros principales.
-- [x] **Modularización del Menú Lateral de Administración**: Extraído el menú lateral del administrador al componente modular `BarraLateralAdmin.jsx` (luego integrado y mejorado en la BarraLateral global). Esto limpia los tableros delegando la lógica de navegación y responsividad al nuevo componente.
-- [x] **Hace que Caja y Finanzas y otros componentes de carga utilicen spinners**: Agregado control de estados de carga en vistas financieras y clínicas para evitar movimientos toscos de maquetación en red.
-- [x] **Conexión de base de datos y CRUDs**: Conexión MySQL, Seguridad JWT, Entidades Mascotas, Dueños, Citas, Servicios médicos, Transacciones, Consultas médicas, Roles, Horarios del Personal, Vacunas y Recetas PDF (Fases 1 a 11B completadas en backend y frontend).
-- [x] **Corrección de Desbordamiento en Encabezados y Celdas de Tablas**: 
-  - Corregidos desbordamientos en los encabezados de los tableros administradores truncando de forma adaptativa el título y el correo del usuario (`correo`) en móviles (`max-w-[80px] sm:max-w-[120px]`).
-  - Corregidas las celdas de tablas (`td`) que utilizaban directamente `flex`, lo cual rompía la alineación de columnas. Se encapsuló su contenido en un contenedor `div className="flex"` en `PaginaDuenos.jsx`, `PaginaUsuarios.jsx`, `PaginaInventario.jsx` y `TablaServicio.jsx`.
-- [x] **Consistencia Responsiva en Tablero de Administrador**: Rediseñado `TableroAdministrador.jsx` para adoptar el mismo menú hamburguesa, drawer responsivo lateral y overlay que se implementaron en los tableros de Cliente, Veterinario y Recepcionista. Ahora todos los tableros del sistema se comportan de manera idéntica y fluida en dispositivos móviles, ocultando la barra lateral bajo un botón hamburguesa en el header y cerrando el panel al seleccionar cualquier opción.
-- [x] **Altura Fija y Armonía Visual del Card de Autenticación**: Establecida una altura fija de `600px` (con `max-height: calc(100vh - 3rem)` como límite de seguridad) para `.auth-card` en tablet y desktop mediante una media query `@media (min-width: 768px)` en `index.css`. Ahora todas las vistas de autenticación (`IniciarSesion`, `Registro`, `RecuperarContrasena`, `RestablecerContrasena`) tienen exactamente el mismo tamaño de card — eliminando el efecto de crecimiento al navegar entre vistas. El panel del formulario (`.auth-right-panel`) tiene `overflow-y: auto` y `height: 100%` para que formularios largos (como Registro) hagan scroll **dentro** del card sin alterar su tamaño. En móvil el card mantiene flujo libre sin restricciones de altura.
-- [x] **Responsividad Final del Flujo de Autenticación en Móvil**: Eliminado el scroll de página en todas las vistas de autenticación (`IniciarSesion.jsx`, `Registro.jsx`, `RecuperarContrasena.jsx`, `RestablecerContrasena.jsx`). En `PanelIzquierdoAutenticacion.jsx` se ocultó todo el contenido decorativo (badge, título, descripción, chips) en móvil con `hidden md:flex`, dejando solo la barra de logo compacta para no desbordar el viewport. En `index.css` se eliminó `max-height` and `overflow-y-auto` del card, usando `items-start md:items-center` en el wrapper de cada página para alinear el card desde arriba en móvil. El `BotonVolver` se hizo siempre visible añadiendo `flex-wrap gap-2` en el encabezado del formulario de todas las vistas. En tablet (md+) el panel azul vuelve a mostrarse completo como columna lateral.
-- [x] **Traducción y Renombrado del Frontend a Español**: Renombradas todas las carpetas (`components` → `componentes`, `pages` → `paginas`, `services` → `servicios`, `Modules` → `modulos`) y archivos internos a nombres en español (`IniciarSesion.jsx`, `TarjetaMascota.jsx`, `duenoServicio.js`, etc.). Ejecutado script automático de refactorización para actualizar todas las importaciones, declaraciones de componentes y referencias en el código. Compilación de producción verificada con `npm run build` sin errores.
-- [x] **Corrección del Botón Volver en Vistas de Autenticación**: Reemplazado el posicionamiento `absolute top-6 right-6` del botón Volver por un botón en flujo normal dentro de un `flex justify-between` junto al título, evitando el solapamiento con el contenido en móvil. Aplicado en `IniciarSesion.jsx`, `Registro.jsx`, `RecuperarContrasena.jsx` y `RestablecerContrasena.jsx`.
-- [x] **Componente Reutilizable `BotonVolver.jsx`**: Creado el componente `BotonVolver` en `src/componentes/` que encapsula `navigate(-1)`, el ícono `ArrowLeft` y los estilos comunes. Reemplazados los botones inline en las 4 vistas de autenticación por `<BotonVolver />`. Ahora el botón respeta el historial real del navegador (ej: desde Portada → Registro → Volver → Portada).
-- [x] **Mejoras de Responsividad y CTA en `Portada.jsx`**: Logo e icono de Huesitos convertido en enlace `<a href="#inicio">`. Texto del nombre adaptativo (`text-xl sm:text-3xl`). Agregado botón "Crear cuenta" en navbar desktop junto a "Iniciar Sesión". Menú hamburguesa corregido: centrado con `flex items-start justify-center`, eliminado el botón ✕ duplicado interno, reordenados los botones (Iniciar Sesión primero, Crear cuenta segundo), sección Hero con tipografía responsiva (`text-3xl sm:text-5xl md:text-7xl`), botones CTA en el hero, grid de sección Nosotros activado desde `md:` en lugar de solo `lg:`, altura de imagen adaptativa por breakpoint.
-- [x] **Menú Hamburguesa Funcional en `Portada.jsx`**: El panel de menú móvil faltaba completamente. Implementado con overlay oscuro, lista de enlaces con íconos emoji, botones de acción al final y cierre automático al seleccionar cualquier enlace.
-- [x] **Refactorización y Abstracción del Flujo de Autenticación**: Modificados `Login.jsx`, `Register.jsx`, `ForgotPassword.jsx` y `ResetPassword.jsx` aplicando las nuevas directrices del frontend. Creamos el componente reutilizable `AuthLeftPanel.jsx` en `src/components` para eliminar la duplicación de código en el panel izquierdo (azul), y definimos clases de CSS semánticas (`.auth-card`, `.auth-left-panel`, `.auth-right-panel`) con la directiva `@apply` en `index.css` para limpiar las clases inline del JSX. Compilación de producción del frontend verificada con éxito.
-- [x] **Alineación, Simetría y Unificación Visual del Flujo de Autenticación con Soporte para Tablets**: Rediseñadas las dimensiones y proporciones de `Login.jsx`, `Register.jsx`, `ForgotPassword.jsx` y `ResetPassword.jsx` unificando la división del contenedor (exactamente 50/50 en desktop) y su altura a `md:h-[640px] max-h-[90vh]`. Se optimizó la adaptabilidad en tablets y pantallas de baja altura mediante padding responsivo (`p-6 md:p-8 lg:p-12`) y desplazamiento vertical interno en los formularios (`overflow-y-auto`). El panel izquierdo fue reestructurado y centrado verticalmente (`flex-1 justify-center space-y-6 my-auto`) agregando chips/badges temáticos consistentes en todas las vistas. Compilación de producción del frontend verificada con éxito.
-- [x] **Rediseño Responsivo Global y Unificación Estética del Flujo de Autenticación**: Rediseñados `Login.jsx`, `Register.jsx`, `ForgotPassword.jsx` y `ResetPassword.jsx` utilizando Tailwind CSS responsivo (`flex-col md:flex-row w-full max-w-4xl`), íconos premium de `lucide-react` (`Lock`, `Mail`, `User`, `Phone`, `MapPin`, `Eye`, `EyeOff` y `ArrowLeft`), unificación tipográfica a `font-bold` / `font-semibold` y consistencia en el uso de mayúsculas/minúsculas (Sentence case). Se eliminaron por completo todos los estilos inline y anchos porcentuales fijos. Compilación de producción del frontend verificada con éxito.
-- [x] **Fase C: Rediseño Responsivo y Estético de Vista Recepcionista**: Rediseñados `RecepcionistaDashboard.jsx` (sidebar responsivo / drawer, botón de hamburguesa y overlay), `CajaPOS.jsx` e `InventarioCriticoWidget.jsx` (diseño responsivo flex-col/lg:flex-row, unificación tipográfica a `font-bold` y Sentence case en etiquetas y modal de cobro táctil), `GestionPedidos.jsx` (adaptabilidad móvil para lista y detalles, unificación de ChevronLeft y Sentence case), y `AgendaSemanal.jsx` (scroll horizontal de la grilla semanal, helpers de Sentence case y unificación de pesos de fuentes). Compilación de frontend validada con éxito.
-- [x] **Fase B: Rediseño Responsivo y Estético de Vista Veterinario**: Rediseñados `VeterinarioDashboard.jsx` (sidebar responsivo / drawer, botón de hamburguesa y overlay), `VeterinarioAgenda.jsx` (KPI cards, remoción de uppercase en etiquetas y Sentence case en estados) y `ConsultaActiva.jsx` (barra de pestañas horizontal fluida, remoción de uppercase en formularios de diagnóstico, recetas y archivos).
-- [x] **Fase A: Rediseño Responsivo y Estético de Vista Cliente**: Rediseñados `ClienteDashboard.jsx` (sidebar colapsable / drawer, botón de hamburguesa y overlay), `ClienteInicio.jsx` (cards de mascotas, timeline de citas, Sentence Case en estados y cabeceras de tabla), `ClienteMascotas.jsx` (acciones y tipografía), `ClienteAgendarCita.jsx` (stepper y formularios responsivos), y `ClienteTienda.jsx` (grilla adaptativa de productos, drawer de carrito y Sentence Case en checkout).
-- [x] Rama `develop` creada y publicada en GitHub.
-- [x] Nueva rama de características `feature/configuracion-base-backend` creada.
-- [x] Base de datos MySQL `huesitos` creada localmente.
-- [x] Configurada la conexión MySQL local y dialecto Hibernate en el backend.
-- [x] Implementada la arquitectura de seguridad basada en Spring Security, CORS y tokens JWT.
-- [x] Compilación y construcción del backend verificada con éxito (`BUILD SUCCESS`).
-- [x] Creados el enumerador `Rol` y la entidad JPA `Usuario` en `huesitos_backend.entidades`.
-- [x] Creados la entidad `Dueño` y los repositorios `UsuarioRepositorio` y `DueñoRepositorio`.
-- [x] Creada la clase `AutenticacionServicio` con la lógica de registro de clientes.
-- [x] Creada la clase `AutenticacionControlador` con el endpoint de registro de clientes.
-- [x] Creado el DTO `RespuestaLogin` e implementado el endpoint de inicio de sesión (`POST /login`) con generación de token JWT y retorno de rol del usuario.
-- [x] Creado el DTO `SolicitudCambioRol`, modificado `AutenticacionServicio` y creado `UsuarioControlador` para el endpoint de cambio de rol (`PUT /api/usuarios/{id}/rol`).
-- [x] Creado `FiltroAutenticacionJwt` y configurada la protección de rutas basada en roles en `SeguridadConfig.java`.
-- [x] Rama de características `feature/configuracion-base-backend` fusionada en `develop` y subida a GitHub (`origin/develop`).
-- [x] Creada la clase entidad JPA `Mascota` bajo el paquete `huesitos_backend.entidades` y su mapeo de relación con `Dueño`.
-- [x] Mapeada la relación con `Dueño` utilizando la anotación `@JsonAlias({"dueño", "dueno"})` en `Mascota` para compatibilidad de codificación UTF-8/ASCII.
-- [x] Creados la interfaz `MascotaRepositorio` y el servicio `MascotaServicio` con validaciones y lógica de negocio.
-- [x] Creada la clase `MascotaControlador` exponiendo los endpoints REST de registro, búsqueda y listado.
-- [x] Sesión de pruebas QA Fase 2 completada exitosamente (login JWT, registro de mascota, validación de dueño inexistente, listado por dueño).
-- [x] Creado el enum `EstadoCita` con valores: `PENDIENTE`, `CONFIRMADA`, `COMPLETADA`, `CANCELADA`.
-- [x] Creada la entidad JPA `Cita` mapeada a la tabla `citas` con relaciones `@ManyToOne` a `Mascota` (obligatoria) y `Usuario` como veterinario (opcional).
-- [x] Creada la interfaz `CitaRepositorio` con métodos para verificar cruces de horario y listar citas por rango de fechas.
-- [x] Creado `CitaServicio` con lógica de agendamiento (validación de mascota, veterinario, disponibilidad horaria), cambio de estado y listado diario.
-- [x] Creado `CitaControlador` con endpoints `POST /api/citas`, `PUT /api/citas/{id}/estado` y `GET /api/citas/calendario?fecha=`.
-- [x] Creada la entidad JPA `ConsultaMedica` en `huesitos_backend.entidades` mapeada a la tabla `consultas_medicas`.
-- [x] Creada la entidad JPA `Servicio` en `huesitos_backend.entidades` mapeada a la tabla `servicios` con atributos de catálogo.
-- [x] Creados los enums `MedioPago` y `EstadoPago`, y la entidad JPA `Transaccion` en `huesitos_backend.entidades` mapeada a la tabla `transacciones` con relación OneToOne a Cita.
-- [x] Integrado el catálogo de Servicios en Citas: creado `ServicioRepositorio`, reemplazado el campo `motivo` en la entidad `Cita` por una relación obligatoria `@ManyToOne` hacia `Servicio`, y actualizada la validación en `CitaServicio` al agendar citas.
-- [x] Creados `TransaccionRepositorio` y `TransaccionServicio` con métodos para crear órdenes de pago automáticas y registrar pagos presenciales cambiando estados de citas a `CONFIRMADA`.
-- [x] Creado `TransaccionControlador` con endpoints para procesar compras web (webhook simulado) y pagos presenciales en caja, y configurada la creación automática de órdenes de pago al agendar citas en `CitaServicio`.
-- [x] Creados `ServicioServicio.java` y `ServicioControlador.java` para la gestión (registro, listado de activos y desactivación lógica) del catálogo de servicios veterinarios, y configurada la ruta GET como pública en `SeguridadConfig.java`.
-- [x] Creados `ConsultaMedicaRepositorio.java`, `ConsultaMedicaServicio.java` y `ConsultaMedicaControlador.java` para completar el ciclo del módulo clínico (registro de consultas con actualización automática a COMPLETADA de la cita asociada, y consulta de historial por mascota).
-- [x] Corregida la restricción de base de datos en `Transaccion.java` estableciendo `medio_pago` como `nullable = true` para permitir registrar transacciones en estado `PENDIENTE`.
-- [x] Sesión de pruebas de integración y QA manual completada con éxito vía Postman para todo el flujo clínico-financiero (registro, login JWT, servicios, mascotas, agendamiento de cita, orden de pago en caja, registro de consulta y consulta de historial clínico).
-- [x] Creado `PerfilControlador.java` exponiendo endpoints para subir y comprimir fotos de perfil de usuarios (`POST /api/perfiles/usuario/{id}/foto`) y de mascotas (`POST /api/perfiles/mascota/{id}/foto`).
-- [x] Modificado `AutenticacionControlador.java` para inyectar `AutenticacionAvanzadaServicio` y añadir endpoints públicos de restablecimiento de contraseña (`/olvide-contrasena` y `/restablecer-contrasena`).
-- [x] Creado `ConfiguracionRolControlador.java` exponiendo endpoints para consultar configuraciones por rol (`GET /api/configuraciones/rol/{rol}`) y para registrar/actualizar configuraciones de forma segura (`POST /api/configuraciones`).
-- [x] Configurado `SeguridadConfig.java` permitiendo acceso público a los endpoints de restablecimiento de contraseña en Spring Security.
-- [x] Creados endpoints y métodos para la activación, desactivación y listado de usuarios por Rol (Fase 6).
-- [x] Implementado endpoint de creación segura de Veterinarios y Recepcionistas por parte del Administrador (Fase 6).
-- [x] Creada la entidad JPA `HorarioPersonal`, repositorio y servicios de gestión y configuración de horarios (Fase 6).
-- [x] Agregada inicialización automática de horarios semanales por defecto (jornada estándar y domingos libres) al registrar nuevo personal (Fase 6).
-- [x] Refinadas reglas de acceso en `SeguridadConfig.java` permitiendo que el personal autenticado consulte su propio horario y restringiendo la edición al Administrador (Fase 6).
-- [x] Agregada la dependencia `openpdf` para permitir la generación y descarga de recetas en formato PDF (Fase 7).
-- [x] Creadas las entidades `Vacuna` e `HistorialVacunacion` con repositorios, servicios y controladores para gestionar el catálogo e historial de vacunación de mascotas (Fase 7).
-- [x] Creada la entidad `Receta` con el servicio `RecetaServicio` implementando la generación de PDF (con formato A5 premium, datos del veterinario, mascota y propietario) y endpoints de consulta y descarga (Fase 7).
-- [x] Modificado `StorageService` para admitir subidas genéricas de archivos médicos en la subcarpeta `uploads/clinicos/` (Fase 7).
-- [x] Creada la entidad `ArchivoClinico` y enum `TipoArchivoClinico` con endpoints para la subida y consulta de archivos asociados a mascotas y consultas (Fase 7).
-- [x] Refinadas reglas de seguridad en `SeguridadConfig` permitiendo la consulta clínica a usuarios autenticados y restringiendo la subida y edición de recetas, vacunas y archivos a los roles `VETERINARIO` y `ADMINISTRADOR` (Fase 7).
-- [x] Agregado el estado `EN_ESPERA` al enumerador `EstadoCita` para soportar la sala de espera de la clínica (Fase 8A).
-- [x] Creado record DTO `SolicitudReprogramacion` para transferir nueva fecha/hora al reprogramar citas (Fase 8A).
-- [x] Modificado `CitaRepositorio` agregando verificación de cruces de horario dinámico excluyendo la cita actual (Fase 8A).
-- [x] Implementados servicios de cancelación, check-in y reprogramación de citas en `CitaServicio` (Fase 8A).
-- [x] Expuestos endpoints PUT en `CitaControlador` para cancelación (`/{id}/cancelar`), check-in (`/{id}/check-in`) y reprogramación (`/{id}/reprogramar`) de citas (Fase 8A).
-- [x] Inyectado `HorarioPersonalRepositorio` en `CitaServicio` e implementada la validación dinámica de horarios de atención (Fase 8B).
-- [x] Agregados métodos de control `validarHorarioAtencion` y el auxiliar `traducirDiaSemana` para el formato amigable de excepciones en español (Fase 8B).
-- [x] Agregada la consulta dinámica `buscarCitasConFiltros` en `CitaRepositorio` para filtrar por rango de fechas, veterinario y estado (Fase 8C).
-- [x] Implementado el método `listarCitasConFiltros` en `CitaServicio` manejando la conversión opcional de fechas (Fase 8C).
-- [x] Expuesto el endpoint de consulta estructurada `GET /api/citas/agenda` en `CitaControlador` (Fase 8C).
-- [x] Implementada la búsqueda de transacciones por usuario y estado de pago en `TransaccionRepositorio` (Fase 9A).
-- [x] Desarrollados los endpoints `GET` en `TransaccionControlador` para que clientes e inspectores/administradores verifiquen el historial de cobros y pagos (Fase 9A).
-- [x] Asegurados los endpoints de caja presencial y listados de transacciones en `SeguridadConfig` bajo los roles `RECEPCIONISTA` y `ADMINISTRADOR` (Fase 9A).
-- [x] Creado record DTO `ReporteFinanciero` para encapsular las estadísticas diarias, mensuales y globales (Fase 9B).
-- [x] Agregadas las consultas de suma de ingresos `sumarMontoPorFechaPagoBetween` y `sumarMontoTotalAprobado` en `TransaccionRepositorio` (Fase 9B).
-- [x] Creado el servicio `BoletaPdfServicio` implementando la maquetación en PDF de boletas tamaño A5 utilizando OpenPDF (Fase 9B).
-- [x] Expuestos los endpoints GET `/reporte` (restringido al administrador) y `/{id}/boleta` (descarga general) en `TransaccionControlador` (Fase 9B).
-- [x] Creadas las entidades JPA para `Categoria`, `Producto` e `Inventario` (lotes de stock y vencimiento) (Fase 10A).
-- [x] Desarrollados repositorios, servicios y controladores para el CRUD y gestión lógica de lotes de inventario (Fase 10A).
-- [x] Protegida la mutación de stock en `SeguridadConfig` bajo el rol `ADMINISTRADOR` y habilitado el listado público para el catálogo (Fase 10A).
-- [x] Agregada la propiedad `stockMinimo` en la entidad `Producto` (Fase 10B).
-- [x] Implementadas las consultas JPQL de bajo stock en `ProductoRepositorio` y de vencimientos en `InventarioRepositorio` (Fase 10B).
-- [x] Expuestos los endpoints GET `/bajo-stock` y `/vencimientos` en `InventarioControlador` bajo seguridad restringida a los roles `VETERINARIO` y `ADMINISTRADOR` (Fase 10B).
-- [x] **Fase 11A: Backend - Catálogo y Pedidos de Tienda Online**:
-  - Creado el enum `EstadoPedido` con estados `PENDIENTE`, `PAGADO`, `ENTREGADO`, `CANCELADO`.
-  - Creadas las entidades `CarritoItem` (asociado a cliente y producto), `Pedido` (cabecera con cliente, fecha, total, estado) y `DetallePedido` (líneas de pedido con precio unitario e inventario).
-  - Creados los repositorios `CarritoItemRepositorio`, `PedidoRepositorio` y `DetallePedidoRepositorio`.
-  - Modificado `InventarioRepositorio` con la consulta FEFO (`buscarLotesDisponiblesParaDescuento`) y `ProductoRepositorio` con búsqueda por coincidencia de nombre.
-  - Modificado `ProductoServicio` y `ProductoControlador` para soportar la búsqueda de catálogo `/api/productos/buscar` de forma pública.
-  - Creado `TiendaOnlineServicio` con el CRUD del carrito y checkout atómico (deducción FEFO lote por lote, guardado de cabecera y detalle de pedido y vaciado del carrito).
-  - Creado `TiendaOnlineControlador` exponiendo `/api/carrito` (CRUD) y `/api/pedidos` (checkout, consultar historial, cambiar estado).
-  - Actualizado `SeguridadConfig` protegiendo las rutas de carrito/checkout para clientes autenticados y cambio de estado de pedidos para Recepcionista y Administrador.
-- [x] **Fase 11B: Backend - Tareas Programadas y Campañas de Marketing**:
-  - Habilitado el planificador de Spring (`@EnableScheduling`) en `HuesitosBackendApplication`.
-  - Creadas las entidades `Desparasitacion`, `Recordatorio`, `Campana` y `Oferta` con sus respectivos repositorios.
-  - Implementados `DesparasitacionServicio` y `CampanaOfertaServicio` con CRUDs completos, auto-cálculos de porcentaje/precio de ofertas e inactivación de expirados.
-  - Implementado `TareaProgramadaServicio` con métodos programados `@Scheduled` para:
-    - Escaneo diario de próximas dosis de vacunas y desparasitaciones a 7 días y generación automática de `Recordatorio` en base de datos.
-  - Creados controladores para desparasitaciones, recordatorios (incluyendo endpoints manuales de control `/procesar-manual` y `/inactivar-campanas-manual` para pruebas de QA) y campañas/ofertas.
-  - Configurado `SeguridadConfig` permitiendo visualización pública de campañas y ofertas, y restringiendo mutaciones a Veterinario/Administrador.
-- [x] **Frontend - Historial Clínico del Cliente**:
-  - Creado `mascotaAPI.js` para consumir endpoints de mascotas, consultas, vacunas, recetas PDF y archivos.
-  - Creado hook personalizado `useHistorialClinico.js` para carga paralela unificada y cronológica.
-  - Reescrito `MascotaFichaHistorial.jsx` con buscador, filtros y un timeline premium adaptativo.
-  - Creado `ClienteMascotas.jsx` y enlazado desde el panel y el inicio.
-- [x] **Frontend - Agendamiento de Citas e Integración de Tienda**:
-  - Creado `citaAPI.js` y `tiendaAPI.js` para conectar con la API de citas y tienda.
-  - Desarrollada vista `ClienteAgendarCita.jsx` interactiva en 4 pasos (Mascota, Servicio, Profesional, Horario/Fecha).
-  - Desarrollada vista `ClienteTienda.jsx` con catálogo, buscador de productos, carrito lateral (drawer) y checkout FEFO.
-  - Integradas todas las vistas en el ruteo de `App.jsx` y la botonera de `ClienteDashboard.jsx`.
-- [x] **Frontend - Vista de Veterinario (Tablet)**:
-  - Creado `veterinarioAPI.js` para los servicios de consultas, recetas, vacunas, historial y subida de archivos clínicos.
-  - Diseñada e implementada la interfaz `VeterinarioDashboard.jsx` optimizada para tablets en formato Split View 30/70.
-  - Integrada la sala de espera del día y el inicio de consultas con diagnóstico, prescripción de recetas y carga multipart de análisis de laboratorio.
-  - Configuradas las rutas correspondientes y redirección dinámica en login por rol.
-- [x] **Frontend - Vista de Recepcionista (POS y Caja)**:
-  - Agregadas las llamadas al POS de caja, alertas de stock mínimo, vencimientos (FEFO) y boleta PDF en `finanzasService.js`.
-  - Diseñada e implementada la interfaz táctil `RecepcionistaDashboard.jsx` en formato Split View 40/60 para tablets.
-  - Integrado el modal de cobro táctil con cálculo de vuelto por efectivo, códigos de referencia y descarga/impresión inmediata de la boleta de venta en formato PDF A5.
-  - Expuesto el endpoint `GET /api/pagos/{id}/boleta` en `TransaccionControlador.java` del backend para vincular `BoletaPdfServicio`.
-  - Registradas las rutas y redirecciones en `App.jsx` y `Login.jsx` respectivamente.
-- [x] **Frontend - Vista de Recepcionista (Despacho de Pedidos)**:
-  - Integrado el control de compras en línea en `RecepcionistaDashboard.jsx` con alternador lateral y filtros rápidos (TODOS, PENDIENTE, PAGADO, ENTREGADO, CANCELADO).
-  - Agregadas las llamadas `obtenerTodosLosPedidos` y `cambiarEstadoPedido` en `tiendaAPI.js`.
-  - Diseñado el desglose detallado de productos comprados, cantidades, subtotal e identificador de lote FEFO asociado.
-  - Habilitados botones interactivos de cambio de estado para flujo de entrega y cancelación.
-- [x] **Frontend - Agenda Semanal de Citas y Reprogramación**:
-  - Creada la vista interactiva `RecepcionistaAgenda.jsx` con visualización semanal (lunes a domingo), navegación interactiva de semanas, y filtros avanzados.
-  - Diseñado un modal interactivo para reprogramar citas en tiempo real (`PUT /api/citas/{id}/reprogramar`) que verifica disponibilidad y horarios del veterinario.
-  - Integrada la agenda semanal como una sección activa en `RecepcionistaDashboard.jsx` y `AdminDashboard.jsx` para roles de Recepcionista y Administrador.
-- [x] **Frontend - Configuración de Horarios del Personal**:
-  - Corregido el endpoint de horarios del personal en `citaAPI.js` para usar `/api/usuarios/{usuarioId}/horarios` y agregada la función `guardarHorarioPersonal`.
-  - Diseñada e implementada la vista `ConfiguracionHorarios.jsx` con selector de personal, switches por día de la semana y horas de entrada/salida.
-  - Añadido bloqueo de excepciones (vacaciones/licencias) almacenado localmente y enlazado a los filtros de agendamiento y reprogramación.
-- [x] **Frontend - Gestión de Inventario FEFO**:
-  - Añadidas las funciones CRUD en `tiendaAPI.js` para categorías, productos y lotes.
-  - Creada la vista `InventarioPage.jsx` con grilla de productos con lotes expandibles, alertas de stock mínimo y vencimientos, y modales para registrar productos, lotes y ajustar cantidades de stock.
-  - Integrada la vista de inventario en `AdminDashboard.jsx` con botón de acceso directo en el panel lateral.
-- [x] **Frontend - Campañas y Ofertas de Marketing**:
-  - Creado `marketingAPI.js` para consumir los endpoints de campañas (`/api/campanas`) y ofertas (`/api/ofertas`).
-  - Desarrollada la vista responsiva `CampanasPage.jsx` con interfaz de doble pestaña, visualización de tarjetas, indicadores de expiración con cuenta regresiva, controles rápidos de activación de estado y cálculo automático de descuentos.
-  - Integrada la vista de Campañas y Ofertas en `AdminDashboard.jsx` con el botón de la barra lateral con icono `Percent`.
-- [x] **Frontend - Historial Clínico / Ficha de Mascota Compartida**:
-  - Creado el componente reutilizable `MascotaHistorialTimeline.jsx` que centraliza la carga y visualización unificada del historial clínico (consultas, vacunas y archivos médicos), ofreciendo buscador de texto, filtros avanzados y descargas de recetas en PDF.
-  - Refactorizado `MascotaFichaHistorial.jsx` para delegar la interfaz al componente compartido en modo completo.
-  - Modificado `VeterinarioDashboard.jsx` para integrar el componente en la pestaña de consulta activa, eliminando estados y llamadas API duplicadas.
-- [x] **Frontend - Agenda Semanal de Citas Compartida**:
-  - Renombrado y refactorizado el componente `RecepcionistaAgenda.jsx` a `AgendaSemanal.jsx` (y su componente interno a `AgendaSemanal`) para desvincular el prefijo específico del rol y hacerlo genérico.
-  - Actualizadas las referencias e importaciones en `AdminDashboard.jsx` y `RecepcionistaDashboard.jsx`.
-- [x] **Frontend - Inventario Crítico / Alertas Compartidas**:
-  - Creado el componente reutilizable `InventarioCriticoWidget.jsx` que encapsula la consulta y el listado de productos con bajo stock y lotes próximos a vencer (FEFO), con carga independiente y refresco manual.
-  - Modificado `RecepcionistaDashboard.jsx` para integrar el widget en el panel POS de caja, eliminando estados duplicados.
-  - Modificado `DashboardAnaliticas.jsx` para insertar el widget y permitir al administrador monitorear la salud operativa de la tienda en tiempo real.
-- [x] **Frontend - Gestión de Pedidos Compartida**:
-  - Extraída y modularizada la lógica de despacho y filtros de pedidos desde `RecepcionistaDashboard.jsx` hacia el componente reutilizable `GestionPedidos.jsx` utilizando sintaxis de función flecha.
-  - Integrada la nueva vista en los paneles de Recepcionista y Administrador, agregando la opción de menú en este último.
-- [x] **Frontend - Reestructuración del Tablero de Veterinario**:
-  - Rediseñado completamente `VeterinarioDashboard.jsx` utilizando sintaxis de función flecha y Tailwind CSS para eliminar el diseño Split-View.
-  - Implementada una estructura clásica con Sidebar oscuro, cabecera superior y área de contenido dinámico para las vistas de Agenda del Día (con KPIs y tarjetas de pacientes), Consulta Médica Activa (con sub-pestañas y placeholder animado) y Buscador General de Expedientes.
-- [x] **Frontend - Modularización de Módulos Clínicos y POS**:
-  - Creadas las carpetas `Modules/recepcionista/pages` y `Modules/veterinario/pages` para estructurar sus sub-páginas de forma simétrica con `admin` y `cliente`.
-  - Extraído el componente `CajaPOS.jsx` que maneja todo el Punto de Venta (POS) y cobros presenciales de la Recepcionista, simplificando `RecepcionistaDashboard.jsx`.
-  - Extraídos los componentes `VeterinarioAgenda.jsx` (agenda diaria y KPIs) y `ConsultaActiva.jsx` (ficha clínica, recetas y carga de análisis) del Veterinario, simplificando `VeterinarioDashboard.jsx` de forma limpia y organizada.
-- [x] **Frontend - Rediseño del Panel de Administración (Responsividad, Tipografía y Simetría)**:
-  - Rediseñada la barra lateral (Sidebar) en `AdminDashboard.jsx` (ancho w-60, tipografía compacta text-xs, color slate-900).
-  - Implementado Sidebar responsivo colapsable / drawer para móviles y tablets mediante botón hamburguesa y overlay difuminado.
-  - Rediseñada la pantalla de Gestión de Pedidos (`GestionPedidos.jsx`) incorporando timeline de progreso, visualización premium de lotes FEFO e información de cliente modularizada.
-  - Uniformizada la tipografía de encabezados (de font-black a font-bold) y los paddings responsivos en el contenedor principal de vistas del administrador.
-  - Refactorizada la responsividad y alineación simétrica en `DashboardAnaliticas.jsx` (cards responsivos y auditoría limpia), `UsuariosPage.jsx` y `InventarioPage.jsx` (tablas adaptativas).
-  - Validada la compilación de producción del frontend sin errores.
+## 🚀 Logros por Módulo
 
-## 📌 Estado Actual de los Componentes
-- **Backend (Spring Boot)**: Configurado con JPA, Security, JWT, capas de Servicio y Controladores. Módulos de Autenticación, Mascotas, Citas, Servicios, Transacciones, Consultas Clínicas, Compresión de Fotos, Restablecimiento de Contraseñas, Configuraciones por Rol, Gestión de Usuarios/Bloqueo, Horarios de Personal, Catálogo de Vacunas/Historial, Recetas Clínicas PDF, Subida de Archivos Clínicos, Modelado e Inventario, Catálogo y Pedidos de Tienda Online, y el módulo de Tareas Programadas y Campañas de Marketing (Fase 11B finalizada) completamente implementados y validados. Inyectado `StorageService` en `ProductoServicio` y expuesto endpoint `/api/productos/{id}/foto` para la subida de fotos.
-- **Frontend (React)**: Inicializado con React 18, Vite y Tailwind. Ruteo adaptado en `TableroAdministrador.jsx` con la nueva vista `/admin/inventario/registrar-producto`. Componente `Combobox` y `BarraLateral` actualizados.
-- **Base de Datos (MySQL)**: Base de datos `huesitos` inicializada. Hibernate crea/actualiza las tablas `usuarios`, `duenos`, `mascotas`, `citas`, `consultas_medicas`, `servicios`, `transacciones`, `horarios_personal`, `vacunas`, `historial_vacunas`, `recetas`, `archivos_clinicos`, `categorias`, `productos` y `inventarios` al levantar la aplicación.
+### Autenticación y Seguridad
+- [x] Flujo completo: registro, login JWT, recuperación/restablecimiento de contraseña, cambio de contraseña con validación de actual (mín. 6 chars).
+- [x] Spring Security + CORS + JWT. Filtro `FiltroAutenticacionJwt`, protección de rutas por rol en `SeguridadConfig.java`.
+- [x] DTOs: `RespuestaLogin` (incluye foto perfil), `SolicitudCambioRol`. Endpoint `PUT /api/usuarios/{id}/rol`.
+- [x] Modularización frontend: subcomponentes atómicos (`ContenedorAutenticacion`, `CampoFormulario`, `CasillerosCodigo`, `PanelIzquierdoAutenticacion`, `BotonVolver`).
+- [x] Card de auth con altura fija 600px en desktop, scroll interno, responsividad completa en móvil (contenido decorativo oculto en breakpoints pequeños).
+- [x] Alternador de tema corregido: Luna en modo oscuro, Sol en modo claro.
+- [x] Redirección automática de sesión activa en Login al navegar hacia atrás.
 
-## 🛠️ Próximos Pasos (Pendientes)
-- Realizar pruebas de flujo completo (registro de producto con foto, creación de categoría rápida y navegación paginada).
-- Evaluar si otros formularios de administración pueden ser desacoplados en páginas o subcomponentes independientes.
+### Usuarios y Perfiles
+- [x] CRUD completo: creación segura de Veterinarios/Recepcionistas por Admin, activación/desactivación, listado por rol.
+- [x] Validación de seguridad: confirmación con contraseña de admin para promover a rol `ADMINISTRADOR`.
+- [x] Subida y compresión de fotos a WebP (75% calidad, canal alfa para PNG). Limpieza de disco al cambiar imagen. Bloqueo de subidas concurrentes con spinner.
+- [x] Sincronización de avatar en Header/Sidebar en tiempo real via eventos `storage`.
+- [x] Desacoplamiento frontend: modales extraídos a `ModalCrearPersonal`, `ModalDetallesUsuario`, `ModalEliminarUsuario` en `src/componentes/usuario/`. `PaginaUsuarios` reducida de 593 a 250 líneas.
 
-## 🧠 Decisiones Clave y Notas
-- Se decidió reemplazar la inyección implícita de Lombok con constructores estándar Java en los componentes de seguridad para asegurar la máxima compatibilidad de compilación directa con Maven Compiler.
-- Se simplificó temporalmente `SeguridadConfig` para desactivar la autenticación estricta JWT en los endpoints, permitiendo pruebas del servicio de registro sin requerir cabeceras de autorización de forma temporal.
-- Se agregó `@JsonAlias` al campo `dueño` en `Mascota` para resolver problemas de deserialización JSON con caracteres Unicode (ñ) desde clientes con distintas codificaciones.
-- El campo `veterinario` en `Cita` es `nullable = true` para permitir que clientes agenden citas generales desde la web y la recepcionista asigne veterinario posteriormente.
-- Se configuró el campo `medioPago` en `Transaccion` como `nullable = true` en base de datos debido a que las transacciones se crean originalmente como órdenes de pago en estado `PENDIENTE` sin medio de pago definido (el cual se asigna una vez efectuado el cobro).
-- **Emergencia 24h**: Dado que una emergencia requiere atención médica inmediata, el módulo de emergencias se resolverá a nivel de frontend únicamente como un botón de marcación directa por llamada telefónica y enlace directo a WhatsApp (sin soporte de agendamiento web transaccional por su naturaleza crítica).
-- **Adherencia a Patrones y Principios**: Todo el backend nuevo de las siguientes fases se desarrollará estrictamente bajo el patrón MVC (desacoplado) y los principios SOLID (especialmente SRP para la separación de lógica de negocio y DIP en la inyección de dependencias).
-- **Diseño e Integración para Tablets**: Toda la API y estructura de datos del backend se optimizará para un consumo ágil, intuitivo y responsivo. Aunque la lógica se implementa en backend, se considera el uso táctil y flujo rápido en Tablets (especialmente para Recepcionistas y Veterinarios en clínica) mediante endpoints de respuesta rápida, paginados y eficientes.
-- **Validación Flexible de Horarios**: En el agendamiento de citas (Fase 8), la validación contra el horario del veterinario será dinámica. Si un veterinario no tiene horarios registrados en la base de datos, el sistema no impondrá restricciones, permitiendo flexibilidad. Si el Administrador configura un horario para el veterinario, este se validará estrictamente.
-- **Cruce de Horario en Reprogramación**: Para la reprogramación de citas se verifica que no existan colisiones de horario para el veterinario en la nueva fecha y hora propuesta, excluyendo la propia cita actual del cálculo para evitar falsos positivos de cruces de agenda cuando no se cambia la hora.
-- **División de Fases y Commits**: A partir de la Fase 11A, se decide realizar una división más granular de las fases y sus correspondientes commits. Esto asegura que cada commit al final de una fase contenga de manera explícita y pormenorizada los puntos y archivos específicos modificados, mejorando enormemente la claridad y control de los cambios realizados.
-- **Planificación de Vistas Frontend (Figma / Stitch)**: Estructuración y diseño inicial del frontend mapeados a las APIs del backend de Huesitos para facilitar la maquetación rápida en Figma y generación con Stitch.
-- **Estrategia de Tema Oscuro**: Se adoptó la directiva `darkMode: 'class'` en Tailwind CSS, inyectando la clase `dark` en la etiqueta raíz `<html>` a través de un contexto global de React. Esto permite un cambio de tema reactivo fluido y consistente.
-- **Paleta de Colores en Modo Oscuro**: Se evitó el uso de colores oscuros genéricos, prefiriendo la combinación de tonos `slate` (como `bg-slate-900` y `bg-slate-800`) para proporcionar una estética premium con buena legibilidad.
-- **Modularización de Vistas**: Se decidió migrar formularios complejos a páginas independientes en lugar de usar modales sobrecargados en la misma vista, mejorando el performance y responsividad.
-- **Tratamiento de Fotos**: Se adoptó el formato WebP comprimido al 75% en el storage del servidor y eliminación automática de fotos antiguas de productos/usuarios al ser reemplazadas para optimizar el disco.
-- **Consistencia en Modales y Formularios**: Uso de `<Combobox />` dinámico con soporte de iconos variables para garantizar coherencia en la interacción de campos autocompletables.
-- **Desacoplamiento de Usuarios**: Se extrajeron los modales de `PaginaUsuarios.jsx` a `src/componentes/usuario/` (`ModalCrearPersonal.jsx`, `ModalDetallesUsuario.jsx` y `ModalEliminarUsuario.jsx`) para reducir la complejidad ciclomatica y simplificar la mantenibilidad.
+### Mascotas
+- [x] Entidad `Mascota` con `@JsonAlias({"dueño", "dueno"})` para compatibilidad UTF-8/ASCII.
+- [x] CRUD completo: `MascotaRepositorio`, `MascotaServicio`, `MascotaControlador`. QA completado.
+- [x] Nueva página física `RegistrarMascotaCliente.jsx` (`/cliente/mascotas/nueva`) desacoplada con el subcomponente `FormularioRegistroMascota.jsx` estructurado en 4 cuadrantes independientes (grilla de 2 columnas), alineado a la izquierda (`w-full`), con subida de fotos (máximo 2 MB), previsualización interactiva y límite de 350 caracteres con contador en tiempo real para las alertas médicas.
+- [x] Resuelta la redundancia visual de los botones "Actualizar" y "Registrar mascota" en la cabecera cuando la lista de mascotas del cliente está vacía (ahora solo se muestra el botón central del estado vacío).
+
+### Citas y Agenda
+- [x] Entidad `Cita` con estados: `PENDIENTE`, `CONFIRMADA`, `COMPLETADA`, `CANCELADA`, `EN_ESPERA`.
+- [x] Validación dinámica de horarios de atención, verificación de cruces de horario (excluyendo cita actual en reprogramación).
+- [x] Endpoints: agendar, cancelar, check-in, reprogramar, filtros avanzados (`GET /api/citas/agenda`).
+- [x] Horarios del personal: entidad `HorarioPersonal`, inicialización automática de jornada estándar (domingos libres).
+- [x] Frontend: `AgendaSemanal` compartida (Admin/Recepcionista), `ModalReprogramarCita` modular, filtros con `<Combobox compacto>`, `ConfiguracionHorarios` con switches por día y excepciones.
+- [x] `ClienteAgendarCita` interactivo en 4 pasos (Mascota → Servicio → Profesional → Horario/Fecha).
+- [x] Desacoplamiento: `ListaPersonalClinica` extraído con avatares gradiente, badges por rol, buscador integrado.
+- [x] Endpoint público de veterinarios para resolver error 403 de clientes al agendar.
+- [x] Integración de descuentos de campañas en reserva de citas (en cascada hasta el total y transacción).
+- [x] Flujo de pago inmediato en la línea de reserva: opciones de "Pagar en clínica" y "Pagar en línea con Mercado Pago".
+- [x] Rediseño de paso de horario con placeholder y mensaje de instrucción dinámico.
+- [x] Límite de 2 citas activas (PENDIENTE, CONFIRMADA, EN_ESPERA) por cliente en backend para evitar abuso y spam del botón "Pagar en clínica".
+- [x] Botón de cancelación de citas pendientes en el panel del cliente, integrado con el componente ModalConfirmacion y recarga de datos reactiva.
+- [x] Selector de horarios en el agendamiento del cliente rediseñado de forma premium con agrupación por turnos (Turno Mañana y Turno Tarde) con iconos Sol y Atardecer.
+
+### Módulo Clínico (Consultas, Vacunas, Recetas, Archivos)
+- [x] Entidades: `ConsultaMedica`, `Servicio`, `Vacuna`, `HistorialVacunacion`, `Receta`, `ArchivoClinico` + enum `TipoArchivoClinico`.
+- [x] Ciclo completo: registro de consulta → actualización automática de cita a `COMPLETADA` → historial por mascota.
+- [x] Recetas PDF (formato A5 premium con OpenPDF). Subida genérica de archivos médicos en `uploads/clinicos/`.
+- [x] Frontend veterinario: `VeterinarioDashboard` (sidebar clásico, agenda diaria con KPIs, consulta activa con sub-pestañas), `VeterinarioAgenda`, `ConsultaActiva`.
+- [x] `MascotaHistorialTimeline` reutilizable: timeline premium con buscador, filtros y descarga de recetas PDF.
+- [x] `ModalEditarServicio` modular extraído de `PaginaServicios`.
+
+### Transacciones y Finanzas
+- [x] Entidad `Transaccion` con enums `MedioPago`, `EstadoPago`. Campo `medioPago` nullable para estado `PENDIENTE`.
+- [x] Creación automática de órdenes de pago al agendar citas. Pago presencial en caja.
+- [x] `BoletaPdfServicio`: boletas PDF tamaño A5. Endpoint `GET /api/pagos/{id}/boleta`.
+- [x] `ReporteFinanciero` DTO con estadísticas diarias/mensuales/globales. Endpoint `GET /reporte` (admin).
+- [x] Frontend: `CajaPOS` táctil con cálculo de vuelto, descarga/impresión de boleta. `TablaTransacciones` modular con paginación. `PaginaFinanzas` simplificada.
+- [x] Integración de Mercado Pago (Checkout Pro) para el pago en línea de citas pendientes con redirección a Sandbox y webhook `/api/pagos/webhook` asíncrono para cambiar el estado a `APROBADO` en base de datos.
+- [x] Frontend: Botón de pago en listado de próximas citas, consulta asíncrona de transacciones y página de retorno `/cliente/citas/retorno-pago` responsiva y compatible con modo oscuro.
+- [x] Robustecimiento de preferencia de Mercado Pago omitiendo URL de notificación en local (previene error 400).
+- [x] Corrección de generación de preferencias de pago con Mercado Pago usando carga ávida (Fetch Join) de Cita y Servicio en el repositorio de Transacciones.
+- [x] Integración de la pasarela PagoEfectivo (código CIP) en backend y frontend con modo de simulación local para agilizar pruebas en desarrollo.
+
+### Inventario y Tienda
+- [x] Entidades: `Categoria`, `Producto` (con `stockMinimo`, foto WebP), `Inventario` (lotes stock/vencimiento FEFO).
+- [x] CRUD completo con alertas de bajo stock y vencimientos. Búsqueda pública de catálogo.
+- [x] Límite de 350 chars en descripción de producto (frontend + backend).
+- [x] Frontend: `PaginaInventario` modular (`TarjetasAlertasInventario`, `TablaInventario`, `ModalIngresoLote`, `ModalAjusteStockLote`). `RegistrarProductoNuevo` como página dedicada (ancho completo). `ModalCrearCategoria` independiente. Paginación con `<Paginacion />`. Filtro de categorías con `<Combobox compacto>`. Tema oscuro corregido.
+- [x] Tienda online: entidades `CarritoItem`, `Pedido`, `DetallePedido`. Checkout atómico con deducción FEFO. `ClienteTienda` con catálogo, buscador, carrito drawer.
+- [x] Gestión de pedidos: `GestionPedidos` compartida (Admin/Recepcionista) con `ListaPedidosDespacho` y `DetallePedidoDespacho` modulares. Paginación de 6 pedidos/página.
+- [x] `InventarioCriticoWidget` reutilizable con paginación (5 items/página). Término "FEFO" eliminado de la UI.
+
+### Marketing (Campañas y Ofertas)
+- [x] Entidades: `Campana` (con `precioPromocional`, relación Many-to-Many con `Servicio`, banner WebP hasta 10MB), `Oferta`, `Desparasitacion`, `Recordatorio`.
+- [x] `CampanaOfertaServicio`: CRUDs, auto-cálculos de descuento, inactivación de expirados. `TareaProgramadaServicio` con `@Scheduled` para recordatorios automáticos.
+- [x] Doble lógica: desactivación lógica (icono `Power`) + eliminación física irreversible (icono `Trash2` rojo) con `desvincularCampana` para claves foráneas.
+- [x] Separación de rutas: `/admin/campanas` (salud) y `/admin/ofertas` (farmacia) con menú independiente en `BarraLateral`.
+- [x] Desacoplamiento: `ListaCampanasPublicitarias`, `ListaOfertasProductos`, `RegistrarCampana` (con buscador Combobox + panel de servicios + resumen financiero reactivo), `RegistrarOferta` (con descuento por categoría completa vía `POST /api/ofertas/categoria`).
+- [x] Carrusel en `ClienteInicio`: diseño unificado split 75% imagen / 25% panel info desde `md` (tablet y desktop). Altura fija escalonada (420px mobile, 340px tablet, 400px lg, 460px xl) con `object-cover` para consistencia entre imágenes. En mobile: columna vertical. Badge simplificado a "Campaña" (sin "Activa").
+- [x] Descripción de campaña ampliada a 500 chars con contador en tiempo real.
+- [x] Límite de un único uso de campañas promocionales por cliente, validado en backend al crear transacciones y filtrado en frontend en el mapeo de servicios.
+- [x] Redirección correcta del botón "Adquiere tu Promo" en el carrusel de campañas a `/cliente/citas` con preselección del servicio de la promoción.
+
+### Dashboard y Analíticas
+- [x] `TableroAnaliticas` con `AuditoriaSistema` modular (paginación configurable 5/10/15/20 filas).
+- [x] `InventarioCriticoWidget` renombrado (sin "FEFO") con paginación integrada (5 items/página) en ambas columnas.
+
+### Configuración Global
+- [x] `ConfiguracionDinamica` con subcomponentes: `FormularioInfoNegocio`, `FormularioContacto`, `FormularioFinanciero`.
+- [x] API `configuracionApi.js` con envío condicional de JWT. Esqueleto de carga para eliminar parpadeo. Interfaz de fallo de conexión con "Reintentar Carga".
+- [x] `ConfiguracionRolControlador` con endpoints por rol.
+- [x] Migración de almacenamiento local a Cloudinary en backend para fotos de perfil, mascotas, productos, campañas y archivos clínicos.
+- [x] Eliminación de credenciales hardcodeadas de Mercado Pago y del correo SMTP por defecto en application.properties, delegándolos al archivo .env.
+
+### Arquitectura Frontend Compartida
+- [x] `PlantillaTablero`: estructura unificada responsiva (sidebar drawer, overlay, header hamburguesa, badge perfil).
+- [x] `BarraLateral` dinámica unificada para todos los roles (Admin/Vet/Recepcionista/Cliente). Colores adaptativos (emerald para vet, sky para resto).
+- [x] Portales migrados: `TableroAdministrador`, `TableroCliente`, `TableroVeterinario` y `TableroRecepcionista` usan `PlantillaTablero`.
+- [x] `Portada` modularizada en componentes autónomos (Hero, Nosotros, Servicios, etc.). Menú hamburguesa funcional, CTAs, tipografía responsiva.
+- [x] Tema oscuro semántico: `darkMode: 'class'`, paleta `slate` premium, color base `#0B1A30`. `ContextoTema` global reactivo.
+- [x] Componente `<Paginacion />` reutilizable. `<Combobox />` con modo compacto e iconos customizados.
+- [x] Spinners de carga en vistas financieras y clínicas.
+- [x] Corrección de desbordamientos en headers/celdas de tablas. Responsividad consistente en todos los tableros.
+- [x] Desacoplamiento de `ClienteInicio` en componentes atómicos (`CarruselCampanas`, `TarjetasMascotasCliente` y `TablaCitasProximas`) con soporte adaptativo completo de tema claro y oscuro.
+- [x] Migración de subvistas del portal de clientes a rutas físicas reales de React Router (`/cliente/*`), garantizando la persistencia tras recargas (F5).
+- [x] Incorporación de reglas de Maquetación y Layout General en `frontend.md` para alinear el panel a la izquierda ocupando todo el ancho (`w-full`).
+- [x] Componente `Combobox.jsx` optimizado y accesible con soporte completo de navegación por teclado.
+- [x] Helper `imagenServicio` para formatear URLs dinámicas permitiendo compatibilidad entre Cloudinary (absoluto) y local (relativo).
+
+### Renombrado y Organización
+- [x] Frontend renombrado a español: `components` → `componentes`, `pages` → `paginas`, `services` → `servicios`, `Modules` → `modulos`. Script automático de refactorización ejecutado.
+- [x] Módulos clínicos y POS en carpetas `modulos/recepcionista/pages` y `modulos/veterinario/pages`.
+
+### Git y Despliegue
+- [x] Rama `develop` creada y publicada. Feature branches desde `develop`. Merge `develop` → `main` validado.
+
+## 📌 Estado Actual
+- **Backend (Spring Boot 4 / Java 26)**: Integración con Cloudinary finalizada y compilación exitosa. Todos los módulos implementados y validados: Autenticación JWT, Mascotas, Citas (con reprogramación/check-in), Servicios, Transacciones/Boletas PDF, Consultas Clínicas, Vacunas/Recetas, Archivos Clínicos, Inventario FEFO, Tienda Online/Pedidos, Marketing/Campañas, Horarios de Personal, Perfiles/Fotos WebP, Configuración por Rol, Tareas Programadas.
+- **Frontend (React 18 / Vite / Tailwind 3.4)**: Todas las vistas de los 4 roles implementadas y modularizadas. Tema oscuro completo. Responsividad validada. Compilación de producción sin errores.
+- **Base de Datos (MySQL 8.4)**: Hibernate auto-genera todas las tablas al iniciar.
+
+## 🛠️ Próximos Pasos
+- Pruebas de flujo completo (registro de producto con foto, creación de categoría rápida, navegación paginada).
+- Evaluar desacoplamiento de formularios restantes en páginas independientes.
+
+## 🧠 Decisiones Clave
+- **Inyección de dependencias**: Constructor estándar Java en componentes de seguridad (compatibilidad Maven).
+- **`@JsonAlias`**: Resuelve deserialización con caracteres Unicode (ñ) desde distintas codificaciones.
+- **`Cita.veterinario`**: nullable para agendamiento web sin veterinario asignado.
+- **`Transaccion.medioPago`**: nullable para órdenes de pago `PENDIENTE`.
+- **Emergencia 24h**: Solo botón de llamada/WhatsApp (sin agendamiento transaccional).
+- **Principios SOLID + MVC**: Estricta separación de capas en todo el backend.
+- **Diseño tablet-first**: Endpoints optimizados para uso táctil rápido (Recepcionista/Veterinario).
+- **Horarios flexibles**: Sin horario registrado = sin restricciones; con horario = validación estricta.
+- **Reprogramación**: Verificación de cruces excluyendo la propia cita para evitar falsos positivos.
+- **Tema oscuro**: `darkMode: 'class'` + paleta `slate` premium + base `#0B1A30`.
+- **Modularización**: Formularios complejos migrados a páginas independientes en vez de modales.
+- **Fotos**: WebP 75%, eliminación automática de imagen anterior, canal alfa para PNG.
+- **Cloudinary**: Integración de SDK oficial para prevenir almacenamiento local efímero y transformaciones automáticas de imágenes en la nube.
+- **Commits granulares**: División detallada por fase desde Fase 11A.
+- **Límite de memoria**: Ampliado a 240 líneas por indicación del usuario, con compresión ejecutada únicamente bajo demanda explícita.
+- **Mercado Pago (Preferencia)**: Uso de carga ávida (`FETCH JOIN` de `Cita` y `Servicio`) en `TransaccionRepositorio` para evitar excepciones de inicialización perezosa de Hibernate (`LazyInitializationException`) en hilos fuera de sesión.
+- **PagoEfectivo (CIP)**: Incorporación de un modo de simulación local en desarrollo (CIP aleatorio de 8 dígitos) que permite probar el flujo completo de agendamiento y webhook de aprobación sin bloqueos de credenciales de pasarela.
+

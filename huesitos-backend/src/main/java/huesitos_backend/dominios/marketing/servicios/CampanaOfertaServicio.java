@@ -106,9 +106,15 @@ public class CampanaOfertaServicio {
     @Transactional
     public void eliminarCampana(Long id) {
         Campana campana = buscarCampanaPorId(id);
-        // Hacemos desactivación lógica para no borrar registros históricos
         campana.setActivo(false);
         campanaRepositorio.save(campana);
+    }
+
+    @Transactional
+    public void eliminarFisicamenteCampana(Long id) {
+        Campana campana = buscarCampanaPorId(id);
+        ofertaRepositorio.desvincularCampana(id);
+        campanaRepositorio.delete(campana);
     }
 
     // --- SERVICIOS DE OFERTAS ---
@@ -238,6 +244,12 @@ public class CampanaOfertaServicio {
         Oferta oferta = buscarOfertaPorId(id);
         oferta.setActivo(false);
         ofertaRepositorio.save(oferta);
+    }
+
+    @Transactional
+    public void eliminarFisicamenteOferta(Long id) {
+        Oferta oferta = buscarOfertaPorId(id);
+        ofertaRepositorio.delete(oferta);
     }
 
     // --- PROCESO PROGRAMADO DE INACTIVACIÓN ---

@@ -50,6 +50,9 @@ public class SeguridadConfig {
                     "/api/autenticacion/restablecer-contrasena",
                     "/api/autenticacion/activar",
                     "/api/autenticacion/reenviar-codigo",
+                    "/api/pagos/webhook",
+                    "/api/pagos/pagoefectivo/webhook",
+                    "/api/pagos/pagoefectivo/simular-pago",
                     "/uploads/**"
                 ).permitAll()
                 
@@ -97,7 +100,7 @@ public class SeguridadConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:3000"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:5174", "http://localhost:3000"));
         
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         

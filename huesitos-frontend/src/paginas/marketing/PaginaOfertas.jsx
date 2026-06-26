@@ -5,6 +5,7 @@ import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
 import {
   obtenerTodasOfertas,
   eliminarOferta,
+  eliminarOfertaFisico,
   actualizarOferta
 } from '@/api/marketingApi';
 import ListaOfertasProductos from '@/componentes/marketing/ListaOfertasProductos';
@@ -88,8 +89,9 @@ const PaginaOfertas = () => {
   };
 
   // --- CRUD OFERTAS ---
-  const handleToggleActivoOferta = async (oferta) => {
-    const confirm = window.confirm(`¿Estás seguro de que deseas ${oferta.activo ? 'desactivar' : 'activar'} esta oferta de descuento?`);
+  const handleToggleActivo = async (oferta) => {
+    const accion = oferta.activo ? 'desactivar' : 'activar';
+    const confirm = window.confirm(`¿Estás seguro de que deseas ${accion} la oferta "${oferta.titulo}"?`);
     if (!confirm) return;
 
     try {
@@ -98,12 +100,26 @@ const PaginaOfertas = () => {
       } else {
         await actualizarOferta(oferta.id, { ...oferta, activo: true });
       }
-      setMensajeExito('Estado de la oferta modificado con éxito.');
+      setMensajeExito(`Oferta ${accion}da con éxito.`);
       cargarDatos();
     } catch (err) {
-      setMensajeError('Error al modificar el estado de la oferta: ' + (err.response?.data || err.message));
+      setMensajeError(`Error al ${accion} la oferta: ` + (err.response?.data || err.message));
     }
   };
+
+  const handleEliminarFisico = async (oferta) => {
+    const confirm = window.confirm(`¿Estás seguro de que deseas ELIMINAR COMPLETAMENTE la oferta "${oferta.titulo}" de la base de datos?\nEsta acción es irreversible.`);
+    if (!confirm) return;
+
+    try {
+      await eliminarOfertaFisico(oferta.id);
+      setMensajeExito('Oferta eliminada permanentemente con éxito.');
+      cargarDatos();
+    } catch (err) {
+      setMensajeError('Error al eliminar la oferta permanentemente: ' + (err.response?.data || err.message));
+    }
+  };
+
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
@@ -157,7 +173,8 @@ const PaginaOfertas = () => {
       ) : (
         <ListaOfertasProductos
           ofertas={ofertas}
-          onToggleActivo={handleToggleActivoOferta}
+          onToggleActivo={handleToggleActivo}
+          onEliminarFisico={handleEliminarFisico}
           calcularExpiracion={calcularExpiracion}
           formatarFecha={formatarFecha}
         />

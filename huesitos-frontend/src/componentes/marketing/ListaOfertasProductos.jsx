@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { Clock, Edit2, Trash2, ShoppingBag } from 'lucide-react';
+import { Clock, Edit2, Trash2, ShoppingBag, Power } from 'lucide-react';
 
-const ListaOfertasProductos = ({ ofertas, onToggleActivo, calcularExpiracion, formatarFecha }) => {
+const ListaOfertasProductos = ({ ofertas, onToggleActivo, onEliminarFisico, calcularExpiracion, formatarFecha }) => {
   const navigate = useNavigate();
 
   if (ofertas.length === 0) {
@@ -44,7 +44,7 @@ const ListaOfertasProductos = ({ ofertas, onToggleActivo, calcularExpiracion, fo
                 <h3 className="font-black text-slate-800 dark:text-slate-100 text-sm tracking-tight leading-tight">
                   {o.titulo}
                 </h3>
-                <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider flex items-center gap-1.5 mt-1">
+                <p className="text-[10px] text-slate-400 dark:text-slate-550 font-bold uppercase tracking-wider flex items-center gap-1.5 mt-1">
                   <ShoppingBag size={12} className="text-slate-400" />
                   Producto: {o.producto?.nombre}
                 </p>
@@ -87,10 +87,17 @@ const ListaOfertasProductos = ({ ofertas, onToggleActivo, calcularExpiracion, fo
                   onClick={() => onToggleActivo(o)}
                   className={`p-1.5 rounded-lg border border-transparent transition-all ${
                     o.activo 
-                      ? 'hover:bg-red-50 dark:hover:bg-red-950/30 text-red-500 hover:border-red-100 dark:hover:border-red-900/30' 
+                      ? 'hover:bg-amber-50 dark:hover:bg-amber-950/30 text-amber-500 hover:border-amber-100 dark:hover:border-amber-900/30' 
                       : 'hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-emerald-500 hover:border-emerald-100 dark:hover:border-emerald-900/30'
                   }`}
                   title={o.activo ? 'Desactivar oferta' : 'Activar oferta'}
+                >
+                  <Power size={12} />
+                </button>
+                <button
+                  onClick={() => onEliminarFisico(o)}
+                  className="p-1.5 rounded-lg border border-transparent transition-all hover:bg-red-50 dark:hover:bg-red-950/30 text-red-500 hover:border-red-100 dark:hover:border-red-900/30"
+                  title="Eliminar permanentemente de la base de datos"
                 >
                   <Trash2 size={12} />
                 </button>

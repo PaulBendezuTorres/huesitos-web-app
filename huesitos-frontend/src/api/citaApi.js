@@ -36,6 +36,12 @@ export const obtenerUsuarios = async () => {
   return respuesta.data;
 };
 
+/** Obtener lista de veterinarios activos (accesible por clientes) */
+export const obtenerVeterinarios = async () => {
+  const respuesta = await axios.get(`${API_BASE}/citas/veterinarios`, obtenerHeaders());
+  return respuesta.data;
+};
+
 /** Obtener horarios de un veterinario */
 export const obtenerHorariosVeterinario = async (usuarioId) => {
   const respuesta = await axios.get(`${API_BASE}/usuarios/${usuarioId}/horarios`, obtenerHeaders());
@@ -70,6 +76,12 @@ export const reprogramarCita = async (id, nuevaFechaHora) => {
     { nuevaFechaHora },
     obtenerHeaders()
   );
+  return respuesta.data;
+};
+
+/** Cancelar una cita (PUT /api/citas/{id}/cancelar) */
+export const cancelarCita = async (id) => {
+  const respuesta = await axios.put(`${API_BASE}/citas/${id}/cancelar`, {}, obtenerHeaders());
   return respuesta.data;
 };
 

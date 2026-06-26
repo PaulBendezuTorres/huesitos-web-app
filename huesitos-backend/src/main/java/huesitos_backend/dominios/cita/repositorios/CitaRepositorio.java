@@ -22,9 +22,19 @@ public interface CitaRepositorio extends JpaRepository<Cita, Long> {
      boolean existsByVeterinarioIdAndFechaHoraAndEstadoNotAndIdNot(Long veterinarioId, LocalDateTime fechaHora, EstadoCita estado, Long id);
 
     /**
+     * Cuenta las citas activas de un dueño de mascota por su lista de estados.
+     */
+    long countByMascotaDueñoIdAndEstadoIn(Long dueñoId, List<EstadoCita> estados);
+
+    /**
      * Lista todas las citas asignadas a un veterinario.
      */
     List<Cita> findByVeterinarioId(Long veterinarioId);
+
+    /**
+     * Verifica si una mascota tiene citas asociadas.
+     */
+    boolean existsByMascotaId(Long mascotaId);
 
     /**
      * Lista todas las citas programadas entre un rango de fechas (para el calendario diario).

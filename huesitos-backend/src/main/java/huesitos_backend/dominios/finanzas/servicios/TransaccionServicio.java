@@ -22,6 +22,7 @@ import java.util.List;
 public class TransaccionServicio {
 
     private final TransaccionRepositorio transaccionRepositorio;
+    private final huesitos_backend.dominios.marketing.repositorios.CampanaRepositorio campanaRepositorio;
 
     @Transactional(readOnly = true)
     public List<Transaccion> listarTodas() {
@@ -72,6 +73,26 @@ public class TransaccionServicio {
         return transaccionRepositorio.save(t);
     }
 
+    @Transactional
+    public Transaccion registrarPagoExitosoPasarela(Long transaccionId, String idTransaccionPasarela, String referencia) {
+        Transaccion t = transaccionRepositorio.findById(transaccionId)
+                .orElseThrow(() -> new RuntimeException("Transacción no encontrada con ID: " + transaccionId));
+
+        t.setMedioPago(MedioPago.MERCADO_PAGO);
+        t.setEstadoPago(EstadoPago.APROBADO);
+        t.setIdTransaccionPasarela(idTransaccionPasarela);
+        t.setReferenciaPago(referencia);
+        t.setFechaPago(LocalDateTime.now());
+
+        return transaccionRepositorio.save(t);
+    }
+
+    @Transactional(readOnly = true)
+    public Transaccion obtenerPorCitaId(Long citaId) {
+        return transaccionRepositorio.findByCitaId(citaId)
+                .orElseThrow(() -> new RuntimeException("Transacción no encontrada para la cita: " + citaId));
+    }
+
     // ====================================================================
     // NUEVO MÉTODO AÑADIDO: Para crear el pago automáticamente al agendar
     // ====================================================================
@@ -82,13 +103,39 @@ public class TransaccionServicio {
         transaccion.setEstadoPago(EstadoPago.PENDIENTE);
         transaccion.setReferenciaPago("SISTEMA_CITA");
 
-        // Verifica si el servicio tiene un precio asignado, sino le pone 0
-        if (cita.getServicio() != null && cita.getServicio().getPrecio() != null) {
-            transaccion.setMonto(cita.getServicio().getPrecio());
-        } else {
-            transaccion.setMonto(BigDecimal.ZERO);
+        BigDecimal monto = BigDecimal.ZERO;
+        if (cita.getServicio() != null) {
+            monto = cita.getServicio().getPrecio();
+            
+            // Buscar si hay campañas activas que contengan este servicio
+            LocalDate hoy = LocalDate.now();
+            List<huesitos_backend.dominios.marketing.entidades.Campana> campanasActivas = campanaRepositorio.findByActivoTrue();
+            for (huesitos_backend.dominios.marketing.entidades.Campana campana : campanasActivas) {
+                if (!hoy.isBefore(campana.getFechaInicio()) && !hoy.isAfter(campana.getFechaFin())) {
+                    boolean contieneServicio = campana.getServicios().stream()
+                            .anyMatch(s -> s.getId().equals(cita.getServicio().getId()));
+                    if (contieneServicio && campana.getPrecioPromocional() != null) {
+                        boolean yaUsoCampana = false;
+                        if (cita.getMascota() != null && cita.getMascota().getDueño() != null) {
+                            long usos = transaccionRepositorio.contarUsosDeCampanaPorCliente(
+                                    cita.getMascota().getDueño().getId(),
+                                    "CAMPANA_" + campana.getId()
+                            );
+                            if (usos > 0) {
+                                yaUsoCampana = true;
+                            }
+                        }
+                        if (!yaUsoCampana) {
+                            monto = campana.getPrecioPromocional();
+                            transaccion.setReferenciaPago("CAMPANA_" + campana.getId());
+                            break;
+                        }
+                    }
+                }
+            }
         }
+        transaccion.setMonto(monto != null ? monto : BigDecimal.ZERO);
 
         transaccionRepositorio.save(transaccion);
     }
-}
+}

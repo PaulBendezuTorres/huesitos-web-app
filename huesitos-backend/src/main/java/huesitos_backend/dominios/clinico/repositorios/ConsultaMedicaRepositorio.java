@@ -15,4 +15,6 @@ public interface ConsultaMedicaRepositorio extends JpaRepository<ConsultaMedica,
      * @return Lista de consultas médicas en orden descendente por fecha.
      */
     List<ConsultaMedica> findByMascotaIdOrderByFechaDesc(Long mascotaId);
+
+    boolean existsByMascotaId(Long mascotaId);
 }

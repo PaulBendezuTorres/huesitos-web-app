@@ -58,4 +58,39 @@ public class MascotaControlador {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
+    /**
+     * Endpoint para actualizar los datos de una mascota.
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizarMascota(
+            @PathVariable Long id,
+            @RequestBody Mascota mascota,
+            java.security.Principal principal) {
+        try {
+            Mascota resultado = mascotaServicio.actualizarMascota(id, mascota, principal.getName());
+            return ResponseEntity.ok(resultado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    /**
+     * Endpoint para eliminar una mascota validando la contraseña del usuario.
+     */
+    @PostMapping("/{id}/eliminar")
+    public ResponseEntity<?> eliminarMascota(
+            @PathVariable Long id,
+            @RequestBody huesitos_backend.dominios.mascota.dto.SolicitudEliminarMascota solicitud,
+            java.security.Principal principal) {
+        if (solicitud == null || solicitud.getContrasena() == null || solicitud.getContrasena().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("La contraseña de confirmación es requerida");
+        }
+        try {
+            mascotaServicio.eliminarMascota(id, solicitud.getContrasena(), principal.getName());
+            return ResponseEntity.ok("Mascota eliminada con éxito");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

@@ -5,6 +5,7 @@ import { obtenerPerfil, actualizarPerfil, subirFotoPerfil } from '@/api/perfilAp
 import PlantillaTablero from '@/componentes/layout/PlantillaTablero';
 import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
 import { useTema } from '@/contextos/ContextoTema';
+import { obtenerUrlImagen } from '@/servicios/imagenServicio';
 
 const MiPerfil = ({ sinPlantilla = false }) => {
   const navigate = useNavigate();
@@ -193,7 +194,7 @@ const MiPerfil = ({ sinPlantilla = false }) => {
                 <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-slate-100 dark:border-slate-700 shadow-inner bg-slate-50 dark:bg-slate-900 flex items-center justify-center relative">
                   {fotoPerfilUrl ? (
                     <img 
-                      src={`http://localhost:8080${fotoPerfilUrl}`} 
+                      src={obtenerUrlImagen(fotoPerfilUrl)} 
                       alt="Foto de perfil" 
                       className={`w-full h-full object-cover transition-opacity duration-200 ${subiendoFoto ? 'opacity-40' : ''}`} 
                     />

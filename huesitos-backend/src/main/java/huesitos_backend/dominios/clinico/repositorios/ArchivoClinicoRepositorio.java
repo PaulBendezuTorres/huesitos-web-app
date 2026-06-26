@@ -11,4 +11,6 @@ public interface ArchivoClinicoRepositorio extends JpaRepository<ArchivoClinico,
      * subida descendente.
      */
     List<ArchivoClinico> findByMascotaIdOrderByFechaSubidaDesc(Long mascotaId);
+
+    boolean existsByMascotaId(Long mascotaId);
 }

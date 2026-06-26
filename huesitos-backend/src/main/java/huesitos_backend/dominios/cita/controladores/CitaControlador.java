@@ -4,6 +4,7 @@ import huesitos_backend.dominios.cita.dto.SolicitudReprogramacion;
 import huesitos_backend.dominios.cita.entidades.Cita;
 import huesitos_backend.dominios.cita.entidades.EstadoCita;
 import huesitos_backend.dominios.cita.servicios.CitaServicio;
+import huesitos_backend.dominios.usuario.entidades.Usuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -139,5 +140,14 @@ public class CitaControlador {
             @RequestParam(required = false) EstadoCita estado) {
         List<Cita> resultado = citaServicio.listarCitasConFiltros(inicio, fin, veterinarioId, estado);
         return ResponseEntity.ok(resultado);
+    }
+
+    /**
+     * Endpoint para obtener la lista de veterinarios activos.
+     * Accesible por CLIENTE y otros roles ya que no está restringido a nivel de clase.
+     */
+    @GetMapping("/veterinarios")
+    public ResponseEntity<List<Usuario>> obtenerVeterinarios() {
+        return ResponseEntity.ok(citaServicio.obtenerVeterinariosActivos());
     }
 }

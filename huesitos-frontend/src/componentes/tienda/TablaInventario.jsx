@@ -1,4 +1,5 @@
 import { ChevronDown, ChevronUp, Package, Trash2, FolderOpen, Edit2 } from 'lucide-react';
+import { obtenerUrlImagen } from '@/servicios/imagenServicio';
 
 const TablaInventario = ({
   productosPaginados = [],
@@ -65,7 +66,7 @@ const TablaInventario = ({
                         <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 overflow-hidden flex items-center justify-center text-slate-300 shadow-inner shrink-0">
                           {p.fotoUrl ? (
                             <img 
-                              src={`http://localhost:8080${p.fotoUrl}`} 
+                              src={obtenerUrlImagen(p.fotoUrl)} 
                               alt={p.nombre} 
                               className="w-full h-full object-cover" 
                             />

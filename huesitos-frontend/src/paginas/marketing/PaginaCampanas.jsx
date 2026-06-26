@@ -5,6 +5,7 @@ import CargadorSpinner from '@/componentes/comun/CargadorSpinner';
 import {
   obtenerTodasCampanas,
   eliminarCampana,
+  eliminarCampanaFisico,
   actualizarCampana
 } from '@/api/marketingApi';
 import ListaCampanasPublicitarias from '@/componentes/marketing/ListaCampanasPublicitarias';
@@ -88,8 +89,9 @@ const PaginaCampanas = () => {
   };
 
   // --- CRUD CAMPAÑAS ---
-  const handleToggleActivoCampana = async (campana) => {
-    const confirm = window.confirm(`¿Estás seguro de que deseas ${campana.activo ? 'desactivar' : 'activar'} esta campaña?`);
+  const handleToggleActivo = async (campana) => {
+    const accion = campana.activo ? 'desactivar' : 'activar';
+    const confirm = window.confirm(`¿Estás seguro de que deseas ${accion} la campaña "${campana.nombre}"?`);
     if (!confirm) return;
 
     try {
@@ -98,12 +100,26 @@ const PaginaCampanas = () => {
       } else {
         await actualizarCampana(campana.id, { ...campana, activo: true });
       }
-      setMensajeExito('Estado de la campaña modificado con éxito.');
+      setMensajeExito(`Campaña ${accion}da con éxito.`);
       cargarDatos();
     } catch (err) {
-      setMensajeError('Error al modificar el estado: ' + (err.response?.data || err.message));
+      setMensajeError(`Error al ${accion} la campaña: ` + (err.response?.data || err.message));
     }
   };
+
+  const handleEliminarFisico = async (campana) => {
+    const confirm = window.confirm(`¿Estás seguro de que deseas ELIMINAR COMPLETAMENTE la campaña "${campana.nombre}" de la base de datos?\nEsta acción es irreversible y desvinculará todas las ofertas asociadas.`);
+    if (!confirm) return;
+
+    try {
+      await eliminarCampanaFisico(campana.id);
+      setMensajeExito('Campaña eliminada permanentemente con éxito.');
+      cargarDatos();
+    } catch (err) {
+      setMensajeError('Error al eliminar la campaña permanentemente: ' + (err.response?.data || err.message));
+    }
+  };
+
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
@@ -157,7 +173,8 @@ const PaginaCampanas = () => {
       ) : (
         <ListaCampanasPublicitarias
           campanas={campanas}
-          onToggleActivo={handleToggleActivoCampana}
+          onToggleActivo={handleToggleActivo}
+          onEliminarFisico={handleEliminarFisico}
           calcularExpiracion={calcularExpiracion}
           formatarFecha={formatarFecha}
         />

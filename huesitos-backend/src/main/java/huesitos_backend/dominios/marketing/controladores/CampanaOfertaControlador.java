@@ -73,7 +73,17 @@ public class CampanaOfertaControlador {
     public ResponseEntity<?> eliminarCampana(@PathVariable Long id) {
         try {
             campanaOfertaServicio.eliminarCampana(id);
-            return ResponseEntity.ok("Campaña eliminada/desactivada con éxito");
+            return ResponseEntity.ok("Campaña desactivada con éxito");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/campanas/{id}/fisico")
+    public ResponseEntity<?> eliminarFisicamenteCampana(@PathVariable Long id) {
+        try {
+            campanaOfertaServicio.eliminarFisicamenteCampana(id);
+            return ResponseEntity.ok("Campaña eliminada físicamente con éxito");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -150,7 +160,17 @@ public class CampanaOfertaControlador {
     public ResponseEntity<?> eliminarOferta(@PathVariable Long id) {
         try {
             campanaOfertaServicio.eliminarOferta(id);
-            return ResponseEntity.ok("Oferta eliminada/desactivada con éxito");
+            return ResponseEntity.ok("Oferta desactivada con éxito");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/ofertas/{id}/fisico")
+    public ResponseEntity<?> eliminarFisicamenteOferta(@PathVariable Long id) {
+        try {
+            campanaOfertaServicio.eliminarFisicamenteOferta(id);
+            return ResponseEntity.ok("Oferta eliminada físicamente con éxito");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
