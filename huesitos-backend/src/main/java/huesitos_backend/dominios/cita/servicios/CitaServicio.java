@@ -10,6 +10,7 @@ import huesitos_backend.dominios.usuario.entidades.Usuario;
 import huesitos_backend.dominios.veterinaria_servicio.repositorios.ServicioRepositorio;
 import huesitos_backend.dominios.finanzas.servicios.TransaccionServicio;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CitaServicio {
@@ -261,4 +263,31 @@ public class CitaServicio {
                 .filter(Usuario::getActivo)
                 .toList();
     }
+
+    /**
+     * Busca todas las citas en estado PENDIENTE o CONFIRMADA cuya fecha y hora de programacion
+     * sea anterior a la actual, y las actualiza a estado CANCELADA.
+     *
+     * @return El numero de citas canceladas.
+     */
+    @Transactional
+    public int cancelarCitasExpiradas() {
+        LocalDateTime ahora = LocalDateTime.now();
+        List<Cita> expiradas = citaRepositorio.findByFechaHoraBeforeAndEstadoIn(
+                ahora,
+                List.of(EstadoCita.PENDIENTE, EstadoCita.CONFIRMADA)
+        );
+
+        for (Cita cita : expiradas) {
+            cita.setEstado(EstadoCita.CANCELADA);
+        }
+
+        if (!expiradas.isEmpty()) {
+            citaRepositorio.saveAll(expiradas);
+            log.info("Cancelacion automatica: Se cancelaron {} citas expiradas por inasistencia.", expiradas.size());
+        }
+
+        return expiradas.size();
+    }
 }
+

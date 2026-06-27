@@ -8,6 +8,7 @@ import huesitos_backend.dominios.mascota.entidades.Mascota;
 import huesitos_backend.dominios.clinico.repositorios.HistorialVacunacionRepositorio;
 import huesitos_backend.dominios.marketing.repositorios.DesparasitacionRepositorio;
 import huesitos_backend.dominios.marketing.repositorios.RecordatorioRepositorio;
+import huesitos_backend.dominios.cita.servicios.CitaServicio;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -26,6 +27,7 @@ public class TareaProgramadaServicio {
     private final DesparasitacionRepositorio desparasitacionRepositorio;
     private final RecordatorioRepositorio recordatorioRepositorio;
     private final CampanaOfertaServicio campanaOfertaServicio;
+    private final CitaServicio citaServicio;
 
     /**
      * Tarea programada diaria a la 1:00 AM para escanear y generar recordatorios.
@@ -46,6 +48,19 @@ public class TareaProgramadaServicio {
     public void ejecutarInactivacionCampanasProgramado() {
         log.info("Tarea Programada: Iniciando inactivación automática de campañas y ofertas...");
         campanaOfertaServicio.inactivarExpiradas(LocalDate.now());
+    }
+
+    /**
+     * Tarea programada cada 15 minutos para cancelar citas expiradas por inasistencia.
+     */
+    @Scheduled(cron = "0 */15 * * * ?")
+    @Transactional
+    public void ejecutarCancelacionCitasExpiradasProgramado() {
+        log.info("Tarea Programada: Iniciando escaneo y cancelación automática de citas expiradas...");
+        int canceladas = citaServicio.cancelarCitasExpiradas();
+        if (canceladas > 0) {
+            log.info("Tarea Programada: Se cancelaron {} citas expiradas con éxito.", canceladas);
+        }
     }
 
     /**

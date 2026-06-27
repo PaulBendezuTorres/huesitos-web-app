@@ -56,4 +56,10 @@ public interface CitaRepositorio extends JpaRepository<Cita, Long> {
         @org.springframework.data.repository.query.Param("veterinarioId") Long veterinarioId,
         @org.springframework.data.repository.query.Param("estado") EstadoCita estado
     );
+
+    /**
+     * Busca citas programadas antes de una fecha y hora especifica y cuyos estados coincidan con los indicados.
+     */
+    List<Cita> findByFechaHoraBeforeAndEstadoIn(LocalDateTime fechaHora, List<EstadoCita> estados);
 }
+
