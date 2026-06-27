@@ -43,6 +43,7 @@
 - [x] Selector de horarios en el agendamiento del cliente rediseñado de forma premium con agrupación por turnos (Turno Mañana y Turno Tarde) con iconos Sol y Atardecer.
 - [x] Cancelación automática de citas expiradas (por inasistencia): tarea programada cada 15 minutos en `TareaProgramadaServicio.java` que detecta citas en estado `PENDIENTE` o `CONFIRMADA` cuya hora programada ya pasó, actualizando su estado a `CANCELADA` para liberar la disponibilidad.
 - [x] Configuración de horario de almuerzo/comida para veterinarios: campos `horaAlmuerzoInicio` y `horaAlmuerzoFin` en `HorarioPersonal` (backend + frontend en `ConfiguracionHorarios.jsx`) con validación al agendar/reprogramar citas para evitar solapamientos con el descanso del profesional.
+- [x] Rediseño premium de la Agenda Semanal del Administrador: adaptación del layout a pantalla completa (`h-[calc(100vh-140px)]`), scroll vertical independiente por columna de día para evitar desbordes globales y tarjetas de citas estilizadas con bordes izquierdos coloreados por estado.
 
 ### Módulo Clínico (Consultas, Vacunas, Recetas, Archivos)
 - [x] Entidades: `ConsultaMedica`, `Servicio`, `Vacuna`, `HistorialVacunacion`, `Receta`, `ArchivoClinico` + enum `TipoArchivoClinico`.

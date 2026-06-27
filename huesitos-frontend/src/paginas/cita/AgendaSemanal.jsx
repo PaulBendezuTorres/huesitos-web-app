@@ -191,26 +191,26 @@ const AgendaSemanal = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300 font-sans text-slate-700 w-full">
+    <div className="flex flex-col h-[calc(100vh-140px)] w-full space-y-4 animate-in fade-in duration-300 font-sans text-slate-700 p-4 md:p-6 lg:p-8 overflow-hidden select-none">
       
       {/* SECCIÓN SUPERIOR: CABECERA Y FILTROS */}
-      <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200/50 dark:border-slate-700/50 p-4 md:p-5 shadow-sm space-y-4">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 p-4 md:p-5 shadow-sm space-y-4 shrink-0">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h2 className="text-lg md:text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-2">
               <Calendar className="text-sky-500" size={20} />
               Agenda semanal de citas
             </h2>
-            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 font-medium">
+            <p className="text-xs text-slate-400 dark:text-slate-550 mt-0.5 font-semibold">
               Consulta, filtra y gestiona la programación semanal de atención veterinaria.
             </p>
           </div>
           
           {/* Navegador de Semanas */}
-          <div className="flex items-center gap-1 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg p-1 self-start md:self-auto shrink-0">
+          <div className="flex items-center gap-1 bg-slate-50 dark:bg-slate-700/60 border border-slate-200 dark:border-slate-600 rounded-lg p-1 self-start md:self-auto shrink-0">
             <button
               onClick={() => setOffsetSemanas(o => o - 1)}
-              className="p-1.5 rounded hover:bg-white dark:hover:bg-slate-600 hover:shadow-sm text-slate-600 dark:text-slate-300 hover:text-sky-500 transition-all"
+              className="p-1.5 rounded hover:bg-white dark:hover:bg-slate-600 hover:shadow-sm text-slate-650 dark:text-slate-300 hover:text-sky-500 transition-all"
               title="Semana anterior"
             >
               <ChevronLeft size={14} />
@@ -220,14 +220,14 @@ const AgendaSemanal = () => {
               className={`px-3 py-1 text-xs font-semibold rounded transition-all ${
                 offsetSemanas === 0
                   ? 'bg-sky-500 text-white shadow-sm font-bold'
-                  : 'text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-600'
+                  : 'text-slate-600 dark:text-slate-350 hover:bg-white dark:hover:bg-slate-600'
               }`}
             >
               Semana actual
             </button>
             <button
               onClick={() => setOffsetSemanas(o => o + 1)}
-              className="p-1.5 rounded hover:bg-white dark:hover:bg-slate-600 hover:shadow-sm text-slate-600 dark:text-slate-300 hover:text-sky-500 transition-all"
+              className="p-1.5 rounded hover:bg-white dark:hover:bg-slate-600 hover:shadow-sm text-slate-650 dark:text-slate-300 hover:text-sky-500 transition-all"
               title="Semana siguiente"
             >
               <ChevronRight size={14} />
@@ -237,9 +237,9 @@ const AgendaSemanal = () => {
  
         {/* Rango de Fechas e Indicador */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-100 dark:border-slate-700">
-          <div className="text-xs md:text-sm font-bold text-slate-700 dark:text-slate-200">
+          <div className="text-xs md:text-sm font-black text-slate-800 dark:text-slate-250">
             {lunes.toLocaleDateString('es-PE', { day: '2-digit', month: 'long' })}
-            <span className="font-medium text-slate-400 dark:text-slate-500 mx-1.5">al</span>
+            <span className="font-semibold text-slate-400 dark:text-slate-500 mx-1.5">al</span>
             {domingo.toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric' })}
           </div>
  
@@ -307,7 +307,7 @@ const AgendaSemanal = () => {
 
       {/* MENSAJES DE ERROR */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-center gap-3">
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-4 flex items-center gap-3 shrink-0">
           <AlertTriangle size={18} className="text-red-500 shrink-0" />
           <p className="text-sm text-red-700 font-semibold">{error}</p>
         </div>
@@ -315,97 +315,124 @@ const AgendaSemanal = () => {
 
       {/* GRILLA CALENDARIO SEMANAL */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm gap-3">
+        <div className="flex-1 flex flex-col items-center justify-center bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm gap-3 min-h-0">
           <CargadorSpinner size="lg" />
           <span className="text-sm font-semibold text-slate-400 dark:text-slate-500">Consultando agenda...</span>
         </div>
       ) : (
-        <div className="overflow-x-auto pb-4 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0">
-          <div className="grid grid-cols-7 gap-4 min-w-[1000px] lg:min-w-0">
-            {diasSemana.map((dia) => {
-              const citasDia = citasPorDia[dia.fechaStr] || [];
-              const esHoy = formatarFechaYMD(new Date()) === dia.fechaStr;
-              return (
-                <div
-                  key={dia.fechaStr}
-                  className={`bg-white dark:bg-slate-800 rounded-xl border ${
-                    esHoy ? 'border-sky-400 ring-2 ring-sky-100 dark:ring-sky-900' : 'border-slate-200/60 dark:border-slate-700/60'
-                  } shadow-sm flex flex-col min-h-[350px] overflow-hidden`}
-                >
-                  {/* Cabecera del día */}
-                  <div className={`p-3 border-b dark:border-slate-700 text-center ${
-                    esHoy ? 'bg-sky-50/50 dark:bg-sky-900/20' : 'bg-slate-50/50 dark:bg-slate-900/30'
-                  }`}>
-                    <p className={`text-[10px] font-bold tracking-wide ${
-                      esHoy ? 'text-sky-600' : 'text-slate-500 dark:text-slate-400'
+        <div className="flex-1 overflow-hidden flex flex-col min-h-0">
+          <div className="flex-1 overflow-x-auto pb-2 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0 flex flex-col min-h-0">
+            <div className="grid grid-cols-7 gap-3 min-w-[1000px] lg:min-w-0 flex-1 min-h-0">
+              {diasSemana.map((dia) => {
+                const citasDia = citasPorDia[dia.fechaStr] || [];
+                const esHoy = formatarFechaYMD(new Date()) === dia.fechaStr;
+                return (
+                  <div
+                    key={dia.fechaStr}
+                    className={`bg-white dark:bg-slate-800 rounded-2xl border ${
+                      esHoy ? 'border-sky-400 ring-2 ring-sky-100 dark:ring-sky-900/30' : 'border-slate-200/60 dark:border-slate-700/60'
+                    } shadow-sm flex flex-col h-full min-h-0 overflow-hidden bg-slate-50/20 dark:bg-slate-900/10`}
+                  >
+                    {/* Cabecera del día */}
+                    <div className={`p-2.5 border-b dark:border-slate-700 text-center shrink-0 ${
+                      esHoy ? 'bg-sky-500/10 dark:bg-sky-900/30' : 'bg-slate-50/40 dark:bg-slate-900/20'
                     }`}>
-                      {dia.nombre}
-                    </p>
-                    <p className={`text-xs font-bold mt-0.5 ${
-                      esHoy ? 'text-sky-700' : 'text-slate-700 dark:text-slate-200'
-                    }`}>
-                      {dia.fechaLabel}
-                    </p>
+                      <p className={`text-[10px] font-extrabold tracking-wide uppercase ${
+                        esHoy ? 'text-sky-500' : 'text-slate-450 dark:text-slate-500'
+                      }`}>
+                        {dia.nombre}
+                      </p>
+                      <p className={`text-xs font-black mt-0.5 ${
+                        esHoy ? 'text-sky-600 dark:text-sky-400' : 'text-slate-700 dark:text-slate-250'
+                      }`}>
+                        {dia.fechaLabel}
+                      </p>
+                    </div>
+
+                    {/* Lista de citas */}
+                    <div className="p-2 flex-1 space-y-2 overflow-y-auto min-h-0 custom-scrollbar pr-0.5">
+                      {citasDia.length === 0 ? (
+                        <div className="h-full flex flex-col items-center justify-center py-10 text-center select-none">
+                          <PawPrint size={20} className="stroke-[1.5] mb-2 opacity-30 text-slate-450 dark:text-slate-650" />
+                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-600">Sin citas</span>
+                        </div>
+                      ) : (
+                        citasDia.map((cita) => {
+                          const hora = cita.fechaHora ? cita.fechaHora.substring(11, 16) : '';
+                          
+                          // Obtener clase de borde izquierdo segun el estado para una interfaz premium
+                          let bordeIzquierdo = 'border-l-4 border-l-slate-400';
+                          let fondoEstado = 'bg-slate-50 dark:bg-slate-800/60';
+                          if (cita.estado === 'PENDIENTE') {
+                            bordeIzquierdo = 'border-l-4 border-l-amber-400';
+                            fondoEstado = 'bg-amber-500/[0.03] dark:bg-amber-500/[0.02] hover:bg-amber-500/[0.08] dark:hover:bg-amber-500/[0.06]';
+                          } else if (cita.estado === 'CONFIRMADA') {
+                            bordeIzquierdo = 'border-l-4 border-l-sky-400';
+                            fondoEstado = 'bg-sky-500/[0.03] dark:bg-sky-500/[0.02] hover:bg-sky-500/[0.08] dark:hover:bg-sky-500/[0.06]';
+                          } else if (cita.estado === 'EN_ESPERA') {
+                            bordeIzquierdo = 'border-l-4 border-l-purple-400';
+                            fondoEstado = 'bg-purple-500/[0.03] dark:bg-purple-500/[0.02] hover:bg-purple-500/[0.08] dark:hover:bg-purple-500/[0.06]';
+                          } else if (cita.estado === 'COMPLETADA') {
+                            bordeIzquierdo = 'border-l-4 border-l-emerald-400';
+                            fondoEstado = 'bg-emerald-500/[0.03] dark:bg-emerald-500/[0.02] hover:bg-emerald-500/[0.08] dark:hover:bg-emerald-500/[0.06]';
+                          } else if (cita.estado === 'CANCELADA') {
+                            bordeIzquierdo = 'border-l-4 border-l-rose-400';
+                            fondoEstado = 'bg-rose-500/[0.03] dark:bg-rose-500/[0.02] hover:bg-rose-500/[0.08] dark:hover:bg-rose-500/[0.06]';
+                          }
+
+                          return (
+                            <div
+                              key={cita.id}
+                              onClick={() => abrirModalReprogramar(cita)}
+                              className={`group border border-slate-200/55 dark:border-slate-700/50 ${bordeIzquierdo} ${fondoEstado} rounded-xl p-3 shadow-sm hover:shadow-md hover:shadow-sky-500/[0.02] hover:-translate-y-0.5 transition-all duration-200 cursor-pointer text-left relative flex flex-col gap-1.5`}
+                            >
+                              <div className="flex items-center justify-between gap-1 shrink-0">
+                                <span className="text-[10px] font-black text-slate-800 dark:text-slate-200 flex items-center gap-1">
+                                  <Clock size={11} className="text-slate-450 dark:text-slate-500" />
+                                  {hora}
+                                </span>
+                                <span className={`text-[8.5px] font-extrabold px-1.5 py-0.5 rounded-full border ${obtenerEstiloEstado(cita.estado)}`}>
+                                  {formatEstadoCita(cita.estado)}
+                                </span>
+                              </div>
+
+                              <div>
+                                <h4 className="text-xs font-black text-slate-800 dark:text-slate-100 tracking-tight group-hover:text-sky-500 dark:group-hover:text-sky-400 transition-colors leading-tight">
+                                  {cita.mascota?.nombre}
+                                </h4>
+                                <p className="text-[9px] font-bold text-slate-450 dark:text-slate-500 mt-0.5">
+                                  {formatEspecie(cita.mascota?.especie)} {cita.mascota?.raza ? `· ${cita.mascota.raza}` : ''}
+                                </p>
+                              </div>
+
+                              <div className="pt-2 border-t border-slate-100 dark:border-slate-700/60 space-y-1 text-[9px] font-semibold">
+                                <p className="text-slate-500 dark:text-slate-400 truncate">
+                                  <span className="text-slate-400 dark:text-slate-550 font-bold uppercase text-[8px] tracking-wide block">Servicio</span>
+                                  <span className="text-slate-700 dark:text-slate-300 font-bold">{cita.servicio?.nombre}</span>
+                                </p>
+                                <p className="text-slate-500 dark:text-slate-400 truncate">
+                                  <span className="text-slate-400 dark:text-slate-550 font-bold uppercase text-[8px] tracking-wide block">Veterinario</span>
+                                  <span className="text-slate-700 dark:text-slate-300 font-bold">{cita.veterinario ? (cita.veterinario.nombre || cita.veterinario.correo) : 'Sin asignar'}</span>
+                                </p>
+                                <p className="text-slate-550 dark:text-slate-450 truncate">
+                                  <span className="text-slate-400 dark:text-slate-550 font-bold uppercase text-[8px] tracking-wide block">Dueño</span>
+                                  <span className="text-slate-650 dark:text-slate-350 font-medium">{cita.mascota?.dueño?.nombreCompleto || 'Cliente'}</span>
+                                </p>
+                              </div>
+
+                              {/* Icono de reprogramacion en hover */}
+                              <div className="absolute right-2 top-10 opacity-0 group-hover:opacity-100 transition-all duration-200 bg-white dark:bg-slate-700 p-1.5 rounded-lg border border-slate-200/50 dark:border-slate-600 shadow-sm hover:scale-115">
+                                <RefreshCw size={10} className="text-sky-500 dark:text-sky-400 animate-spin-slow" />
+                              </div>
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
                   </div>
-
-                  {/* Lista de citas */}
-                  <div className="p-2 flex-1 space-y-2 overflow-y-auto max-h-[450px]">
-                    {citasDia.length === 0 ? (
-                      <div className="h-full flex flex-col items-center justify-center py-12 text-center text-slate-350">
-                        <PawPrint size={18} className="stroke-[1.5] mb-1.5 opacity-60 text-slate-400" />
-                        <span className="text-[9px] font-semibold tracking-wider text-slate-400 dark:text-slate-500">Sin citas</span>
-                      </div>
-                    ) : (
-                      citasDia.map((cita) => {
-                        const hora = cita.fechaHora ? cita.fechaHora.substring(11, 16) : '';
-                        return (
-                          <div
-                            key={cita.id}
-                            onClick={() => abrirModalReprogramar(cita)}
-                            className="group border border-slate-100 dark:border-slate-700 hover:border-sky-200 bg-white dark:bg-slate-800/80 rounded-xl p-2.5 shadow-sm hover:shadow-md hover:shadow-sky-500/5 transition-all duration-200 cursor-pointer text-left relative"
-                          >
-                            <div className="flex items-center justify-between gap-1 mb-1">
-                              <span className="text-[10px] font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1">
-                                <Clock size={10} className="text-slate-400" />
-                                {hora}
-                              </span>
-                              <span className={`text-[8.5px] font-bold px-1.5 py-0.5 rounded border ${obtenerEstiloEstado(cita.estado)}`}>
-                                {formatEstadoCita(cita.estado)}
-                              </span>
-                            </div>
-
-                            <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100 tracking-tight group-hover:text-sky-500 transition-colors">
-                              {cita.mascota?.nombre}
-                            </h4>
-                            
-                            <p className="text-[9px] font-semibold text-slate-500 dark:text-slate-400 mt-0.5 truncate">
-                              {formatEspecie(cita.mascota?.especie)} {cita.mascota?.raza ? `· ${cita.mascota.raza}` : ''}
-                            </p>
-
-                            <div className="mt-1.5 pt-1.5 border-t border-slate-50 dark:border-slate-700 space-y-0.5 text-[9px] font-medium">
-                              <p className="text-slate-500 dark:text-slate-400 truncate">
-                                <span className="font-semibold text-slate-600 dark:text-slate-300">Serv:</span> {cita.servicio?.nombre}
-                              </p>
-                              <p className="text-slate-500 dark:text-slate-400 truncate">
-                                <span className="font-semibold text-slate-600 dark:text-slate-300">Vet:</span> {cita.veterinario ? (cita.veterinario.nombre || cita.veterinario.correo) : 'Sin asignar'}
-                              </p>
-                              <p className="text-slate-400 dark:text-slate-500 truncate">
-                                <span className="font-semibold text-slate-500 dark:text-slate-400">Prop:</span> {cita.mascota?.dueño?.nombreCompleto || 'Cliente'}
-                              </p>
-                            </div>
-
-                            {/* Hover Overlay indicator */}
-                            <div className="absolute right-1.5 bottom-1.5 opacity-0 group-hover:opacity-100 transition-opacity bg-sky-50 p-1 rounded border border-sky-100">
-                              <RefreshCw size={9} className="text-sky-500 animate-spin-slow" />
-                            </div>
-                          </div>
-                        );
-                      })
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
       )}
