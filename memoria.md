@@ -71,7 +71,7 @@
 - [x] Límite de 350 chars en descripción de producto (frontend + backend).
 - [x] Frontend: `PaginaInventario` modular (`TarjetasAlertasInventario`, `TablaInventario`, `ModalIngresoLote`, `ModalAjusteStockLote`). `RegistrarProductoNuevo` como página dedicada (ancho completo). `ModalCrearCategoria` independiente. Paginación con `<Paginacion />`. Filtro de categorías con `<Combobox compacto>`. Tema oscuro corregido.
 - [x] Tienda online: entidades `CarritoItem`, `Pedido`, `DetallePedido`. Checkout atómico con deducción FEFO. `ClienteTienda` con catálogo, buscador, carrito drawer.
-- [x] Gestión de pedidos: `GestionPedidos` compartida (Admin/Recepcionista) con `ListaPedidosDespacho` y `DetallePedidoDespacho` modulares. Paginación de 6 pedidos/página.
+- [x] Panel de Recojo de Pedidos (`GestionPedidos.jsx`) para la Recepcionista y Administrador, reorientando el flujo de negocio de despacho a recojo exclusivo en el local de la veterinaria (sin delivery).
 - [x] `InventarioCriticoWidget` reutilizable con paginación (5 items/página). Término "FEFO" eliminado de la UI.
 
 ### Marketing (Campañas y Ofertas)

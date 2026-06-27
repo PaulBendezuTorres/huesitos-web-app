@@ -13,9 +13,9 @@ const DetallePedidoDespacho = ({
         <div className="w-16 h-16 bg-slate-100 dark:bg-slate-900/60 text-slate-450 dark:text-slate-555 rounded-full flex items-center justify-center mb-4 border border-slate-200/40 dark:border-slate-850 shadow-inner">
           <Truck size={32} />
         </div>
-        <h3 className="text-base font-black text-slate-800 dark:text-slate-100 tracking-tight">Despacho de Pedidos</h3>
+        <h3 className="text-base font-black text-slate-800 dark:text-slate-100 tracking-tight">Recojo de Pedidos</h3>
         <p className="text-xs text-slate-400 dark:text-slate-500 max-w-sm mt-1.5 font-medium leading-relaxed">
-          Selecciona un pedido entrante de la lista para gestionar su estado de pago, verificar lotes y despachar físicamente el producto.
+          Selecciona un pedido entrante de la lista para gestionar su estado de pago, verificar lotes y entregarlo físicamente al cliente en el local.
         </p>
       </div>
     );
@@ -80,7 +80,7 @@ const DetallePedidoDespacho = ({
           <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-700/60 pb-2">
             <User size={15} className="text-slate-450 dark:text-slate-500" />
             <h4 className="font-bold text-slate-800 dark:text-slate-100 text-xs tracking-wide">
-              Contacto y Entrega
+              Contacto y Recojo en Local
             </h4>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-semibold">

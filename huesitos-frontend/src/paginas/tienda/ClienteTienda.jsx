@@ -405,7 +405,7 @@ const ClienteTienda = () => {
                   {procesando ? (
                     <><CargadorSpinner size="xs" color="border-white" /> Procesando...</>
                   ) : (
-                    <><ShoppingCart size={16} /> Finalizar compra (Checkout FEFO)</>
+                    <><ShoppingCart size={16} /> Finalizar compra (Recojo en local)</>
                   )}
                 </button>
               </div>

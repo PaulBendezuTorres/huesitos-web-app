@@ -68,7 +68,7 @@ const configsRoles = {
     badgeBg: "bg-sky-500",
     items: [
       { id: 'caja', label: 'Caja y POS', icon: Wallet },
-      { id: 'pedidos', label: 'Despacho de pedidos', icon: Truck },
+      { id: 'pedidos', label: 'Recojo de pedidos', icon: ShoppingBag },
       { id: 'agenda', label: 'Agenda semanal', icon: Calendar }
     ]
   },

@@ -140,7 +140,7 @@ const ListaPedidosDespacho = ({
       {/* Paginación */}
       {!loadingPedidos && pedidosFiltrados.length > 0 && (
         <Paginacion
-          paginaActual={paginaStockValida}
+          paginaActual={paginaValida}
           totalItems={pedidosFiltrados.length}
           itemsPorPagina={itemsPorPagina}
           onPaginaChange={setPaginaActual}
