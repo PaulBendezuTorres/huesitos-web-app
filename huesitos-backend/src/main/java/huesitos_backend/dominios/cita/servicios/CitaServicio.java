@@ -218,6 +218,15 @@ public class CitaServicio {
             throw new RuntimeException("La cita está fuera del horario de atención del veterinario ("
                     + horario.getHoraEntrada() + " a " + horario.getHoraSalida() + ")");
         }
+
+        if (horario.getHoraAlmuerzoInicio() != null && horario.getHoraAlmuerzoFin() != null) {
+            LocalTime almuerzoInicio = horario.getHoraAlmuerzoInicio();
+            LocalTime almuerzoFin = horario.getHoraAlmuerzoFin();
+            if (!horaCita.isBefore(almuerzoInicio) && horaCita.isBefore(almuerzoFin)) {
+                throw new RuntimeException("El veterinario se encuentra en su horario de comida/almuerzo ("
+                        + almuerzoInicio + " a " + almuerzoFin + ")");
+            }
+        }
     }
 
     /**

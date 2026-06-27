@@ -34,6 +34,12 @@ public class HorarioPersonal {
     @Column(name = "hora_salida")
     private LocalTime horaSalida;
 
+    @Column(name = "hora_almuerzo_inicio")
+    private LocalTime horaAlmuerzoInicio;
+
+    @Column(name = "hora_almuerzo_fin")
+    private LocalTime horaAlmuerzoFin;
+
     @Column(nullable = false)
     private Boolean activo = true;
 }

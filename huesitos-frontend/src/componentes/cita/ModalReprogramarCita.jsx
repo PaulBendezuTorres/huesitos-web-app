@@ -99,6 +99,13 @@ const ModalReprogramarCita = ({ isOpen, onClose, cita, onReprogramada }) => {
       const horarioDia = horariosVet.find((h) => h.diaSemana === diaMap[diaSemana] && h.activo);
       if (!horarioDia) return false;
       if (hora < horarioDia.horaEntrada || hora >= horarioDia.horaSalida) return false;
+
+      // Filtrar hora de almuerzo
+      if (horarioDia.horaAlmuerzoInicio && horarioDia.horaAlmuerzoFin) {
+        const almuerzoInicio = horarioDia.horaAlmuerzoInicio.substring(0, 5);
+        const almuerzoFin = horarioDia.horaAlmuerzoFin.substring(0, 5);
+        if (hora >= almuerzoInicio && hora < almuerzoFin) return false;
+      }
     }
 
     return true;

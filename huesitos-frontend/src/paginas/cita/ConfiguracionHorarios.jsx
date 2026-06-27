@@ -82,17 +82,21 @@ const ConfiguracionHorarios = () => {
               ? {
                   id: registrado.id,
                   activo: registrado.activo,
-                  horaEntrada: registrado.horaEntrada ? registrado.horaEntrada.substring(0, 5) : '09:00',
+                  horaEntrada: registrado.horaEntrada ? registrado.horaEntrada.substring(0, 5) : '08:00',
                   horaSalida: registrado.horaSalida ? registrado.horaSalida.substring(0, 5) : '18:00',
+                  horaAlmuerzoInicio: registrado.horaAlmuerzoInicio ? registrado.horaAlmuerzoInicio.substring(0, 5) : '',
+                  horaAlmuerzoFin: registrado.horaAlmuerzoFin ? registrado.horaAlmuerzoFin.substring(0, 5) : '',
                 }
               : {
                   activo: d.key !== 'SUNDAY', // Domingo inactivo por defecto
-                  horaEntrada: '09:00',
+                  horaEntrada: d.key === 'SATURDAY' ? '09:00' : '08:00',
                   horaSalida: d.key === 'SATURDAY' ? '13:00' : '18:00',
+                  horaAlmuerzoInicio: d.key === 'SATURDAY' || d.key === 'SUNDAY' ? '' : '12:00',
+                  horaAlmuerzoFin: d.key === 'SATURDAY' || d.key === 'SUNDAY' ? '' : '14:00',
                 };
           });
           setHorarios(mapaHorarios);
-
+ 
           // Cargar excepciones desde localStorage
           const guardadas = localStorage.getItem(`excepciones_horario_${empleadoSeleccionado.id}`);
           setExcepciones(guardadas ? JSON.parse(guardadas) : []);
@@ -130,11 +134,30 @@ const ConfiguracionHorarios = () => {
       // Validaciones locales antes de enviar
       for (const d of DIAS_MAP) {
         const h = horarios[d.key];
-        if (h.activo && (!h.horaEntrada || !h.horaSalida)) {
-          throw new Error(`Debes especificar hora de entrada y salida para el día ${d.label}.`);
-        }
-        if (h.activo && h.horaEntrada >= h.horaSalida) {
-          throw new Error(`La hora de entrada debe ser anterior a la salida para el día ${d.label}.`);
+        if (h.activo) {
+          if (!h.horaEntrada || !h.horaSalida) {
+            throw new Error(`Debes especificar hora de entrada y salida para el día ${d.label}.`);
+          }
+          if (h.horaEntrada >= h.horaSalida) {
+            throw new Error(`La hora de entrada debe ser anterior a la salida para el día ${d.label}.`);
+          }
+
+          // Validación del almuerzo/comida
+          const tieneAlmuerzoInicio = !!h.horaAlmuerzoInicio;
+          const tieneAlmuerzoFin = !!h.horaAlmuerzoFin;
+          
+          if (tieneAlmuerzoInicio !== tieneAlmuerzoFin) {
+            throw new Error(`Debes especificar tanto el inicio como el fin del almuerzo para el día ${d.label}, o dejar ambos vacíos.`);
+          }
+
+          if (tieneAlmuerzoInicio && tieneAlmuerzoFin) {
+            if (h.horaAlmuerzoInicio >= h.horaAlmuerzoFin) {
+              throw new Error(`La hora de inicio de almuerzo debe ser anterior a la de fin para el día ${d.label}.`);
+            }
+            if (h.horaAlmuerzoInicio < h.horaEntrada || h.horaAlmuerzoFin > h.horaSalida) {
+              throw new Error(`El horario de almuerzo debe estar dentro de la jornada laboral (${h.horaEntrada} a ${h.horaSalida}) para el día ${d.label}.`);
+            }
+          }
         }
       }
 
@@ -146,6 +169,8 @@ const ConfiguracionHorarios = () => {
           activo: h.activo,
           horaEntrada: h.activo ? `${h.horaEntrada}:00` : null,
           horaSalida: h.activo ? `${h.horaSalida}:00` : null,
+          horaAlmuerzoInicio: h.activo && h.horaAlmuerzoInicio ? `${h.horaAlmuerzoInicio}:00` : null,
+          horaAlmuerzoFin: h.activo && h.horaAlmuerzoFin ? `${h.horaAlmuerzoFin}:00` : null,
         };
         if (h.id) payload.id = h.id;
 
@@ -168,13 +193,17 @@ const ConfiguracionHorarios = () => {
           ? {
               id: registrado.id,
               activo: registrado.activo,
-              horaEntrada: registrado.horaEntrada ? registrado.horaEntrada.substring(0, 5) : '09:00',
+              horaEntrada: registrado.horaEntrada ? registrado.horaEntrada.substring(0, 5) : '08:00',
               horaSalida: registrado.horaSalida ? registrado.horaSalida.substring(0, 5) : '18:00',
+              horaAlmuerzoInicio: registrado.horaAlmuerzoInicio ? registrado.horaAlmuerzoInicio.substring(0, 5) : '',
+              horaAlmuerzoFin: registrado.horaAlmuerzoFin ? registrado.horaAlmuerzoFin.substring(0, 5) : '',
             }
           : {
               activo: d.key !== 'SUNDAY',
-              horaEntrada: '09:00',
+              horaEntrada: d.key === 'SATURDAY' ? '09:00' : '08:00',
               horaSalida: d.key === 'SATURDAY' ? '13:00' : '18:00',
+              horaAlmuerzoInicio: d.key === 'SATURDAY' || d.key === 'SUNDAY' ? '' : '12:00',
+              horaAlmuerzoFin: d.key === 'SATURDAY' || d.key === 'SUNDAY' ? '' : '14:00',
             };
       });
       setHorarios(mapaHorarios);
@@ -304,27 +333,53 @@ const ConfiguracionHorarios = () => {
                             </div>
 
                             {h.activo ? (
-                              <div className="flex items-center gap-3">
-                                <div>
-                                  <label className="block text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase mb-1">Entrada</label>
-                                  <input
-                                    type="time"
-                                    value={h.horaEntrada}
-                                    onChange={(e) => handleHorarioChange(d.key, 'horaEntrada', e.target.value)}
-                                    required={h.activo}
-                                    className="px-3 py-1.5 border border-slate-200 dark:border-slate-600 rounded-lg text-xs text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all font-semibold bg-transparent dark:bg-slate-700"
-                                  />
+                              <div className="flex flex-wrap items-center gap-4">
+                                <div className="flex items-center gap-3">
+                                  <div>
+                                    <label className="block text-[9px] font-bold text-slate-400 dark:text-slate-550 uppercase mb-1">Entrada</label>
+                                    <input
+                                      type="time"
+                                      value={h.horaEntrada}
+                                      onChange={(e) => handleHorarioChange(d.key, 'horaEntrada', e.target.value)}
+                                      required={h.activo}
+                                      className="px-3 py-1.5 border border-slate-200 dark:border-slate-600 rounded-lg text-xs text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all font-semibold bg-transparent dark:bg-slate-700"
+                                    />
+                                  </div>
+                                  <span className="text-slate-300 dark:text-slate-600 text-sm mt-4">—</span>
+                                  <div>
+                                    <label className="block text-[9px] font-bold text-slate-400 dark:text-slate-550 uppercase mb-1">Salida</label>
+                                    <input
+                                      type="time"
+                                      value={h.horaSalida}
+                                      onChange={(e) => handleHorarioChange(d.key, 'horaSalida', e.target.value)}
+                                      required={h.activo}
+                                      className="px-3 py-1.5 border border-slate-200 dark:border-slate-600 rounded-lg text-xs text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all font-semibold bg-transparent dark:bg-slate-700"
+                                    />
+                                  </div>
                                 </div>
-                                <span className="text-slate-300 dark:text-slate-600 text-sm mt-4">—</span>
-                                <div>
-                                  <label className="block text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase mb-1">Salida</label>
-                                  <input
-                                    type="time"
-                                    value={h.horaSalida}
-                                    onChange={(e) => handleHorarioChange(d.key, 'horaSalida', e.target.value)}
-                                    required={h.activo}
-                                    className="px-3 py-1.5 border border-slate-200 dark:border-slate-600 rounded-lg text-xs text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all font-semibold bg-transparent dark:bg-slate-700"
-                                  />
+
+                                <div className="hidden sm:block border-l border-slate-200 dark:border-slate-700 h-8 mx-1"></div>
+
+                                <div className="flex items-center gap-3">
+                                  <div>
+                                    <label className="block text-[9px] font-bold text-slate-400 dark:text-slate-550 uppercase mb-1">Almuerzo Inicio</label>
+                                    <input
+                                      type="time"
+                                      value={h.horaAlmuerzoInicio || ''}
+                                      onChange={(e) => handleHorarioChange(d.key, 'horaAlmuerzoInicio', e.target.value)}
+                                      className="px-3 py-1.5 border border-slate-200 dark:border-slate-600 rounded-lg text-xs text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all font-semibold bg-transparent dark:bg-slate-700"
+                                    />
+                                  </div>
+                                  <span className="text-slate-300 dark:text-slate-600 text-sm mt-4">—</span>
+                                  <div>
+                                    <label className="block text-[9px] font-bold text-slate-400 dark:text-slate-550 uppercase mb-1">Almuerzo Fin</label>
+                                    <input
+                                      type="time"
+                                      value={h.horaAlmuerzoFin || ''}
+                                      onChange={(e) => handleHorarioChange(d.key, 'horaAlmuerzoFin', e.target.value)}
+                                      className="px-3 py-1.5 border border-slate-200 dark:border-slate-600 rounded-lg text-xs text-slate-800 dark:text-slate-100 outline-none focus:border-sky-400 transition-all font-semibold bg-transparent dark:bg-slate-700"
+                                    />
+                                  </div>
                                 </div>
                               </div>
                             ) : (

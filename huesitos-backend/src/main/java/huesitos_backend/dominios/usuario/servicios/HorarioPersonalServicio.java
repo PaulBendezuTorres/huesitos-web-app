@@ -52,6 +52,8 @@ public class HorarioPersonalServicio {
             horario = horarioExistente.get();
             horario.setHoraEntrada(nuevoHorario.getHoraEntrada());
             horario.setHoraSalida(nuevoHorario.getHoraSalida());
+            horario.setHoraAlmuerzoInicio(nuevoHorario.getHoraAlmuerzoInicio());
+            horario.setHoraAlmuerzoFin(nuevoHorario.getHoraAlmuerzoFin());
             horario.setActivo(nuevoHorario.getActivo());
         } else {
             horario = new HorarioPersonal();
@@ -59,6 +61,8 @@ public class HorarioPersonalServicio {
             horario.setDiaSemana(nuevoHorario.getDiaSemana());
             horario.setHoraEntrada(nuevoHorario.getHoraEntrada());
             horario.setHoraSalida(nuevoHorario.getHoraSalida());
+            horario.setHoraAlmuerzoInicio(nuevoHorario.getHoraAlmuerzoInicio());
+            horario.setHoraAlmuerzoFin(nuevoHorario.getHoraAlmuerzoFin());
             horario.setActivo(nuevoHorario.getActivo() != null ? nuevoHorario.getActivo() : true);
         }
 
@@ -79,14 +83,20 @@ public class HorarioPersonalServicio {
             if (dia == DayOfWeek.SUNDAY) {
                 hp.setHoraEntrada(null);
                 hp.setHoraSalida(null);
+                hp.setHoraAlmuerzoInicio(null);
+                hp.setHoraAlmuerzoFin(null);
                 hp.setActivo(false);
             } else if (dia == DayOfWeek.SATURDAY) {
                 hp.setHoraEntrada(LocalTime.of(9, 0));
                 hp.setHoraSalida(LocalTime.of(13, 0));
+                hp.setHoraAlmuerzoInicio(null);
+                hp.setHoraAlmuerzoFin(null);
                 hp.setActivo(true);
             } else {
-                hp.setHoraEntrada(LocalTime.of(9, 0));
+                hp.setHoraEntrada(LocalTime.of(8, 0));
                 hp.setHoraSalida(LocalTime.of(18, 0));
+                hp.setHoraAlmuerzoInicio(LocalTime.of(12, 0));
+                hp.setHoraAlmuerzoFin(LocalTime.of(14, 0));
                 hp.setActivo(true);
             }
             horarios.add(horarioPersonalRepositorio.save(hp));
