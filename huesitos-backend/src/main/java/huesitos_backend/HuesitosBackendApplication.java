@@ -20,7 +20,42 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class HuesitosBackendApplication {
 
     public static void main(String[] args) {
+        cargarVariablesEntorno();
         SpringApplication.run(HuesitosBackendApplication.class, args);
+    }
+
+    private static void cargarVariablesEntorno() {
+        java.io.File archivoEnv = new java.io.File(".env");
+        if (archivoEnv.exists()) {
+            try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(archivoEnv))) {
+                String linea;
+                while ((linea = br.readLine()) != null) {
+                    linea = linea.trim();
+                    if (linea.isEmpty() || linea.startsWith("#")) {
+                        continue;
+                    }
+                    int idx = linea.indexOf('=');
+                    if (idx > 0) {
+                        String clave = linea.substring(0, idx).trim();
+                        String valor = linea.substring(idx + 1).trim();
+                        
+                        // Eliminar comillas si las hay
+                        if (valor.startsWith("\"") && valor.endsWith("\"")) {
+                            valor = valor.substring(1, valor.length() - 1);
+                        } else if (valor.startsWith("'") && valor.endsWith("'")) {
+                            valor = valor.substring(1, valor.length() - 1);
+                        }
+                        
+                        // Solo inyectar si no existe ya en el entorno real
+                        if (System.getenv(clave) == null && System.getProperty(clave) == null) {
+                            System.setProperty(clave, valor);
+                        }
+                    }
+                }
+            } catch (java.io.IOException e) {
+                System.err.println("Error al leer el archivo .env: " + e.getMessage());
+            }
+        }
     }
 
     // Este bloque crea los 3 roles automáticamente al iniciar el servidor

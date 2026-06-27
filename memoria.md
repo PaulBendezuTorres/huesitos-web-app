@@ -92,6 +92,7 @@
 - [x] `ConfiguracionRolControlador` con endpoints por rol.
 - [x] Migración de almacenamiento local a Cloudinary en backend para fotos de perfil, mascotas, productos, campañas y archivos clínicos.
 - [x] Eliminación de credenciales hardcodeadas de Mercado Pago y del correo SMTP por defecto en application.properties, delegándolos al archivo .env.
+- [x] Implementación de cargador automático de archivo .env en HuesitosBackendApplication.java para resolver variables en local sin necesidad de dependencias adicionales de terceros.
 
 ### Arquitectura Frontend Compartida
 - [x] `PlantillaTablero`: estructura unificada responsiva (sidebar drawer, overlay, header hamburguesa, badge perfil).
